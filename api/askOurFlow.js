@@ -59,13 +59,7 @@ If you are unsure, say so instead of guessing.`
 
         console.log(JSON.stringify(data, null, 2));
 
-        const answer =
-            data?.choices?.[0]?.message?.content ||
-            "Sorry, I couldn't find an answer.";
-
-        return res.status(200).json({
-            answer
-        });
+        return res.status(200).json(data);
 
     } catch (error) {
 
