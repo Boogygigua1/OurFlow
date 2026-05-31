@@ -61,7 +61,7 @@ If you are unsure, say so instead of guessing.`
 
         const answer =
             data?.choices?.[0]?.message?.content ||
-            "Sorry, I couldn't find an answer.";
+            JSON.stringify(data, null, 2);
 
         return res.status(200).json({
             answer
