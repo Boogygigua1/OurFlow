@@ -7,8 +7,6 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="https://www.youtube.com/iframe_api"></script>
-
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#000000">
 
@@ -321,7 +319,7 @@ margin-right:auto;
             <option>Billing</option>
             <option>Bug</option>
             <option>Suggestion</option>
-            <option>Music Recommendation</option>
+            <option>Navigation Feedback</option>
             <option>Other</option>
         </select>
 
@@ -362,7 +360,7 @@ margin-right:auto;
 
         console.log("SCRIPT LOADED");
 
-        function trackTune4Me(eventName, details = {}) {
+        function trackOurFlow(eventName, details = {}) {
             if (window.va) {
                 window.va("event", {
                     name: eventName,
@@ -373,20 +371,6 @@ margin-right:auto;
 
         let playerInstance;
 
-        let FREE_SAVE_LIMIT = Math.max(
-            parseInt(localStorage.getItem("saveLimit")) || 15,
-            grandfatheredCount
-        );
-
-        let playsToday = parseInt(localStorage.getItem("playsToday")) || 0;
-        let lastDate = localStorage.getItem("playDate");
-
-        let today = new Date().toDateString();
-
-        if (lastDate !== today) {
-            playsToday = 0;
-            localStorage.setItem("playDate", today);
-        }
 
         // HELPERS
 
@@ -507,12 +491,6 @@ margin-right:auto;
 
 
     </script>
-
-    <!--
-T4M_ORIGIN_AIMUSICDISCOVERY
-music-that-understands-your-moment
-intentional-listening-not-endless-scrolling
--->
 
 </body>
 
