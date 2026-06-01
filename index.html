@@ -503,6 +503,21 @@ margin-right:auto;
 
                         answers: []
                     };
+
+                    result.innerHTML = `
+    <div class="card">
+        <strong>🧭 Journey Started</strong><br><br>
+
+        Started:
+        ${activeJourney.startTime}
+
+        <br><br>
+
+        You can now record parking locations, destinations, and travel notes.
+    </div>
+    `;
+
+                    return;
                 }
 
                 if (
