@@ -213,6 +213,10 @@
         💾 Save Journey
     </button>
 
+    <button onclick="showSavedJourneys()">
+        🧭 View Journeys
+    </button>
+
     <p style="font-size:11px; color:#888; margin-top:10px;">
         Ask a question, provide clues, and OurFlow will help you find your way 🧭
     </p>
@@ -512,7 +516,7 @@ margin-right:auto;
 
                         answers: []
                     };
-                    
+
                     result.innerHTML = `
     <div class="card">
         <strong>🧭 Journey Started</strong><br><br>
@@ -584,6 +588,65 @@ margin-right:auto;
         </div>
         `;
             }
+        }
+
+        function showSavedJourneys() {
+
+            const result =
+                document.getElementById("result");
+
+            if (savedJourneys.length === 0) {
+
+                result.innerHTML = `
+        <div class="card">
+            <strong>🧭 Saved Journeys</strong>
+            <br><br>
+            No journeys saved yet.
+        </div>
+        `;
+
+                return;
+            }
+
+            let html =
+                `<div class="card">
+            <strong>🧭 Saved Journeys</strong>
+            <br><br>`;
+
+            savedJourneys.forEach((journey, index) => {
+
+                html += `
+<div
+    style="
+        padding:10px;
+        border-bottom:1px solid #ddd;
+    "
+>
+            <strong>
+    ${journey.journeyName}
+</strong>
+
+<br>
+
+${journey.startTime}
+
+<br>
+
+Parking:
+${journey.parkingLocation || "Not recorded"}
+
+<br>
+
+Questions:
+${journey.questions.length}
+
+        </div>
+                `;
+            });
+
+            html += `</div >`;
+
+            result.innerHTML = html;
         }
 
         function showJourneyUpgradeBox() {
