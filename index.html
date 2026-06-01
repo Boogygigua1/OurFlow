@@ -436,6 +436,9 @@ margin-right:auto;
 
         function saveJourney() {
 
+            const result =
+                document.getElementById("result");
+
             if (!activeJourney) return;
 
             if (savedJourneys.length >= JOURNEY_LIMIT) {
@@ -454,7 +457,23 @@ margin-right:auto;
 
             activeJourney = null;
 
-            alert("🧭 Journey saved.");
+            result.innerHTML = `
+<div class="card">
+    <strong>🧭 Journey Saved</strong><br><br>
+
+    Destination:
+    ${activeJourney.destination}
+
+    <br><br>
+
+    Questions:
+    ${activeJourney.questions.length}
+
+    <br><br>
+
+    Your journey has been added to Saved Journeys.
+</div>
+`;
         }
 
         // AI 
