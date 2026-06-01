@@ -209,6 +209,10 @@
 
     <button onclick="clearNewList()">🗑 Clear List</button>
 
+    <button onclick="saveJourney()">
+        💾 Save Journey
+    </button>
+
     <p style="font-size:11px; color:#888; margin-top:10px;">
         Ask a question, provide clues, and OurFlow will help you find your way 🧭
     </p>
@@ -444,6 +448,8 @@ margin-right:auto;
             );
 
             activeJourney = null;
+
+            alert("🧭 Journey saved.");
         }
 
         // AI 
@@ -487,6 +493,9 @@ margin-right:auto;
 
                     activeJourney = {
 
+                        journeyName:
+                            "Journey " + new Date().toLocaleDateString(),
+
                         startTime:
                             new Date().toLocaleString(),
 
@@ -503,7 +512,7 @@ margin-right:auto;
 
                         answers: []
                     };
-
+                    
                     result.innerHTML = `
     <div class="card">
         <strong>🧭 Journey Started</strong><br><br>
@@ -518,6 +527,11 @@ margin-right:auto;
     `;
 
                     return;
+                }
+
+                if (activeJourney) {
+
+                    activeJourney.questions.push(question);
                 }
 
                 if (
@@ -546,6 +560,11 @@ margin-right:auto;
                 });
 
                 const data = await response.json();
+
+                if (activeJourney) {
+
+                    activeJourney.answers.push(data.answer);
+                }
 
                 result.innerHTML = `
         <div class="card">
