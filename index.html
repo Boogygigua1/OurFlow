@@ -474,57 +474,7 @@ margin-right:auto;
             const question =
                 document.getElementById("questionInput").value.trim();
 
-            if (
-                !activeJourney &&
-                question.length > 3
-            ) {
-
-                activeJourney = {
-
-                    destination:
-                        "Unknown",
-
-                    startTime:
-                        new Date().toLocaleString(),
-
-                    startLocation:
-                        "",
-
-                    parkingLocation:
-                        "",
-
-                    questions: [],
-
-                    answers: [],
-
-                    endLocation:
-                        "",
-
-                    endTime:
-                        ""
-                };
-
-                result.innerHTML = `
-    <div class="card">
-        <strong>🧭 Journey Started</strong><br><br>
-
-        Destination:
-        ${question}
-
-        <br><br>
-
-        Started:
-        ${activeJourney.startTime}
-
-        <br><br>
-
-        Ask your next question and I'll keep a log of this trip.
-    </div>
-    `;
-
-                return;
-            }
-
+            
 
             if (!question) {
                 alert("Ask OurFlow a question first 🧭");
