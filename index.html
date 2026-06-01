@@ -193,7 +193,8 @@
     <input type="text" id="questionInput" placeholder="Where do you need help?" onkeydown="handleKey(event)">
 
     <p style="font-size:12px; color:#888; margin-top:6px;">
-        Examples: "Am I on the right train?", "Which entrance should I use?", "I can't remember my hotel name."
+        🧭 To begin a trip, type:
+        "Start journey to [destination]"
     </p>
 
     <p style="font-size:12px; color:#888; margin-top:6px;">
@@ -492,50 +493,133 @@ margin-right:auto;
                 conversationHistory.push(question);
 
                 if (
-                    question.toLowerCase() === "start journey"
+                    question.toLowerCase().startsWith("start journey to ")
                 ) {
+
+                    const destination =
+                        question.replace(/start journey to /i, "").trim();
 
                     activeJourney = {
 
-                        journeyName:
-                            "Journey " + new Date().toLocaleDateString(),
+                        destination:
+                            destination,
 
                         startTime:
                             new Date().toLocaleString(),
 
                         startLocation:
-                            "Unknown",
+                            "",
 
                         parkingLocation:
                             "",
 
-                        destination:
-                            "",
-
                         questions: [],
 
-                        answers: []
+                        answers: [],
+
+                        endLocation:
+                            "",
+
+                        endTime:
+                            ""
                     };
 
                     result.innerHTML = `
+<div class="card">
+    <strong>🧭 Journey Started</strong><br><br>
+
+    Destination:
+    ${destination}
+
+    <br><br>
+
+    Started:
+    ${activeJourney.startTime}
+
+    <br><br>
+
+    You can now record parking locations, destinations, and travel notes.
+</div>
+`;
+
+                    return;
+
+                }
+
+                if (activeJourney) {
+
+                    activeJourney.questions.push(question);
+                }
+
+                if (activeJourney) {
+
+                    activeJourney.questions.push(question);
+                }
+
+                /* END JOURNEY BLOCK HERE */
+
+                if (
+                    question.toLowerCase() === "end journey"
+                ) {
+
+                    if (!activeJourney) {
+
+                        result.innerHTML = `
+        <div class="card">
+            <strong>🧭 OurFlow</strong><br><br>
+            No active journey to end.
+        </div>
+        `;
+
+                        return;
+                    }
+
+                    activeJourney.endTime =
+                        new Date().toLocaleString();
+
+                    result.innerHTML = `
     <div class="card">
-        <strong>🧭 Journey Started</strong><br><br>
+        <strong>🧭 Journey Ended</strong><br><br>
+
+        Destination:
+        ${activeJourney.destination}
+
+        <br><br>
 
         Started:
         ${activeJourney.startTime}
 
         <br><br>
 
-        You can now record parking locations, destinations, and travel notes.
+        Ended:
+        ${activeJourney.endTime}
+
+        <br><br>
+
+        Questions:
+        ${activeJourney.questions.length}
+
+        <br><br>
+
+        Use 💾 Save Journey to store this trip.
     </div>
     `;
 
                     return;
                 }
 
-                if (activeJourney) {
+                if (
+                    question.toLowerCase().startsWith("parking location:")
+                ) {
 
-                    activeJourney.questions.push(question);
+                    if (activeJourney) {
+
+                        activeJourney.parkingLocation =
+                            question.replace(
+                                /parking location:/i,
+                                ""
+                            ).trim();
+                    }
                 }
 
                 if (
@@ -559,7 +643,7 @@ margin-right:auto;
                     },
                     body: JSON.stringify({
                         question,
-                        history: conversationHistory.slice(-5)
+                        history: conversationHistory.slice(-20)
                     })
                 });
 
@@ -623,7 +707,7 @@ margin-right:auto;
     "
 >
             <strong>
-    ${journey.journeyName}
+    ${journey.destination}
 </strong>
 
 <br>
