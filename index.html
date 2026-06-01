@@ -474,7 +474,34 @@ margin-right:auto;
             const question =
                 document.getElementById("questionInput").value.trim();
 
-            
+            if (
+                !activeJourney &&
+                question.length > 10
+            ) {
+
+                activeJourney = {
+
+                    destination:
+                        question.length < 50
+                            ? question
+                            : "Journey",
+
+                    startTime:
+                        new Date().toLocaleString(),
+
+                    startLocation: "",
+
+                    parkingLocation: "",
+
+                    questions: [],
+
+                    answers: [],
+
+                    endLocation: "",
+
+                    endTime: ""
+                };
+            }
 
             if (!question) {
                 alert("Ask OurFlow a question first 🧭");
