@@ -425,10 +425,38 @@ margin-right:auto;
 
         } // end clearNewList function
 
+        function saveJourney() {
+
+            if (!activeJourney) return;
+
+            if (savedJourneys.length >= JOURNEY_LIMIT) {
+
+                showJourneyUpgradeBox();
+
+                return;
+            }
+
+            savedJourneys.push(activeJourney);
+
+            localStorage.setItem(
+                "savedJourneys",
+                JSON.stringify(savedJourneys)
+            );
+
+            activeJourney = null;
+        }
 
         // AI 
 
         let conversationHistory = [];
+
+        let activeJourney = null;
+
+        let savedJourneys =
+            JSON.parse(localStorage.getItem("savedJourneys")) || [];
+
+        let JOURNEY_LIMIT =
+            parseInt(localStorage.getItem("journeyLimit")) || 5;
 
         async function askOurFlow() {
 
@@ -452,6 +480,44 @@ margin-right:auto;
             try {
 
                 conversationHistory.push(question);
+
+                if (
+                    question.toLowerCase() === "start journey"
+                ) {
+
+                    activeJourney = {
+
+                        startTime:
+                            new Date().toLocaleString(),
+
+                        startLocation:
+                            "Unknown",
+
+                        parkingLocation:
+                            "",
+
+                        destination:
+                            "",
+
+                        questions: [],
+
+                        answers: []
+                    };
+                }
+
+                if (
+                    question.toLowerCase().startsWith("parking location:")
+                ) {
+
+                    if (activeJourney) {
+
+                        activeJourney.parkingLocation =
+                            question.replace(
+                                /parking location:/i,
+                                ""
+                            ).trim();
+                    }
+                }
 
                 const response = await fetch("/api/askOurFlow", {
                     method: "POST",
@@ -486,6 +552,13 @@ margin-right:auto;
             }
         }
 
+        function showJourneyUpgradeBox() {
+
+            alert(
+                "🧭 Journey archive full.\n\n" +
+                "Upgrade for 25 additional saved journeys."
+            );
+        }
 
     </script>
 
