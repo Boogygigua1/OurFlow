@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
     try {
 
-        const { question } = req.body;
+        const { question, history = [] } = req.body;
 
         if (!question) {
             return res.status(400).json({
@@ -77,7 +77,13 @@ When confidence is low, explain what additional clue would help identify the pla
                         },
                         {
                             role: "user",
-                            content: question
+                            content: `
+Previous clues:
+${history.join("\n")}
+
+Current question:
+${question}
+`
                         }
                     ]
                 })
@@ -91,7 +97,7 @@ When confidence is low, explain what additional clue would help identify the pla
         const answer =
             data?.choices?.[0]?.message?.content ||
             "I couldn't determine the location confidently. Can you give me another clue, nearby landmark, street name, or business?";
-        
+
         return res.status(200).json({
             answer
         });

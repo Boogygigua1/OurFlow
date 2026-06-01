@@ -1356,6 +1356,8 @@ cursor:pointer;
 
         // AI 
 
+        let conversationHistory = [];
+
         async function askOurFlow() {
 
             const question =
@@ -1377,13 +1379,16 @@ cursor:pointer;
 
             try {
 
+                conversationHistory.push(question);
+
                 const response = await fetch("/api/askOurFlow", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        question
+                        question,
+                        history: conversationHistory.slice(-5)
                     })
                 });
 
