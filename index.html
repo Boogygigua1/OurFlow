@@ -546,10 +546,6 @@ margin-right:auto;
 
                 }
 
-                if (activeJourney) {
-
-                    activeJourney.questions.push(question);
-                }
 
                 if (activeJourney) {
 
@@ -597,29 +593,18 @@ margin-right:auto;
         <br><br>
 
         Questions:
-        ${activeJourney.questions.length}
+${activeJourney.questions.length}
 
-        <br><br>
+<br><br>
+
+Answers:
+${activeJourney.answers.length}
 
         Use 💾 Save Journey to store this trip.
     </div>
     `;
 
                     return;
-                }
-
-                if (
-                    question.toLowerCase().startsWith("parking location:")
-                ) {
-
-                    if (activeJourney) {
-
-                        activeJourney.parkingLocation =
-                            question.replace(
-                                /parking location:/i,
-                                ""
-                            ).trim();
-                    }
                 }
 
                 if (
@@ -704,33 +689,104 @@ margin-right:auto;
     style="
         padding:10px;
         border-bottom:1px solid #ddd;
+        cursor:pointer;
     "
+    onclick="toggleJourney(${index})"
 >
-            <strong>
-    ${journey.destination}
-</strong>
+    <strong>
+        ${journey.destination}
+    </strong>
 
-<br>
+    <br>
 
-${journey.startTime}
+    ${journey.startTime}
 
-<br>
+    <br>
 
-Parking:
-${journey.parkingLocation || "Not recorded"}
+    Parking:
+    ${journey.parkingLocation || "Not recorded"}
 
-<br>
+    <br>
 
-Questions:
-${journey.questions.length}
+    Questions:
+    ${journey.questions.length}
 
-        </div>
-                `;
+    <div
+        id="journey-${index}"
+        style="display:none; margin-top:10px;"
+    >
+    </div>
+
+</div>
+`;
             });
 
             html += `</div >`;
 
             result.innerHTML = html;
+        }
+
+        function toggleJourney(index) {
+
+            const details =
+                document.getElementById(`journey-${index}`);
+
+            const journey =
+                savedJourneys[index];
+
+            if (details.style.display === "block") {
+
+                details.style.display = "none";
+
+                return;
+            }
+
+            let html = `
+        <hr>
+
+        <strong>Destination:</strong>
+        ${journey.destination}
+
+        <br><br>
+
+        <strong>Started:</strong>
+        ${journey.startTime}
+
+        <br><br>
+
+        <strong>Ended:</strong>
+        ${journey.endTime || "Not recorded"}
+
+        <br><br>
+
+        <strong>Parking:</strong>
+        ${journey.parkingLocation || "Not recorded"}
+
+        <br><br>
+
+        <strong>Questions & Answers</strong>
+
+        <br><br>
+    `;
+
+            journey.questions.forEach((question, i) => {
+
+                html += `
+            <strong>Q${i + 1}:</strong>
+            ${question}
+
+            <br>
+
+            <strong>A${i + 1}:</strong>
+            ${journey.answers[i] || ""}
+
+            <br><br>
+        `;
+            });
+
+            details.innerHTML = html;
+
+            details.style.display = "block";
         }
 
         function showJourneyUpgradeBox() {
