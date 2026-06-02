@@ -737,12 +737,20 @@ ${activeJourney.answers.length}
                     const chicoMatch =
                         question.match(/chico state/i);
 
+                    const anthroMatch =
+                        question.match(/anthropology|anthro lab/i);
+
                     if (teaMatch) {
                         activeJourney.destination = "Tea Bar";
                     }
 
                     if (chicoMatch) {
                         activeJourney.destination = "Chico State";
+                    }
+
+                    if (anthroMatch) {
+                        activeJourney.destination =
+                            "Anthropology Lab";
                     }
                 }
 
