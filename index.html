@@ -804,7 +804,15 @@ ${activeJourney.answers.length}
                     recallQuestion.includes("i forgot where i parked")
                 ) {
 
+                    alert("Parking recall triggered");
+
                     if (activeJourney?.parkingLocation) {
+
+                        if (activeJourney) {
+                            activeJourney.answers.push(
+                                "Parking reminder displayed."
+                            );
+                        }
 
                         result.innerHTML = `
 <div class="card">
