@@ -641,18 +641,16 @@ margin-right:auto;
 
                 if (
                     endQuestion === "end journey" ||
-                    endQuestion === "done journey" ||
-                    endQuestion === "done" ||
-                    endQuestion === "i'm done" ||
-                    endQuestion === "im done" ||
-                    endQuestion === "i made it" ||
-                    endQuestion === "i've arrived" ||
-                    endQuestion === "ive arrived" ||
-                    endQuestion === "i got here" ||
-                    endQuestion === "all set" ||
-                    endQuestion === "finished" ||
-                    endQuestion === "that's all" ||
-                    endQuestion === "thats all"
+                    endQuestion.includes("done") ||
+                    endQuestion.includes("i made it") ||
+                    endQuestion.includes("i've arrived") ||
+                    endQuestion.includes("ive arrived") ||
+                    endQuestion.includes("i got here") ||
+                    endQuestion.includes("all set") ||
+                    endQuestion.includes("finished") ||
+                    endQuestion.includes("that's all") ||
+                    endQuestion.includes("thats all") ||
+                    endQuestion.includes("no thanks")
                 ) {
 
 
@@ -766,12 +764,14 @@ ${activeJourney.answers.length}
 
                         result.innerHTML = `
 <div class="card">
-    <strong>📍 Parking Location Detected</strong>
+    <strong>📍 Parking Location Saved</strong>
 
     <br><br>
 
-    Would you like me to remember this parking location for this journey?
+   
+I'll remember where you parked for this journey.
 
+Can I help you further? 🧭
     <br><br>
 
     Reply:
