@@ -607,37 +607,17 @@ margin-right:auto;
                 }
 
 
-                if (activeJourney) {
-
-                    activeJourney.questions.push(question);
-                }
-
-                if (
-                    activeJourney.destination === "Untitled Journey"
-                ) {
-
-                    const teaMatch =
-                        question.match(/tea bar/i);
-
-                    const chicoMatch =
-                        question.match(/chico state/i);
-
-                    if (teaMatch) {
-                        activeJourney.destination = "Tea Bar";
-                    }
-
-                    if (chicoMatch) {
-                        activeJourney.destination = "Chico State";
-                    }
-                }
-
-                /* END JOURNEY BLOCK HERE */
-
                 if (
                     question.toLowerCase() === "end journey" ||
                     question.toLowerCase() === "done journey" ||
                     question.toLowerCase() === "done"
                 ) {
+
+
+
+                    /* END JOURNEY BLOCK HERE */
+
+
 
                     if (!activeJourney) {
 
@@ -700,6 +680,30 @@ ${activeJourney.answers.length}
     `;
 
                     return;
+                }
+
+                if (activeJourney) {
+
+                    activeJourney.questions.push(question);
+                }
+
+                if (
+                    activeJourney.destination === "Untitled Journey"
+                ) {
+
+                    const teaMatch =
+                        question.match(/tea bar/i);
+
+                    const chicoMatch =
+                        question.match(/chico state/i);
+
+                    if (teaMatch) {
+                        activeJourney.destination = "Tea Bar";
+                    }
+
+                    if (chicoMatch) {
+                        activeJourney.destination = "Chico State";
+                    }
                 }
 
                 if (
