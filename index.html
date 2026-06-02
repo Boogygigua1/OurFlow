@@ -748,40 +748,33 @@ ${activeJourney.answers.length}
 
                     if (activeJourney) {
 
-                        activeJourney.parkingLocation = question;
+                        activeJourney.pendingParkingLocation = question;
+
+                        // parking location will be saved after confirmation
 
                         result.innerHTML = `
 <div class="card">
-    <strong>📍 Parking Location Saved</strong>
+    <strong>📍 Parking Location Detected</strong>
 
     <br><br>
 
-    I'll remember where you parked for this journey.
-</div>
-`;
-                    }
-                }
-
-                const lowerQuestion = question.toLowerCase().trim();
-
-                if (
-                    lowerQuestion.includes("where did i park") ||
-                    lowerQuestion.includes("find my car")
-                ) {
-
-                    if (activeJourney?.parkingLocation) {
-
-                        result.innerHTML = `
-<div class="card">
-    <strong>🧭 Parking Reminder</strong>
+    Would you like me to remember this parking location for this journey?
 
     <br><br>
 
-    You recorded:
+    Reply:
 
     <br><br>
 
-    ${activeJourney.parkingLocation}
+    Yes
+
+    <br>
+
+    or
+
+    <br>
+
+    No
 </div>
 `;
 
