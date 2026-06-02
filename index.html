@@ -750,10 +750,11 @@ ${activeJourney.answers.length}
                     }
                 }
 
+                const lowerQuestion = question.toLowerCase().trim();
+
                 if (
-                    question.toLowerCase() === "where did i park?" ||
-                    question.toLowerCase() === "where did i park" ||
-                    question.toLowerCase() === "find my car"
+                    lowerQuestion.includes("where did i park") ||
+                    lowerQuestion.includes("find my car")
                 ) {
 
                     if (activeJourney?.parkingLocation) {
