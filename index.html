@@ -312,29 +312,32 @@ margin-right:auto;
 
         <br><br>
 
-<hr style="margin:15px 0; opacity:0.3;">
+        <hr style="margin:15px 0; opacity:0.3;">
 
-<br><br>
+        <br><br>
 
-<strong>© 2026 OurFlow. All rights reserved.</strong>
+        <strong>© 2026 OurFlow. All rights reserved.</strong>
 
-<br><br>
+        <br><br>
 
-The OurFlow application, design, features, branding, user interface, journey system, content, and source code are protected by applicable copyright and intellectual property laws.
+        The OurFlow application, design, features, branding, user interface, journey system, content, and source code
+        are protected by applicable copyright and intellectual property laws.
 
-<br><br>
+        <br><br>
 
-No part of this application may be copied, reproduced, distributed, modified, reverse engineered, republished, or used to create derivative works without prior written permission from the owner.
+        No part of this application may be copied, reproduced, distributed, modified, reverse engineered, republished,
+        or used to create derivative works without prior written permission from the owner.
 
-<br><br>
+        <br><br>
 
-Unauthorized use of the OurFlow platform, branding, content, or source code may violate copyright, trademark, and other applicable laws.
+        Unauthorized use of the OurFlow platform, branding, content, or source code may violate copyright, trademark,
+        and other applicable laws.
 
-<br><br>
+        <br><br>
 
-OurFlow is provided for personal use only unless otherwise authorized.
+        OurFlow is provided for personal use only unless otherwise authorized.
 
-<br><br>
+        <br><br>
 
     </div>
 
@@ -745,6 +748,44 @@ ${activeJourney.answers.length}
                                 ""
                             ).trim();
                     }
+                }
+
+                if (
+                    question.toLowerCase() === "where did i park?" ||
+                    question.toLowerCase() === "where did i park" ||
+                    question.toLowerCase() === "find my car"
+                ) {
+
+                    if (activeJourney?.parkingLocation) {
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>🧭 Parking Reminder</strong>
+
+    <br><br>
+
+    You recorded:
+
+    <br><br>
+
+    ${activeJourney.parkingLocation}
+</div>
+`;
+
+                        return;
+                    }
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>🧭 Parking Reminder</strong>
+
+    <br><br>
+
+    No parking location has been recorded for this journey.
+</div>
+`;
+
+                    return;
                 }
 
                 const response = await fetch("/api/askOurFlow", {
