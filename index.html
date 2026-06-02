@@ -738,7 +738,7 @@ ${activeJourney.answers.length}
                         question.match(/chico state/i);
 
                     const anthroMatch =
-                        question.match(/anthropology|anthro lab/i);
+                        question.match(/anthropology|anthro lab|anthro|anthro\. dep/i);
 
                     if (teaMatch) {
                         activeJourney.destination = "Tea Bar";
@@ -768,7 +768,7 @@ ${activeJourney.answers.length}
 
                         activeJourney.parkingLocation = question;
 
-                        // parking location will be saved after confirmation
+                        // save parking location immediately
 
                         result.innerHTML = `
 <div class="card">
@@ -804,14 +804,14 @@ ${activeJourney.answers.length}
 
                 if (
                     recallQuestion.includes("where did i park") ||
+                    recallQuestion.includes("where am i parked") ||
+                    recallQuestion.includes("were did i park") ||
                     recallQuestion.includes("where's my car") ||
                     recallQuestion.includes("where is my car") ||
                     recallQuestion.includes("find my car") ||
                     recallQuestion.includes("take me back to my car") ||
                     recallQuestion.includes("i forgot where i parked")
                 ) {
-
-                    alert("Parking recall triggered");
 
                     if (activeJourney?.parkingLocation) {
 
