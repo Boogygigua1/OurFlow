@@ -515,7 +515,7 @@ margin-right:auto;
                 activeJourney = {
 
                     destination:
-                        question.split(" ").slice(0, 5).join(" "),
+                        "Untitled Journey",
 
                     startTime:
                         new Date().toLocaleString(),
@@ -610,6 +610,25 @@ margin-right:auto;
                 if (activeJourney) {
 
                     activeJourney.questions.push(question);
+                }
+
+                if (
+                    activeJourney.destination === "Untitled Journey"
+                ) {
+
+                    const teaMatch =
+                        question.match(/tea bar/i);
+
+                    const chicoMatch =
+                        question.match(/chico state/i);
+
+                    if (teaMatch) {
+                        activeJourney.destination = "Tea Bar";
+                    }
+
+                    if (chicoMatch) {
+                        activeJourney.destination = "Chico State";
+                    }
                 }
 
                 /* END JOURNEY BLOCK HERE */
