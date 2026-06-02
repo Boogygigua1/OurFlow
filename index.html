@@ -749,6 +749,16 @@ ${activeJourney.answers.length}
                     if (activeJourney) {
 
                         activeJourney.parkingLocation = question;
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>📍 Parking Location Saved</strong>
+
+    <br><br>
+
+    I'll remember where you parked for this journey.
+</div>
+`;
                     }
                 }
 
