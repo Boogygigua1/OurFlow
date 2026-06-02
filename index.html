@@ -619,7 +619,7 @@ margin-right:auto;
     <strong>🧭 Journey Started</strong><br><br>
 
     Destination:
-    ${destination}
+${destination}
 
     <br><br>
 
@@ -756,60 +756,6 @@ ${activeJourney.answers.length}
 
                 }
 
-                const parkingQuestion = question.toLowerCase();
-
-                if (
-                    parkingQuestion.startsWith("parking location:") ||
-                    parkingQuestion.includes("i parked") ||
-                    parkingQuestion.includes("i'm parked") ||
-                    parkingQuestion.includes("my car is") ||
-                    parkingQuestion.includes("i left my car") ||
-                    parkingQuestion.includes("near the elevator") ||
-                    parkingQuestion.includes("near elevator") ||
-                    parkingQuestion.includes("near the stairs") ||
-                    parkingQuestion.includes("by the stairs") ||
-                    parkingQuestion.includes("parking structure")
-                ) {
-
-                    if (activeJourney) {
-
-                        activeJourney.parkingLocation = question;
-
-                        // save parking location immediately
-
-                        activeJourney.answers.push(
-                            "Parking location saved."
-                        );
-
-                        result.innerHTML = `
-<div class="card">
-    <strong>📍 Parking Location Saved</strong>
-
-    <br><br>
-
-    I've saved your parking location for this journey.
-
-    <br><br>
-
-    Can I help you further? 🧭
-</div>
-`;
-
-                        return;
-                    }
-
-                    result.innerHTML = `
-<div class="card">
-    <strong>🧭 Parking Reminder</strong>
-
-    <br><br>
-
-    No parking location has been recorded for this journey.
-</div>
-`;
-
-                    return;
-                }
 
                 const recallQuestion = question.toLowerCase();
 
@@ -864,6 +810,47 @@ ${activeJourney.answers.length}
                     return;
                 }
 
+                const parkingQuestion = question.toLowerCase();
+
+                if (
+                    parkingQuestion.startsWith("parking location:") ||
+                    parkingQuestion.includes("i parked") ||
+                    parkingQuestion.includes("i'm parked") ||
+                    parkingQuestion.includes("my car is") ||
+                    parkingQuestion.includes("i left my car") ||
+                    parkingQuestion.includes("near the elevator") ||
+                    parkingQuestion.includes("near elevator") ||
+                    parkingQuestion.includes("near the stairs") ||
+                    parkingQuestion.includes("by the stairs") ||
+                    parkingQuestion.includes("parking structure")
+                ) {
+
+                    if (activeJourney) {
+
+                        activeJourney.parkingLocation = question;
+
+                        activeJourney.answers.push(
+                            "Parking location saved."
+                        );
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>📍 Parking Location Saved</strong>
+
+    <br><br>
+
+    I've saved your parking location for this journey.
+
+    <br><br>
+
+    Can I help you further? 🧭
+</div>
+`;
+
+                        return;
+                    }
+                }
+
                 const response = await fetch("/api/askOurFlow", {
                     method: "POST",
                     headers: {
@@ -889,22 +876,22 @@ ${activeJourney.answers.length}
                 }
 
                 result.innerHTML = `
-        <div class="card">
-            <strong>🧭 OurFlow</strong><br><br>
-            ${data.answer}
-        </div>
-        `;
+<div class="card">
+    <strong>🧭 OurFlow</strong><br><br>
+    ${data.answer}
+</div>
+`;
 
             } catch (error) {
 
                 console.error(error);
 
                 result.innerHTML = `
-        <div class="card">
-            <strong>🧭 OurFlow</strong><br><br>
-            Error contacting OurFlow.
-        </div>
-        `;
+<div class="card">
+    <strong>🧭 OurFlow</strong><br><br>
+    Error contacting OurFlow.
+</div>
+`;
             }
         }
 
@@ -916,12 +903,12 @@ ${activeJourney.answers.length}
             if (savedJourneys.length === 0) {
 
                 result.innerHTML = `
-        <div class="card">
-            <strong>🧭 Saved Journeys</strong>
-            <br><br>
-            No journeys saved yet.
-        </div>
-        `;
+<div class="card">
+    <strong>🧭 Saved Journeys</strong>
+    <br><br>
+    No journeys saved yet.
+</div>
+`;
 
                 return;
             }
@@ -929,23 +916,23 @@ ${activeJourney.answers.length}
             let html =
                 `<div class="card">
 
-    <strong>🧭 Saved Journeys</strong>
+<strong>🧭 Saved Journeys</strong>
 
-    <br><br>
+<br><br>
 
-    <input
-        type="text"
-        id="journeySearch"
-        placeholder="🔍 Find Journey"
-        onkeyup="filterJourneys()"
-        style="
-            width:95%;
-            padding:10px;
-            margin-bottom:15px;
-        "
-    >
+<input
+    type="text"
+    id="journeySearch"
+    placeholder="🔍 Find Journey"
+    onkeyup="filterJourneys()"
+    style="
+        width:95%;
+        padding:10px;
+        margin-bottom:15px;
+    "
+>
 
-    <div id="journeyList">
+<div id="journeyList">
 `;
 
             savedJourneys.forEach((journey, index) => {
@@ -970,18 +957,18 @@ ${activeJourney.answers.length}
 
     <br>
 
-Parking:
-${journey.parkingLocation || "Not recorded"}
+    Parking:
+    ${journey.parkingLocation || "Not recorded"}
 
-<br>
+    <br>
 
-Questions:
-${journey.questions.length}
+    Questions:
+    ${journey.questions.length}
 
-<br>
+    <br>
 
-Answers:
-${journey.answers.length}
+    Answers:
+    ${journey.answers.length}
 
     <div
         id="journey-${index}"
