@@ -416,6 +416,37 @@ margin-right:auto;
             }
         }
 
+        function getCurrentLocation() {
+
+            if (!navigator.geolocation) {
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+
+                (position) => {
+
+                    currentLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    };
+
+                    console.log(
+                        "GPS:",
+                        currentLocation.latitude,
+                        currentLocation.longitude
+                    );
+                },
+
+                (error) => {
+                    console.log("GPS unavailable", error);
+                }
+
+            );
+        }
+
+        getCurrentLocation();
+
         function toggleReadMore(button) {
 
             const moreText = document.getElementById("moreText");
@@ -526,6 +557,8 @@ margin-right:auto;
 
         let activeJourney = null;
 
+        let currentLocation = null;
+
         let savedJourneys =
             JSON.parse(localStorage.getItem("savedJourneys")) || [];
 
@@ -598,7 +631,7 @@ margin-right:auto;
                             new Date().toLocaleString(),
 
                         startLocation:
-                            "",
+                            currentLocation,
 
                         parkingLocation:
                             "",
