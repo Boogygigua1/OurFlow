@@ -793,6 +793,53 @@ ${activeJourney.answers.length}
                     return;
                 }
 
+                const recallQuestion = question.toLowerCase();
+
+                if (
+                    recallQuestion.includes("where did i park") ||
+                    recallQuestion.includes("where's my car") ||
+                    recallQuestion.includes("where is my car") ||
+                    recallQuestion.includes("find my car") ||
+                    recallQuestion.includes("take me back to my car") ||
+                    recallQuestion.includes("i forgot where i parked")
+                ) {
+
+                    if (activeJourney?.parkingLocation) {
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>📍 Parking Reminder</strong>
+
+    <br><br>
+
+    You told me:
+
+    <br><br>
+
+    ${activeJourney.parkingLocation}
+
+    <br><br>
+
+    Can I help you further? 🧭
+</div>
+`;
+
+                        return;
+                    }
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>📍 Parking Reminder</strong>
+
+    <br><br>
+
+    I don't have a parking location recorded for this journey.
+</div>
+`;
+
+                    return;
+                }
+
                 const response = await fetch("/api/askOurFlow", {
                     method: "POST",
                     headers: {
