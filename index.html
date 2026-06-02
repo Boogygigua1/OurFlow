@@ -637,10 +637,22 @@ margin-right:auto;
                 }
 
 
+                const endQuestion = question.toLowerCase().trim();
+
                 if (
-                    question.toLowerCase() === "end journey" ||
-                    question.toLowerCase() === "done journey" ||
-                    question.toLowerCase() === "done"
+                    endQuestion === "end journey" ||
+                    endQuestion === "done journey" ||
+                    endQuestion === "done" ||
+                    endQuestion === "i'm done" ||
+                    endQuestion === "im done" ||
+                    endQuestion === "i made it" ||
+                    endQuestion === "i've arrived" ||
+                    endQuestion === "ive arrived" ||
+                    endQuestion === "i got here" ||
+                    endQuestion === "all set" ||
+                    endQuestion === "finished" ||
+                    endQuestion === "that's all" ||
+                    endQuestion === "thats all"
                 ) {
 
 
