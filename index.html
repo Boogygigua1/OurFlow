@@ -448,32 +448,46 @@ margin-right:auto;
                 return;
             }
 
-            savedJourneys.push(activeJourney);
+            const journeyToSave = { ...activeJourney };
+
+            savedJourneys.push(journeyToSave);
 
             localStorage.setItem(
                 "savedJourneys",
                 JSON.stringify(savedJourneys)
             );
 
-            activeJourney = null;
-
             result.innerHTML = `
 <div class="card">
     <strong>🧭 Journey Saved</strong><br><br>
 
     Destination:
-    ${activeJourney.destination}
+    ${journeyToSave.destination}
 
     <br><br>
 
     Questions:
-    ${activeJourney.questions.length}
+    ${journeyToSave.questions.length}
 
     <br><br>
 
-    Your journey has been added to Saved Journeys.
+    Your journey has been saved and closed.
+
+    <br><br>
+
+    Start a new journey anytime by typing:
+
+    <br><br>
+
+    Start journey to [destination]
+
+
 </div>
 `;
+
+            activeJourney = null;
+
+            document.getElementById("questionInput").value = "";
         }
 
         // AI 
@@ -501,9 +515,7 @@ margin-right:auto;
                 activeJourney = {
 
                     destination:
-                        question.length < 50
-                            ? question
-                            : "Journey",
+                        question.split(" ").slice(0, 5).join(" "),
 
                     startTime:
                         new Date().toLocaleString(),
@@ -621,6 +633,15 @@ margin-right:auto;
                     activeJourney.endTime =
                         new Date().toLocaleString();
 
+
+                    const start = new Date(activeJourney.startTime);
+                    const end = new Date(activeJourney.endTime);
+
+                    const minutes =
+                        Math.round((end - start) / 60000);
+
+                    activeJourney.duration = minutes;
+
                     result.innerHTML = `
     <div class="card">
         <strong>🧭 Journey Ended</strong><br><br>
@@ -639,6 +660,11 @@ margin-right:auto;
         ${activeJourney.endTime}
 
         <br><br>
+
+Duration:
+${activeJourney.duration} minute(s)
+
+<br><br>
 
         Questions:
 ${activeJourney.questions.length}
@@ -727,13 +753,31 @@ ${activeJourney.answers.length}
 
             let html =
                 `<div class="card">
-            <strong>🧭 Saved Journeys</strong>
-            <br><br>`;
+
+    <strong>🧭 Saved Journeys</strong>
+
+    <br><br>
+
+    <input
+        type="text"
+        id="journeySearch"
+        placeholder="🔍 Find Journey"
+        onkeyup="filterJourneys()"
+        style="
+            width:95%;
+            padding:10px;
+            margin-bottom:15px;
+        "
+    >
+
+    <div id="journeyList">
+`;
 
             savedJourneys.forEach((journey, index) => {
 
                 html += `
 <div
+    data-journey="${journey.destination}"
     style="
         padding:10px;
         border-bottom:1px solid #ddd;
@@ -769,7 +813,10 @@ ${activeJourney.answers.length}
 `;
             });
 
-            html += `</div >`;
+            html += `
+</div>
+</div>
+`;
 
             result.innerHTML = html;
         }
@@ -790,7 +837,36 @@ ${activeJourney.answers.length}
             }
 
             let html = `
-        <hr>
+<div style="
+    background:#f8f8f8;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:10px;
+">
+    <strong>🧭 Journey Summary</strong>
+
+    <br><br>
+
+    Destination:
+    ${journey.destination}
+
+    <br>
+
+    Duration:
+    ${journey.duration || 0} minute(s)
+
+    <br>
+
+    Questions:
+    ${journey.questions.length}
+
+    <br>
+
+    Answers:
+    ${journey.answers.length}
+</div>
+
+<hr>
 
         <strong>Destination:</strong>
         ${journey.destination}
@@ -807,12 +883,17 @@ ${activeJourney.answers.length}
 
         <br><br>
 
+        <strong>Duration:</strong>
+        ${journey.duration || 0} minute(s)
+
+        <br><br>
+
         <strong>Parking:</strong>
         ${journey.parkingLocation || "Not recorded"}
 
         <br><br>
 
-        <strong>Questions & Answers</strong>
+        <strong>Journey Details</strong>
 
         <br><br>
     `;
@@ -835,6 +916,28 @@ ${activeJourney.answers.length}
             details.innerHTML = html;
 
             details.style.display = "block";
+        }
+
+        function filterJourneys() {
+
+            const search =
+                document.getElementById("journeySearch")
+                    .value
+                    .toLowerCase();
+
+            const journeyItems =
+                document.querySelectorAll("[data-journey]");
+
+            journeyItems.forEach(item => {
+
+                const title =
+                    item.dataset.journey.toLowerCase();
+
+                item.style.display =
+                    title.includes(search)
+                        ? "block"
+                        : "none";
+            });
         }
 
         function showJourneyUpgradeBox() {
