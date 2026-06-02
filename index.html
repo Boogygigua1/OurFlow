@@ -752,6 +752,8 @@ ${activeJourney.answers.length}
                         activeJourney.destination =
                             "Anthropology Lab";
                     }
+
+
                 }
 
                 const parkingQuestion = question.toLowerCase();
@@ -864,7 +866,13 @@ ${activeJourney.answers.length}
                     },
                     body: JSON.stringify({
                         question,
-                        history: conversationHistory.slice(-20)
+                        history: conversationHistory.slice(-20),
+
+                        destination:
+                            activeJourney?.destination || "",
+
+                        parkingLocation:
+                            activeJourney?.parkingLocation || ""
                     })
                 });
 

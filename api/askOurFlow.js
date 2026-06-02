@@ -8,7 +8,12 @@ export default async function handler(req, res) {
 
     try {
 
-        const { question, history = [] } = req.body;
+        const {
+            question,
+            history = [],
+            destination = "",
+            parkingLocation = ""
+        } = req.body;
 
         if (!question) {
             return res.status(400).json({
@@ -240,6 +245,12 @@ When confidence is low, explain what additional clue would help identify the pla
                             content: `
 Previous clues:
 ${history.join("\n")}
+
+Current destination:
+${destination || "Unknown"}
+
+Current parking location:
+${parkingLocation || "Unknown"}
 
 Current question:
 ${question}
