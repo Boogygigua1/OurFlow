@@ -770,6 +770,10 @@ ${activeJourney.answers.length}
 
                         // save parking location immediately
 
+                        activeJourney.answers.push(
+                            "Parking location saved."
+                        );
+
                         result.innerHTML = `
 <div class="card">
     <strong>📍 Parking Location Saved</strong>
@@ -814,6 +818,10 @@ ${activeJourney.answers.length}
                 ) {
 
                     if (activeJourney?.parkingLocation) {
+
+                        activeJourney.answers.push(
+                            activeJourney.parkingLocation
+                        );
 
                         result.innerHTML = `
 <div class="card">
