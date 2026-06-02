@@ -736,17 +736,19 @@ ${activeJourney.answers.length}
                     }
                 }
 
+                const parkingQuestion = question.toLowerCase();
+
                 if (
-                    question.toLowerCase().startsWith("parking location:")
+                    lowerQuestion.startsWith("parking location:") ||
+                    lowerQuestion.includes("i parked") ||
+                    lowerQuestion.includes("i'm parked") ||
+                    lowerQuestion.includes("my car is") ||
+                    lowerQuestion.includes("i left my car")
                 ) {
 
                     if (activeJourney) {
 
-                        activeJourney.parkingLocation =
-                            question.replace(
-                                /parking location:/i,
-                                ""
-                            ).trim();
+                        activeJourney.parkingLocation = question;
                     }
                 }
 
