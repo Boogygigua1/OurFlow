@@ -615,7 +615,9 @@ margin-right:auto;
                 /* END JOURNEY BLOCK HERE */
 
                 if (
-                    question.toLowerCase() === "end journey"
+                    question.toLowerCase() === "end journey" ||
+                    question.toLowerCase() === "done journey" ||
+                    question.toLowerCase() === "done"
                 ) {
 
                     if (!activeJourney) {
