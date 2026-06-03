@@ -431,6 +431,12 @@ margin-right:auto;
                         longitude: position.coords.longitude
                     };
 
+                    alert(
+                        "GPS FOUND\n\n" +
+                        position.coords.latitude + "\n" +
+                        position.coords.longitude
+                    );
+
                     console.log(
                         "GPS:",
                         currentLocation.latitude,
@@ -672,8 +678,8 @@ ${destination}
 
 GPS:
 ${currentLocation
-    ? `${currentLocation.latitude}, ${currentLocation.longitude}`
-    : "Not detected"}
+                            ? `${currentLocation.latitude}, ${currentLocation.longitude}`
+                            : "Not detected"}
 
 <br><br>
 
