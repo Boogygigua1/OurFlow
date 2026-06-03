@@ -1113,6 +1113,12 @@ ${activeJourney.answers.length}
     Answers:
     ${journey.answers.length}
 
+    <br>
+
+<button onclick="event.stopPropagation(); deleteJourney(${index})">
+    🗑 Delete Journey
+</button>
+
     <div
         id="journey-${index}"
         style="display:none; margin-top:10px;"
@@ -1226,6 +1232,23 @@ ${activeJourney.answers.length}
             details.innerHTML = html;
 
             details.style.display = "block";
+        }
+
+        function deleteJourney(index) {
+
+            const confirmDelete =
+                confirm("Delete this saved journey?");
+
+            if (!confirmDelete) return;
+
+            savedJourneys.splice(index, 1);
+
+            localStorage.setItem(
+                "savedJourneys",
+                JSON.stringify(savedJourneys)
+            );
+
+            showSavedJourneys();
         }
 
         function filterJourneys() {
