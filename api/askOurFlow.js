@@ -250,7 +250,6 @@ Avoid:
 
 When confidence is low, explain what additional clue would help identify the place.`
                         },
-                        {
                             {
                             role: "user",
                             content: landmarkImageData
