@@ -199,7 +199,8 @@
         🎤 Speak
     </button>
 
-    <input type="file" id="landmarkImage" accept="image/*" onchange="analyzeLandmarkImage()" style="
+    <input type="file" id="landmarkImage" accept="image/*" capture="environment" onchange="analyzeLandmarkImage()"
+        style="
         margin-top:10px;
         margin-bottom:10px;
         width:90%;
@@ -446,7 +447,24 @@ margin-right:auto;
             recognition.start();
 
             recognition.onstart = function () {
-                alert("🎤 Listening...");
+
+                document.getElementById(
+                    "questionInput"
+                ).placeholder = "🎤 Listening...";
+            };
+
+            recognition.onend = function () {
+
+                const input =
+                    document.getElementById(
+                        "questionInput"
+                    );
+
+                if (!input.value.trim()) {
+
+                    input.placeholder =
+                        "Where do you need help?";
+                }
             };
 
             recognition.onresult = function (event) {
@@ -461,8 +479,15 @@ margin-right:auto;
 
             recognition.onerror = function (event) {
 
-                alert(
-                    "🎤 Voice error: " +
+                if (
+                    event.error === "no-speech" ||
+                    event.error === "aborted"
+                ) {
+                    return;
+                }
+
+                console.log(
+                    "Voice error:",
                     event.error
                 );
             };
@@ -524,13 +549,6 @@ margin-right:auto;
             const reader = new FileReader();
 
             reader.onload = function (e) {
-
-                landmarkImageData = e.target.result;
-
-                alert(
-                    "IMAGE SAVED\n\nLength: " +
-                    landmarkImageData.length
-                );
 
                 landmarkImageData = e.target.result;
 
