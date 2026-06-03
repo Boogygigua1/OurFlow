@@ -192,6 +192,15 @@
 
     <input type="text" id="questionInput" placeholder="Where do you need help?" onkeydown="handleKey(event)">
 
+    <input type="file" id="landmarkImage" accept="image/*" onchange="previewLandmarkImage()" style="
+        margin-top:10px;
+        margin-bottom:10px;
+        width:90%;
+        max-width:420px;
+    ">
+
+    <div id="imagePreview"></div>
+
     <p style="font-size:12px; color:#888; margin-top:6px;">
         🧭 To begin a trip, type:
         "Start journey to [destination]"
@@ -453,6 +462,34 @@ margin-right:auto;
             button.innerText = isHidden
                 ? "▲ Hide AI, Usage & Platform Information"
                 : "▼ AI, Usage & Platform Information";
+        }
+
+        function previewLandmarkImage() {
+
+            const file =
+                document.getElementById("landmarkImage")
+                    .files[0];
+
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+
+                document.getElementById("imagePreview")
+                    .innerHTML = `
+<img
+    src="${e.target.result}"
+    style="
+        max-width:300px;
+        margin-top:10px;
+        border-radius:10px;
+    "
+>
+`;
+            };
+
+            reader.readAsDataURL(file);
         }
 
         // SAVE
