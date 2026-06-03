@@ -439,7 +439,13 @@ margin-right:auto;
                 },
 
                 (error) => {
+
                     console.log("GPS unavailable", error);
+
+                    alert(
+                        "📍 Location access is disabled.\n\n" +
+                        "Allow location access if you'd like OurFlow to detect your starting location automatically."
+                    );
                 }
 
             );
@@ -658,8 +664,8 @@ ${destination}
 
 GPS:
 ${currentLocation
-    ? `${currentLocation.latitude}, ${currentLocation.longitude}`
-    : "Not detected"}
+                            ? `${currentLocation.latitude}, ${currentLocation.longitude}`
+                            : "Not detected"}
     <br><br>
 
     Started:
