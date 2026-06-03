@@ -426,31 +426,64 @@ margin-right:auto;
 
             navigator.geolocation.getCurrentPosition(
 
-                (position) => {
+                function (position) {
+
+                    alert(
+                        "GPS FOUND\n\n" +
+                        position.coords.latitude +
+                        "\n" +
+                        position.coords.longitude
+                    );
 
                     currentLocation = {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude
                     };
+                },
+
+                function (error) {
 
                     alert(
-                        "GPS FOUND\n\n" +
-                        position.coords.latitude + "\n" +
-                        position.coords.longitude
-                    );
-
-                    console.log(
-                        "GPS:",
-                        currentLocation.latitude,
-                        currentLocation.longitude
-                    );
-
-                    console.log(
-                        "GPS FOUND:",
-                        currentLocation.latitude,
-                        currentLocation.longitude
+                        "GPS ERROR\n\n" +
+                        "Code: " + error.code +
+                        "\n" +
+                        error.message
                     );
                 },
+
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+
+            );
+
+            (position) => {
+
+                currentLocation = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
+
+                alert(
+                    "GPS FOUND\n\n" +
+                    position.coords.latitude + "\n" +
+                    position.coords.longitude
+                );
+
+                console.log(
+                    "GPS:",
+                    currentLocation.latitude,
+                    currentLocation.longitude
+                );
+
+                console.log(
+                    "GPS FOUND:",
+                    currentLocation.latitude,
+                    currentLocation.longitude
+                );
+            },
 
                 (error) => {
 
@@ -464,8 +497,6 @@ margin-right:auto;
 
             );
         }
-
-        // getCurrentLocation();
 
         function toggleReadMore(button) {
 
