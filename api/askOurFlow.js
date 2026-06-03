@@ -261,6 +261,8 @@ When confidence is low, explain what additional clue would help identify the pla
   - what is confirmed
 
 - Never present a guess as a fact.
+- If an image does not contain enough information for identification, say so clearly.
+- Do not repeatedly request additional clues if reasonable possibilities can already be provided.
 
 - When analyzing images:
   - First describe visible details.
