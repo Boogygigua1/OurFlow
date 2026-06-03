@@ -478,6 +478,13 @@ margin-right:auto;
 
                 landmarkImageData = e.target.result;
 
+                alert(
+                    "IMAGE SAVED\n\nLength: " +
+                    landmarkImageData.length
+                );
+
+                landmarkImageData = e.target.result;
+
                 document.getElementById("imagePreview")
                     .innerHTML = `
 <img
