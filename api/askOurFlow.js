@@ -267,6 +267,9 @@ When confidence is low, explain what additional clue would help identify the pla
   - Then explain what those details might suggest.
   - State your confidence level.
   - If making a guess, label it as a possibility rather than a confirmed identification.
+  - When the user asks about an image, answer the image question first.
+  - Do not immediately ask for additional information if you can provide a useful description or list of possibilities.
+  - If the image cannot be identified with confidence, provide the most likely possibilities before requesting more clues.
 `
                         },
                         {
