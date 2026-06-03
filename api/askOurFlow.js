@@ -16,6 +16,16 @@ export default async function handler(req, res) {
             landmarkImageData = ""
         } = req.body;
 
+        if (!landmarkImageData) {
+            return res.status(200).json({
+                answer: "NO IMAGE RECEIVED"
+            });
+        }
+
+        return res.status(200).json({
+            answer: "IMAGE RECEIVED LENGTH = " + landmarkImageData.length
+        });
+
         console.log(
             "IMAGE RECEIVED:",
             landmarkImageData
@@ -250,7 +260,7 @@ Avoid:
 
 When confidence is low, explain what additional clue would help identify the place.`
                         },
-                            {
+                        {
                             role: "user",
                             content: landmarkImageData
                                 ? [
