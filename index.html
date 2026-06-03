@@ -457,45 +457,7 @@ margin-right:auto;
                     maximumAge: 0
                 }
 
-            );
-
-            (position) => {
-
-                currentLocation = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                };
-
-                alert(
-                    "GPS FOUND\n\n" +
-                    position.coords.latitude + "\n" +
-                    position.coords.longitude
-                );
-
-                console.log(
-                    "GPS:",
-                    currentLocation.latitude,
-                    currentLocation.longitude
-                );
-
-                console.log(
-                    "GPS FOUND:",
-                    currentLocation.latitude,
-                    currentLocation.longitude
-                );
-            },
-
-                (error) => {
-
-                    console.log("GPS unavailable", error);
-
-                    alert(
-                        "📍 Location access is disabled.\n\n" +
-                        "Allow location access if you'd like OurFlow to detect your starting location automatically."
-                    );
-                }
-
-            );
+            );   
         }
 
         function toggleReadMore(button) {
