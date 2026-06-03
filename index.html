@@ -654,6 +654,12 @@ margin-right:auto;
     Destination:
 ${destination}
 
+<br><br>
+
+GPS:
+${currentLocation
+    ? `${currentLocation.latitude}, ${currentLocation.longitude}`
+    : "Not detected"}
     <br><br>
 
     Started:
