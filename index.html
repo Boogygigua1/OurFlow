@@ -451,7 +451,7 @@ margin-right:auto;
             );
         }
 
-        getCurrentLocation();
+        // getCurrentLocation();
 
         function toggleReadMore(button) {
 
@@ -627,6 +627,8 @@ margin-right:auto;
 
                     const destination =
                         question.replace(/start journey to /i, "").trim();
+
+                    getCurrentLocation();
 
                     activeJourney = {
 
