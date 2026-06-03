@@ -275,9 +275,13 @@ ${parkingLocation || "Unknown"}
 Current question:
 ${question}
 
-If an image is attached, identify what you see and use it as a navigation clue.
-`
-                                    },
+If an image is attached:
+
+- First describe what you see.
+- Then explain how it may help identify the location.
+- If the exact location cannot be determined, identify visible landmarks, buildings, signs, architecture, vehicles, vegetation, or other clues.
+- Never ignore the image.
+`                                    },
                                     {
                                         type: "image_url",
                                         image_url: {
