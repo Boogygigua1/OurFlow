@@ -251,8 +251,36 @@ Avoid:
 When confidence is low, explain what additional clue would help identify the place.`
                         },
                         {
+                            {
                             role: "user",
-                            content: `
+                            content: landmarkImageData
+                                ? [
+                                    {
+                                        type: "text",
+                                        text: `
+Previous clues:
+${history.join("\n")}
+
+Current destination:
+${destination || "Unknown"}
+
+Current parking location:
+${parkingLocation || "Unknown"}
+
+Current question:
+${question}
+
+If an image is attached, identify what you see and use it as a navigation clue.
+`
+                                    },
+                                    {
+                                        type: "image_url",
+                                        image_url: {
+                                            url: landmarkImageData
+                                        }
+                                    }
+                                ]
+                                : `
 Previous clues:
 ${history.join("\n")}
 
