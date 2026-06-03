@@ -416,49 +416,6 @@ margin-right:auto;
             }
         }
 
-        function getCurrentLocation() {
-
-            alert("GPS REQUEST STARTED");
-
-            if (!navigator.geolocation) {
-                return;
-            }
-
-            navigator.geolocation.getCurrentPosition(
-
-                function (position) {
-
-                    alert(
-                        "GPS FOUND\n\n" +
-                        position.coords.latitude +
-                        "\n" +
-                        position.coords.longitude
-                    );
-
-                    currentLocation = {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    };
-                },
-
-                function (error) {
-
-                    alert(
-                        "GPS ERROR\n\n" +
-                        "Code: " + error.code +
-                        "\n" +
-                        error.message
-                    );
-                },
-
-                {
-                    enableHighAccuracy: false,
-                    timeout: 60000,
-                    maximumAge: 0
-                }
-
-            );   
-        }
 
         function toggleReadMore(button) {
 
@@ -570,8 +527,6 @@ margin-right:auto;
 
         let activeJourney = null;
 
-        let currentLocation = null;
-
         let savedJourneys =
             JSON.parse(localStorage.getItem("savedJourneys")) || [];
 
@@ -635,7 +590,6 @@ margin-right:auto;
                     const destination =
                         question.replace(/start journey to /i, "").trim();
 
-                    getCurrentLocation();
 
                     activeJourney = {
 
@@ -645,8 +599,6 @@ margin-right:auto;
                         startTime:
                             new Date().toLocaleString(),
 
-                        startLocation:
-                            currentLocation,
 
                         parkingLocation:
                             "",
@@ -671,12 +623,6 @@ ${destination}
 
 <br><br>
 
-GPS:
-${currentLocation
-                            ? `${currentLocation.latitude}, ${currentLocation.longitude}`
-                            : "Not detected"}
-
-<br><br>
 
     Started:
     ${activeJourney.startTime}
