@@ -12,8 +12,16 @@ export default async function handler(req, res) {
             question,
             history = [],
             destination = "",
-            parkingLocation = ""
+            parkingLocation = "",
+            landmarkImageData = ""
         } = req.body;
+
+        console.log(
+            "IMAGE RECEIVED:",
+            landmarkImageData
+                ? landmarkImageData.substring(0, 50)
+                : "NO IMAGE"
+        );
 
         if (!question) {
             return res.status(400).json({
