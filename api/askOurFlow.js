@@ -16,15 +16,6 @@ export default async function handler(req, res) {
             landmarkImageData = ""
         } = req.body;
 
-        if (!landmarkImageData) {
-            return res.status(200).json({
-                answer: "NO IMAGE RECEIVED"
-            });
-        }
-
-        return res.status(200).json({
-            answer: "IMAGE RECEIVED LENGTH = " + landmarkImageData.length
-        });
 
         console.log(
             "IMAGE RECEIVED:",
@@ -38,6 +29,11 @@ export default async function handler(req, res) {
                 error: "Question required"
             });
         }
+
+        console.log(
+            "USING IMAGE:",
+            landmarkImageData.length
+        );
 
         const response = await fetch(
             "https://api.openai.com/v1/chat/completions",
