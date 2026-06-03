@@ -192,7 +192,7 @@
 
     <input type="text" id="questionInput" placeholder="Where do you need help?" onkeydown="handleKey(event)">
 
-    <input type="file" id="landmarkImage" accept="image/*" onchange="previewLandmarkImage()" style="
+    <input type="file" id="landmarkImage" accept="image/*" onchange="analyzeLandmarkImage()" style="
         margin-top:10px;
         margin-bottom:10px;
         width:90%;
@@ -490,6 +490,25 @@ margin-right:auto;
             };
 
             reader.readAsDataURL(file);
+        }
+
+        async function analyzeLandmarkImage() {
+
+            previewLandmarkImage();
+
+            const file =
+                document.getElementById("landmarkImage")
+                    .files[0];
+
+            if (!file) return;
+
+            document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📸 Landmark Analysis</strong>
+    <br><br>
+    Analyzing image...
+</div>
+`;
         }
 
         // SAVE
