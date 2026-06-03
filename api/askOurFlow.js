@@ -254,7 +254,20 @@ Good:
 Avoid:
 "Can you tell me more about the bridges?"
 
-When confidence is low, explain what additional clue would help identify the place.`
+When confidence is low, explain what additional clue would help identify the place.
+- Clearly distinguish between:
+  - what you see in the image
+  - what is a reasonable guess
+  - what is confirmed
+
+- Never present a guess as a fact.
+
+- When analyzing images:
+  - First describe visible details.
+  - Then explain what those details might suggest.
+  - State your confidence level.
+  - If making a guess, label it as a possibility rather than a confirmed identification.
+`
                         },
                         {
                             role: "user",
