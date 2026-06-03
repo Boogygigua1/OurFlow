@@ -437,8 +437,10 @@ margin-right:auto;
                         currentLocation.longitude
                     );
 
-                    alert(
-                        `GPS Found:\n\n${currentLocation.latitude}, ${currentLocation.longitude}`
+                    console.log(
+                        "GPS FOUND:",
+                        currentLocation.latitude,
+                        currentLocation.longitude
                     );
                 },
 
@@ -670,9 +672,10 @@ ${destination}
 
 GPS:
 ${currentLocation
-                            ? `${currentLocation.latitude}, ${currentLocation.longitude}`
-                            : "Not detected"}
-    <br><br>
+    ? `${currentLocation.latitude}, ${currentLocation.longitude}`
+    : "Not detected"}
+
+<br><br>
 
     Started:
     ${activeJourney.startTime}
