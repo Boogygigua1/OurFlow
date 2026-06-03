@@ -192,6 +192,13 @@
 
     <input type="text" id="questionInput" placeholder="Where do you need help?" onkeydown="handleKey(event)">
 
+    <button onclick="startVoiceInput()" style="
+    margin-top:10px;
+    margin-bottom:10px;
+">
+        🎤 Speak
+    </button>
+
     <input type="file" id="landmarkImage" accept="image/*" onchange="analyzeLandmarkImage()" style="
         margin-top:10px;
         margin-bottom:10px;
@@ -418,6 +425,48 @@ margin-right:auto;
         }
 
         // HELPERS
+
+        function startVoiceInput() {
+
+            const SpeechRecognition =
+                window.SpeechRecognition ||
+                window.webkitSpeechRecognition;
+
+            if (!SpeechRecognition) {
+                alert("🎤 Speech recognition is not supported in this browser.");
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+
+            recognition.lang = "en-US";
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.start();
+
+            recognition.onstart = function () {
+                alert("🎤 Listening...");
+            };
+
+            recognition.onresult = function (event) {
+
+                const transcript =
+                    event.results[0][0].transcript;
+
+                document.getElementById(
+                    "questionInput"
+                ).value = transcript;
+            };
+
+            recognition.onerror = function (event) {
+
+                alert(
+                    "🎤 Voice error: " +
+                    event.error
+                );
+            };
+        }
 
         function handleKey(event) {
             if (event.key === "Enter") {
