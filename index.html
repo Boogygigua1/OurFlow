@@ -476,6 +476,8 @@ margin-right:auto;
 
             reader.onload = function (e) {
 
+                landmarkImageData = e.target.result;
+
                 document.getElementById("imagePreview")
                     .innerHTML = `
 <img
@@ -578,6 +580,10 @@ margin-right:auto;
         }
 
         // AI 
+
+        // AI
+
+        let landmarkImageData = "";
 
         let conversationHistory = [];
 
