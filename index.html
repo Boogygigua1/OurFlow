@@ -436,6 +436,10 @@ margin-right:auto;
                         currentLocation.latitude,
                         currentLocation.longitude
                     );
+
+                    alert(
+                        `GPS Found:\n\n${currentLocation.latitude}, ${currentLocation.longitude}`
+                    );
                 },
 
                 (error) => {
