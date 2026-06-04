@@ -1606,6 +1606,21 @@ ${journey.notes && journey.notes.length
 <br><br>
 `;
 
+            html += `
+<strong>❓ Saved Questions:</strong>
+
+<br><br>
+
+${journey.questionsForDoctor &&
+                    journey.questionsForDoctor.length
+                    ? journey.questionsForDoctor.map(question =>
+                        `• ${question}<br>`
+                    ).join("")
+                    : "No saved questions"}
+
+<br><br>
+`;
+
             journey.questions.forEach((question, i) => {
 
                 html += `
