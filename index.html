@@ -1033,6 +1033,8 @@ ${activeJourney.answers.length}
                     noteQuestion.startsWith("save question:")
                 ) {
 
+                    console.log("SAVE QUESTION BLOCK FIRED");
+
                     const doctorQuestion = question
                         .replace(/save question:/i, "")
                         .trim();
