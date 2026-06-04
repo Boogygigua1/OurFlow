@@ -976,8 +976,9 @@ ${activeJourney.answers.length}
 
                 if (
                     parkingQuestion.startsWith("parking location:") ||
-                    parkingQuestion.includes("i parked") ||
-                    parkingQuestion.includes("i'm parked") ||
+                    parkingQuestion.startsWith("parking location:") ||
+                    parkingQuestion.startsWith("save parking:") ||
+                    parkingQuestion.startsWith("my parking is:") ||
                     parkingQuestion.includes("my car is") ||
                     parkingQuestion.includes("i left my car") ||
                     parkingQuestion.includes("near the elevator") ||
