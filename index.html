@@ -1055,6 +1055,42 @@ ${activeJourney.answers.length}
                     }
                 }
 
+                const destinationUpdate =
+                    question.toLowerCase();
+
+                if (
+                    activeJourney &&
+                    (
+                        destinationUpdate.includes("i'm going here") ||
+                        destinationUpdate.includes("im going here") ||
+                        destinationUpdate.includes("i found it") ||
+                        destinationUpdate.includes("the address is") ||
+                        destinationUpdate.includes("it says") ||
+                        destinationUpdate.includes("this is the address")
+                    )
+                ) {
+                    activeJourney.destination = question;
+
+                    activeJourney.answers.push(
+                        "Destination updated."
+                    );
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>🧭 Destination Updated</strong>
+    <br><br>
+    I saved this as your journey destination:
+    <br><br>
+    ${activeJourney.destination}
+    <br><br>
+    I can use this for the rest of your journey.
+</div>
+`;
+
+                    return;
+                }
+                
+
                 const navigationSearch =
                     question.toLowerCase();
 
