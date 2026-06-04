@@ -728,6 +728,10 @@ margin-right:auto;
 
             const questionInfo = analyzeUserQuestion(question);
 
+            if (activeJourney && questionInfo.travelMode !== "unknown") {
+                activeJourney.travelMode = questionInfo.travelMode;
+            }
+
             console.log(activeJourney);
 
             if (
@@ -745,6 +749,18 @@ margin-right:auto;
                     currentLocation: "",
 
                     travelMode: "",
+
+                    journeyStatus: "traveling",
+
+                    notes: [],
+
+                    questionsForDoctor: [],
+
+                    staffInstructions: [],
+
+                    medications: [],
+
+                    appointments: [],
 
                     startTime:
                         new Date().toLocaleString(),
@@ -800,6 +816,18 @@ margin-right:auto;
 
                         travelMode: "",
 
+                        journeyStatus: "traveling",
+
+                        notes: [],
+
+                        questionsForDoctor: [],
+
+                        staffInstructions: [],
+
+                        medications: [],
+
+                        appointments: [],
+
                         startTime:
                             new Date().toLocaleString(),
 
@@ -845,7 +873,6 @@ ${destination}
 
                 if (
                     endQuestion === "end journey" ||
-                    endQuestion.includes("done") ||
                     endQuestion.includes("i made it") ||
                     endQuestion.includes("i've arrived") ||
                     endQuestion.includes("ive arrived") ||
@@ -971,6 +998,36 @@ ${activeJourney.answers.length}
 
                 const recallQuestion = question.toLowerCase();
 
+                const noteQuestion = question.toLowerCase();
+
+                if (
+                    activeJourney &&
+                    noteQuestion.startsWith("save note:")
+                ) {
+
+                    const note = question
+                        .replace(/save note:/i, "")
+                        .trim();
+
+                    activeJourney.notes.push(note);
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>📝 Note Saved</strong>
+
+    <br><br>
+
+    ${note}
+
+    <br><br>
+
+    I'll remember that for this journey.
+</div>
+`;
+
+                    return;
+                }
+
                 if (
                     recallQuestion.includes("where did i park") ||
                     recallQuestion.includes("where am i parked") ||
@@ -1085,7 +1142,7 @@ ${activeJourney.answers.length}
                         destinationUpdate.includes("i found the address") ||
                         destinationUpdate.includes("located at") ||
                         destinationUpdate.includes("265 cohasset") ||
-                        destinationUpdate.includes ("here it is") ||
+                        destinationUpdate.includes("here it is") ||
                         destinationUpdate.includes("cohasset rd")
 
                     )
@@ -1493,6 +1550,10 @@ ${activeJourney.answers.length}
         }
 
     </script>
+
+    <footer class="project-credit">
+        Created by Vad Monty • ChatGPT Aided
+    </footer>
 
 </body>
 
