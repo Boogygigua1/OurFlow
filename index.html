@@ -676,6 +676,8 @@ margin-right:auto;
 
         let activeJourney = null;
 
+        let pendingParkingLocation = "";
+
         let savedJourneys =
             JSON.parse(localStorage.getItem("savedJourneys")) || [];
 
@@ -1092,9 +1094,29 @@ ${activeJourney.answers.length}
 
                     const placeData = await placeResponse.json();
 
+                    if (
+                        questionInfo.mentionsParking &&
+                        questionInfo.asksRoute
+                    ) {
+                        pendingParkingLocation = question;
+                    }
+
                     result.innerHTML = `
 <div class="card">
     <strong>🧭 Verified Map Search</strong>
+
+    ${pendingParkingLocation
+                            ? `
+            <br><br>
+            <strong>📍 Parking location detected.</strong>
+            <br><br>
+            <button onclick="savePendingParking()">
+                Save Parking
+            </button>
+            `
+                            : ""
+                        }
+
     <br><br>
     I should not guess exact directions without verified map data.
     <br><br>
@@ -1107,7 +1129,6 @@ ${activeJourney.answers.length}
     After you open it, come back and tell me what you see.
 </div>
 `;
-
                     return;
                 }
 
@@ -1368,6 +1389,20 @@ ${activeJourney.answers.length}
             );
 
             showSavedJourneys();
+        }
+
+        function savePendingParking() {
+
+            if (!pendingParkingLocation) return;
+
+            if (activeJourney) {
+                activeJourney.parkingLocation =
+                    pendingParkingLocation;
+            }
+
+            pendingParkingLocation = "";
+
+            alert("📍 Parking location saved.");
         }
 
         function filterJourneys() {
