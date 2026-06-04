@@ -1183,6 +1183,52 @@ ${index + 1}. ${question}<br><br>
                 }
 
                 if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show my medications" ||
+                        noteQuestion === "show medications" ||
+                        noteQuestion === "what medications do i have"
+                    )
+                ) {
+
+                    if (activeJourney.medications.length === 0) {
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>💊 Medications</strong>
+
+    <br><br>
+
+    No medications saved for this journey yet.
+</div>
+`;
+
+                        return;
+                    }
+
+                    let medicationsHtml = "";
+
+                    activeJourney.medications.forEach((medication, index) => {
+
+                        medicationsHtml += `
+${index + 1}. ${medication}<br><br>
+`;
+                    });
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>💊 Medications</strong>
+
+    <br><br>
+
+    ${medicationsHtml}
+</div>
+`;
+
+                    return;
+                }
+
+                if (
                     recallQuestion.includes("where did i park") ||
                     recallQuestion.includes("where am i parked") ||
                     recallQuestion.includes("were did i park") ||
