@@ -728,6 +728,8 @@ margin-right:auto;
 
             const questionInfo = analyzeUserQuestion(question);
 
+            console.log(activeJourney);
+
             if (
                 !activeJourney &&
                 question.length > 10
@@ -737,6 +739,12 @@ margin-right:auto;
 
                     destination:
                         "Untitled Journey",
+
+                    destinationAddress: "",
+
+                    currentLocation: "",
+
+                    travelMode: "",
 
                     startTime:
                         new Date().toLocaleString(),
@@ -786,9 +794,14 @@ margin-right:auto;
                         destination:
                             destination,
 
+                        destinationAddress: "",
+
+                        currentLocation: "",
+
+                        travelMode: "",
+
                         startTime:
                             new Date().toLocaleString(),
-
 
                         parkingLocation:
                             "",
@@ -1089,7 +1102,7 @@ ${activeJourney.answers.length}
 
                     return;
                 }
-                
+
 
                 const navigationSearch =
                     question.toLowerCase();
