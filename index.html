@@ -1030,6 +1030,36 @@ ${activeJourney.answers.length}
 
                 if (
                     activeJourney &&
+                    noteQuestion.startsWith("save question:")
+                ) {
+
+                    const doctorQuestion = question
+                        .replace(/save question:/i, "")
+                        .trim();
+
+                    activeJourney.questionsForDoctor.push(
+                        doctorQuestion
+                    );
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>❓ Question Saved</strong>
+
+    <br><br>
+
+    ${doctorQuestion}
+
+    <br><br>
+
+    I'll remember that for this journey.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
                     (
                         noteQuestion === "show my notes" ||
                         noteQuestion === "show notes" ||
