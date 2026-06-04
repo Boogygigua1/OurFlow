@@ -1107,6 +1107,52 @@ ${index + 1}. ${note}<br><br>
                 }
 
                 if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show my questions" ||
+                        noteQuestion === "show questions" ||
+                        noteQuestion === "what questions do i have"
+                    )
+                ) {
+
+                    if (activeJourney.questionsForDoctor.length === 0) {
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>❓ Saved Questions</strong>
+
+    <br><br>
+
+    No saved questions for this journey yet.
+</div>
+`;
+
+                        return;
+                    }
+
+                    let questionsHtml = "";
+
+                    activeJourney.questionsForDoctor.forEach((question, index) => {
+
+                        questionsHtml += `
+${index + 1}. ${question}<br><br>
+`;
+                    });
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>❓ Saved Questions</strong>
+
+    <br><br>
+
+    ${questionsHtml}
+</div>
+`;
+
+                    return;
+                }
+
+                if (
                     recallQuestion.includes("where did i park") ||
                     recallQuestion.includes("where am i parked") ||
                     recallQuestion.includes("were did i park") ||
