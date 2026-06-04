@@ -955,7 +955,33 @@ ${activeJourney.answers.length}
 
                 if (activeJourney) {
 
-                    activeJourney.questions.push(question);
+                    const lowerQuestion =
+                        question.toLowerCase();
+
+                    const isMemoryCommand =
+
+                        lowerQuestion.startsWith("save note:") ||
+
+                        lowerQuestion.startsWith("save question:") ||
+
+                        lowerQuestion.startsWith("save medication:") ||
+
+                        lowerQuestion === "show my notes" ||
+
+                        lowerQuestion === "show notes" ||
+
+                        lowerQuestion === "show my questions" ||
+
+                        lowerQuestion === "show questions" ||
+
+                        lowerQuestion === "show my medications" ||
+
+                        lowerQuestion === "show medications";
+
+                    if (!isMemoryCommand) {
+
+                        activeJourney.questions.push(question);
+                    }
                 }
 
                 if (
