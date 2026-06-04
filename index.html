@@ -1062,6 +1062,36 @@ ${activeJourney.answers.length}
 
                 if (
                     activeJourney &&
+                    noteQuestion.startsWith("save medication:")
+                ) {
+
+                    const medication = question
+                        .replace(/save medication:/i, "")
+                        .trim();
+
+                    activeJourney.medications.push(
+                        medication
+                    );
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>💊 Medication Saved</strong>
+
+    <br><br>
+
+    ${medication}
+
+    <br><br>
+
+    I'll remember that for this journey.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
                     (
                         noteQuestion === "show my notes" ||
                         noteQuestion === "show notes" ||
