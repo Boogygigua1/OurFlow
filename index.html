@@ -1514,6 +1514,20 @@ ${index + 1}. ${note}<br><br>
         <br><br>
     `;
 
+            html += `
+<strong>📝 Notes:</strong>
+
+<br><br>
+
+${journey.notes && journey.notes.length
+                    ? journey.notes.map(note =>
+                        `• ${note}<br>`
+                    ).join("")
+                    : "No notes recorded"}
+
+<br><br>
+`;
+
             journey.questions.forEach((question, i) => {
 
                 html += `
