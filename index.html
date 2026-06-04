@@ -1079,7 +1079,14 @@ ${activeJourney.answers.length}
                         destinationUpdate.includes("i found it") ||
                         destinationUpdate.includes("the address is") ||
                         destinationUpdate.includes("it says") ||
-                        destinationUpdate.includes("this is the address")
+                        destinationUpdate.includes("this is the address") ||
+                        destinationUpdate.includes("found it") ||
+                        destinationUpdate.includes("found the address") ||
+                        destinationUpdate.includes("i found the address") ||
+                        destinationUpdate.includes("located at") ||
+                        destinationUpdate.includes("265 cohasset") ||
+                        destinationUpdate.includes("cohasset rd")
+
                     )
                 ) {
                     activeJourney.destination = question;
