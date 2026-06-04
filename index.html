@@ -1029,6 +1029,52 @@ ${activeJourney.answers.length}
                 }
 
                 if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show my notes" ||
+                        noteQuestion === "show notes" ||
+                        noteQuestion === "what notes do i have"
+                    )
+                ) {
+
+                    if (activeJourney.notes.length === 0) {
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>📝 Notes</strong>
+
+    <br><br>
+
+    No notes saved for this journey yet.
+</div>
+`;
+
+                        return;
+                    }
+
+                    let notesHtml = "";
+
+                    activeJourney.notes.forEach((note, index) => {
+
+                        notesHtml += `
+${index + 1}. ${note}<br><br>
+`;
+                    });
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>📝 Notes</strong>
+
+    <br><br>
+
+    ${notesHtml}
+</div>
+`;
+
+                    return;
+                }
+
+                if (
                     recallQuestion.includes("where did i park") ||
                     recallQuestion.includes("where am i parked") ||
                     recallQuestion.includes("were did i park") ||
