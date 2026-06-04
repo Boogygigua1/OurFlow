@@ -1697,6 +1697,21 @@ ${journey.questionsForDoctor &&
 <br><br>
 `;
 
+            html += `
+<strong>💊 Medications:</strong>
+
+<br><br>
+
+${journey.medications &&
+                    journey.medications.length
+                    ? journey.medications.map(medication =>
+                        `• ${medication}<br>`
+                    ).join("")
+                    : "No medications recorded"}
+
+<br><br>
+`;
+
             journey.questions.forEach((question, i) => {
 
                 html += `
