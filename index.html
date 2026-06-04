@@ -1012,6 +1012,48 @@ ${activeJourney.answers.length}
                         return;
                     }
                 }
+                
+                const navigationSearch =
+                    question.toLowerCase();
+
+                if (
+                    navigationSearch.includes("where is") ||
+                    navigationSearch.includes("where's") ||
+                    navigationSearch.includes("directions to") ||
+                    navigationSearch.includes("how do i get to") ||
+                    navigationSearch.includes("route to") ||
+                    navigationSearch.includes("take me to")
+                ) {
+                    const placeResponse = await fetch("/api/searchPlace", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            query: question
+                        })
+                    });
+
+                    const placeData = await placeResponse.json();
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>🧭 Verified Map Search</strong>
+    <br><br>
+    I should not guess exact directions without verified map data.
+    <br><br>
+    Open this map search:
+    <br><br>
+    <a href="${placeData.mapUrl}" target="_blank">
+        Search Google Maps
+    </a>
+    <br><br>
+    After you open it, come back and tell me what you see.
+</div>
+`;
+
+                    return;
+                }
 
                 const response = await fetch("/api/askOurFlow", {
                     method: "POST",
