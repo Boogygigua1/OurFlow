@@ -192,12 +192,13 @@
 
     <input type="text" id="questionInput" placeholder="Where do you need help?" onkeydown="handleKey(event)">
 
-    <button onclick="startVoiceInput()" style="
+    <!-- <button onclick="startVoiceInput()" style="
     margin-top:10px;
     margin-bottom:10px;
 ">
         🎤 Speak
     </button>
+-->
 
     <input type="file" id="landmarkImage" accept="image/*" capture="environment" onchange="analyzeLandmarkImage()"
         style="
@@ -472,9 +473,21 @@ margin-right:auto;
                 const transcript =
                     event.results[0][0].transcript;
 
-                document.getElementById(
-                    "questionInput"
-                ).value = transcript;
+                const input =
+                    document.getElementById("questionInput");
+
+                const start = input.selectionStart;
+                const end = input.selectionEnd;
+
+                input.value =
+                    input.value.substring(0, start) +
+                    transcript +
+                    " " +
+                    input.value.substring(end);
+
+                input.selectionStart =
+                    input.selectionEnd =
+                    start + transcript.length + 1;
             };
 
             recognition.onerror = function (event) {
@@ -877,6 +890,9 @@ ${activeJourney.answers.length}
                     const anthroMatch =
                         question.match(/anthropology|anthro lab|anthro|anthro\. dep/i);
 
+                    const hospitalMatch =
+                        question.match(/hospital|hematology|enloe|emergency room|er/i);
+
                     if (teaMatch) {
                         activeJourney.destination = "Tea Bar";
                     }
@@ -888,6 +904,11 @@ ${activeJourney.answers.length}
                     if (anthroMatch) {
                         activeJourney.destination =
                             "Anthropology Lab";
+                    }
+
+                    if (hospitalMatch) {
+                        activeJourney.destination =
+                            "Hospital Visit";
                     }
 
 
