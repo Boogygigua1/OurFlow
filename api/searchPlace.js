@@ -13,8 +13,14 @@ export default async function handler(req, res) {
         });
     }
 
+    const cleanQuery =
+        query
+            .replace(/entrance parking directions/gi, "")
+            .replace(/reviews/gi, "")
+            .trim();
+
     const searchQuery =
-        query + " entrance parking directions reviews";
+        cleanQuery + " entrance parking directions reviews";
 
     const mapUrl =
         "https://www.google.com/maps/search/?api=1&query=" +
