@@ -668,8 +668,6 @@ margin-right:auto;
 
         // AI 
 
-        // AI
-
         let landmarkImageData = "";
 
         let conversationHistory = [];
@@ -683,6 +681,43 @@ margin-right:auto;
 
         let JOURNEY_LIMIT =
             parseInt(localStorage.getItem("journeyLimit")) || 5;
+
+        function showActiveJourneyBox() {
+            if (!activeJourney) {
+                return;
+            }
+
+            result.innerHTML = `
+<div class="card">
+    <strong>🧭 Active Journey</strong>
+
+    <br><br>
+
+    <strong>Destination:</strong><br>
+    ${activeJourney.destination || "Not set yet"}
+
+    <br><br>
+
+    <strong>Arrival Help:</strong><br>
+    ${activeJourney.arrivalTips || "No arrival tips yet."}
+
+    <br><br>
+
+    <strong>Start Location:</strong><br>
+    ${activeJourney.startLocation || "Start location not saved yet."}
+
+    <br><br>
+
+    <button onclick="openGoogleMapsForJourney()">
+        Open Google Maps
+    </button>
+
+    <button onclick="saveJourney()">
+        Save Journey
+    </button>
+</div>
+`;
+        }
 
         function analyzeUserQuestion(question) {
             const text = question.toLowerCase();
@@ -775,7 +810,15 @@ margin-right:auto;
 
                     parkingLocation: "",
 
+                    arrivalTips: "",
+
+                    mapLink: "",
+
                     questions: [],
+
+                    arrivalTips: "",
+
+                    mapLink: "",
 
                     answers: [],
 
