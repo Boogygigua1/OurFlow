@@ -1765,6 +1765,39 @@ ${index + 1}. ${instruction}<br><br>
                     return;
                 }
 
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion.includes("suite") ||
+                        noteQuestion.includes("department") ||
+                        noteQuestion.includes("hematology") ||
+                        noteQuestion.includes("elevator") ||
+                        noteQuestion.includes("directory") ||
+                        noteQuestion.includes("check-in") ||
+                        noteQuestion.includes("reception")
+                    )
+                ) {
+                    activeJourney.directories.push(question);
+
+                    showActiveJourneyBox();
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>🏢 Directory Info Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I'll remember this for finding the right office or department.
+</div>
+`;
+
+                    return;
+                }
+
                 const parkingQuestion = question.toLowerCase();
 
                 if (
