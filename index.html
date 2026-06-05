@@ -1824,6 +1824,37 @@ ${index + 1}. ${instruction}<br><br>
     ${journey.answers.length}
 </div>
 
+<br><br>
+
+<strong>🧭 Quick Summary</strong>
+
+<br><br>
+
+${journey.notes &&
+                    journey.notes.length
+                    ? `<strong>📝 Notes:</strong><br>${journey.notes.map(n => `• ${n}<br>`).join("")}<br>`
+                    : ""}
+
+${journey.questionsForDoctor &&
+                    journey.questionsForDoctor.length
+                    ? `<strong>❓ Questions:</strong><br>${journey.questionsForDoctor.map(q => `• ${q}<br>`).join("")}<br>`
+                    : ""}
+
+${journey.medications &&
+                    journey.medications.length
+                    ? `<strong>💊 Medications:</strong><br>${journey.medications.map(m => `• ${m}<br>`).join("")}<br>`
+                    : ""}
+
+${journey.appointments &&
+                    journey.appointments.length
+                    ? `<strong>📅 Appointments:</strong><br>${journey.appointments.map(a => `• ${a}<br>`).join("")}<br>`
+                    : ""}
+
+${journey.staffInstructions &&
+                    journey.staffInstructions.length
+                    ? `<strong>👩‍⚕️ Instructions:</strong><br>${journey.staffInstructions.map(i => `• ${i}<br>`).join("")}<br>`
+                    : ""}
+
 <hr>
 
         <strong>Destination:</strong>
@@ -1996,8 +2027,34 @@ ${journey.staffInstructions &&
                 const title =
                     item.dataset.journey.toLowerCase();
 
+                const index =
+                    parseInt(
+                        item.querySelector("button")
+                            .getAttribute("onclick")
+                            .match(/\d+/)[0]
+                    );
+
+                const journey =
+                    savedJourneys[index];
+
+                const searchableText = `
+
+${journey.destination || ""}
+
+${journey.notes?.join(" ") || ""}
+
+${journey.questionsForDoctor?.join(" ") || ""}
+
+${journey.medications?.join(" ") || ""}
+
+${journey.appointments?.join(" ") || ""}
+
+${journey.staffInstructions?.join(" ") || ""}
+
+`.toLowerCase();
+
                 item.style.display =
-                    title.includes(search)
+                    searchableText.includes(search)
                         ? "block"
                         : "none";
             });
