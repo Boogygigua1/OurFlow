@@ -1911,6 +1911,21 @@ ${journey.appointments &&
 <br><br>
 `;
 
+            html += `
+<strong>👩‍⚕️ Instructions:</strong>
+
+<br><br>
+
+${journey.staffInstructions &&
+                    journey.staffInstructions.length
+                    ? journey.staffInstructions.map(instruction =>
+                        `• ${instruction}<br>`
+                    ).join("")
+                    : "No instructions recorded"}
+
+<br><br>
+`;
+
             journey.questions.forEach((question, i) => {
 
                 html += `
