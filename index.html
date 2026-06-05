@@ -1000,23 +1000,23 @@ margin-right:auto;
 
                 }
 
-                    const endQuestion = question.toLowerCase().trim();
+                const endQuestion = question.toLowerCase().trim();
 
-                    if (
-                        activeJourney &&
-                        (
-                            endQuestion.includes("i made it") ||
-                            endQuestion.includes("i've arrived") ||
-                            endQuestion.includes("ive arrived") ||
-                            endQuestion.includes("i got here") ||
-                            endQuestion.includes("i'm here") ||
-                            endQuestion.includes("im here")
-                        )
-                    ) {
+                if (
+                    activeJourney &&
+                    (
+                        endQuestion.includes("i made it") ||
+                        endQuestion.includes("i've arrived") ||
+                        endQuestion.includes("ive arrived") ||
+                        endQuestion.includes("i got here") ||
+                        endQuestion.includes("i'm here") ||
+                        endQuestion.includes("im here")
+                    )
+                ) {
 
-                        activeJourney.journeyStatus = "arrived";
+                    activeJourney.journeyStatus = "arrived";
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🧭 Destination Reached</strong>
 
@@ -1036,47 +1036,47 @@ margin-right:auto;
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        endQuestion === "end journey" ||
-                        endQuestion.includes("all set") ||
-                        endQuestion.includes("finished") ||
-                        endQuestion.includes("that's all") ||
-                        endQuestion.includes("thats all") ||
-                        endQuestion.includes("no thanks")
-                    ) {
+                if (
+                    endQuestion === "end journey" ||
+                    endQuestion.includes("all set") ||
+                    endQuestion.includes("finished") ||
+                    endQuestion.includes("that's all") ||
+                    endQuestion.includes("thats all") ||
+                    endQuestion.includes("no thanks")
+                ) {
 
-                        /* END JOURNEY BLOCK HERE */
+                    /* END JOURNEY BLOCK HERE */
 
 
 
-                        if (!activeJourney) {
+                    if (!activeJourney) {
 
-                            result.innerHTML = `
+                        result.innerHTML = `
         <div class="card">
             <strong>🧭 OurFlow</strong><br><br>
             No active journey to end.
         </div>
         `;
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        activeJourney.endTime =
-                            new Date().toLocaleString();
+                    activeJourney.endTime =
+                        new Date().toLocaleString();
 
 
-                        const start = new Date(activeJourney.startTime);
-                        const end = new Date(activeJourney.endTime);
+                    const start = new Date(activeJourney.startTime);
+                    const end = new Date(activeJourney.endTime);
 
-                        const minutes =
-                            Math.round((end - start) / 60000);
+                    const minutes =
+                        Math.round((end - start) / 60000);
 
-                        activeJourney.duration = minutes;
+                    activeJourney.duration = minutes;
 
-                        result.innerHTML = `
+                    result.innerHTML = `
     <div class="card">
         <strong>🧭 Journey Ended</strong><br><br>
 
@@ -1112,109 +1112,109 @@ ${activeJourney.answers.length}
     </div>
     `;
 
-                        return;
+                    return;
+                }
+
+                if (activeJourney) {
+
+                    const lowerQuestion =
+                        question.toLowerCase();
+
+                    const isMemoryCommand =
+
+                        lowerQuestion.startsWith("save appointment:") ||
+
+                        lowerQuestion === "show my appointments" ||
+
+                        lowerQuestion === "show appointments" ||
+
+                        lowerQuestion.startsWith("save instruction:") ||
+
+                        lowerQuestion === "show my instructions" ||
+
+                        lowerQuestion === "show instructions" ||
+
+                        lowerQuestion.startsWith("save note:") ||
+
+                        lowerQuestion.startsWith("save directory:") ||
+
+                        lowerQuestion.startsWith("save question:") ||
+
+                        lowerQuestion.startsWith("save medication:") ||
+
+                        lowerQuestion === "show my notes" ||
+
+                        lowerQuestion === "show notes" ||
+
+                        lowerQuestion === "show my questions" ||
+
+                        lowerQuestion === "show questions" ||
+
+                        lowerQuestion === "show my medications" ||
+
+                        lowerQuestion === "show medications";
+
+                    if (!isMemoryCommand) {
+
+                        activeJourney.questions.push(question);
+                    }
+                }
+
+                if (
+                    activeJourney &&
+                    activeJourney.destination === "Untitled Journey"
+                ) {
+
+                    const teaMatch =
+                        question.match(/tea bar/i);
+
+                    const chicoMatch =
+                        question.match(/chico state/i);
+
+                    const anthroMatch =
+                        question.match(/anthropology|anthro lab|anthro|anthro\. dep/i);
+
+                    const hospitalMatch =
+                        question.match(/hospital|hematology|enloe|emergency room|er/i);
+
+                    if (teaMatch) {
+                        activeJourney.destination = "Tea Bar";
                     }
 
-                    if (activeJourney) {
-
-                        const lowerQuestion =
-                            question.toLowerCase();
-
-                        const isMemoryCommand =
-
-                            lowerQuestion.startsWith("save appointment:") ||
-
-                            lowerQuestion === "show my appointments" ||
-
-                            lowerQuestion === "show appointments" ||
-
-                            lowerQuestion.startsWith("save instruction:") ||
-
-                            lowerQuestion === "show my instructions" ||
-
-                            lowerQuestion === "show instructions" ||
-
-                            lowerQuestion.startsWith("save note:") ||
-
-                            lowerQuestion.startsWith("save directory:") ||
-
-                            lowerQuestion.startsWith("save question:") ||
-
-                            lowerQuestion.startsWith("save medication:") ||
-
-                            lowerQuestion === "show my notes" ||
-
-                            lowerQuestion === "show notes" ||
-
-                            lowerQuestion === "show my questions" ||
-
-                            lowerQuestion === "show questions" ||
-
-                            lowerQuestion === "show my medications" ||
-
-                            lowerQuestion === "show medications";
-
-                        if (!isMemoryCommand) {
-
-                            activeJourney.questions.push(question);
-                        }
+                    if (chicoMatch) {
+                        activeJourney.destination = "Chico State";
                     }
 
-                    if (
-                        activeJourney &&
-                        activeJourney.destination === "Untitled Journey"
-                    ) {
+                    if (anthroMatch) {
+                        activeJourney.destination =
+                            "Anthropology Lab";
+                    }
 
-                        const teaMatch =
-                            question.match(/tea bar/i);
-
-                        const chicoMatch =
-                            question.match(/chico state/i);
-
-                        const anthroMatch =
-                            question.match(/anthropology|anthro lab|anthro|anthro\. dep/i);
-
-                        const hospitalMatch =
-                            question.match(/hospital|hematology|enloe|emergency room|er/i);
-
-                        if (teaMatch) {
-                            activeJourney.destination = "Tea Bar";
-                        }
-
-                        if (chicoMatch) {
-                            activeJourney.destination = "Chico State";
-                        }
-
-                        if (anthroMatch) {
-                            activeJourney.destination =
-                                "Anthropology Lab";
-                        }
-
-                        if (hospitalMatch) {
-                            activeJourney.destination =
-                                "Hospital Visit";
-                        }
-
-
+                    if (hospitalMatch) {
+                        activeJourney.destination =
+                            "Hospital Visit";
                     }
 
 
-                    const recallQuestion = question.toLowerCase();
+                }
 
-                    const noteQuestion = question.toLowerCase();
 
-                    if (
-                        activeJourney &&
-                        noteQuestion.startsWith("save note:")
-                    ) {
+                const recallQuestion = question.toLowerCase();
 
-                        const note = question
-                            .replace(/save note:/i, "")
-                            .trim();
+                const noteQuestion = question.toLowerCase();
 
-                        activeJourney.notes.push(note);
+                if (
+                    activeJourney &&
+                    noteQuestion.startsWith("save note:")
+                ) {
 
-                        result.innerHTML = `
+                    const note = question
+                        .replace(/save note:/i, "")
+                        .trim();
+
+                    activeJourney.notes.push(note);
+
+                    result.innerHTML = `
 <div class="card">
     <strong>📝 Note Saved</strong>
 
@@ -1228,25 +1228,25 @@ ${activeJourney.answers.length}
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        noteQuestion.startsWith("save question:")
-                    ) {
+                if (
+                    activeJourney &&
+                    noteQuestion.startsWith("save question:")
+                ) {
 
-                        console.log("SAVE QUESTION BLOCK FIRED");
+                    console.log("SAVE QUESTION BLOCK FIRED");
 
-                        const doctorQuestion = question
-                            .replace(/save question:/i, "")
-                            .trim();
+                    const doctorQuestion = question
+                        .replace(/save question:/i, "")
+                        .trim();
 
-                        activeJourney.questionsForDoctor.push(
-                            doctorQuestion
-                        );
+                    activeJourney.questionsForDoctor.push(
+                        doctorQuestion
+                    );
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>❓ Question Saved</strong>
 
@@ -1260,23 +1260,23 @@ ${activeJourney.answers.length}
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        noteQuestion.startsWith("save medication:")
-                    ) {
+                if (
+                    activeJourney &&
+                    noteQuestion.startsWith("save medication:")
+                ) {
 
-                        const medication = question
-                            .replace(/save medication:/i, "")
-                            .trim();
+                    const medication = question
+                        .replace(/save medication:/i, "")
+                        .trim();
 
-                        activeJourney.medications.push(
-                            medication
-                        );
+                    activeJourney.medications.push(
+                        medication
+                    );
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>💊 Medication Saved</strong>
 
@@ -1290,23 +1290,23 @@ ${activeJourney.answers.length}
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        noteQuestion.startsWith("save directory:")
-                    ) {
+                if (
+                    activeJourney &&
+                    noteQuestion.startsWith("save directory:")
+                ) {
 
-                        const directory = question
-                            .replace(/save directory:/i, "")
-                            .trim();
+                    const directory = question
+                        .replace(/save directory:/i, "")
+                        .trim();
 
-                        activeJourney.directories.push(directory);
+                    activeJourney.directories.push(directory);
 
-                        showActiveJourneyBox();
+                    showActiveJourneyBox();
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🏢 Directory Saved</strong>
 
@@ -1320,23 +1320,23 @@ ${activeJourney.answers.length}
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        noteQuestion.startsWith("save appointment:")
-                    ) {
+                if (
+                    activeJourney &&
+                    noteQuestion.startsWith("save appointment:")
+                ) {
 
-                        const appointment = question
-                            .replace(/save appointment:/i, "")
-                            .trim();
+                    const appointment = question
+                        .replace(/save appointment:/i, "")
+                        .trim();
 
-                        activeJourney.appointments.push(
-                            appointment
-                        );
+                    activeJourney.appointments.push(
+                        appointment
+                    );
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>📅 Appointment Saved</strong>
 
@@ -1350,23 +1350,23 @@ ${activeJourney.answers.length}
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        noteQuestion.startsWith("save instruction:")
-                    ) {
+                if (
+                    activeJourney &&
+                    noteQuestion.startsWith("save instruction:")
+                ) {
 
-                        const instruction = question
-                            .replace(/save instruction:/i, "")
-                            .trim();
+                    const instruction = question
+                        .replace(/save instruction:/i, "")
+                        .trim();
 
-                        activeJourney.staffInstructions.push(
-                            instruction
-                        );
+                    activeJourney.staffInstructions.push(
+                        instruction
+                    );
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>👩‍⚕️ Instruction Saved</strong>
 
@@ -1380,24 +1380,24 @@ ${activeJourney.answers.length}
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        noteQuestion.startsWith("save start location:")
-                    ) {
+                if (
+                    activeJourney &&
+                    noteQuestion.startsWith("save start location:")
+                ) {
 
-                        const startLocation = question
-                            .replace(/save start location:/i, "")
-                            .trim();
+                    const startLocation = question
+                        .replace(/save start location:/i, "")
+                        .trim();
 
-                        activeJourney.startLocation =
-                            startLocation;
+                    activeJourney.startLocation =
+                        startLocation;
 
-                        showActiveJourneyBox();
+                    showActiveJourneyBox();
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🧭 Start Location Saved</strong>
 
@@ -1411,21 +1411,21 @@ ${activeJourney.answers.length}
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        (
-                            noteQuestion === "show directories" ||
-                            noteQuestion === "show my directories" ||
-                            noteQuestion === "what directories do i have"
-                        )
-                    ) {
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show directories" ||
+                        noteQuestion === "show my directories" ||
+                        noteQuestion === "what directories do i have"
+                    )
+                ) {
 
-                        if (!activeJourney.directories || activeJourney.directories.length === 0) {
+                    if (!activeJourney.directories || activeJourney.directories.length === 0) {
 
-                            result.innerHTML = `
+                        result.innerHTML = `
 <div class="card">
     <strong>🏢 Directories</strong>
 
@@ -1435,19 +1435,19 @@ ${activeJourney.answers.length}
 </div>
 `;
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        let directoriesHtml = "";
+                    let directoriesHtml = "";
 
-                        activeJourney.directories.forEach((directory, index) => {
+                    activeJourney.directories.forEach((directory, index) => {
 
-                            directoriesHtml += `
+                        directoriesHtml += `
 ${index + 1}. ${directory}<br><br>
 `;
-                        });
+                    });
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🏢 Saved Directory Information</strong>
 
@@ -1457,21 +1457,21 @@ ${index + 1}. ${directory}<br><br>
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        (
-                            noteQuestion === "show my notes" ||
-                            noteQuestion === "show notes" ||
-                            noteQuestion === "what notes do i have"
-                        )
-                    ) {
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show my notes" ||
+                        noteQuestion === "show notes" ||
+                        noteQuestion === "what notes do i have"
+                    )
+                ) {
 
-                        if (activeJourney.notes.length === 0) {
+                    if (activeJourney.notes.length === 0) {
 
-                            result.innerHTML = `
+                        result.innerHTML = `
 <div class="card">
     <strong>📝 Notes</strong>
 
@@ -1481,19 +1481,19 @@ ${index + 1}. ${directory}<br><br>
 </div>
 `;
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        let notesHtml = "";
+                    let notesHtml = "";
 
-                        activeJourney.notes.forEach((note, index) => {
+                    activeJourney.notes.forEach((note, index) => {
 
-                            notesHtml += `
+                        notesHtml += `
 ${index + 1}. ${note}<br><br>
 `;
-                        });
+                    });
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>📝 Notes</strong>
 
@@ -1503,21 +1503,21 @@ ${index + 1}. ${note}<br><br>
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        (
-                            noteQuestion === "show my questions" ||
-                            noteQuestion === "show questions" ||
-                            noteQuestion === "what questions do i have"
-                        )
-                    ) {
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show my questions" ||
+                        noteQuestion === "show questions" ||
+                        noteQuestion === "what questions do i have"
+                    )
+                ) {
 
-                        if (activeJourney.questionsForDoctor.length === 0) {
+                    if (activeJourney.questionsForDoctor.length === 0) {
 
-                            result.innerHTML = `
+                        result.innerHTML = `
 <div class="card">
     <strong>❓ Saved Questions</strong>
 
@@ -1527,19 +1527,19 @@ ${index + 1}. ${note}<br><br>
 </div>
 `;
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        let questionsHtml = "";
+                    let questionsHtml = "";
 
-                        activeJourney.questionsForDoctor.forEach((question, index) => {
+                    activeJourney.questionsForDoctor.forEach((question, index) => {
 
-                            questionsHtml += `
+                        questionsHtml += `
 ${index + 1}. ${question}<br><br>
 `;
-                        });
+                    });
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>❓ Saved Questions</strong>
 
@@ -1549,21 +1549,21 @@ ${index + 1}. ${question}<br><br>
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        (
-                            noteQuestion === "show my medications" ||
-                            noteQuestion === "show medications" ||
-                            noteQuestion === "what medications do i have"
-                        )
-                    ) {
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show my medications" ||
+                        noteQuestion === "show medications" ||
+                        noteQuestion === "what medications do i have"
+                    )
+                ) {
 
-                        if (activeJourney.medications.length === 0) {
+                    if (activeJourney.medications.length === 0) {
 
-                            result.innerHTML = `
+                        result.innerHTML = `
 <div class="card">
     <strong>💊 Medications</strong>
 
@@ -1573,19 +1573,19 @@ ${index + 1}. ${question}<br><br>
 </div>
 `;
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        let medicationsHtml = "";
+                    let medicationsHtml = "";
 
-                        activeJourney.medications.forEach((medication, index) => {
+                    activeJourney.medications.forEach((medication, index) => {
 
-                            medicationsHtml += `
+                        medicationsHtml += `
 ${index + 1}. ${medication}<br><br>
 `;
-                        });
+                    });
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>💊 Medications</strong>
 
@@ -1595,21 +1595,21 @@ ${index + 1}. ${medication}<br><br>
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        (
-                            noteQuestion === "show my appointments" ||
-                            noteQuestion === "show appointments" ||
-                            noteQuestion === "what appointments do i have"
-                        )
-                    ) {
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show my appointments" ||
+                        noteQuestion === "show appointments" ||
+                        noteQuestion === "what appointments do i have"
+                    )
+                ) {
 
-                        if (activeJourney.appointments.length === 0) {
+                    if (activeJourney.appointments.length === 0) {
 
-                            result.innerHTML = `
+                        result.innerHTML = `
 <div class="card">
     <strong>📅 Appointments</strong>
 
@@ -1619,19 +1619,19 @@ ${index + 1}. ${medication}<br><br>
 </div>
 `;
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        let appointmentsHtml = "";
+                    let appointmentsHtml = "";
 
-                        activeJourney.appointments.forEach((appointment, index) => {
+                    activeJourney.appointments.forEach((appointment, index) => {
 
-                            appointmentsHtml += `
+                        appointmentsHtml += `
 ${index + 1}. ${appointment}<br><br>
 `;
-                        });
+                    });
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>📅 Appointments</strong>
 
@@ -1641,21 +1641,21 @@ ${index + 1}. ${appointment}<br><br>
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        (
-                            noteQuestion === "show my instructions" ||
-                            noteQuestion === "show instructions" ||
-                            noteQuestion === "what instructions do i have"
-                        )
-                    ) {
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show my instructions" ||
+                        noteQuestion === "show instructions" ||
+                        noteQuestion === "what instructions do i have"
+                    )
+                ) {
 
-                        if (activeJourney.staffInstructions.length === 0) {
+                    if (activeJourney.staffInstructions.length === 0) {
 
-                            result.innerHTML = `
+                        result.innerHTML = `
 <div class="card">
     <strong>👩‍⚕️ Instructions</strong>
 
@@ -1665,19 +1665,19 @@ ${index + 1}. ${appointment}<br><br>
 </div>
 `;
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        let instructionsHtml = "";
+                    let instructionsHtml = "";
 
-                        activeJourney.staffInstructions.forEach((instruction, index) => {
+                    activeJourney.staffInstructions.forEach((instruction, index) => {
 
-                            instructionsHtml += `
+                        instructionsHtml += `
 ${index + 1}. ${instruction}<br><br>
 `;
-                        });
+                    });
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>👩‍⚕️ Instructions</strong>
 
@@ -1687,30 +1687,30 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        recallQuestion.includes("where did i park") ||
-                        recallQuestion.includes("where am i parked") ||
-                        recallQuestion.includes("were did i park") ||
-                        recallQuestion.includes("where's my car") ||
-                        recallQuestion.includes("where is my car") ||
-                        recallQuestion.includes("find my car") ||
-                        recallQuestion.includes("take me back to my car") ||
-                        recallQuestion.includes("return me to my car") ||
-                        recallQuestion.includes("get me back to my car") ||
-                        recallQuestion.includes("help me find my car") ||
-                        recallQuestion.includes("i forgot where i parked")
-                    ) {
+                if (
+                    recallQuestion.includes("where did i park") ||
+                    recallQuestion.includes("where am i parked") ||
+                    recallQuestion.includes("were did i park") ||
+                    recallQuestion.includes("where's my car") ||
+                    recallQuestion.includes("where is my car") ||
+                    recallQuestion.includes("find my car") ||
+                    recallQuestion.includes("take me back to my car") ||
+                    recallQuestion.includes("return me to my car") ||
+                    recallQuestion.includes("get me back to my car") ||
+                    recallQuestion.includes("help me find my car") ||
+                    recallQuestion.includes("i forgot where i parked")
+                ) {
 
-                        if (activeJourney?.parkingLocation) {
+                    if (activeJourney?.parkingLocation) {
 
-                            activeJourney.answers.push(
-                                activeJourney.parkingLocation
-                            );
+                        activeJourney.answers.push(
+                            activeJourney.parkingLocation
+                        );
 
-                            result.innerHTML = `
+                        result.innerHTML = `
 <div class="card">
     <strong>🚗 Vehicle Location</strong>
 
@@ -1728,12 +1728,12 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                            return;
-                        }
+                        return;
+                    }
 
 
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>📍 Parking Reminder</strong>
 
@@ -1743,19 +1743,19 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        recallQuestion.includes("take me back to where i started") ||
-                        recallQuestion.includes("where did i start") ||
-                        recallQuestion.includes("return me to my starting location") ||
-                        recallQuestion.includes("take me back to my starting location")
-                    ) {
+                if (
+                    recallQuestion.includes("take me back to where i started") ||
+                    recallQuestion.includes("where did i start") ||
+                    recallQuestion.includes("return me to my starting location") ||
+                    recallQuestion.includes("take me back to my starting location")
+                ) {
 
-                        if (activeJourney?.startLocation) {
+                    if (activeJourney?.startLocation) {
 
-                            result.innerHTML = `
+                        result.innerHTML = `
 <div class="card">
     <strong>🧭 Starting Location</strong>
 
@@ -1773,10 +1773,10 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🧭 Starting Location</strong>
 
@@ -1786,26 +1786,26 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (
-                        activeJourney &&
-                        (
-                            noteQuestion.includes("suite") ||
-                            noteQuestion.includes("department") ||
-                            noteQuestion.includes("hematology") ||
-                            noteQuestion.includes("elevator") ||
-                            noteQuestion.includes("directory") ||
-                            noteQuestion.includes("check-in") ||
-                            noteQuestion.includes("reception")
-                        )
-                    ) {
-                        activeJourney.directories.push(question);
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion.includes("suite") ||
+                        noteQuestion.includes("department") ||
+                        noteQuestion.includes("hematology") ||
+                        noteQuestion.includes("elevator") ||
+                        noteQuestion.includes("directory") ||
+                        noteQuestion.includes("check-in") ||
+                        noteQuestion.includes("reception")
+                    )
+                ) {
+                    activeJourney.directories.push(question);
 
-                        showActiveJourneyBox();
+                    showActiveJourneyBox();
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🏢 Directory Info Saved</strong>
 
@@ -1819,42 +1819,42 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
-                    const parkingQuestion = question.toLowerCase();
+                const parkingQuestion = question.toLowerCase();
 
-                    if (
-                        parkingQuestion.startsWith("parking location:") ||
-                        parkingQuestion.startsWith("save parking:") ||
-                        parkingQuestion.startsWith("my parking is:") ||
-                        parkingQuestion.includes("my car is") ||
-                        parkingQuestion.includes("i left my car") ||
-                        parkingQuestion.includes("i parked") ||
-                        parkingQuestion.includes("parked on") ||
-                        parkingQuestion.includes("parked near") ||
-                        parkingQuestion.includes("parked at") ||
-                        parkingQuestion.includes("my car is parked") ||
-                        parkingQuestion.includes("my vehicle is parked") ||
-                        parkingQuestion.includes("i parked") ||
-                        parkingQuestion.includes("my car is parked") ||
-                        parkingQuestion.includes("my vehicle is parked") ||
-                        parkingQuestion.includes("near the elevator") ||
-                        parkingQuestion.includes("near elevator") ||
-                        parkingQuestion.includes("near the stairs") ||
-                        parkingQuestion.includes("by the stairs") ||
-                        parkingQuestion.includes("parking structure")
-                    ) {
+                if (
+                    parkingQuestion.startsWith("parking location:") ||
+                    parkingQuestion.startsWith("save parking:") ||
+                    parkingQuestion.startsWith("my parking is:") ||
+                    parkingQuestion.includes("my car is") ||
+                    parkingQuestion.includes("i left my car") ||
+                    parkingQuestion.includes("i parked") ||
+                    parkingQuestion.includes("parked on") ||
+                    parkingQuestion.includes("parked near") ||
+                    parkingQuestion.includes("parked at") ||
+                    parkingQuestion.includes("my car is parked") ||
+                    parkingQuestion.includes("my vehicle is parked") ||
+                    parkingQuestion.includes("i parked") ||
+                    parkingQuestion.includes("my car is parked") ||
+                    parkingQuestion.includes("my vehicle is parked") ||
+                    parkingQuestion.includes("near the elevator") ||
+                    parkingQuestion.includes("near elevator") ||
+                    parkingQuestion.includes("near the stairs") ||
+                    parkingQuestion.includes("by the stairs") ||
+                    parkingQuestion.includes("parking structure")
+                ) {
 
-                        if (activeJourney) {
+                    if (activeJourney) {
 
-                            activeJourney.parkingLocation = question;
+                        activeJourney.parkingLocation = question;
 
-                            activeJourney.answers.push(
-                                "Parking location saved."
-                            );
+                        activeJourney.answers.push(
+                            "Parking location saved."
+                        );
 
-                            result.innerHTML = `
+                        result.innerHTML = `
 <div class="card">
     <strong>📍 Parking Location Saved</strong>
 
@@ -1868,39 +1868,39 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                            return;
-                        }
+                        return;
                     }
+                }
 
-                    const destinationUpdate =
-                        question.toLowerCase();
+                const destinationUpdate =
+                    question.toLowerCase();
 
-                    if (
-                        activeJourney &&
-                        (
-                            destinationUpdate.includes("i'm going here") ||
-                            destinationUpdate.includes("im going here") ||
-                            destinationUpdate.includes("i found it") ||
-                            destinationUpdate.includes("the address is") ||
-                            destinationUpdate.includes("it says") ||
-                            destinationUpdate.includes("this is the address") ||
-                            destinationUpdate.includes("found it") ||
-                            destinationUpdate.includes("found the address") ||
-                            destinationUpdate.includes("i found the address") ||
-                            destinationUpdate.includes("located at") ||
-                            destinationUpdate.includes("265 cohasset") ||
-                            destinationUpdate.includes("here it is") ||
-                            destinationUpdate.includes("cohasset rd")
+                if (
+                    activeJourney &&
+                    (
+                        destinationUpdate.includes("i'm going here") ||
+                        destinationUpdate.includes("im going here") ||
+                        destinationUpdate.includes("i found it") ||
+                        destinationUpdate.includes("the address is") ||
+                        destinationUpdate.includes("it says") ||
+                        destinationUpdate.includes("this is the address") ||
+                        destinationUpdate.includes("found it") ||
+                        destinationUpdate.includes("found the address") ||
+                        destinationUpdate.includes("i found the address") ||
+                        destinationUpdate.includes("located at") ||
+                        destinationUpdate.includes("265 cohasset") ||
+                        destinationUpdate.includes("here it is") ||
+                        destinationUpdate.includes("cohasset rd")
 
-                        )
-                    ) {
-                        activeJourney.destination = question;
+                    )
+                ) {
+                    activeJourney.destination = question;
 
-                        activeJourney.answers.push(
-                            "Destination updated."
-                        );
+                    activeJourney.answers.push(
+                        "Destination updated."
+                    );
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🧭 Destination Updated</strong>
     <br><br>
@@ -1912,62 +1912,62 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                        return;
-                    }
+                    return;
+                }
 
 
-                    const navigationSearch =
-                        question.toLowerCase();
+                const navigationSearch =
+                    question.toLowerCase();
+
+                if (
+                    navigationSearch.includes("where is") ||
+                    navigationSearch.includes("where's") ||
+                    navigationSearch.includes("directions") ||
+                    navigationSearch.includes("route") ||
+                    navigationSearch.includes("fastest route") ||
+                    navigationSearch.includes("walking to") ||
+                    navigationSearch.includes("walk to") ||
+                    navigationSearch.includes("drive to") ||
+                    navigationSearch.includes("driving to") ||
+                    navigationSearch.includes("ride to") ||
+                    navigationSearch.includes("bike to") ||
+                    navigationSearch.includes("navigate to") ||
+                    navigationSearch.includes("go to") ||
+                    navigationSearch.includes("get to") ||
+                    navigationSearch.includes("head to") ||
+                    navigationSearch.includes("travel to") ||
+                    navigationSearch.includes("on my way to") ||
+                    navigationSearch.includes("take me to") ||
+                    navigationSearch.includes("how do i get to") ||
+                    navigationSearch.includes("hospital") ||
+                    navigationSearch.includes("hematology") ||
+                    navigationSearch.includes("enloe")
+                ) {
+                    const placeResponse = await fetch("/api/searchPlace", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            query: question
+                        })
+                    });
+
+                    const placeData = await placeResponse.json();
 
                     if (
-                        navigationSearch.includes("where is") ||
-                        navigationSearch.includes("where's") ||
-                        navigationSearch.includes("directions") ||
-                        navigationSearch.includes("route") ||
-                        navigationSearch.includes("fastest route") ||
-                        navigationSearch.includes("walking to") ||
-                        navigationSearch.includes("walk to") ||
-                        navigationSearch.includes("drive to") ||
-                        navigationSearch.includes("driving to") ||
-                        navigationSearch.includes("ride to") ||
-                        navigationSearch.includes("bike to") ||
-                        navigationSearch.includes("navigate to") ||
-                        navigationSearch.includes("go to") ||
-                        navigationSearch.includes("get to") ||
-                        navigationSearch.includes("head to") ||
-                        navigationSearch.includes("travel to") ||
-                        navigationSearch.includes("on my way to") ||
-                        navigationSearch.includes("take me to") ||
-                        navigationSearch.includes("how do i get to") ||
-                        navigationSearch.includes("hospital") ||
-                        navigationSearch.includes("hematology") ||
-                        navigationSearch.includes("enloe")
+                        questionInfo.mentionsParking &&
+                        questionInfo.asksRoute
                     ) {
-                        const placeResponse = await fetch("/api/searchPlace", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                query: question
-                            })
-                        });
+                        pendingParkingLocation = question;
+                    }
 
-                        const placeData = await placeResponse.json();
-
-                        if (
-                            questionInfo.mentionsParking &&
-                            questionInfo.asksRoute
-                        ) {
-                            pendingParkingLocation = question;
-                        }
-
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🧭 Verified Map Search</strong>
 
     ${pendingParkingLocation
-                                ? `
+                            ? `
             <br><br>
             <strong>📍 Parking location detected.</strong>
             <br><br>
@@ -1975,8 +1975,8 @@ ${index + 1}. ${instruction}<br><br>
                 Save Parking
             </button>
             `
-                                : ""
-                            }
+                            : ""
+                        }
 
     <br><br>
     I should not guess exact directions without verified map data.
@@ -1990,72 +1990,72 @@ ${index + 1}. ${instruction}<br><br>
     After you open it, come back and tell me what you see.
 </div>
 `;
-                        return;
-                    }
+                    return;
+                }
 
-                    const response = await fetch("/api/askOurFlow", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            question,
-                            history: conversationHistory.slice(-20),
+                const response = await fetch("/api/askOurFlow", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        question,
+                        history: conversationHistory.slice(-20),
 
-                            destination:
-                                activeJourney?.destination || "",
+                        destination:
+                            activeJourney?.destination || "",
 
-                            parkingLocation:
-                                activeJourney?.parkingLocation || "",
+                        parkingLocation:
+                            activeJourney?.parkingLocation || "",
 
-                            arrivalTips:
-                                activeJourney?.arrivalTips || "",
+                        arrivalTips:
+                            activeJourney?.arrivalTips || "",
 
-                            startLocation:
-                                activeJourney?.startLocation || "",
+                        startLocation:
+                            activeJourney?.startLocation || "",
 
-                            journeyStatus:
-                                activeJourney?.journeyStatus || "",
+                        journeyStatus:
+                            activeJourney?.journeyStatus || "",
 
-                            landmarkImageData
-                        })
-                    });
+                        landmarkImageData
+                    })
+                });
 
-                    const data = await response.json();
+                const data = await response.json();
 
-                    if (activeJourney) {
+                if (activeJourney) {
 
-                        activeJourney.answers.push(data.answer);
-                    }
+                    activeJourney.answers.push(data.answer);
+                }
 
-                    result.innerHTML = `
+                result.innerHTML = `
 <div class="card">
     <strong>🧭 OurFlow</strong><br><br>
     ${data.answer}
 </div>
 `;
 
-                } catch (error) {
+            } catch (error) {
 
-                    console.error(error);
+                console.error(error);
 
-                    result.innerHTML = `
+                result.innerHTML = `
 <div class="card">
     <strong>🧭 OurFlow</strong><br><br>
     Error contacting OurFlow.
 </div>
 `;
-                }
             }
+        }
 
         function showSavedJourneys() {
 
-                const result =
-                    document.getElementById("result");
+            const result =
+                document.getElementById("result");
 
-                if (savedJourneys.length === 0) {
+            if (savedJourneys.length === 0) {
 
-                    result.innerHTML = `
+                result.innerHTML = `
 <div class="card">
     <strong>🧭 Saved Journeys</strong>
     <br><br>
@@ -2063,11 +2063,11 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                    return;
-                }
+                return;
+            }
 
-                let html =
-                    `<div class="card">
+            let html =
+                `<div class="card">
 
 <strong>🧭 Saved Journeys</strong>
 
@@ -2088,9 +2088,9 @@ ${index + 1}. ${instruction}<br><br>
 <div id="journeyList">
 `;
 
-                savedJourneys.forEach((journey, index) => {
+            savedJourneys.forEach((journey, index) => {
 
-                    html += `
+                html += `
 <div
     data-journey="${journey.destination}"
     style="
@@ -2137,32 +2137,32 @@ ${index + 1}. ${instruction}<br><br>
 
 </div>
 `;
-                });
+            });
 
-                html += `
+            html += `
 </div>
 </div>
 `;
 
-                result.innerHTML = html;
+            result.innerHTML = html;
+        }
+
+        function toggleJourney(index) {
+
+            const details =
+                document.getElementById(`journey-${index}`);
+
+            const journey =
+                savedJourneys[index];
+
+            if (details.style.display === "block") {
+
+                details.style.display = "none";
+
+                return;
             }
 
-            function toggleJourney(index) {
-
-                const details =
-                    document.getElementById(`journey-${index}`);
-
-                const journey =
-                    savedJourneys[index];
-
-                if (details.style.display === "block") {
-
-                    details.style.display = "none";
-
-                    return;
-                }
-
-                let html = `
+            let html = `
 <div style="
     background:#f8f8f8;
     padding:10px;
@@ -2199,29 +2199,29 @@ ${index + 1}. ${instruction}<br><br>
 <br><br>
 
 ${journey.notes &&
-                        journey.notes.length
-                        ? `<strong>📝 Notes:</strong><br>${journey.notes.map(n => `• ${n}<br>`).join("")}<br>`
-                        : ""}
+                    journey.notes.length
+                    ? `<strong>📝 Notes:</strong><br>${journey.notes.map(n => `• ${n}<br>`).join("")}<br>`
+                    : ""}
 
 ${journey.questionsForDoctor &&
-                        journey.questionsForDoctor.length
-                        ? `<strong>❓ Questions:</strong><br>${journey.questionsForDoctor.map(q => `• ${q}<br>`).join("")}<br>`
-                        : ""}
+                    journey.questionsForDoctor.length
+                    ? `<strong>❓ Questions:</strong><br>${journey.questionsForDoctor.map(q => `• ${q}<br>`).join("")}<br>`
+                    : ""}
 
 ${journey.medications &&
-                        journey.medications.length
-                        ? `<strong>💊 Medications:</strong><br>${journey.medications.map(m => `• ${m}<br>`).join("")}<br>`
-                        : ""}
+                    journey.medications.length
+                    ? `<strong>💊 Medications:</strong><br>${journey.medications.map(m => `• ${m}<br>`).join("")}<br>`
+                    : ""}
 
 ${journey.appointments &&
-                        journey.appointments.length
-                        ? `<strong>📅 Appointments:</strong><br>${journey.appointments.map(a => `• ${a}<br>`).join("")}<br>`
-                        : ""}
+                    journey.appointments.length
+                    ? `<strong>📅 Appointments:</strong><br>${journey.appointments.map(a => `• ${a}<br>`).join("")}<br>`
+                    : ""}
 
 ${journey.staffInstructions &&
-                        journey.staffInstructions.length
-                        ? `<strong>👩‍⚕️ Instructions:</strong><br>${journey.staffInstructions.map(i => `• ${i}<br>`).join("")}<br>`
-                        : ""}
+                    journey.staffInstructions.length
+                    ? `<strong>👩‍⚕️ Instructions:</strong><br>${journey.staffInstructions.map(i => `• ${i}<br>`).join("")}<br>`
+                    : ""}
 
 <hr>
 
@@ -2255,83 +2255,98 @@ ${journey.staffInstructions &&
         <br><br>
     `;
 
-                html += `
+            html += `
 <strong>📝 Notes:</strong>
 
 <br><br>
 
 ${journey.notes && journey.notes.length
-                        ? journey.notes.map(note =>
-                            `• ${note}<br>`
-                        ).join("")
-                        : "No notes recorded"}
+                    ? journey.notes.map(note =>
+                        `• ${note}<br>`
+                    ).join("")
+                    : "No notes recorded"}
 
 <br><br>
 `;
 
-                html += `
+            html += `
 <strong>❓ Saved Questions:</strong>
 
 <br><br>
 
 ${journey.questionsForDoctor &&
-                        journey.questionsForDoctor.length
-                        ? journey.questionsForDoctor.map(question =>
-                            `• ${question}<br>`
-                        ).join("")
-                        : "No saved questions"}
+                    journey.questionsForDoctor.length
+                    ? journey.questionsForDoctor.map(question =>
+                        `• ${question}<br>`
+                    ).join("")
+                    : "No saved questions"}
 
 <br><br>
 `;
 
-                html += `
+            html += `
 <strong>💊 Medications:</strong>
 
 <br><br>
 
 ${journey.medications &&
-                        journey.medications.length
-                        ? journey.medications.map(medication =>
-                            `• ${medication}<br>`
-                        ).join("")
-                        : "No medications recorded"}
+                    journey.medications.length
+                    ? journey.medications.map(medication =>
+                        `• ${medication}<br>`
+                    ).join("")
+                    : "No medications recorded"}
 
 <br><br>
 `;
 
-                html += `
+            html += `
 <strong>📅 Appointments:</strong>
 
 <br><br>
 
 ${journey.appointments &&
-                        journey.appointments.length
-                        ? journey.appointments.map(appointment =>
-                            `• ${appointment}<br>`
-                        ).join("")
-                        : "No appointments recorded"}
+                    journey.appointments.length
+                    ? journey.appointments.map(appointment =>
+                        `• ${appointment}<br>`
+                    ).join("")
+                    : "No appointments recorded"}
 
 <br><br>
 `;
 
-                html += `
+            html += `
+<strong>🏢 Directories:</strong>
+
+<br><br>
+
+${journey.directories &&
+                    journey.directories.length
+                    ? journey.directories.map(directory =>
+                        `• ${directory}<br>`
+                    ).join("")
+                    : "No directory information recorded"}
+
+<br><br>
+`;
+
+            html += `
 <strong>👩‍⚕️ Instructions:</strong>
 
 <br><br>
 
 ${journey.staffInstructions &&
-                        journey.staffInstructions.length
-                        ? journey.staffInstructions.map(instruction =>
-                            `• ${instruction}<br>`
-                        ).join("")
-                        : "No instructions recorded"}
+                    journey.staffInstructions.length
+                    ? journey.staffInstructions.map(instruction =>
+                        `• ${instruction}<br>`
+                    ).join("")
+                    : "No instructions recorded"}
 
 <br><br>
 `;
 
-                journey.questions.forEach((question, i) => {
+            journey.questions.forEach((question, i) => {
 
-                    html += `
+                html += `
             <strong>Q${i + 1}:</strong>
             ${question}
 
@@ -2342,69 +2357,69 @@ ${journey.staffInstructions &&
 
             <br><br>
         `;
-                });
+            });
 
-                details.innerHTML = html;
+            details.innerHTML = html;
 
-                details.style.display = "block";
+            details.style.display = "block";
+        }
+
+        function deleteJourney(index) {
+
+            const confirmDelete =
+                confirm("Delete this saved journey?");
+
+            if (!confirmDelete) return;
+
+            savedJourneys.splice(index, 1);
+
+            localStorage.setItem(
+                "savedJourneys",
+                JSON.stringify(savedJourneys)
+            );
+
+            showSavedJourneys();
+        }
+
+        function savePendingParking() {
+
+            if (!pendingParkingLocation) return;
+
+            if (activeJourney) {
+                activeJourney.parkingLocation =
+                    pendingParkingLocation;
             }
 
-            function deleteJourney(index) {
+            pendingParkingLocation = "";
 
-                const confirmDelete =
-                    confirm("Delete this saved journey?");
+            alert("📍 Parking location saved.");
+        }
 
-                if (!confirmDelete) return;
+        function filterJourneys() {
 
-                savedJourneys.splice(index, 1);
+            const search =
+                document.getElementById("journeySearch")
+                    .value
+                    .toLowerCase();
 
-                localStorage.setItem(
-                    "savedJourneys",
-                    JSON.stringify(savedJourneys)
-                );
+            const journeyItems =
+                document.querySelectorAll("[data-journey]");
 
-                showSavedJourneys();
-            }
+            journeyItems.forEach(item => {
 
-            function savePendingParking() {
+                const index =
+                    parseInt(
+                        item.querySelector("button")
+                            .getAttribute("onclick")
+                            .match(/\d+/)[0]
+                    );
 
-                if (!pendingParkingLocation) return;
+                const journey =
+                    savedJourneys[index];
 
-                if (activeJourney) {
-                    activeJourney.parkingLocation =
-                        pendingParkingLocation;
-                }
+                if (!journey) return;
 
-                pendingParkingLocation = "";
-
-                alert("📍 Parking location saved.");
-            }
-
-            function filterJourneys() {
-
-                const search =
-                    document.getElementById("journeySearch")
-                        .value
-                        .toLowerCase();
-
-                const journeyItems =
-                    document.querySelectorAll("[data-journey]");
-
-                journeyItems.forEach(item => {
-
-                    const index =
-                        parseInt(
-                            item.querySelector("button")
-                                .getAttribute("onclick")
-                                .match(/\d+/)[0]
-                        );
-
-                    const journey =
-                        savedJourneys[index];
-
-                    if (!journey) return;
-
-                    const searchableText = `
+                const searchableText = `
 
 ${journey.destination || ""}
 
@@ -2420,20 +2435,20 @@ ${journey.staffInstructions?.join(" ") || ""}
 
 `.toLowerCase();
 
-                    item.style.display =
-                        searchableText.includes(search)
-                            ? "block"
-                            : "none";
-                });
-            }
+                item.style.display =
+                    searchableText.includes(search)
+                        ? "block"
+                        : "none";
+            });
+        }
 
-            function showJourneyUpgradeBox() {
+        function showJourneyUpgradeBox() {
 
-                alert(
-                    "🧭 Journey archive full.\n\n" +
-                    "Upgrade for 25 additional saved journeys."
-                );
-            }
+            alert(
+                "🧭 Journey archive full.\n\n" +
+                "Upgrade for 25 additional saved journeys."
+            );
+        }
 
     </script>
 
