@@ -736,7 +736,7 @@ margin-right:auto;
 
             if (
                 !activeJourney &&
-                question.length > 10
+                question.toLowerCase().startsWith("start journey to ")
             ) {
 
                 activeJourney = {
@@ -2034,6 +2034,8 @@ ${journey.staffInstructions &&
 
                 const journey =
                     savedJourneys[index];
+
+                if (!journey) return;
 
                 const searchableText = `
 
