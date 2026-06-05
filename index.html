@@ -734,10 +734,6 @@ margin-right:auto;
 
     <br><br>
 
-    <button onclick="openGoogleMapsForJourney()">
-        Open Google Maps
-    </button>
-
     <button onclick="saveJourney()">
         Save Journey
     </button>
@@ -1426,6 +1422,52 @@ ${activeJourney.answers.length}
     <br><br>
 
     I'll remember where you started.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show directories" ||
+                        noteQuestion === "show my directories" ||
+                        noteQuestion === "what directories do i have"
+                    )
+                ) {
+
+                    if (!activeJourney.directories || activeJourney.directories.length === 0) {
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>🏢 Directories</strong>
+
+    <br><br>
+
+    No directories saved for this journey yet.
+</div>
+`;
+
+                        return;
+                    }
+
+                    let directoriesHtml = "";
+
+                    activeJourney.directories.forEach((directory, index) => {
+
+                        directoriesHtml += `
+${index + 1}. ${directory}<br><br>
+`;
+                    });
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>🏢 Saved Directory Information</strong>
+
+    <br><br>
+
+    ${directoriesHtml}
 </div>
 `;
 
