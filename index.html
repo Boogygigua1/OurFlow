@@ -1191,6 +1191,35 @@ ${activeJourney.answers.length}
 
                 if (
                     activeJourney &&
+                    noteQuestion.startsWith("save start location:")
+                ) {
+
+                    const startLocation = question
+                        .replace(/save start location:/i, "")
+                        .trim();
+
+                    activeJourney.startLocation =
+                        startLocation;
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>🧭 Start Location Saved</strong>
+
+    <br><br>
+
+    ${startLocation}
+
+    <br><br>
+
+    I'll remember where you started.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
                     (
                         noteQuestion === "show my notes" ||
                         noteQuestion === "show notes" ||
