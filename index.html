@@ -749,9 +749,9 @@ margin-right:auto;
             const placeData = await placeResponse.json();
 
             activeJourney.arrivalTips =
+                placeData.arrivalTip ||
                 "Map search ready. Open Google Maps and check Street View, reviews, parking, and entrance details before leaving.";
-            
-                activeJourney.mapLink =
+            activeJourney.mapLink =
                 placeData.mapUrl;
 
             showActiveJourneyBox();

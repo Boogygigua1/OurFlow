@@ -13,14 +13,22 @@ export default async function handler(req, res) {
         });
     }
 
+    const searchQuery =
+        query + " entrance parking directions reviews";
+
     const mapUrl =
         "https://www.google.com/maps/search/?api=1&query=" +
-        encodeURIComponent(query);
+        encodeURIComponent(searchQuery);
+
+    const arrivalTip =
+        "Map search ready for: " +
+        searchQuery +
+        ". Before leaving, check Google Maps for Street View, photos, reviews, parking, entrance signs, and whether the office is inside a larger complex.";
 
     return res.status(200).json({
         query,
+        searchQuery,
         mapUrl,
-        message:
-            "I cannot verify turn-by-turn directions yet, but I can help you open a verified map search."
+        arrivalTip
     });
 }
