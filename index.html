@@ -1154,6 +1154,36 @@ ${activeJourney.answers.length}
 
                 if (
                     activeJourney &&
+                    noteQuestion.startsWith("save instruction:")
+                ) {
+
+                    const instruction = question
+                        .replace(/save instruction:/i, "")
+                        .trim();
+
+                    activeJourney.staffInstructions.push(
+                        instruction
+                    );
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>👩‍⚕️ Instruction Saved</strong>
+
+    <br><br>
+
+    ${instruction}
+
+    <br><br>
+
+    I'll remember that for this journey.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
                     (
                         noteQuestion === "show my notes" ||
                         noteQuestion === "show notes" ||
