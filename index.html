@@ -239,6 +239,8 @@
     <p style="font-size:11px; color:#888; margin-top:10px;">
         Ask a question, provide clues, and OurFlow will help you find your way 🧭
     </p>
+    <div id="activeJourneyBox"></div>
+
     <div id="result"></div>
 
     <div style="
@@ -685,7 +687,7 @@ margin-right:auto;
         function showActiveJourneyBox() {
 
             const result =
-                document.getElementById("result");
+                document.getElementById("activeJourneyBox");
 
             if (!activeJourney) {
                 return;
@@ -906,6 +908,10 @@ margin-right:auto;
 
                         parkingLocation:
                             "",
+
+                        arrivalTips: "",
+
+                        mapLink: "",
 
                         questions: [],
 
@@ -1305,6 +1311,8 @@ ${activeJourney.answers.length}
 
                     activeJourney.startLocation =
                         startLocation;
+
+                    showActiveJourneyBox();
 
                     result.innerHTML = `
 <div class="card">
