@@ -729,8 +729,10 @@ margin-right:auto;
 
     <br><br>
 
-    <strong>🏢 Directories:</strong><br>
-    ${activeJourney.directories?.length || 0}
+    <strong>🏢 Directory Memory:</strong><br>
+    ${activeJourney.directories?.length
+                    ? activeJourney.directories.slice(-3).join("<br>• ")
+                    : "No directory information saved yet."}
 
     <br><br>
 
