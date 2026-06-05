@@ -960,6 +960,12 @@ ${activeJourney.answers.length}
 
                     const isMemoryCommand =
 
+                        lowerQuestion.startsWith("save appointment:") ||
+
+                        lowerQuestion === "show my appointments" ||
+
+                        lowerQuestion === "show appointments" ||
+
                         lowerQuestion.startsWith("save note:") ||
 
                         lowerQuestion.startsWith("save question:") ||
@@ -1278,6 +1284,52 @@ ${index + 1}. ${medication}<br><br>
     <br><br>
 
     ${medicationsHtml}
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion === "show my appointments" ||
+                        noteQuestion === "show appointments" ||
+                        noteQuestion === "what appointments do i have"
+                    )
+                ) {
+
+                    if (activeJourney.appointments.length === 0) {
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>📅 Appointments</strong>
+
+    <br><br>
+
+    No appointments saved for this journey yet.
+</div>
+`;
+
+                        return;
+                    }
+
+                    let appointmentsHtml = "";
+
+                    activeJourney.appointments.forEach((appointment, index) => {
+
+                        appointmentsHtml += `
+${index + 1}. ${appointment}<br><br>
+`;
+                    });
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>📅 Appointments</strong>
+
+    <br><br>
+
+    ${appointmentsHtml}
 </div>
 `;
 
@@ -1764,6 +1816,21 @@ ${journey.medications &&
                         `• ${medication}<br>`
                     ).join("")
                     : "No medications recorded"}
+
+<br><br>
+`;
+
+            html += `
+<strong>📅 Appointments:</strong>
+
+<br><br>
+
+${journey.appointments &&
+                    journey.appointments.length
+                    ? journey.appointments.map(appointment =>
+                        `• ${appointment}<br>`
+                    ).join("")
+                    : "No appointments recorded"}
 
 <br><br>
 `;
