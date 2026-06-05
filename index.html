@@ -997,6 +997,7 @@ ${activeJourney.answers.length}
                 }
 
                 if (
+                    activeJourney &&
                     activeJourney.destination === "Untitled Journey"
                 ) {
 
@@ -2023,9 +2024,6 @@ ${journey.staffInstructions &&
                 document.querySelectorAll("[data-journey]");
 
             journeyItems.forEach(item => {
-
-                const title =
-                    item.dataset.journey.toLowerCase();
 
                 const index =
                     parseInt(
