@@ -60,7 +60,13 @@ Focus on:
 - department locations
 - check-in desks
 
-Keep it concise and useful.
+Return plain text only.
+No markdown.
+No bold text.
+No numbered list.
+Use 4 short bullet points maximum.
+Keep each bullet under 12 words.
+Do not say "safe travels."
 `
                     },
                     {
