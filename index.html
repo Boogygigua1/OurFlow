@@ -854,6 +854,9 @@ margin-right:auto;
                         startTime:
                             new Date().toLocaleString(),
 
+                        startLocation:
+                            "",
+
                         parkingLocation:
                             "",
 
@@ -891,23 +894,53 @@ ${destination}
 
                 }
 
-
                 const endQuestion = question.toLowerCase().trim();
 
                 if (
+                    activeJourney &&
+                    (
+                        endQuestion.includes("i made it") ||
+                        endQuestion.includes("i've arrived") ||
+                        endQuestion.includes("ive arrived") ||
+                        endQuestion.includes("i got here") ||
+                        endQuestion.includes("i'm here") ||
+                        endQuestion.includes("im here")
+                    )
+                ) {
+
+                    activeJourney.journeyStatus = "arrived";
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>🧭 Destination Reached</strong>
+
+    <br><br>
+
+    Glad you made it to:
+
+    <br><br>
+
+    ${activeJourney.destination}
+
+    <br><br>
+
+    I'll continue remembering notes, questions,
+    medications, appointments, and instructions
+    for this journey.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
                     endQuestion === "end journey" ||
-                    endQuestion.includes("i made it") ||
-                    endQuestion.includes("i've arrived") ||
-                    endQuestion.includes("ive arrived") ||
-                    endQuestion.includes("i got here") ||
                     endQuestion.includes("all set") ||
                     endQuestion.includes("finished") ||
                     endQuestion.includes("that's all") ||
                     endQuestion.includes("thats all") ||
                     endQuestion.includes("no thanks")
                 ) {
-
-
 
                     /* END JOURNEY BLOCK HERE */
 
@@ -1512,16 +1545,31 @@ ${index + 1}. ${instruction}<br><br>
                         return;
                     }
 
-                    if (
-                        recallQuestion.includes("take me back to where i started") ||
-                        recallQuestion.includes("where did i start") ||
-                        recallQuestion.includes("return me to my starting location") ||
-                        recallQuestion.includes("take me back to my starting location")
-                    ) {
 
-                        if (activeJourney?.startLocation) {
 
-                            result.innerHTML = `
+                    result.innerHTML = `
+<div class="card">
+    <strong>📍 Parking Reminder</strong>
+
+    <br><br>
+
+    I don't have a vehicle location recorded for this journey.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    recallQuestion.includes("take me back to where i started") ||
+                    recallQuestion.includes("where did i start") ||
+                    recallQuestion.includes("return me to my starting location") ||
+                    recallQuestion.includes("take me back to my starting location")
+                ) {
+
+                    if (activeJourney?.startLocation) {
+
+                        result.innerHTML = `
 <div class="card">
     <strong>🧭 Starting Location</strong>
 
@@ -1539,29 +1587,16 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🧭 Starting Location</strong>
 
     <br><br>
 
     I don't have a starting location recorded for this journey.
-</div>
-`;
-
-                        return;
-                    }
-
-                    result.innerHTML = `
-<div class="card">
-    <strong>📍 Parking Reminder</strong>
-
-    <br><br>
-
-    I don't have a vehicle location recorded for this journey.
 </div>
 `;
 
