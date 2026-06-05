@@ -725,15 +725,20 @@ margin-right:auto;
 
 
     <strong>Arrival Help:</strong><br>
-    ${activeJourney.arrivalTips || "No arrival tips yet."}
+${activeJourney.arrivalTips || "No arrival tips yet."}
 
-    <br><br>
+<br><br>
 
-    <strong>🏢 Directory Memory:</strong><br>
-    ${activeJourney.directories?.length
-                    ? activeJourney.directories.slice(-3).join("<br>• ")
-                    : "No directory information saved yet."}
+<strong>📍 Destination Details:</strong><br>
+${activeJourney.destinationAddress ||
+    "No destination details saved yet."}
 
+<br><br>
+
+<strong>🏢 Directory Memory:</strong><br>
+${activeJourney.directories?.length
+    ? activeJourney.directories.slice(-3).join("<br>• ")
+    : "No directory information saved yet."}
     <br><br>
 
     <button onclick="saveJourney()">
@@ -1969,10 +1974,7 @@ ${index + 1}. ${instruction}<br><br>
                     navigationSearch.includes("travel to") ||
                     navigationSearch.includes("on my way to") ||
                     navigationSearch.includes("take me to") ||
-                    navigationSearch.includes("how do i get to") ||
-                    navigationSearch.includes("hospital") ||
-                    navigationSearch.includes("hematology") ||
-                    navigationSearch.includes("enloe")
+                    navigationSearch.includes("how do i get to") 
                 ) {
                     const placeResponse = await fetch("/api/searchPlace", {
                         method: "POST",
