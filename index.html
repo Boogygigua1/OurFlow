@@ -757,6 +757,21 @@ margin-right:auto;
             showActiveJourneyBox();
         }
 
+        function openGoogleMapsForJourney() {
+
+            if (!activeJourney) {
+                alert("No active journey found.");
+                return;
+            }
+
+            const mapDestination =
+                activeJourney.mapLink ||
+                "https://www.google.com/maps/search/?api=1&query=" +
+                encodeURIComponent(activeJourney.destination);
+
+            window.open(mapDestination, "_blank");
+        }
+
         function analyzeUserQuestion(question) {
             const text = question.toLowerCase();
 
