@@ -725,6 +725,38 @@ margin-right:auto;
 `;
         }
 
+        async function getArrivalHelp(destination) {
+
+            if (!activeJourney) {
+                return;
+            }
+
+            activeJourney.arrivalTips =
+                "Searching for arrival tips...";
+
+            showActiveJourneyBox();
+
+            const placeResponse = await fetch("/api/searchPlace", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    query: destination + " entrance parking directions"
+                })
+            });
+
+            const placeData = await placeResponse.json();
+
+            activeJourney.arrivalTips =
+                "I found a map search for this destination. Open Google Maps and look for entrance, parking, and building access details.";
+
+            activeJourney.mapLink =
+                placeData.mapUrl;
+
+            showActiveJourneyBox();
+        }
+
         function analyzeUserQuestion(question) {
             const text = question.toLowerCase();
 
@@ -821,10 +853,6 @@ margin-right:auto;
                     mapLink: "",
 
                     questions: [],
-
-                    arrivalTips: "",
-
-                    mapLink: "",
 
                     answers: [],
 
@@ -944,6 +972,8 @@ ${destination}
 `;
 
                     showActiveJourneyBox();
+
+                    await getArrivalHelp(destination);
 
                     return;
 
