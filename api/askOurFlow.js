@@ -328,8 +328,17 @@ ${history.join("\n")}
 Current destination:
 ${destination || "Unknown"}
 
+Current arrival tips:
+${arrivalTips || "None"}
+
 Current parking location:
 ${parkingLocation || "Unknown"}
+
+Current start location:
+${startLocation || "Unknown"}
+
+Journey status:
+${journeyStatus || "Unknown"}
 
 Current question:
 ${question}
