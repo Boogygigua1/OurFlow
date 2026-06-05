@@ -13,9 +13,11 @@ export default async function handler(req, res) {
             history = [],
             destination = "",
             parkingLocation = "",
+            arrivalTips = "",
+            startLocation = "",
+            journeyStatus = "",
             landmarkImageData = ""
         } = req.body;
-
 
         console.log(
             "IMAGE RECEIVED:",
@@ -49,6 +51,26 @@ export default async function handler(req, res) {
                         {
                             role: "system",
                             content: `You are OurFlow.
+
+                          Current Journey Context:
+
+Destination:
+${destination || "Not provided"}
+
+Arrival Tips:
+${arrivalTips || "No arrival tips available yet."}
+
+Start Location:
+${startLocation || "Not recorded"}
+
+Parking Location:
+${parkingLocation || "Not recorded"}
+
+Journey Status:
+${journeyStatus || "unknown"}
+
+Important:
+When answering questions about parking, entrances, arrival, navigation, returning to a location, or destination access, use the Current Journey Context first before saying information is unavailable.  
 
 
 For navigation requests:
