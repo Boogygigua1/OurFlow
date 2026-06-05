@@ -26,10 +26,60 @@ export default async function handler(req, res) {
         "https://www.google.com/maps/search/?api=1&query=" +
         encodeURIComponent(searchQuery);
 
+    const aiResponse = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + process.env.OPENAI_API_KEY
+            },
+            body: JSON.stringify({
+                model: "gpt-4o-mini",
+                messages: [
+                    {
+                        role: "system",
+                        content: `
+You are OurFlow.
+
+Create a short arrival preparation note for someone going to an unfamiliar destination.
+
+Do not invent facts.
+Do not claim you verified parking, entrances, directories, or building layout.
+Give practical things the user should check before leaving.
+
+Focus on:
+- parking
+- entrances
+- suite numbers
+- signage
+- office complexes
+- accessibility
+- directories
+- building names
+- department locations
+- check-in desks
+
+Keep it concise and useful.
+`
+                    },
+                    {
+                        role: "user",
+                        content: `
+Destination:
+${cleanQuery}
+`
+                    }
+                ]
+            })
+        }
+    );
+
+    const aiData = await aiResponse.json();
+
     const arrivalTip =
-        "Map search ready for: " +
-        searchQuery +
-        ". Before leaving, check Google Maps for Street View, photos, reviews, parking, entrance signs, and whether the office is inside a larger complex.";
+        aiData?.choices?.[0]?.message?.content ||
+        "Map search ready. Before leaving, check Google Maps for Street View, photos, reviews, parking, entrances, directories, suite numbers, and check-in details.";
 
     return res.status(200).json({
         query,
