@@ -1792,6 +1792,37 @@ ${index + 1}. ${instruction}<br><br>
                 if (
                     activeJourney &&
                     (
+                        noteQuestion.includes("exact location") ||
+                        noteQuestion.includes("the address is") ||
+                        noteQuestion.includes("this is the address") ||
+                        noteQuestion.includes("enter at") ||
+                        noteQuestion.includes("located at")
+                    )
+                ) {
+                    activeJourney.destinationAddress = question;
+
+                    showActiveJourneyBox();
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>📍 Location Detail Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I'll remember this as part of the destination details.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
+                    (
                         noteQuestion.includes("suite") ||
                         noteQuestion.includes("department") ||
                         noteQuestion.includes("hematology") ||
