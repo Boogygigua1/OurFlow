@@ -735,6 +735,12 @@ ${activeJourney.destinationAddress ||
 
 <br><br>
 
+<strong>🚗 Parking Memory:</strong><br>
+${activeJourney.parkingLocation ||
+    "No parking location saved yet."}
+
+<br><br>
+
 <strong>🏢 Directory Memory:</strong><br>
 ${activeJourney.directories?.length
     ? activeJourney.directories.slice(-3).join("<br>• ")
