@@ -856,6 +856,8 @@ margin-right:auto;
 
                     appointments: [],
 
+                    directories: [],
+
                     startTime:
                         new Date().toLocaleString(),
 
@@ -942,6 +944,8 @@ margin-right:auto;
                         medications: [],
 
                         appointments: [],
+
+                        directories: [],
 
                         startTime:
                             new Date().toLocaleString(),
@@ -1279,6 +1283,36 @@ ${activeJourney.answers.length}
     <br><br>
 
     I'll remember that for this journey.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
+                    noteQuestion.startsWith("save directory:")
+                ) {
+
+                    const directory = question
+                        .replace(/save directory:/i, "")
+                        .trim();
+
+                    activeJourney.directories.push(directory);
+
+                    showActiveJourneyBox();
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>🏢 Directory Saved</strong>
+
+    <br><br>
+
+    ${directory}
+
+    <br><br>
+
+    I'll remember this directory for the journey.
 </div>
 `;
 
