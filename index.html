@@ -736,7 +736,13 @@ margin-right:auto;
 
             if (
                 !activeJourney &&
-                question.toLowerCase().startsWith("start journey to ")
+                (
+                    question.toLowerCase().startsWith("start journey to ") ||
+                    question.toLowerCase().startsWith("i'm going to ") ||
+                    question.toLowerCase().startsWith("im going to ") ||
+                    question.toLowerCase().startsWith("going to ") ||
+                    question.toLowerCase().startsWith("heading to ")
+                )
             ) {
 
                 activeJourney = {
@@ -798,11 +804,28 @@ margin-right:auto;
                 conversationHistory.push(question);
 
                 if (
-                    question.toLowerCase().startsWith("start journey to ")
+
+                    question.toLowerCase().startsWith("start journey to ") ||
+
+                    question.toLowerCase().startsWith("i'm going to ") ||
+
+                    question.toLowerCase().startsWith("im going to ") ||
+
+                    question.toLowerCase().startsWith("going to ") ||
+
+                    question.toLowerCase().startsWith("heading to ")
+
                 ) {
 
-                    const destination =
-                        question.replace(/start journey to /i, "").trim();
+                    let destination = question;
+
+                    destination = destination
+                        .replace(/start journey to /i, "")
+                        .replace(/i'm going to /i, "")
+                        .replace(/im going to /i, "")
+                        .replace(/going to /i, "")
+                        .replace(/heading to /i, "")
+                        .trim();
 
 
                     activeJourney = {
@@ -1553,6 +1576,12 @@ ${index + 1}. ${instruction}<br><br>
                     parkingQuestion.startsWith("my parking is:") ||
                     parkingQuestion.includes("my car is") ||
                     parkingQuestion.includes("i left my car") ||
+                    parkingQuestion.includes("i parked") ||
+                    parkingQuestion.includes("parked on") ||
+                    parkingQuestion.includes("parked near") ||
+                    parkingQuestion.includes("parked at") ||
+                    parkingQuestion.includes("my car is parked") ||
+                    parkingQuestion.includes("my vehicle is parked") ||
                     parkingQuestion.includes("i parked") ||
                     parkingQuestion.includes("my car is parked") ||
                     parkingQuestion.includes("my vehicle is parked") ||
