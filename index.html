@@ -695,8 +695,32 @@ margin-right:auto;
 
             result.innerHTML = `
 <div class="card">
-    <strong>🧭 Active Journey</strong>
 
+    <strong>🧭 Journey Started</strong>
+
+    <br><br>
+
+    I see you're starting a journey to:
+
+    <br><br>
+
+    <strong>
+        ${activeJourney.destination || "Not set yet"}
+    </strong>
+
+    <br><br>
+
+    Here's a map to get you started.
+
+    <br><br>
+
+    <button onclick="openGoogleMapsForJourney()">
+        Open Google Maps
+    </button>
+
+    <br><br>
+
+    <strong>Active Journey Info:</strong>
     <br><br>
 
     <strong>Destination:</strong><br>
