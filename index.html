@@ -843,6 +843,27 @@ ${activeJourney.directories?.length
             const question =
                 document.getElementById("questionInput").value.trim();
 
+            const looksLikeAddress =
+
+                /\d+\s+\w+/.test(question) &&
+
+                (
+                    question.toLowerCase().includes("street") ||
+                    question.toLowerCase().includes("st") ||
+                    question.toLowerCase().includes("avenue") ||
+                    question.toLowerCase().includes("ave") ||
+                    question.toLowerCase().includes("road") ||
+                    question.toLowerCase().includes("rd") ||
+                    question.toLowerCase().includes("drive") ||
+                    question.toLowerCase().includes("dr") ||
+                    question.toLowerCase().includes("lane") ||
+                    question.toLowerCase().includes("ln") ||
+                    question.toLowerCase().includes("court") ||
+                    question.toLowerCase().includes("ct") ||
+                    question.toLowerCase().includes("boulevard") ||
+                    question.toLowerCase().includes("blvd")
+                );
+
             const questionInfo = analyzeUserQuestion(question);
 
             if (activeJourney && questionInfo.travelMode !== "unknown") {
@@ -858,7 +879,8 @@ ${activeJourney.directories?.length
                     question.toLowerCase().startsWith("i'm going to ") ||
                     question.toLowerCase().startsWith("im going to ") ||
                     question.toLowerCase().startsWith("going to ") ||
-                    question.toLowerCase().startsWith("heading to ")
+                    question.toLowerCase().startsWith("heading to ") ||
+                    looksLikeAddress
                 )
             ) {
 
