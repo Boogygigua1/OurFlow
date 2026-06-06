@@ -1183,9 +1183,6 @@ ${activeJourney.answers.length}
 
                     return;
                 }
-
-                if (activeJourney) {
-
                     const lowerQuestion =
                         question.toLowerCase();
 
@@ -1341,6 +1338,8 @@ ${activeJourney.answers.length}
 
                         lowerQuestion.includes("bike is parked");
 
+                    if (activeJourney) {
+    
                     if (
                         !isMemoryCommand &&
                         !isUtilityQuestion
@@ -1965,9 +1964,6 @@ ${index + 1}. ${instruction}<br><br>
 
                     if (activeJourney?.parkingLocation) {
 
-                        activeJourney.answers.push(
-                            activeJourney.parkingLocation
-                        );
 
                         result.innerHTML = `
 <div class="card">
@@ -2376,7 +2372,11 @@ ${index + 1}. ${instruction}<br><br>
 
                 const data = await response.json();
 
-                if (activeJourney) {
+                if (
+                    activeJourney &&
+                    !isMemoryCommand &&
+                    !isUtilityQuestion
+                ) {
 
                     activeJourney.answers.push(data.answer);
                 }
