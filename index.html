@@ -710,7 +710,7 @@ margin-right:auto;
 
     <br><br>
 
-    Here's a map to get you started.
+    Here's a map in case you need it.
 
     <br><br>
 
@@ -845,15 +845,15 @@ ${activeJourney.directories?.length
 
             const looksLikeAddress =
 
-    /^\d+/.test(question) &&
+                /^\d+/.test(question) &&
 
-    (
-        question.includes(",") ||
-        question.toLowerCase().includes("ca") ||
-        question.toLowerCase().includes("california")
-    );
+                (
+                    question.includes(",") ||
+                    question.toLowerCase().includes("ca") ||
+                    question.toLowerCase().includes("california")
+                );
 
-const questionInfo = analyzeUserQuestion(question);
+            const questionInfo = analyzeUserQuestion(question);
 
             if (activeJourney && questionInfo.travelMode !== "unknown") {
                 activeJourney.travelMode = questionInfo.travelMode;
@@ -2283,6 +2283,11 @@ ${journey.staffInstructions &&
 
         <strong>Destination:</strong>
         ${journey.destination}
+
+        <br><br>
+
+        <strong>📍 Destination Details:</strong>
+        ${journey.destinationAddress || "No destination details recorded"}
 
         <br><br>
 
