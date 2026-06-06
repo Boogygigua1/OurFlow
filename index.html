@@ -1070,6 +1070,9 @@ ${activeJourney.directories?.length
                         endQuestion.includes("ive arrived") ||
                         endQuestion.includes("i got here") ||
                         endQuestion.includes("i'm here") ||
+                        endQuestion.includes("i found it") ||
+                        endQuestion.includes("found it") ||
+                        endQuestion.includes("got it") ||
                         endQuestion.includes("im here")
                     )
                 ) {
@@ -1234,6 +1237,17 @@ ${activeJourney.answers.length}
 
                         lowerQuestion.includes("i left my bike") ||
 
+                        lowerQuestion.includes("left my bide") ||
+                        lowerQuestion.includes("my bide is") ||
+                        lowerQuestion.includes("bike is") ||
+                        lowerQuestion.includes("bicycle") ||
+
+                        lowerQuestion.includes("left my ride") ||
+                        lowerQuestion.includes("i left my ride") ||
+                        lowerQuestion.includes("my ride is") ||
+                        lowerQuestion.includes("where is my ride") ||
+                        lowerQuestion.includes("find my ride") ||
+
                         lowerQuestion.includes("my car is parked") ||
 
                         lowerQuestion.includes("my vehicle is parked") ||
@@ -1249,7 +1263,7 @@ ${activeJourney.answers.length}
                         lowerQuestion === "take me back" ||
                         lowerQuestion === "go back" ||
                         lowerQuestion === "return me" ||
-                        
+
                         lowerQuestion.includes("return me to my starting location") ||
 
                         lowerQuestion === "parking" ||
@@ -1887,9 +1901,9 @@ ${index + 1}. ${instruction}<br><br>
                 }
 
                 if (
-                    recallQuestion === "take me back" ||
-                    recallQuestion === "go back" ||
-                    recallQuestion === "return me" ||
+                    recallQuestion.includes("take me back") ||
+                    recallQuestion.includes("go back") ||
+                    recallQuestion.includes("return me") ||
 
                     recallQuestion.includes("take me back to where i started") ||
                     recallQuestion.includes("where did i start") ||
@@ -2095,11 +2109,9 @@ ${index + 1}. ${instruction}<br><br>
                     (
                         destinationUpdate.includes("i'm going here") ||
                         destinationUpdate.includes("im going here") ||
-                        destinationUpdate.includes("i found it") ||
                         destinationUpdate.includes("the address is") ||
                         destinationUpdate.includes("it says") ||
                         destinationUpdate.includes("this is the address") ||
-                        destinationUpdate.includes("found it") ||
                         destinationUpdate.includes("found the address") ||
                         destinationUpdate.includes("i found the address") ||
                         destinationUpdate.includes("located at") ||
