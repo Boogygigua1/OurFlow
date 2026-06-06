@@ -1177,7 +1177,33 @@ ${activeJourney.answers.length}
 
                         lowerQuestion === "show my medications" ||
 
-                        lowerQuestion === "show medications";
+                        lowerQuestion === "show medications" ||
+
+                        lowerQuestion.includes("i'm parked") ||
+
+                        lowerQuestion.includes("im parked") ||
+
+                        lowerQuestion.includes("i parked") ||
+
+                        lowerQuestion.includes("parked on") ||
+
+                        lowerQuestion.includes("parked near") ||
+
+                        lowerQuestion.includes("parked at") ||
+
+                        lowerQuestion.includes("left my car") ||
+
+                        lowerQuestion.includes("i left my car") ||
+
+                        lowerQuestion.includes("left my bike") ||
+
+                        lowerQuestion.includes("i left my bike") ||
+
+                        lowerQuestion.includes("my car is parked") ||
+
+                        lowerQuestion.includes("my vehicle is parked") ||
+
+                        lowerQuestion.includes("bike is parked");
 
                     if (!isMemoryCommand) {
 
