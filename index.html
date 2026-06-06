@@ -731,20 +731,20 @@ ${activeJourney.arrivalTips || "No arrival tips yet."}
 
 <strong>📍 Destination Details:</strong><br>
 ${activeJourney.destinationAddress ||
-    "No destination details saved yet."}
+                "No destination details saved yet."}
 
 <br><br>
 
 <strong>🚗 Parking Memory:</strong><br>
 ${activeJourney.parkingLocation ||
-    "No parking location saved yet."}
+                "No parking location saved yet."}
 
 <br><br>
 
 <strong>🏢 Directory Memory:</strong><br>
 ${activeJourney.directories?.length
-    ? activeJourney.directories.slice(-3).join("<br>• ")
-    : "No directory information saved yet."}
+                    ? activeJourney.directories.slice(-3).join("<br>• ")
+                    : "No directory information saved yet."}
     <br><br>
 
     <button onclick="saveJourney()">
@@ -1213,6 +1213,39 @@ ${activeJourney.answers.length}
                 const recallQuestion = question.toLowerCase();
 
                 const noteQuestion = question.toLowerCase();
+
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion.includes("exact location") ||
+                        noteQuestion.includes("the address is") ||
+                        noteQuestion.includes("address is") ||
+                        noteQuestion.includes("this is the address") ||
+                        noteQuestion.includes("enter at") ||
+                        noteQuestion.includes("located at")
+                    )
+                ) {
+
+                    activeJourney.destinationAddress = question;
+
+                    showActiveJourneyBox();
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>📍 Location Detail Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I'll remember this as part of the destination details.
+</div>
+`;
+
+                    return;
+                }
 
                 if (
                     activeJourney &&
@@ -1801,55 +1834,22 @@ ${index + 1}. ${instruction}<br><br>
                 }
 
                 if (
-    activeJourney &&
-    (
-        noteQuestion.includes("exact location") ||
-        noteQuestion.includes("the address is") ||
-        noteQuestion.includes("address is") ||
-        noteQuestion.includes("this is the address") ||
-        noteQuestion.includes("enter at") ||
-        noteQuestion.includes("located at")
-    )
-) {
+                    activeJourney &&
+                    (
+                        noteQuestion.includes("suite") ||
+                        noteQuestion.includes("department") ||
+                        noteQuestion.includes("hematology") ||
+                        noteQuestion.includes("elevator") ||
+                        noteQuestion.includes("directory") ||
+                        noteQuestion.includes("check-in") ||
+                        noteQuestion.includes("reception")
+                    )
+                ) {
+                    activeJourney.directories.push(question);
 
-    activeJourney.destinationAddress = question;
+                    showActiveJourneyBox();
 
-    showActiveJourneyBox();
-
-    result.innerHTML = `
-<div class="card">
-    <strong>📍 Location Detail Saved</strong>
-
-    <br><br>
-
-    ${question}
-
-    <br><br>
-
-    I'll remember this as part of the destination details.
-</div>
-`;
-
-    return;
-}
-
-                if (
-                activeJourney &&
-                (
-                    noteQuestion.includes("suite") ||
-                    noteQuestion.includes("department") ||
-                    noteQuestion.includes("hematology") ||
-                    noteQuestion.includes("elevator") ||
-                    noteQuestion.includes("directory") ||
-                    noteQuestion.includes("check-in") ||
-                    noteQuestion.includes("reception")
-                )
-            ) {
-                activeJourney.directories.push(question);
-
-                showActiveJourneyBox();
-
-                result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🏢 Directory Info Saved</strong>
 
@@ -1863,44 +1863,44 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                return;
-            }
+                    return;
+                }
 
-            const parkingQuestion = question.toLowerCase();
+                const parkingQuestion = question.toLowerCase();
 
-            if (
-                parkingQuestion.startsWith("parking location:") ||
-                parkingQuestion.startsWith("save parking:") ||
-                parkingQuestion.startsWith("my parking is:") ||
-                parkingQuestion.includes("my car is") ||
-                parkingQuestion.includes("i left my car") ||
-                parkingQuestion.includes("i parked") ||
-                parkingQuestion.includes("parked on") ||
-                parkingQuestion.includes("parked near") ||
-                parkingQuestion.includes("parked at") ||
-                parkingQuestion.includes("my car is parked") ||
-                parkingQuestion.includes("my vehicle is parked") ||
-                parkingQuestion.includes("i parked") ||
-                parkingQuestion.includes("my car is parked") ||
-                parkingQuestion.includes("my vehicle is parked") ||
-                parkingQuestion.includes("near the elevator") ||
-                parkingQuestion.includes("near elevator") ||
-                parkingQuestion.includes("near the stairs") ||
-                parkingQuestion.includes("by the stairs") ||
-                parkingQuestion.includes("parking structure")
-            ) {
+                if (
+                    parkingQuestion.startsWith("parking location:") ||
+                    parkingQuestion.startsWith("save parking:") ||
+                    parkingQuestion.startsWith("my parking is:") ||
+                    parkingQuestion.includes("my car is") ||
+                    parkingQuestion.includes("i left my car") ||
+                    parkingQuestion.includes("i parked") ||
+                    parkingQuestion.includes("parked on") ||
+                    parkingQuestion.includes("parked near") ||
+                    parkingQuestion.includes("parked at") ||
+                    parkingQuestion.includes("my car is parked") ||
+                    parkingQuestion.includes("my vehicle is parked") ||
+                    parkingQuestion.includes("i parked") ||
+                    parkingQuestion.includes("my car is parked") ||
+                    parkingQuestion.includes("my vehicle is parked") ||
+                    parkingQuestion.includes("near the elevator") ||
+                    parkingQuestion.includes("near elevator") ||
+                    parkingQuestion.includes("near the stairs") ||
+                    parkingQuestion.includes("by the stairs") ||
+                    parkingQuestion.includes("parking structure")
+                ) {
 
-                if (activeJourney) {
+                    if (activeJourney) {
 
-                    activeJourney.parkingLocation = question;
+                        activeJourney.parkingLocation = question;
 
-                    showActiveJourneyBox();
+                        showActiveJourneyBox();
 
-                    activeJourney.answers.push(
-                        "Parking location saved."
-                    );
+                        activeJourney.answers.push(
+                            "Parking location saved."
+                        );
 
-                    result.innerHTML = `
+                        result.innerHTML = `
 <div class="card">
     <strong>📍 Parking Location Saved</strong>
 
@@ -1914,39 +1914,39 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                    return;
+                        return;
+                    }
                 }
-            }
 
-            const destinationUpdate =
-                question.toLowerCase();
+                const destinationUpdate =
+                    question.toLowerCase();
 
-            if (
-                activeJourney &&
-                (
-                    destinationUpdate.includes("i'm going here") ||
-                    destinationUpdate.includes("im going here") ||
-                    destinationUpdate.includes("i found it") ||
-                    destinationUpdate.includes("the address is") ||
-                    destinationUpdate.includes("it says") ||
-                    destinationUpdate.includes("this is the address") ||
-                    destinationUpdate.includes("found it") ||
-                    destinationUpdate.includes("found the address") ||
-                    destinationUpdate.includes("i found the address") ||
-                    destinationUpdate.includes("located at") ||
-                    destinationUpdate.includes("265 cohasset") ||
-                    destinationUpdate.includes("here it is") ||
-                    destinationUpdate.includes("cohasset rd")
+                if (
+                    activeJourney &&
+                    (
+                        destinationUpdate.includes("i'm going here") ||
+                        destinationUpdate.includes("im going here") ||
+                        destinationUpdate.includes("i found it") ||
+                        destinationUpdate.includes("the address is") ||
+                        destinationUpdate.includes("it says") ||
+                        destinationUpdate.includes("this is the address") ||
+                        destinationUpdate.includes("found it") ||
+                        destinationUpdate.includes("found the address") ||
+                        destinationUpdate.includes("i found the address") ||
+                        destinationUpdate.includes("located at") ||
+                        destinationUpdate.includes("265 cohasset") ||
+                        destinationUpdate.includes("here it is") ||
+                        destinationUpdate.includes("cohasset rd")
 
-                )
-            ) {
-                activeJourney.destination = question;
+                    )
+                ) {
+                    activeJourney.destination = question;
 
-                activeJourney.answers.push(
-                    "Destination updated."
-                );
+                    activeJourney.answers.push(
+                        "Destination updated."
+                    );
 
-                result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🧭 Destination Updated</strong>
     <br><br>
@@ -1958,8 +1958,8 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                return;
-            }
+                    return;
+                }
 
                 const navigationSearch =
                     question.toLowerCase();
@@ -1983,7 +1983,7 @@ ${index + 1}. ${instruction}<br><br>
                     navigationSearch.includes("travel to") ||
                     navigationSearch.includes("on my way to") ||
                     navigationSearch.includes("take me to") ||
-                    navigationSearch.includes("how do i get to") 
+                    navigationSearch.includes("how do i get to")
                 ) {
                     const placeResponse = await fetch("/api/searchPlace", {
                         method: "POST",
