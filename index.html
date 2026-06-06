@@ -1211,6 +1211,12 @@ ${activeJourney.answers.length}
 
                         lowerQuestion.includes("my vehicle is parked") ||
 
+                        lowerQuestion === "parking" ||
+
+                        lowerQuestion === "start" ||
+                        
+                        lowerQuestion === "both" ||
+
                         lowerQuestion.includes("bike is parked");
 
                     if (!isMemoryCommand) {
@@ -2407,6 +2413,11 @@ ${journey.staffInstructions &&
 
         <strong>Duration:</strong>
         ${journey.duration || 0} minute(s)
+
+        <br><br>
+
+        <strong>🧭 Starting Location:</strong>
+        ${journey.startLocation || "Not recorded"}
 
         <br><br>
 
