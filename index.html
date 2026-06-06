@@ -2548,37 +2548,20 @@ ${journey.staffInstructions &&
         <br><br>
     `;
 
+
             html += `
-<strong>📝 Notes:</strong>
+${journey.questionsForDoctor &&
+    journey.questionsForDoctor.length
+    ? `
+<strong>❓ Saved Questions:</strong><br>
 
-<br><br>
-
-${journey.notes && journey.notes.length
-                    ? `
-<strong>📝 Notes:</strong><br>
-
-${journey.notes.map(note =>
-                        `• ${note}<br>`
-                    ).join("")}
+${journey.questionsForDoctor.map(question =>
+        `• ${question}<br>`
+    ).join("")}
 
 <br>
 `
-                    : ""}
-`;
-
-            html += `
-<strong>❓ Saved Questions:</strong>
-
-<br><br>
-
-${journey.questionsForDoctor &&
-                    journey.questionsForDoctor.length
-                    ? journey.questionsForDoctor.map(question =>
-                        `• ${question}<br>`
-                    ).join("")
-                    : "No saved questions"}
-
-<br><br>
+    : ""}
 `;
 
             html += `
@@ -2586,14 +2569,18 @@ ${journey.questionsForDoctor &&
 
 <br><br>
 
-${journey.medications &&
-                    journey.medications.length
-                    ? journey.medications.map(medication =>
-                        `• ${medication}<br>`
-                    ).join("")
-                    : "No medications recorded"}
+${journey.directories &&
+    journey.directories.length
+    ? `
+<strong>🏢 Directories:</strong><br>
 
-<br><br>
+${journey.directories.map(directory =>
+        `• ${directory}<br>`
+    ).join("")}
+
+<br>
+`
+    : ""}
 `;
 
             html += `
@@ -2601,14 +2588,18 @@ ${journey.medications &&
 
 <br><br>
 
-${journey.appointments &&
-                    journey.appointments.length
-                    ? journey.appointments.map(appointment =>
-                        `• ${appointment}<br>`
-                    ).join("")
-                    : "No appointments recorded"}
+${journey.directories &&
+    journey.directories.length
+    ? `
+<strong>🏢 Directories:</strong><br>
 
-<br><br>
+${journey.directories.map(directory =>
+        `• ${directory}<br>`
+    ).join("")}
+
+<br>
+`
+    : ""}
 `;
 
             html += `
@@ -2617,13 +2608,17 @@ ${journey.appointments &&
 <br><br>
 
 ${journey.directories &&
-                    journey.directories.length
-                    ? journey.directories.map(directory =>
-                        `• ${directory}<br>`
-                    ).join("")
-                    : "No directory information recorded"}
+    journey.directories.length
+    ? `
+<strong>🏢 Directories:</strong><br>
 
-<br><br>
+${journey.directories.map(directory =>
+        `• ${directory}<br>`
+    ).join("")}
+
+<br>
+`
+    : ""}
 `;
 
             html += `
@@ -2631,14 +2626,18 @@ ${journey.directories &&
 
 <br><br>
 
-${journey.staffInstructions &&
-                    journey.staffInstructions.length
-                    ? journey.staffInstructions.map(instruction =>
-                        `• ${instruction}<br>`
-                    ).join("")
-                    : "No instructions recorded"}
+${journey.directories &&
+    journey.directories.length
+    ? `
+<strong>🏢 Directories:</strong><br>
 
-<br><br>
+${journey.directories.map(directory =>
+        `• ${directory}<br>`
+    ).join("")}
+
+<br>
+`
+    : ""}
 `;
 
             journey.questions.forEach((question, i) => {
