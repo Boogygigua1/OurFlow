@@ -1319,7 +1319,16 @@ ${activeJourney.answers.length}
                 }
 
 
-                const recallQuestion = question.toLowerCase();
+                const recallQuestion =
+                    question
+                        .toLowerCase()
+                        .replace(/[?.!,]/g, "")
+                        .trim();
+
+                console.log(
+                    "RECALL CHECK:",
+                    recallQuestion
+                );
 
                 const noteQuestion = question.toLowerCase();
 
