@@ -873,10 +873,20 @@ ${activeJourney.directories?.length
                 !activeJourney &&
                 (
                     question.toLowerCase().startsWith("start journey to ") ||
+                    question.toLowerCase().startsWith("starting journey to ") ||
+                    question.toLowerCase().startsWith("begin journey to ") ||
+                    question.toLowerCase().startsWith("starting my journey to ") ||
                     question.toLowerCase().startsWith("i'm going to ") ||
                     question.toLowerCase().startsWith("im going to ") ||
                     question.toLowerCase().startsWith("going to ") ||
+                    question.toLowerCase().startsWith("headed to ") ||
                     question.toLowerCase().startsWith("heading to ") ||
+                    question.toLowerCase().startsWith("on my way to ") ||
+                    question.toLowerCase().startsWith("leaving for ") ||
+                    question.toLowerCase().startsWith("leave for ") ||
+                    question.toLowerCase().startsWith("off to ") ||
+                    question.toLowerCase().startsWith("traveling to ") ||
+                    question.toLowerCase().startsWith("travelling to ") ||
                     looksLikeAddress
                 )
             ) {
@@ -948,15 +958,20 @@ ${activeJourney.directories?.length
                 if (
 
                     question.toLowerCase().startsWith("start journey to ") ||
-
+                    question.toLowerCase().startsWith("starting journey to ") ||
+                    question.toLowerCase().startsWith("begin journey to ") ||
+                    question.toLowerCase().startsWith("starting my journey to ") ||
                     question.toLowerCase().startsWith("i'm going to ") ||
-
                     question.toLowerCase().startsWith("im going to ") ||
-
                     question.toLowerCase().startsWith("going to ") ||
-
+                    question.toLowerCase().startsWith("headed to ") ||
                     question.toLowerCase().startsWith("heading to ") ||
-
+                    question.toLowerCase().startsWith("on my way to ") ||
+                    question.toLowerCase().startsWith("leaving for ") ||
+                    question.toLowerCase().startsWith("leave for ") ||
+                    question.toLowerCase().startsWith("off to ") ||
+                    question.toLowerCase().startsWith("traveling to ") ||
+                    question.toLowerCase().startsWith("travelling to ") ||
                     looksLikeAddress
 
 
@@ -1218,7 +1233,7 @@ ${activeJourney.answers.length}
                         lowerQuestion.includes("where did i start") ||
 
                         lowerQuestion.includes("take me back to where i started") ||
-                        
+
                         lowerQuestion.includes("return me to my starting location") ||
 
                         lowerQuestion === "parking" ||
