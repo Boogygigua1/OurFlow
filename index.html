@@ -2088,6 +2088,12 @@ ${index + 1}. ${instruction}<br><br>
 
                 const parkingQuestion = question.toLowerCase();
 
+                console.log(
+                    "PARKING CHECK:",
+                    parkingQuestion,
+                    activeJourney
+                );
+
                 if (
                     parkingQuestion.startsWith("parking location:") ||
                     parkingQuestion.startsWith("save parking:") ||
@@ -2543,16 +2549,16 @@ ${journey.staffInstructions &&
 <br><br>
 
 ${journey.notes && journey.notes.length
-    ? `
+                    ? `
 <strong>📝 Notes:</strong><br>
 
 ${journey.notes.map(note =>
-        `• ${note}<br>`
-    ).join("")}
+                        `• ${note}<br>`
+                    ).join("")}
 
 <br>
 `
-    : ""}
+                    : ""}
 `;
 
             html += `
