@@ -2543,12 +2543,16 @@ ${journey.staffInstructions &&
 <br><br>
 
 ${journey.notes && journey.notes.length
-                    ? journey.notes.map(note =>
-                        `• ${note}<br>`
-                    ).join("")
-                    : "No notes recorded"}
+    ? `
+<strong>📝 Notes:</strong><br>
 
-<br><br>
+${journey.notes.map(note =>
+        `• ${note}<br>`
+    ).join("")}
+
+<br>
+`
+    : ""}
 `;
 
             html += `
