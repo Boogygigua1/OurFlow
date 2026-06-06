@@ -2085,68 +2085,6 @@ ${index + 1}. ${instruction}<br><br>
 
                 {
 
-                    let saveMessage = "";
-
-                    if (question.toLowerCase() === "parking") {
-
-                        activeJourney.parkingLocation =
-                            pendingLocationClassification;
-
-                        saveMessage =
-                            "Parking location recorded.";
-                    }
-
-                    if (question.toLowerCase() === "start") {
-
-                        activeJourney.startLocation =
-                            pendingLocationClassification;
-
-                        saveMessage =
-                            "Starting location recorded.";
-                    }
-
-                    if (question.toLowerCase() === "both") {
-
-                        activeJourney.parkingLocation =
-                            pendingLocationClassification;
-
-                        activeJourney.startLocation =
-                            pendingLocationClassification;
-
-                        saveMessage =
-                            "Starting location and parking location recorded.";
-                    }
-
-                    pendingLocationClassification = "";
-
-                    showActiveJourneyBox();
-
-                    result.innerHTML = `
-<div class="card">
-    <strong>📍 Location Saved</strong>
-
-    <br><br>
-
-    ${saveMessage}
-
-    <br><br>
-
-    Destination:
-
-    <br><br>
-
-    <strong>
-        ${activeJourney.destination}
-    </strong>
-
-    <br><br>
-
-    Can I help with directions, notes, parking reminders, or arrival details?
-</div>
-`;
-
-                    return;
-                }
 
                 const parkingQuestion = question.toLowerCase();
 
