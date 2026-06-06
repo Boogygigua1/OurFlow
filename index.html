@@ -1254,6 +1254,15 @@ ${activeJourney.answers.length}
                         lowerQuestion.includes("where is my ride") ||
                         lowerQuestion.includes("find my ride") ||
 
+                        lowerQuestion.includes("where's my ride") ||
+                        lowerQuestion.includes("wheres my ride") ||
+
+                        lowerQuestion.includes("where's my bike") ||
+                        lowerQuestion.includes("wheres my bike") ||
+
+                        lowerQuestion.includes("where's my car") ||
+                        lowerQuestion.includes("wheres my car") ||
+
                         lowerQuestion.includes("my car is parked") ||
 
                         lowerQuestion.includes("my vehicle is parked") ||
@@ -1344,9 +1353,6 @@ ${activeJourney.answers.length}
                         .toLowerCase()
                         .replace(/[?.!,]/g, "")
                         .trim();
-
-                const normalizedRecallQuestion =
-                    recallQuestion.replace("where's", "where is");
 
                 console.log(
                     "RECALL CHECK:",
@@ -1887,10 +1893,20 @@ ${index + 1}. ${instruction}<br><br>
                     recallQuestion.includes("find my bike") ||
                     recallQuestion.includes("take me back to my bike") ||
 
-                    
+
 
                     recallQuestion.includes("where is my ride") ||
                     recallQuestion.includes("find my ride") ||
+
+                    recallQuestion.includes("where's my ride") ||
+                    recallQuestion.includes("wheres my ride") ||
+
+                    recallQuestion.includes("where's my bike") ||
+                    recallQuestion.includes("wheres my bike") ||
+
+                    recallQuestion.includes("where's my car") ||
+                    recallQuestion.includes("wheres my car") ||
+
                     recallQuestion.includes("take me back to my ride") ||
                     recallQuestion.includes("return me to my ride") ||
                     recallQuestion.includes("help me find my ride") ||
@@ -2039,16 +2055,24 @@ ${index + 1}. ${instruction}<br><br>
                     )
                 ) {
 
+                    let saveMessage = "";
+
                     if (question.toLowerCase() === "parking") {
 
                         activeJourney.parkingLocation =
                             pendingLocationClassification;
+
+                        saveMessage =
+                            "Parking location recorded.";
                     }
 
                     if (question.toLowerCase() === "start") {
 
                         activeJourney.startLocation =
                             pendingLocationClassification;
+
+                        saveMessage =
+                            "Starting location recorded.";
                     }
 
                     if (question.toLowerCase() === "both") {
@@ -2058,6 +2082,9 @@ ${index + 1}. ${instruction}<br><br>
 
                         activeJourney.startLocation =
                             pendingLocationClassification;
+
+                        saveMessage =
+                            "Starting location and parking location recorded.";
                     }
 
                     pendingLocationClassification = "";
@@ -2070,7 +2097,7 @@ ${index + 1}. ${instruction}<br><br>
 
     <br><br>
 
-    Starting location and parking location recorded.
+    ${saveMessage}
 
     <br><br>
 
@@ -2119,6 +2146,10 @@ ${index + 1}. ${instruction}<br><br>
                     parkingQuestion.includes("left my ride") ||
                     parkingQuestion.includes("i left my ride") ||
                     parkingQuestion.includes("my ride is") ||
+                    parkingQuestion.includes("my ride's at") ||
+                    parkingQuestion.includes("my bike is") ||
+                    parkingQuestion.includes("my bicycle is") ||
+                    parkingQuestion.includes("my car is at") ||
                     parkingQuestion.includes("near the elevator") ||
                     parkingQuestion.includes("near elevator") ||
                     parkingQuestion.includes("near the stairs") ||
@@ -2206,8 +2237,6 @@ ${index + 1}. ${instruction}<br><br>
                     question.toLowerCase();
 
                 if (
-                    navigationSearch.includes("where is") ||
-                    navigationSearch.includes("where's") ||
                     navigationSearch.includes("directions") ||
                     navigationSearch.includes("route") ||
                     navigationSearch.includes("fastest route") ||
@@ -2501,6 +2530,11 @@ ${journey.appointments &&
                     ? `<strong>📅 Appointments:</strong><br>${journey.appointments.map(a => `• ${a}<br>`).join("")}<br>`
                     : ""}
 
+${journey.directories &&
+                    journey.directories.length
+                    ? `<strong>🏢 Directories:</strong><br>${journey.directories.map(d => `• ${d}<br>`).join("")}<br>`
+                    : ""}                    
+
 ${journey.staffInstructions &&
                     journey.staffInstructions.length
                     ? `<strong>👩‍⚕️ Instructions:</strong><br>${journey.staffInstructions.map(i => `• ${i}<br>`).join("")}<br>`
@@ -2549,96 +2583,6 @@ ${journey.staffInstructions &&
     `;
 
 
-            html += `
-${journey.questionsForDoctor &&
-    journey.questionsForDoctor.length
-    ? `
-<strong>❓ Saved Questions:</strong><br>
-
-${journey.questionsForDoctor.map(question =>
-        `• ${question}<br>`
-    ).join("")}
-
-<br>
-`
-    : ""}
-`;
-
-            html += `
-<strong>💊 Medications:</strong>
-
-<br><br>
-
-${journey.directories &&
-    journey.directories.length
-    ? `
-<strong>🏢 Directories:</strong><br>
-
-${journey.directories.map(directory =>
-        `• ${directory}<br>`
-    ).join("")}
-
-<br>
-`
-    : ""}
-`;
-
-            html += `
-<strong>📅 Appointments:</strong>
-
-<br><br>
-
-${journey.directories &&
-    journey.directories.length
-    ? `
-<strong>🏢 Directories:</strong><br>
-
-${journey.directories.map(directory =>
-        `• ${directory}<br>`
-    ).join("")}
-
-<br>
-`
-    : ""}
-`;
-
-            html += `
-<strong>🏢 Directories:</strong>
-
-<br><br>
-
-${journey.directories &&
-    journey.directories.length
-    ? `
-<strong>🏢 Directories:</strong><br>
-
-${journey.directories.map(directory =>
-        `• ${directory}<br>`
-    ).join("")}
-
-<br>
-`
-    : ""}
-`;
-
-            html += `
-<strong>👩‍⚕️ Instructions:</strong>
-
-<br><br>
-
-${journey.directories &&
-    journey.directories.length
-    ? `
-<strong>🏢 Directories:</strong><br>
-
-${journey.directories.map(directory =>
-        `• ${directory}<br>`
-    ).join("")}
-
-<br>
-`
-    : ""}
-`;
 
             journey.questions.forEach((question, i) => {
 
