@@ -1189,7 +1189,44 @@ ${activeJourney.answers.length}
                     const lowerQuestion =
                         question.toLowerCase();
 
+                    const isUtilityQuestion =
+
+                        (
+                            lowerQuestion.startsWith("where's ") ||
+                            lowerQuestion.startsWith("where is ") ||
+                            lowerQuestion.startsWith("wheres ") ||
+
+                            lowerQuestion.includes("closest ") ||
+                            lowerQuestion.includes("nearest ") ||
+                            lowerQuestion.includes("near me") ||
+
+                            lowerQuestion.includes("starbucks") ||
+                            lowerQuestion.includes("coffee") ||
+                            lowerQuestion.includes("restaurant") ||
+                            lowerQuestion.includes("gas station") ||
+                            lowerQuestion.includes("hotel") ||
+                            lowerQuestion.includes("hospital")
+                        )
+
+                        &&
+
+                        !lowerQuestion.includes("my ride")
+                        && !lowerQuestion.includes("my bike")
+                        && !lowerQuestion.includes("my car");
+
                     const isMemoryCommand =
+
+                        lowerQuestion.includes("where's my ride") ||
+                        lowerQuestion.includes("where is my ride") ||
+                        lowerQuestion.includes("find my ride") ||
+
+                        lowerQuestion.includes("where's my bike") ||
+                        lowerQuestion.includes("where is my bike") ||
+                        lowerQuestion.includes("find my bike") ||
+
+                        lowerQuestion.includes("where's my car") ||
+                        lowerQuestion.includes("where is my car") ||
+                        lowerQuestion.includes("find my car") ||
 
                         lowerQuestion.startsWith("save appointment:") ||
 
@@ -1303,7 +1340,10 @@ ${activeJourney.answers.length}
 
                         lowerQuestion.includes("bike is parked");
 
-                    if (!isMemoryCommand) {
+                    if (
+                        !isMemoryCommand &&
+                        !isUtilityQuestion
+                    ) {
 
                         activeJourney.questions.push(question);
                     }
