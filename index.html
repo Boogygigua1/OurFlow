@@ -614,7 +614,6 @@ margin-right:auto;
 
         function saveJourney() {
 
-            alert("SAVE BUTTON FIRED");
 
             const result =
                 document.getElementById("result");
@@ -667,7 +666,15 @@ margin-right:auto;
 
             activeJourney = null;
 
-            document.getElementById("questionInput").value = "";
+            activeJourney = null;
+
+            document.getElementById(
+                "activeJourneyBox"
+            ).innerHTML = "";
+
+            document.getElementById(
+                "questionInput"
+            ).value = "";
         }
 
         // AI 
@@ -1260,9 +1267,9 @@ ${activeJourney.answers.length}
 
                         lowerQuestion.includes("take me back to where i started") ||
 
-                        lowerQuestion === "take me back" ||
-                        lowerQuestion === "go back" ||
-                        lowerQuestion === "return me" ||
+                        lowerQuestion.includes("take me back") ||
+                        lowerQuestion.includes("go back") ||
+                        lowerQuestion.includes("return me") ||
 
                         lowerQuestion.includes("return me to my starting location") ||
 
@@ -1860,10 +1867,24 @@ ${index + 1}. ${instruction}<br><br>
                     recallQuestion.includes("where's my car") ||
                     recallQuestion.includes("where is my car") ||
                     recallQuestion.includes("find my car") ||
+                    recallQuestion.includes("where is my bike") ||
+                    recallQuestion.includes("find my bike") ||
+                    recallQuestion.includes("take me back to my bike") ||
+
+                    recallQuestion.includes("where is my ride") ||
+                    recallQuestion.includes("find my ride") ||
+                    recallQuestion.includes("take me back to my ride") ||
+                    recallQuestion.includes("return me to my ride") ||
+                    recallQuestion.includes("help me find my ride") ||
+
                     recallQuestion.includes("take me back to my car") ||
                     recallQuestion.includes("return me to my car") ||
                     recallQuestion.includes("get me back to my car") ||
                     recallQuestion.includes("help me find my car") ||
+
+                    recallQuestion.includes("return me to my bike") ||
+                    recallQuestion.includes("help me find my bike") ||
+
                     recallQuestion.includes("i forgot where i parked")
                 ) {
 
@@ -2068,6 +2089,9 @@ ${index + 1}. ${instruction}<br><br>
                     parkingQuestion.includes("my vehicle is parked") ||
                     parkingQuestion.includes("left my bike") ||
                     parkingQuestion.includes("i left my bike") ||
+                    parkingQuestion.includes("left my ride") ||
+                    parkingQuestion.includes("i left my ride") ||
+                    parkingQuestion.includes("my ride is") ||
                     parkingQuestion.includes("near the elevator") ||
                     parkingQuestion.includes("near elevator") ||
                     parkingQuestion.includes("near the stairs") ||
