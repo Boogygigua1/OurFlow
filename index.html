@@ -1345,6 +1345,9 @@ ${activeJourney.answers.length}
                         .replace(/[?.!,]/g, "")
                         .trim();
 
+                const normalizedRecallQuestion =
+                    recallQuestion.replace("where's", "where is");
+
                 console.log(
                     "RECALL CHECK:",
                     recallQuestion
@@ -1883,6 +1886,8 @@ ${index + 1}. ${instruction}<br><br>
                     recallQuestion.includes("where is my bike") ||
                     recallQuestion.includes("find my bike") ||
                     recallQuestion.includes("take me back to my bike") ||
+
+                    
 
                     recallQuestion.includes("where is my ride") ||
                     recallQuestion.includes("find my ride") ||
