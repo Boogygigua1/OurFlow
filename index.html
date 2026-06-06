@@ -981,10 +981,20 @@ ${activeJourney.directories?.length
 
                     destination = destination
                         .replace(/start journey to /i, "")
+                        .replace(/starting journey to /i, "")
+                        .replace(/begin journey to /i, "")
+                        .replace(/starting my journey to /i, "")
                         .replace(/i'm going to /i, "")
                         .replace(/im going to /i, "")
                         .replace(/going to /i, "")
+                        .replace(/headed to /i, "")
                         .replace(/heading to /i, "")
+                        .replace(/on my way to /i, "")
+                        .replace(/leaving for /i, "")
+                        .replace(/leave for /i, "")
+                        .replace(/off to /i, "")
+                        .replace(/traveling to /i, "")
+                        .replace(/travelling to /i, "")
                         .trim();
 
 
