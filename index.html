@@ -1183,163 +1183,163 @@ ${activeJourney.answers.length}
 
                     return;
                 }
-                    const lowerQuestion =
-                        question.toLowerCase();
+                const lowerQuestion =
+                    question.toLowerCase();
 
-                    const isUtilityQuestion =
+                const isUtilityQuestion =
 
-                        (
-                            lowerQuestion.startsWith("where's ") ||
-                            lowerQuestion.startsWith("where is ") ||
-                            lowerQuestion.startsWith("wheres ") ||
+                    (
+                        lowerQuestion.startsWith("where's ") ||
+                        lowerQuestion.startsWith("where is ") ||
+                        lowerQuestion.startsWith("wheres ") ||
 
-                            lowerQuestion.includes("closest ") ||
-                            lowerQuestion.includes("nearest ") ||
-                            lowerQuestion.includes("near me") ||
+                        lowerQuestion.includes("closest ") ||
+                        lowerQuestion.includes("nearest ") ||
+                        lowerQuestion.includes("near me") ||
 
-                            lowerQuestion.includes("starbucks") ||
-                            lowerQuestion.includes("wells fargo") ||
-                            lowerQuestion.includes("coffee") ||
-                            lowerQuestion.includes("restaurant") ||
-                            lowerQuestion.includes("gas station") ||
-                            lowerQuestion.includes("hotel") ||
-                            lowerQuestion.includes("hospital")
-                        )
+                        lowerQuestion.includes("starbucks") ||
+                        lowerQuestion.includes("wells fargo") ||
+                        lowerQuestion.includes("coffee") ||
+                        lowerQuestion.includes("restaurant") ||
+                        lowerQuestion.includes("gas station") ||
+                        lowerQuestion.includes("hotel") ||
+                        lowerQuestion.includes("hospital")
+                    )
 
-                        &&
+                    &&
 
-                        !lowerQuestion.includes("my ride")
-                        && !lowerQuestion.includes("my bike")
-                        && !lowerQuestion.includes("my car");
+                    !lowerQuestion.includes("my ride")
+                    && !lowerQuestion.includes("my bike")
+                    && !lowerQuestion.includes("my car");
 
-                    const isMemoryCommand =
+                const isMemoryCommand =
 
-                        lowerQuestion.includes("where's my ride") ||
-                        lowerQuestion.includes("where is my ride") ||
-                        lowerQuestion.includes("find my ride") ||
+                    lowerQuestion.includes("where's my ride") ||
+                    lowerQuestion.includes("where is my ride") ||
+                    lowerQuestion.includes("find my ride") ||
 
-                        lowerQuestion.includes("where's my bike") ||
-                        lowerQuestion.includes("where is my bike") ||
-                        lowerQuestion.includes("find my bike") ||
+                    lowerQuestion.includes("where's my bike") ||
+                    lowerQuestion.includes("where is my bike") ||
+                    lowerQuestion.includes("find my bike") ||
 
-                        lowerQuestion.includes("where's my car") ||
-                        lowerQuestion.includes("where is my car") ||
-                        lowerQuestion.includes("find my car") ||
+                    lowerQuestion.includes("where's my car") ||
+                    lowerQuestion.includes("where is my car") ||
+                    lowerQuestion.includes("find my car") ||
 
-                        lowerQuestion.startsWith("save appointment:") ||
+                    lowerQuestion.startsWith("save appointment:") ||
 
-                        lowerQuestion === "show my appointments" ||
+                    lowerQuestion === "show my appointments" ||
 
-                        lowerQuestion === "show appointments" ||
+                    lowerQuestion === "show appointments" ||
 
-                        lowerQuestion.startsWith("save instruction:") ||
+                    lowerQuestion.startsWith("save instruction:") ||
 
-                        lowerQuestion === "show my instructions" ||
+                    lowerQuestion === "show my instructions" ||
 
-                        lowerQuestion === "show instructions" ||
+                    lowerQuestion === "show instructions" ||
 
-                        lowerQuestion.startsWith("save note:") ||
+                    lowerQuestion.startsWith("save note:") ||
 
-                        lowerQuestion.startsWith("save directory:") ||
+                    lowerQuestion.startsWith("save directory:") ||
 
-                        lowerQuestion.startsWith("save question:") ||
+                    lowerQuestion.startsWith("save question:") ||
 
-                        lowerQuestion.startsWith("save medication:") ||
+                    lowerQuestion.startsWith("save medication:") ||
 
-                        lowerQuestion === "show my notes" ||
+                    lowerQuestion === "show my notes" ||
 
-                        lowerQuestion === "show notes" ||
+                    lowerQuestion === "show notes" ||
 
-                        lowerQuestion === "show my questions" ||
+                    lowerQuestion === "show my questions" ||
 
-                        lowerQuestion === "show questions" ||
+                    lowerQuestion === "show questions" ||
 
-                        lowerQuestion === "show my medications" ||
+                    lowerQuestion === "show my medications" ||
 
-                        lowerQuestion === "show medications" ||
+                    lowerQuestion === "show medications" ||
 
-                        lowerQuestion.includes("i'm parked") ||
+                    lowerQuestion.includes("i'm parked") ||
 
-                        lowerQuestion.includes("im parked") ||
+                    lowerQuestion.includes("im parked") ||
 
-                        lowerQuestion.includes("i parked") ||
+                    lowerQuestion.includes("i parked") ||
 
-                        lowerQuestion.includes("parked on") ||
+                    lowerQuestion.includes("parked on") ||
 
-                        lowerQuestion.includes("parked near") ||
+                    lowerQuestion.includes("parked near") ||
 
-                        lowerQuestion.includes("parked at") ||
+                    lowerQuestion.includes("parked at") ||
 
-                        lowerQuestion.includes("left my car") ||
+                    lowerQuestion.includes("left my car") ||
 
-                        lowerQuestion.includes("i left my car") ||
+                    lowerQuestion.includes("i left my car") ||
 
-                        lowerQuestion.includes("left my bike") ||
+                    lowerQuestion.includes("left my bike") ||
 
-                        lowerQuestion.includes("i left my bike") ||
+                    lowerQuestion.includes("i left my bike") ||
 
-                        lowerQuestion.includes("left my bide") ||
-                        lowerQuestion.includes("my bide is") ||
-                        lowerQuestion.includes("bike is") ||
-                        lowerQuestion.includes("bicycle") ||
+                    lowerQuestion.includes("left my bide") ||
+                    lowerQuestion.includes("my bide is") ||
+                    lowerQuestion.includes("bike is") ||
+                    lowerQuestion.includes("bicycle") ||
 
-                        lowerQuestion.includes("left my ride") ||
-                        lowerQuestion.includes("i left my ride") ||
-                        lowerQuestion.includes("my ride is") ||
-                        lowerQuestion.includes("where is my ride") ||
-                        lowerQuestion.includes("find my ride") ||
+                    lowerQuestion.includes("left my ride") ||
+                    lowerQuestion.includes("i left my ride") ||
+                    lowerQuestion.includes("my ride is") ||
+                    lowerQuestion.includes("where is my ride") ||
+                    lowerQuestion.includes("find my ride") ||
 
-                        lowerQuestion.includes("where's my ride") ||
-                        lowerQuestion.includes("wheres my ride") ||
+                    lowerQuestion.includes("where's my ride") ||
+                    lowerQuestion.includes("wheres my ride") ||
 
-                        lowerQuestion.includes("where's my bike") ||
-                        lowerQuestion.includes("wheres my bike") ||
+                    lowerQuestion.includes("where's my bike") ||
+                    lowerQuestion.includes("wheres my bike") ||
 
-                        lowerQuestion.includes("where's my car") ||
-                        lowerQuestion.includes("wheres my car") ||
+                    lowerQuestion.includes("where's my car") ||
+                    lowerQuestion.includes("wheres my car") ||
 
-                        lowerQuestion.includes("my car is parked") ||
+                    lowerQuestion.includes("my car is parked") ||
 
-                        lowerQuestion.includes("my vehicle is parked") ||
+                    lowerQuestion.includes("my vehicle is parked") ||
 
-                        lowerQuestion.includes("where did i park") ||
+                    lowerQuestion.includes("where did i park") ||
 
-                        lowerQuestion.includes("where am i parked") ||
+                    lowerQuestion.includes("where am i parked") ||
 
-                        lowerQuestion.includes("where did i start") ||
+                    lowerQuestion.includes("where did i start") ||
 
-                        lowerQuestion.includes("take me back to where i started") ||
+                    lowerQuestion.includes("take me back to where i started") ||
 
-                        lowerQuestion.includes("take me back") ||
-                        lowerQuestion.includes("go back") ||
-                        lowerQuestion.includes("return me") ||
+                    lowerQuestion.includes("take me back") ||
+                    lowerQuestion.includes("go back") ||
+                    lowerQuestion.includes("return me") ||
 
-                        lowerQuestion.includes("get back there") ||
-                        lowerQuestion.includes("help me get back") ||
-                        lowerQuestion.includes("get me back") ||
+                    lowerQuestion.includes("get back there") ||
+                    lowerQuestion.includes("help me get back") ||
+                    lowerQuestion.includes("get me back") ||
 
-                        lowerQuestion.includes("return me to my starting location") ||
+                    lowerQuestion.includes("return me to my starting location") ||
 
-                        lowerQuestion === "parking" ||
+                    lowerQuestion === "parking" ||
 
-                        lowerQuestion === "start" ||
+                    lowerQuestion === "start" ||
 
-                        lowerQuestion === "both" ||
+                    lowerQuestion === "both" ||
 
-                        lowerQuestion === "yes" ||
-                        lowerQuestion === "y" ||
-                        lowerQuestion === "yeah" ||
-                        lowerQuestion === "yep" ||
-                        lowerQuestion === "sure" ||
-                        lowerQuestion === "ok" ||
-                        lowerQuestion === "okay" ||
-                        lowerQuestion === "no" ||
-                        lowerQuestion === "nope" ||
+                    lowerQuestion === "yes" ||
+                    lowerQuestion === "y" ||
+                    lowerQuestion === "yeah" ||
+                    lowerQuestion === "yep" ||
+                    lowerQuestion === "sure" ||
+                    lowerQuestion === "ok" ||
+                    lowerQuestion === "okay" ||
+                    lowerQuestion === "no" ||
+                    lowerQuestion === "nope" ||
 
-                        lowerQuestion.includes("bike is parked");
+                    lowerQuestion.includes("bike is parked");
 
-                    if (activeJourney) {
-    
+                if (activeJourney) {
+
                     if (
                         !isMemoryCommand &&
                         !isUtilityQuestion
@@ -2083,14 +2083,7 @@ ${index + 1}. ${instruction}<br><br>
                     return;
                 }
 
-                if (
-                    pendingLocationClassification &&
-                    (
-                        question.toLowerCase() === "parking" ||
-                        question.toLowerCase() === "start" ||
-                        question.toLowerCase() === "both"
-                    )
-                ) {
+                {
 
                     let saveMessage = "";
 
@@ -2204,24 +2197,25 @@ ${index + 1}. ${instruction}<br><br>
 
     <br><br>
 
-    Should I remember this as:
+    Should I remember this as?
 
     <br><br>
 
-    1. Parking Location
-
-    <br>
-
-    2. Starting Location
-
-    <br>
-
-    3. Both
+    <button onclick="saveLocationType('parking')">
+        🚗 Parking
+    </button>
 
     <br><br>
 
-    Reply:
-    Parking, Start, or Both
+    <button onclick="saveLocationType('start')">
+        🧭 Start
+    </button>
+
+    <br><br>
+
+    <button onclick="saveLocationType('both')">
+        🚗🧭 Both
+    </button>
 </div>
 `;
 
@@ -2623,7 +2617,13 @@ ${journey.staffInstructions &&
         <br><br>
     `;
 
+            if (journey.questions.length === 0) {
 
+                html += `
+No journey events recorded.
+<br><br>
+`;
+            }
 
             journey.questions.forEach((question, i) => {
 
@@ -2674,6 +2674,75 @@ ${journey.staffInstructions &&
             pendingParkingLocation = "";
 
             alert("📍 Parking location saved.");
+        }
+
+        function saveLocationType(type) {
+
+            if (!activeJourney ||
+                !pendingLocationClassification) {
+                return;
+            }
+
+            let saveMessage = "";
+
+            if (type === "parking") {
+
+                activeJourney.parkingLocation =
+                    pendingLocationClassification;
+
+                saveMessage =
+                    "Parking location recorded.";
+            }
+
+            if (type === "start") {
+
+                activeJourney.startLocation =
+                    pendingLocationClassification;
+
+                saveMessage =
+                    "Starting location recorded.";
+            }
+
+            if (type === "both") {
+
+                activeJourney.parkingLocation =
+                    pendingLocationClassification;
+
+                activeJourney.startLocation =
+                    pendingLocationClassification;
+
+                saveMessage =
+                    "Starting location and parking location recorded.";
+            }
+
+            pendingLocationClassification = "";
+
+            showActiveJourneyBox();
+
+            document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📍 Location Saved</strong>
+
+    <br><br>
+
+    ${saveMessage}
+
+    <br><br>
+
+    Destination:
+
+    <br><br>
+
+    <strong>
+        ${activeJourney.destination}
+    </strong>
+
+    <br><br>
+
+    Can I help with directions, notes,
+    parking reminders, or arrival details?
+</div>
+`;
         }
 
         function filterJourneys() {
