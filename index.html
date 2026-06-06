@@ -678,6 +678,8 @@ margin-right:auto;
 
         let pendingParkingLocation = "";
 
+        let pendingLocationClassification = "";
+
         let savedJourneys =
             JSON.parse(localStorage.getItem("savedJourneys")) || [];
 
@@ -1906,6 +1908,57 @@ ${index + 1}. ${instruction}<br><br>
                     return;
                 }
 
+                if (
+                    pendingLocationClassification &&
+                    (
+                        question.toLowerCase() === "parking" ||
+                        question.toLowerCase() === "start" ||
+                        question.toLowerCase() === "both"
+                    )
+                ) {
+
+                    if (question.toLowerCase() === "parking") {
+
+                        activeJourney.parkingLocation =
+                            pendingLocationClassification;
+                    }
+
+                    if (question.toLowerCase() === "start") {
+
+                        activeJourney.startLocation =
+                            pendingLocationClassification;
+                    }
+
+                    if (question.toLowerCase() === "both") {
+
+                        activeJourney.parkingLocation =
+                            pendingLocationClassification;
+
+                        activeJourney.startLocation =
+                            pendingLocationClassification;
+                    }
+
+                    pendingLocationClassification = "";
+
+                    showActiveJourneyBox();
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>📍 Location Saved</strong>
+
+    <br><br>
+
+    Great!
+
+    <br><br>
+
+    Where are you headed?
+</div>
+`;
+
+                    return;
+                }
+
                 const parkingQuestion = question.toLowerCase();
 
                 if (
@@ -1932,25 +1985,32 @@ ${index + 1}. ${instruction}<br><br>
 
                     if (activeJourney) {
 
-                        activeJourney.parkingLocation = question;
-
-                        showActiveJourneyBox();
-
-                        activeJourney.answers.push(
-                            "Parking location saved."
-                        );
+                        pendingLocationClassification = question;
 
                         result.innerHTML = `
 <div class="card">
-    <strong>📍 Parking Location Saved</strong>
+    <strong>📍 Location Found</strong>
 
     <br><br>
 
-    I've saved your parking location for this journey.
+    Should I remember this as:
 
     <br><br>
 
-    Can I help you further? 🧭
+    1. Parking Location
+
+    <br>
+
+    2. Starting Location
+
+    <br>
+
+    3. Both
+
+    <br><br>
+
+    Reply:
+    Parking, Start, or Both
 </div>
 `;
 
