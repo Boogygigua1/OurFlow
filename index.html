@@ -1833,30 +1833,6 @@ ${index + 1}. ${instruction}<br><br>
     return;
 }
 
-if (
-    activeJourney &&
-    (
-        noteQuestion.startsWith("this is") ||
-        noteQuestion.startsWith("here is") ||
-        noteQuestion.startsWith("i found") ||
-        noteQuestion.startsWith("it says")
-    )
-) {
-
-    result.innerHTML = `
-<div class="card">
-    <strong>🧭 Information Recorded</strong>
-
-    <br><br>
-
-    I added that information to the current journey.
-
-</div>
-`;
-
-    return;
-}
-
                 if (
                 activeJourney &&
                 (
