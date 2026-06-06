@@ -737,6 +737,12 @@ ${activeJourney.destinationAddress ||
 
 <br><br>
 
+<strong>🧭 Starting Location:</strong><br>
+${activeJourney.startLocation ||
+                "No starting location saved yet."}
+
+<br><br>
+
 <strong>🚗 Parking Memory:</strong><br>
 ${activeJourney.parkingLocation ||
                 "No parking location saved yet."}
@@ -1264,7 +1270,8 @@ ${activeJourney.answers.length}
                         noteQuestion.includes("address is") ||
                         noteQuestion.includes("this is the address") ||
                         noteQuestion.includes("enter at") ||
-                        noteQuestion.includes("located at")
+                        noteQuestion.includes("located at") ||
+                        question.match(/\d{3,}/)
                     )
                 ) {
 
@@ -1878,7 +1885,6 @@ ${index + 1}. ${instruction}<br><br>
                 if (
                     activeJourney &&
                     (
-                        noteQuestion.includes("suite") ||
                         noteQuestion.includes("department") ||
                         noteQuestion.includes("hematology") ||
                         noteQuestion.includes("elevator") ||
