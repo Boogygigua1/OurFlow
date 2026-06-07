@@ -1306,7 +1306,12 @@ Ready to save?
                         lowerQuestion.includes("restaurant") ||
                         lowerQuestion.includes("gas station") ||
                         lowerQuestion.includes("hotel") ||
-                        lowerQuestion.includes("hospital")
+
+                        (
+                            lowerQuestion.includes("hospital")
+                            &&
+                            !lowerQuestion.startsWith("start a journey")
+                        )
                     )
 
                     &&
@@ -1314,7 +1319,7 @@ Ready to save?
                     !lowerQuestion.includes("my ride")
                     && !lowerQuestion.includes("my bike")
                     && !lowerQuestion.includes("my car");
-
+                    
                 const isMemoryCommand =
 
                     lowerQuestion.includes("where's my ride") ||
