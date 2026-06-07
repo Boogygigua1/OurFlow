@@ -1000,10 +1000,14 @@ ${activeJourney.directories?.length
                 conversationHistory.push(question);
 
                 if (
-
-                    question.toLowerCase().startsWith("start journey to ") ||
-                    question.toLowerCase().startsWith("starting journey to ") ||
                     question.toLowerCase().startsWith("begin journey to ") ||
+                    question.toLowerCase().startsWith("start journey to ") ||
+                    question.toLowerCase().startsWith("start a journey ") ||
+                    question.toLowerCase().startsWith("start a journey to ") ||
+                    question.toLowerCase().startsWith("start journey ") ||
+                    question.toLowerCase().startsWith("starting a journey ") ||
+                    question.toLowerCase().startsWith("starting journey ") ||
+                    question.toLowerCase().startsWith("starting journey to ") ||
                     question.toLowerCase().startsWith("starting my journey to ") ||
                     question.toLowerCase().startsWith("i'm going to ") ||
                     question.toLowerCase().startsWith("im going to ") ||
@@ -1024,8 +1028,13 @@ ${activeJourney.directories?.length
                     let destination = question;
 
                     destination = destination
+                        .replace(/start journey /i, "")
                         .replace(/start journey to /i, "")
+                        .replace(/start a journey /i, "")
+                        .replace(/start a journey to /i, "")
+                        .replace(/starting journey /i, "")
                         .replace(/starting journey to /i, "")
+                        .replace(/starting a journey /i, "")
                         .replace(/begin journey to /i, "")
                         .replace(/starting my journey to /i, "")
                         .replace(/i'm going to /i, "")
@@ -1040,7 +1049,6 @@ ${activeJourney.directories?.length
                         .replace(/traveling to /i, "")
                         .replace(/travelling to /i, "")
                         .trim();
-
 
                     activeJourney = {
 
@@ -1314,7 +1322,13 @@ Ready to save?
                         (
                             lowerQuestion.includes("hospital")
                             &&
+                            !lowerQuestion.startsWith("start journey")
+                            &&
                             !lowerQuestion.startsWith("start a journey")
+                            &&
+                            !lowerQuestion.startsWith("starting journey")
+                            &&
+                            !lowerQuestion.startsWith("starting a journey")
                         )
                     )
 
