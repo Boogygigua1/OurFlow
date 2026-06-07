@@ -1599,7 +1599,6 @@ ${activeJourney.directories?.length
                 if (
                     activeJourney &&
                     (
-                        noteQuestion.startsWith("take ") ||
                         noteQuestion.startsWith("follow up in ") ||
                         noteQuestion.startsWith("return in ") ||
                         noteQuestion.startsWith("schedule another ") ||
@@ -2336,6 +2335,28 @@ ${index + 1}. ${instruction}<br><br>
                         noteQuestion.includes("reception")
                     )
                 ) {
+
+                    if (
+                        activeJourney.directories.includes(question)
+                    ) {
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>🏢 Directory Already Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I already have that directory information.
+</div>
+`;
+
+                        return;
+                    }
+
                     activeJourney.directories.push(question);
 
                     activeJourney.timeline.push(
