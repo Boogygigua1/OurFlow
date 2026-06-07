@@ -1044,15 +1044,17 @@ ${activeJourney.directories?.length
                     let destination = question;
 
                     destination = destination
-                        .replace(/start journey /i, "")
-                        .replace(/start journey to /i, "")
-                        .replace(/start a journey /i, "")
                         .replace(/start a journey to /i, "")
-                        .replace(/starting journey /i, "")
-                        .replace(/starting journey to /i, "")
-                        .replace(/starting a journey /i, "")
-                        .replace(/begin journey to /i, "")
+                        .replace(/start journey to /i, "")
                         .replace(/starting my journey to /i, "")
+                        .replace(/starting journey to /i, "")
+                        .replace(/begin journey to /i, "")
+
+                        .replace(/start a journey /i, "")
+                        .replace(/start journey /i, "")
+                        .replace(/starting a journey /i, "")
+                        .replace(/starting journey /i, "")
+
                         .replace(/i'm going to /i, "")
                         .replace(/im going to /i, "")
                         .replace(/going to /i, "")
