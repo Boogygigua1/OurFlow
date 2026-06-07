@@ -796,6 +796,12 @@ ${activeJourney.directories?.length
             activeJourney.arrivalTips =
                 placeData.arrivalTip ||
                 "Map search ready. Open Google Maps and check Street View, reviews, parking, and entrance details before leaving.";
+
+            activeJourney.timeline.push(
+                "🚪 Arrival Help Saved: " +
+                activeJourney.arrivalTips
+            );
+
             activeJourney.mapLink =
                 placeData.mapUrl;
 
@@ -1442,6 +1448,11 @@ ${activeJourney.answers.length}
 
                     activeJourney.destinationAddress = question;
 
+                    activeJourney.timeline.push(
+                        "📍 Destination Saved: " +
+                        question
+                    );
+
                     showActiveJourneyBox();
 
                     result.innerHTML = `
@@ -1455,6 +1466,39 @@ ${activeJourney.answers.length}
     <br><br>
 
     I'll remember this as part of the destination details.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion.startsWith("need to ") ||
+                        noteQuestion.startsWith("remember to ") ||
+                        noteQuestion.startsWith("don't forget to ") ||
+                        noteQuestion.startsWith("dont forget to ")
+                    )
+                ) {
+
+                    activeJourney.notes.push(question);
+
+                    activeJourney.timeline.push(
+                        "📝 Note Saved: " + question
+                    );
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>📝 Note Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I'll remember that for this journey.
 </div>
 `;
 
@@ -1681,6 +1725,11 @@ ${activeJourney.answers.length}
 
                     activeJourney.startLocation =
                         startLocation;
+
+                    activeJourney.timeline.push(
+                        "🧭 Starting Location Saved: " +
+                        startLocation
+                    );
 
                     showActiveJourneyBox();
 
@@ -2457,19 +2506,14 @@ ${index + 1}. ${instruction}<br><br>
 
     <br>
 
-    Questions:
-    ${journey.questions.length}
+    Events:
+    ${journey.timeline?.length || 0}
 
     <br>
 
-    Answers:
-    ${journey.answers.length}
-
-    <br>
-
-<button onclick="event.stopPropagation(); deleteJourney(${index})">
-    🗑 Delete Journey
-</button>
+    <button onclick="event.stopPropagation(); deleteJourney(${index})">
+        🗑 Delete Journey
+    </button>
 
     <div
         id="journey-${index}"
