@@ -85,6 +85,16 @@
             width: 95%;
             text-align: left;
         }
+
+        .project-credit {
+            font-size: 10px;
+            color: #aaa;
+            opacity: 0.75;
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
     </style>
 </head>
 
@@ -667,6 +677,10 @@ margin-right:auto;
 
             activeJourney = null;
 
+            localStorage.removeItem(
+                "activeJourney"
+            );
+
             document.getElementById(
                 "activeJourneyBox"
             ).innerHTML = "";
@@ -682,7 +696,10 @@ margin-right:auto;
 
         let conversationHistory = [];
 
-        let activeJourney = null;
+        let activeJourney =
+            JSON.parse(
+                localStorage.getItem("activeJourney")
+            ) || null;
 
         let pendingParkingLocation = "";
 
@@ -768,7 +785,14 @@ ${activeJourney.directories?.length
     </button>
 </div>
 `;
+
+            localStorage.setItem(
+                "activeJourney",
+                JSON.stringify(activeJourney)
+            );
         }
+
+
 
         async function getArrivalHelp(destination) {
 
@@ -1175,6 +1199,10 @@ ${activeJourney.directories?.length
                     activeJourney.endTime =
                         new Date().toLocaleString();
 
+                    localStorage.setItem(
+                        "activeJourney",
+                        JSON.stringify(activeJourney)
+                    );
 
                     const start = new Date(activeJourney.startTime);
                     const end = new Date(activeJourney.endTime);
@@ -3043,6 +3071,16 @@ ${journey.staffInstructions?.join(" ") || ""}
             alert(
                 "🧭 Journey archive full.\n\n" +
                 "Upgrade for 25 additional saved journeys."
+            );
+        }
+
+        if (activeJourney) {
+
+            showActiveJourneyBox();
+
+            console.log(
+                "Recovered active journey:",
+                activeJourney.destination
             );
         }
 
