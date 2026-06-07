@@ -884,6 +884,22 @@ ${activeJourney.directories?.length
             };
         }
 
+        function openGoogleMapsToStartLocation() {
+
+            alert("🧭 Return to Start clicked");
+
+            if (!activeJourney?.startLocation) {
+                alert("No starting location recorded.");
+                return;
+            }
+
+            const mapUrl =
+                "https://www.google.com/maps/search/?api=1&query=" +
+                encodeURIComponent(activeJourney.startLocation);
+
+            window.open(mapUrl, "_blank");
+        }
+
         async function askOurFlow() {
 
             const question =
@@ -2413,7 +2429,13 @@ ${index + 1}. ${instruction}<br><br>
 
     <br><br>
 
-    Can I help you get back there?
+<button onclick="openGoogleMapsToStartLocation()">
+    🧭 Return To Start
+</button>
+
+<br><br>
+
+Can I help you get back there?
 </div>
 `;
 
