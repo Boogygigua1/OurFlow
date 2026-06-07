@@ -1219,30 +1219,60 @@ ${activeJourney.directories?.length
 
                     result.innerHTML = `
 <div class="card">
-    <strong>🧭 Journey Ended</strong><br><br>
+    <strong>🧭 Journey Recap</strong>
+
+    <br><br>
 
     Destination:
     ${activeJourney.destination}
 
     <br><br>
 
-    Started:
-    ${activeJourney.startTime}
+    ❓ Questions:
+    ${activeJourney.questionsForDoctor?.length || 0}
 
     <br><br>
 
-    Ended:
-    ${activeJourney.endTime}
+    📝 Notes:
+    ${activeJourney.notes?.length || 0}
 
     <br><br>
 
-    Duration:
+    💊 Medications:
+    ${activeJourney.medications?.length || 0}
+
+    <br><br>
+
+    📅 Appointments:
+    ${activeJourney.appointments?.length || 0}
+
+    <br><br>
+
+    👩‍⚕️ Instructions:
+    ${activeJourney.staffInstructions?.length || 0}
+
+    <br><br>
+
+    🏢 Directories:
+    ${activeJourney.directories?.length || 0}
+
+    <br><br>
+
+    ⏱ Duration:
     ${activeJourney.duration} minute(s)
 
     <br><br>
 
-    Events:
+    📌 Total Events:
     ${activeJourney.timeline?.length || 0}
+
+    <br><br>
+
+    You captured important information during this journey.
+
+    <br><br>
+
+    Ready to save?
 
     <br><br>
 
@@ -1538,6 +1568,9 @@ ${activeJourney.directories?.length
                         question
                     );
 
+                    showActiveJourneyBox();
+
+
                     result.innerHTML = `
 <div class="card">
     <strong>❓ Question Saved</strong>
@@ -1574,6 +1607,9 @@ ${activeJourney.directories?.length
                         question
                     );
 
+                    showActiveJourneyBox();
+
+
                     result.innerHTML = `
 <div class="card">
     <strong>💊 Medication Saved</strong>
@@ -1607,6 +1643,9 @@ ${activeJourney.directories?.length
                         "📅 Appointment Saved: " +
                         question
                     );
+
+                    showActiveJourneyBox();
+
 
                     result.innerHTML = `
 <div class="card">
@@ -1652,6 +1691,9 @@ ${activeJourney.directories?.length
                         question
                     );
 
+                    showActiveJourneyBox();
+
+
                     result.innerHTML = `
 <div class="card">
     <strong>👩‍⚕️ Instruction Saved</strong>
@@ -1684,6 +1726,8 @@ ${activeJourney.directories?.length
                     activeJourney.timeline.push(
                         "📝 Note Saved: " + question
                     );
+
+                    showActiveJourneyBox();
 
                     result.innerHTML = `
 <div class="card">
@@ -1754,6 +1798,8 @@ ${activeJourney.directories?.length
                         doctorQuestion
                     );
 
+                    showActiveJourneyBox();
+
                     result.innerHTML = `
 <div class="card">
     <strong>❓ Question Saved</strong>
@@ -1788,6 +1834,8 @@ ${activeJourney.directories?.length
                         "💊 Medication Saved: " +
                         medication
                     );
+
+                    showActiveJourneyBox();
 
                     result.innerHTML = `
 <div class="card">
@@ -1893,6 +1941,8 @@ ${activeJourney.directories?.length
                         "👩‍⚕️ Instruction Saved: " +
                         instruction
                     );
+
+                    showActiveJourneyBox();
 
                     result.innerHTML = `
 <div class="card">
