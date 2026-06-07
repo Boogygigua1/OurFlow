@@ -939,6 +939,8 @@ ${activeJourney.directories?.length
 
                     answers: [],
 
+                    timeline: [],
+
                     endLocation: "",
 
                     endTime: ""
@@ -1047,6 +1049,8 @@ ${activeJourney.directories?.length
                         questions: [],
 
                         answers: [],
+
+                        timeline: [],
 
                         endLocation:
                             "",
@@ -2552,7 +2556,10 @@ ${journey.staffInstructions &&
         <br><br>
     `;
 
-            if (journey.questions.length === 0) {
+            if (
+                !journey.timeline ||
+                journey.timeline.length === 0
+            ) {
 
                 html += `
 No journey events recorded.
@@ -2560,21 +2567,16 @@ No journey events recorded.
 `;
             }
 
-            journey.questions.forEach((question, i) => {
+            else {
 
-                html += `
-            <strong>Q${i + 1}:</strong>
-            ${question}
+                journey.timeline.forEach(event => {
 
-            <br>
-
-            <strong>A${i + 1}:</strong>
-            ${journey.answers[i] || ""}
-
-            <br><br>
-        `;
-            });
-
+                    html += `
+${event}
+<br><br>
+`;
+                });
+            }
             details.innerHTML = html;
 
             details.style.display = "block";
@@ -2625,6 +2627,11 @@ No journey events recorded.
                 activeJourney.parkingLocation =
                     pendingLocationClassification;
 
+                activeJourney.timeline.push(
+                    "🚗 Parking Saved: " +
+                    pendingLocationClassification
+                );
+
                 saveMessage =
                     "Parking location recorded.";
             }
@@ -2633,6 +2640,11 @@ No journey events recorded.
 
                 activeJourney.startLocation =
                     pendingLocationClassification;
+
+                activeJourney.timeline.push(
+                    "🧭 Starting Location Saved: " +
+                    pendingLocationClassification
+                );
 
                 saveMessage =
                     "Starting location recorded.";
@@ -2645,6 +2657,16 @@ No journey events recorded.
 
                 activeJourney.startLocation =
                     pendingLocationClassification;
+
+                activeJourney.timeline.push(
+                    "🚗 Parking Saved: " +
+                    pendingLocationClassification
+                );
+
+                activeJourney.timeline.push(
+                    "🧭 Starting Location Saved: " +
+                    pendingLocationClassification
+                );
 
                 saveMessage =
                     "Starting location and parking location recorded.";
