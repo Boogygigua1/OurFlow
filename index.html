@@ -1060,6 +1060,11 @@ ${activeJourney.directories?.length
                     };
 
 
+                    activeJourney.timeline.push(
+                        "🧭 Journey Started: " +
+                        destination
+                    );
+
                     showActiveJourneyBox();
 
                     await getArrivalHelp(destination);
@@ -1148,6 +1153,11 @@ ${activeJourney.directories?.length
                         Math.round((end - start) / 60000);
 
                     activeJourney.duration = minutes;
+
+                    activeJourney.timeline.push(
+                        "🧭 Journey Ended: " +
+                        activeJourney.destination
+                    );
 
                     result.innerHTML = `
     <div class="card">
