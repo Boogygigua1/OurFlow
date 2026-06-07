@@ -1112,13 +1112,35 @@ ${activeJourney.directories?.length
 
     <br><br>
 
-    ${activeJourney.destination}
+    <strong>${activeJourney.destination}</strong>
 
     <br><br>
 
-    I'll continue remembering notes, questions,
-    medications, appointments, and instructions
-    for this journey.
+    What would you like me to remember?
+
+    <br><br>
+
+    ❓ Questions for staff
+
+    <br>
+
+    📝 Notes
+
+    <br>
+
+    📅 Appointments
+
+    <br>
+
+    👩‍⚕️ Instructions
+
+    <br>
+
+    🏢 Directory information
+
+    <br><br>
+
+    Just tell me naturally and I'll save it for this journey.
 </div>
 `;
 
@@ -1545,9 +1567,7 @@ ${activeJourney.directories?.length
                     activeJourney &&
                     (
                         noteQuestion.startsWith("appointment ") ||
-                        noteQuestion.startsWith("my appointment is ") ||
-                        noteQuestion.startsWith("follow-up ") ||
-                        noteQuestion.startsWith("follow up ")
+                        noteQuestion.startsWith("my appointment is ")
                     )
                 ) {
 
