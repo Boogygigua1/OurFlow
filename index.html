@@ -1462,6 +1462,10 @@ ${activeJourney.answers.length}
 
                     activeJourney.notes.push(note);
 
+                    activeJourney.timeline.push(
+                        "📝 Note Saved: " + note
+                    );
+
                     result.innerHTML = `
 <div class="card">
     <strong>📝 Note Saved</strong>
@@ -1491,6 +1495,11 @@ ${activeJourney.answers.length}
                         .trim();
 
                     activeJourney.questionsForDoctor.push(
+                        doctorQuestion
+                    );
+
+                    activeJourney.timeline.push(
+                        "❓ Question Saved: " +
                         doctorQuestion
                     );
 
@@ -1524,6 +1533,11 @@ ${activeJourney.answers.length}
                         medication
                     );
 
+                    activeJourney.timeline.push(
+                        "💊 Medication Saved: " +
+                        medication
+                    );
+
                     result.innerHTML = `
 <div class="card">
     <strong>💊 Medication Saved</strong>
@@ -1551,6 +1565,11 @@ ${activeJourney.answers.length}
                         .trim();
 
                     activeJourney.directories.push(directory);
+
+                    activeJourney.timeline.push(
+                        "🏢 Directory Saved: " +
+                        directory
+                    );
 
                     showActiveJourneyBox();
 
@@ -1584,6 +1603,11 @@ ${activeJourney.answers.length}
                         appointment
                     );
 
+                    activeJourney.timeline.push(
+                        "📅 Appointment Saved: " +
+                        appointment
+                    );
+
                     result.innerHTML = `
 <div class="card">
     <strong>📅 Appointment Saved</strong>
@@ -1611,6 +1635,11 @@ ${activeJourney.answers.length}
                         .trim();
 
                     activeJourney.staffInstructions.push(
+                        instruction
+                    );
+
+                    activeJourney.timeline.push(
+                        "👩‍⚕️ Instruction Saved: " +
                         instruction
                     );
 
@@ -2079,6 +2108,11 @@ ${index + 1}. ${instruction}<br><br>
                     )
                 ) {
                     activeJourney.directories.push(question);
+
+                    activeJourney.timeline.push(
+                        "🏢 Directory Saved: " +
+                        question
+                    );
 
                     showActiveJourneyBox();
 
