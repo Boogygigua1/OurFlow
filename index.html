@@ -3076,13 +3076,26 @@ ${journey.staffInstructions?.join(" ") || ""}
 
         if (activeJourney) {
 
-            showActiveJourneyBox();
+    showActiveJourneyBox();
 
-            console.log(
-                "Recovered active journey:",
-                activeJourney.destination
-            );
-        }
+    result.innerHTML = `
+<div class="card">
+    <strong>🧭 Active Journey Restored</strong>
+
+    <br><br>
+
+    Welcome back.
+
+    <br><br>
+
+    Continuing journey to:
+
+    <br><br>
+
+    ${activeJourney.destination}
+</div>
+`;
+}
 
     </script>
 
