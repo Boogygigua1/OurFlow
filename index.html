@@ -1356,9 +1356,19 @@ ${activeJourney.answers.length}
 
                 if (activeJourney) {
 
+                    const isDirectoryEntry =
+
+                        lowerQuestion.includes("department") ||
+                        lowerQuestion.includes("hematology") ||
+                        lowerQuestion.includes("elevator") ||
+                        lowerQuestion.includes("directory") ||
+                        lowerQuestion.includes("check-in") ||
+                        lowerQuestion.includes("reception");
+
                     if (
                         !isMemoryCommand &&
-                        !isUtilityQuestion
+                        !isUtilityQuestion &&
+                        !isDirectoryEntry
                     ) {
 
                         activeJourney.questions.push(question);
