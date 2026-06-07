@@ -3076,9 +3076,9 @@ ${journey.staffInstructions?.join(" ") || ""}
 
         if (activeJourney) {
 
-    showActiveJourneyBox();
+            showActiveJourneyBox();
 
-    result.innerHTML = `
+            document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>🧭 Active Journey Restored</strong>
 
@@ -3088,14 +3088,18 @@ ${journey.staffInstructions?.join(" ") || ""}
 
     <br><br>
 
-    Continuing journey to:
+    I'm still tracking your journey to:
 
     <br><br>
 
-    ${activeJourney.destination}
+    <strong>${activeJourney.destination}</strong>
+
+    <br><br>
+
+    Your notes, questions, appointments, instructions, and other journey details have been restored.
 </div>
 `;
-}
+        }
 
     </script>
 
