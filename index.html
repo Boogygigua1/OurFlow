@@ -1065,6 +1065,8 @@ ${activeJourney.directories?.length
                         destination
                     );
 
+                    console.log(activeJourney.timeline);
+
                     showActiveJourneyBox();
 
                     await getArrivalHelp(destination);
@@ -2628,6 +2630,10 @@ ${event}
             if (!activeJourney ||
                 !pendingLocationClassification) {
                 return;
+            }
+
+            if (!activeJourney.timeline) {
+                activeJourney.timeline = [];
             }
 
             let saveMessage = "";
