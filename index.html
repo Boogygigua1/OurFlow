@@ -776,7 +776,7 @@ ${activeJourney.parkingLocation ||
 
 <strong>🏢 Directory Memory:</strong><br>
 ${activeJourney.directories?.length
-                    ? activeJourney.directories.slice(-3).join("<br>• ")
+                    ? "• " + activeJourney.directories.slice(-3).join("<br>• ")
                     : "No directory information saved yet."}
     <br><br>
 
@@ -1268,11 +1268,15 @@ ${activeJourney.directories?.length
 
     <br><br>
 
-    You captured important information during this journey.
+    You captured ${activeJourney.timeline?.length || 0} important moments during this journey.
 
-    <br><br>
+<br><br>
 
-    Ready to save?
+Take a moment to review everything before saving.
+
+<br><br>
+
+Ready to save?
 
     <br><br>
 
@@ -1760,6 +1764,8 @@ ${activeJourney.directories?.length
                     activeJourney.timeline.push(
                         "📝 Note Saved: " + note
                     );
+
+                    showActiveJourneyBox();
 
                     result.innerHTML = `
 <div class="card">
@@ -2869,10 +2875,19 @@ ${journey.appointments &&
                     ? `<strong>📅 Appointments:</strong><br>${journey.appointments.map(a => `• ${a}<br>`).join("")}<br>`
                     : ""}
 
+${journey.parkingLocation
+                    ? `<strong>🚗 Parking:</strong><br>• ${journey.parkingLocation}<br><br>`
+                    : ""}
+
+${journey.startLocation
+                    ? `<strong>🧭 Starting Location:</strong><br>• ${journey.startLocation}<br><br>`
+                    : ""}  
+
 ${journey.directories &&
                     journey.directories.length
                     ? `<strong>🏢 Directories:</strong><br>${journey.directories.map(d => `• ${d}<br>`).join("")}<br>`
-                    : ""}                    
+                    : ""}    
+                                      
 
 ${journey.staffInstructions &&
                     journey.staffInstructions.length
@@ -3108,6 +3123,8 @@ ${journey.medications?.join(" ") || ""}
 ${journey.appointments?.join(" ") || ""}
 
 ${journey.staffInstructions?.join(" ") || ""}
+
+${journey.directories?.join(" ") || ""}
 
 `.toLowerCase();
 
