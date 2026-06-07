@@ -910,9 +910,13 @@ ${activeJourney.directories?.length
             if (
                 !activeJourney &&
                 (
-                    question.toLowerCase().startsWith("start journey to ") ||
-                    question.toLowerCase().startsWith("starting journey to ") ||
                     question.toLowerCase().startsWith("begin journey to ") ||
+                    question.toLowerCase().startsWith("start journey to ") ||
+                    question.toLowerCase().startsWith("start a journey ") ||
+                    question.toLowerCase().startsWith("start a journey to ") ||
+                    question.toLowerCase().startsWith("start journey ") ||
+                    question.toLowerCase().startsWith("starting journey ") ||
+                    question.toLowerCase().startsWith("starting a journey ") ||
                     question.toLowerCase().startsWith("starting my journey to ") ||
                     question.toLowerCase().startsWith("i'm going to ") ||
                     question.toLowerCase().startsWith("im going to ") ||
@@ -1319,7 +1323,7 @@ Ready to save?
                     !lowerQuestion.includes("my ride")
                     && !lowerQuestion.includes("my bike")
                     && !lowerQuestion.includes("my car");
-                    
+
                 const isMemoryCommand =
 
                     lowerQuestion.includes("where's my ride") ||
