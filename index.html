@@ -1511,6 +1511,78 @@ ${activeJourney.answers.length}
                 if (
                     activeJourney &&
                     (
+                        noteQuestion.startsWith("taking ") ||
+                        noteQuestion.startsWith("started ") ||
+                        noteQuestion.startsWith("using ") ||
+                        noteQuestion.startsWith("prescribed ")
+                    )
+                ) {
+
+                    activeJourney.medications.push(
+                        question
+                    );
+
+                    activeJourney.timeline.push(
+                        "💊 Medication Saved: " +
+                        question
+                    );
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>💊 Medication Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I'll remember that for this journey.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
+                    (
+                        noteQuestion.startsWith("appointment ") ||
+                        noteQuestion.startsWith("my appointment is ") ||
+                        noteQuestion.startsWith("follow-up ") ||
+                        noteQuestion.startsWith("follow up ")
+                    )
+                ) {
+
+                    activeJourney.appointments.push(
+                        question
+                    );
+
+                    activeJourney.timeline.push(
+                        "📅 Appointment Saved: " +
+                        question
+                    );
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>📅 Appointment Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I'll remember that for this journey.
+</div>
+`;
+
+                    return;
+                }
+
+                if (
+                    activeJourney &&
+                    (
                         noteQuestion.startsWith("need to ") ||
                         noteQuestion.startsWith("remember to ") ||
                         noteQuestion.startsWith("don't forget to ") ||
@@ -2471,18 +2543,17 @@ ${index + 1}. ${instruction}<br><br>
     <strong>🧭 OurFlow</strong><br><br>
     Error contacting OurFlow.
 </div>
-`;
+`; }
             }
-        }
 
-        function showSavedJourneys() {
+            function showSavedJourneys() {
 
-            const result =
-                document.getElementById("result");
+                const result =
+                    document.getElementById("result");
 
-            if (savedJourneys.length === 0) {
+                if (savedJourneys.length === 0) {
 
-                result.innerHTML = `
+                    result.innerHTML = `
 <div class="card">
     <strong>🧭 Saved Journeys</strong>
     <br><br>
@@ -2490,11 +2561,11 @@ ${index + 1}. ${instruction}<br><br>
 </div>
 `;
 
-                return;
-            }
+                    return;
+                }
 
-            let html =
-                `<div class="card">
+                let html =
+                    `<div class="card">
 
 <strong>🧭 Saved Journeys</strong>
 
@@ -2515,9 +2586,9 @@ ${index + 1}. ${instruction}<br><br>
 <div id="journeyList">
 `;
 
-            savedJourneys.forEach((journey, index) => {
+                savedJourneys.forEach((journey, index) => {
 
-                html += `
+                    html += `
 <div
     data-journey="${journey.destination}"
     style="
@@ -2559,32 +2630,31 @@ ${index + 1}. ${instruction}<br><br>
 
 </div>
 `;
-            });
+                });
 
-            html += `
-</div>
+                html += `
 </div>
 `;
 
-            result.innerHTML = html;
-        }
-
-        function toggleJourney(index) {
-
-            const details =
-                document.getElementById(`journey-${index}`);
-
-            const journey =
-                savedJourneys[index];
-
-            if (details.style.display === "block") {
-
-                details.style.display = "none";
-
-                return;
+                result.innerHTML = html;
             }
 
-            let html = `
+            function toggleJourney(index) {
+
+                const details =
+                    document.getElementById(`journey-${index}`);
+
+                const journey =
+                    savedJourneys[index];
+
+                if (details.style.display === "block") {
+
+                    details.style.display = "none";
+
+                    return;
+                }
+
+                let html = `
 <div style="
     background:#f8f8f8;
     padding:10px;
@@ -2621,34 +2691,34 @@ ${index + 1}. ${instruction}<br><br>
 <br><br>
 
 ${journey.notes &&
-                    journey.notes.length
-                    ? `<strong>📝 Notes:</strong><br>${journey.notes.map(n => `• ${n}<br>`).join("")}<br>`
-                    : ""}
+                        journey.notes.length
+                        ? `<strong>📝 Notes:</strong><br>${journey.notes.map(n => `• ${n}<br>`).join("")}<br>`
+                        : ""}
 
 ${journey.questionsForDoctor &&
-                    journey.questionsForDoctor.length
-                    ? `<strong>❓ Questions:</strong><br>${journey.questionsForDoctor.map(q => `• ${q}<br>`).join("")}<br>`
-                    : ""}
+                        journey.questionsForDoctor.length
+                        ? `<strong>❓ Questions:</strong><br>${journey.questionsForDoctor.map(q => `• ${q}<br>`).join("")}<br>`
+                        : ""}
 
 ${journey.medications &&
-                    journey.medications.length
-                    ? `<strong>💊 Medications:</strong><br>${journey.medications.map(m => `• ${m}<br>`).join("")}<br>`
-                    : ""}
+                        journey.medications.length
+                        ? `<strong>💊 Medications:</strong><br>${journey.medications.map(m => `• ${m}<br>`).join("")}<br>`
+                        : ""}
 
 ${journey.appointments &&
-                    journey.appointments.length
-                    ? `<strong>📅 Appointments:</strong><br>${journey.appointments.map(a => `• ${a}<br>`).join("")}<br>`
-                    : ""}
+                        journey.appointments.length
+                        ? `<strong>📅 Appointments:</strong><br>${journey.appointments.map(a => `• ${a}<br>`).join("")}<br>`
+                        : ""}
 
 ${journey.directories &&
-                    journey.directories.length
-                    ? `<strong>🏢 Directories:</strong><br>${journey.directories.map(d => `• ${d}<br>`).join("")}<br>`
-                    : ""}                    
+                        journey.directories.length
+                        ? `<strong>🏢 Directories:</strong><br>${journey.directories.map(d => `• ${d}<br>`).join("")}<br>`
+                        : ""}                    
 
 ${journey.staffInstructions &&
-                    journey.staffInstructions.length
-                    ? `<strong>👩‍⚕️ Instructions:</strong><br>${journey.staffInstructions.map(i => `• ${i}<br>`).join("")}<br>`
-                    : ""}
+                        journey.staffInstructions.length
+                        ? `<strong>👩‍⚕️ Instructions:</strong><br>${journey.staffInstructions.map(i => `• ${i}<br>`).join("")}<br>`
+                        : ""}
 
 <hr>
 
@@ -2692,131 +2762,131 @@ ${journey.staffInstructions &&
         <br><br>
     `;
 
-            if (
-                !journey.timeline ||
-                journey.timeline.length === 0
-            ) {
+                if (
+                    !journey.timeline ||
+                    journey.timeline.length === 0
+                ) {
 
-                html += `
+                    html += `
 No journey events recorded.
 <br><br>
 `;
-            }
+                }
 
-            else {
+                else {
 
-                journey.timeline.forEach(event => {
+                    journey.timeline.forEach(event => {
 
-                    html += `
+                        html += `
 ${event}
 <br><br>
 `;
-                });
-            }
-            details.innerHTML = html;
+                    });
+                }
+                details.innerHTML = html;
 
-            details.style.display = "block";
-        }
-
-        function deleteJourney(index) {
-
-            const confirmDelete =
-                confirm("Delete this saved journey?");
-
-            if (!confirmDelete) return;
-
-            savedJourneys.splice(index, 1);
-
-            localStorage.setItem(
-                "savedJourneys",
-                JSON.stringify(savedJourneys)
-            );
-
-            showSavedJourneys();
-        }
-
-        function savePendingParking() {
-
-            if (!pendingParkingLocation) return;
-
-            if (activeJourney) {
-                activeJourney.parkingLocation =
-                    pendingParkingLocation;
+                details.style.display = "block";
             }
 
-            pendingParkingLocation = "";
+            function deleteJourney(index) {
 
-            alert("📍 Parking location saved.");
-        }
+                const confirmDelete =
+                    confirm("Delete this saved journey?");
 
-        function saveLocationType(type) {
+                if (!confirmDelete) return;
 
-            if (!activeJourney ||
-                !pendingLocationClassification) {
-                return;
-            }
+                savedJourneys.splice(index, 1);
 
-            if (!activeJourney.timeline) {
-                activeJourney.timeline = [];
-            }
-
-            let saveMessage = "";
-
-            if (type === "parking") {
-
-                activeJourney.parkingLocation =
-                    pendingLocationClassification;
-
-                activeJourney.timeline.push(
-                    "🚗 Parking Saved: " +
-                    pendingLocationClassification
+                localStorage.setItem(
+                    "savedJourneys",
+                    JSON.stringify(savedJourneys)
                 );
 
-                saveMessage =
-                    "Parking location recorded.";
+                showSavedJourneys();
             }
 
-            if (type === "start") {
+            function savePendingParking() {
 
-                activeJourney.startLocation =
-                    pendingLocationClassification;
+                if (!pendingParkingLocation) return;
 
-                activeJourney.timeline.push(
-                    "🧭 Starting Location Saved: " +
-                    pendingLocationClassification
-                );
+                if (activeJourney) {
+                    activeJourney.parkingLocation =
+                        pendingParkingLocation;
+                }
 
-                saveMessage =
-                    "Starting location recorded.";
+                pendingParkingLocation = "";
+
+                alert("📍 Parking location saved.");
             }
 
-            if (type === "both") {
+            function saveLocationType(type) {
 
-                activeJourney.parkingLocation =
-                    pendingLocationClassification;
+                if (!activeJourney ||
+                    !pendingLocationClassification) {
+                    return;
+                }
 
-                activeJourney.startLocation =
-                    pendingLocationClassification;
+                if (!activeJourney.timeline) {
+                    activeJourney.timeline = [];
+                }
 
-                activeJourney.timeline.push(
-                    "🚗 Parking Saved: " +
-                    pendingLocationClassification
-                );
+                let saveMessage = "";
 
-                activeJourney.timeline.push(
-                    "🧭 Starting Location Saved: " +
-                    pendingLocationClassification
-                );
+                if (type === "parking") {
 
-                saveMessage =
-                    "Starting location and parking location recorded.";
-            }
+                    activeJourney.parkingLocation =
+                        pendingLocationClassification;
 
-            pendingLocationClassification = "";
+                    activeJourney.timeline.push(
+                        "🚗 Parking Saved: " +
+                        pendingLocationClassification
+                    );
 
-            showActiveJourneyBox();
+                    saveMessage =
+                        "Parking location recorded.";
+                }
 
-            document.getElementById("result").innerHTML = `
+                if (type === "start") {
+
+                    activeJourney.startLocation =
+                        pendingLocationClassification;
+
+                    activeJourney.timeline.push(
+                        "🧭 Starting Location Saved: " +
+                        pendingLocationClassification
+                    );
+
+                    saveMessage =
+                        "Starting location recorded.";
+                }
+
+                if (type === "both") {
+
+                    activeJourney.parkingLocation =
+                        pendingLocationClassification;
+
+                    activeJourney.startLocation =
+                        pendingLocationClassification;
+
+                    activeJourney.timeline.push(
+                        "🚗 Parking Saved: " +
+                        pendingLocationClassification
+                    );
+
+                    activeJourney.timeline.push(
+                        "🧭 Starting Location Saved: " +
+                        pendingLocationClassification
+                    );
+
+                    saveMessage =
+                        "Starting location and parking location recorded.";
+                }
+
+                pendingLocationClassification = "";
+
+                showActiveJourneyBox();
+
+                document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Location Saved</strong>
 
@@ -2840,33 +2910,33 @@ ${event}
     parking reminders, or arrival details?
 </div>
 `;
-        }
+            }
 
-        function filterJourneys() {
+            function filterJourneys() {
 
-            const search =
-                document.getElementById("journeySearch")
-                    .value
-                    .toLowerCase();
+                const search =
+                    document.getElementById("journeySearch")
+                        .value
+                        .toLowerCase();
 
-            const journeyItems =
-                document.querySelectorAll("[data-journey]");
+                const journeyItems =
+                    document.querySelectorAll("[data-journey]");
 
-            journeyItems.forEach(item => {
+                journeyItems.forEach(item => {
 
-                const index =
-                    parseInt(
-                        item.querySelector("button")
-                            .getAttribute("onclick")
-                            .match(/\d+/)[0]
-                    );
+                    const index =
+                        parseInt(
+                            item.querySelector("button")
+                                .getAttribute("onclick")
+                                .match(/\d+/)[0]
+                        );
 
-                const journey =
-                    savedJourneys[index];
+                    const journey =
+                        savedJourneys[index];
 
-                if (!journey) return;
+                    if (!journey) return;
 
-                const searchableText = `
+                    const searchableText = `
 
 ${journey.destination || ""}
 
@@ -2882,20 +2952,20 @@ ${journey.staffInstructions?.join(" ") || ""}
 
 `.toLowerCase();
 
-                item.style.display =
-                    searchableText.includes(search)
-                        ? "block"
-                        : "none";
-            });
-        }
+                    item.style.display =
+                        searchableText.includes(search)
+                            ? "block"
+                            : "none";
+                });
+            }
 
-        function showJourneyUpgradeBox() {
+            function showJourneyUpgradeBox() {
 
-            alert(
-                "🧭 Journey archive full.\n\n" +
-                "Upgrade for 25 additional saved journeys."
-            );
-        }
+                alert(
+                    "🧭 Journey archive full.\n\n" +
+                    "Upgrade for 25 additional saved journeys."
+                );
+            }
 
     </script>
 
