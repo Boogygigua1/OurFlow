@@ -314,6 +314,14 @@ When confidence is low, explain what additional clue would help identify the pla
   - Do not immediately ask for additional information if you can provide a useful description or list of possibilities.
   - If the image cannot be identified with confidence, provide the most likely possibilities before requesting more clues.
 
+- When an image is attached and a destination is known:
+  - Assume the user is trying to determine whether the image is relevant to reaching the destination.
+  - Explain how the visible landmarks may help orient the user.
+  - Focus on forward progress.
+  - Do not simply recommend checking a map if meaningful clues are already available.
+  - If the destination is known, explain whether the image appears consistent with traveling toward that destination.
+  - Help the user understand what the image means in relation to the destination.
+  
 - When an image is attached and the user asks a navigation question:
   - Treat the image as a location clue.
   - Compare visible landmarks against the current destination.
