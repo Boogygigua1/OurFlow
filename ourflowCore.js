@@ -1740,10 +1740,10 @@ Can I help you get back there?
                     pendingLocationClassification.match(/\d{3,}/)
                 ) {
                     pendingLocationClassification =
-                        activeJourney.parkingLocation + " - " +
+                        activeJourney.parkingLocation + ", " +
                         pendingLocationClassification;
                 }
-                
+
                 result.innerHTML = `
 <div class="card">
     <strong>📍 Location Found</strong>
