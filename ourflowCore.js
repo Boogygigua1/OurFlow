@@ -30,11 +30,7 @@ async function askOurFlow() {
     const lastPhoto =
         activeJourney.photos[activeJourney.photos.length - 1];
 
-    lastPhoto.note = question;
-
-    activeJourney.timeline.push(
-        "📝 Photo Note Saved: " + question
-    );
+    pendingPhotoClassification = question;
 
     pendingPhotoMemory = false;
 
@@ -45,20 +41,45 @@ async function askOurFlow() {
 
     showActiveJourneyBox();
 
-    document.getElementById("result").innerHTML = `
+document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📷 Photo Note Saved</strong>
 
-    <br><br>
+<strong>📷 Photo Memory</strong>
 
-    ${question}
+<br><br>
 
-    <br><br>
+${question}
 
-    I'll remember this with your most recent photo.
+<br><br>
+
+How should I save this?
+
+<br><br>
+
+<button onclick="savePhotoClassification('parking')">
+🚗 Parking
+</button>
+
+<br><br>
+
+<button onclick="savePhotoClassification('start')">
+🧭 Start Location
+</button>
+
+<br><br>
+
+<button onclick="savePhotoClassification('both')">
+🚗 + 🧭 Both
+</button>
+
+<br><br>
+
+<button onclick="savePhotoClassification('note')">
+📝 Photo Note Only
+</button>
+
 </div>
 `;
-
     document.getElementById("questionInput").value = "";
 
     return;

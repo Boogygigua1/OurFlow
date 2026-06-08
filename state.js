@@ -1,5 +1,7 @@
 let pendingPhotoMemory = false;
 
+let pendingPhotoClassification = "";
+
 let landmarkImageData = "";
 
 let conversationHistory = [];
