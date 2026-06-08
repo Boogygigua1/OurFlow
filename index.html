@@ -210,9 +210,9 @@
     </button>
 -->
 
-<button onclick="document.getElementById('landmarkImage').click()">
-    📷 Take Photo
-</button>
+    <button onclick="document.getElementById('landmarkImage').click()">
+        📷 Take Photo
+    </button>
 
     <input type="file" id="landmarkImage" accept="image/*" capture="environment" onchange="analyzeLandmarkImage()"
         style="
@@ -788,6 +788,8 @@ ${activeJourney.parkingLocation ||
 
 <strong>📷 Photos:</strong><br>
 ${activeJourney.photos?.length || 0}
+
+<br><br>
 
 <strong>🏢 Directory Memory:</strong><br>
 ${activeJourney.directories?.length
@@ -3107,135 +3109,161 @@ ${event}
 <br><br>
 `;
                 });
-            }
-            details.innerHTML = html;
 
-            details.style.display = "block";
-        }
+                if (journey.photos && journey.photos.length) {
 
-        function deleteJourney(index) {
+                    html += `
+    <br>
 
-            const confirmDelete =
-                confirm("Delete this saved journey?");
+    <strong>📷 Saved Photos</strong>
 
-            if (!confirmDelete) return;
+    <br><br>
 
-            savedJourneys.splice(index, 1);
+    ${journey.photos.map(photo => `
+        <img
+            src="${photo.image}"
+            style="
+                max-width:200px;
+                border-radius:8px;
+                margin-bottom:10px;
+                display:block;
+            "
+        >
+    `).join("")}
+    `;
+                }
 
-            localStorage.setItem(
-                "savedJourneys",
-                JSON.stringify(savedJourneys)
-            );
+details.innerHTML = html;
 
-            showSavedJourneys();
-        }
+details.style.display = "block";
 
-        function savePendingParking() {
+    }
 
-            if (!pendingParkingLocation) return;
+}
 
-            if (activeJourney) {
-                activeJourney.parkingLocation =
-                    pendingParkingLocation;
-            }
+function deleteJourney(index) {
 
-            pendingParkingLocation = "";
+                    const confirmDelete =
+                        confirm("Delete this saved journey?");
 
-            alert("📍 Parking location saved.");
-        }
+                    if (!confirmDelete) return;
 
-        function saveJourneyPhoto() {
+                    savedJourneys.splice(index, 1);
 
-            if (!activeJourney || !landmarkImageData) {
-                return;
-            }
+                    localStorage.setItem(
+                        "savedJourneys",
+                        JSON.stringify(savedJourneys)
+                    );
 
-            if (!activeJourney.photos) {
-                activeJourney.photos = [];
-            }
+                    showSavedJourneys();
+                }
 
-            activeJourney.photos.push({
-                image: landmarkImageData,
-                timestamp: new Date().toLocaleString()
-            });
+                function savePendingParking() {
 
-            activeJourney.timeline.push(
-                "📷 Photo Saved"
-            );
+                    if (!pendingParkingLocation) return;
 
-            showActiveJourneyBox();
+                    if (activeJourney) {
+                        activeJourney.parkingLocation =
+                            pendingParkingLocation;
+                    }
 
-            alert("📷 Photo saved to this journey.");
-        }
+                    pendingParkingLocation = "";
 
-        function saveLocationType(type) {
+                    alert("📍 Parking location saved.");
+                }
 
-            if (!activeJourney ||
-                !pendingLocationClassification) {
-                return;
-            }
+                function saveJourneyPhoto() {
 
-            if (!activeJourney.timeline) {
-                activeJourney.timeline = [];
-            }
+                    if (!activeJourney || !landmarkImageData) {
+                        return;
+                    }
 
-            let saveMessage = "";
+                    if (!activeJourney.photos) {
+                        activeJourney.photos = [];
+                    }
 
-            if (type === "parking") {
+                    activeJourney.photos.push({
+                        image: landmarkImageData,
+                        timestamp: new Date().toLocaleString()
+                    });
 
-                activeJourney.parkingLocation =
-                    pendingLocationClassification;
+                    activeJourney.timeline.push(
+                        "📷 Photo Saved"
+                    );
 
-                activeJourney.timeline.push(
-                    "🚗 Parking Saved: " +
-                    pendingLocationClassification
-                );
+                    showActiveJourneyBox();
 
-                saveMessage =
-                    "Parking location recorded.";
-            }
+                    alert("📷 Photo saved to this journey.");
+                }
 
-            if (type === "start") {
+                function saveLocationType(type) {
 
-                activeJourney.startLocation =
-                    pendingLocationClassification;
+                    if (!activeJourney ||
+                        !pendingLocationClassification) {
+                        return;
+                    }
 
-                activeJourney.timeline.push(
-                    "🧭 Starting Location Saved: " +
-                    pendingLocationClassification
-                );
+                    if (!activeJourney.timeline) {
+                        activeJourney.timeline = [];
+                    }
 
-                saveMessage =
-                    "Starting location recorded.";
-            }
+                    let saveMessage = "";
 
-            if (type === "both") {
+                    if (type === "parking") {
 
-                activeJourney.parkingLocation =
-                    pendingLocationClassification;
+                        activeJourney.parkingLocation =
+                            pendingLocationClassification;
 
-                activeJourney.startLocation =
-                    pendingLocationClassification;
+                        activeJourney.timeline.push(
+                            "🚗 Parking Saved: " +
+                            pendingLocationClassification
+                        );
 
-                activeJourney.timeline.push(
-                    "🚗 Parking Saved: " +
-                    pendingLocationClassification
-                );
+                        saveMessage =
+                            "Parking location recorded.";
+                    }
 
-                activeJourney.timeline.push(
-                    "🧭 Starting Location Saved: " +
-                    pendingLocationClassification
-                );
+                    if (type === "start") {
 
-                saveMessage =
-                    "Starting location and parking location recorded.";
-            }
+                        activeJourney.startLocation =
+                            pendingLocationClassification;
 
-            pendingLocationClassification = "";
+                        activeJourney.timeline.push(
+                            "🧭 Starting Location Saved: " +
+                            pendingLocationClassification
+                        );
 
-            showActiveJourneyBox();
+                        saveMessage =
+                            "Starting location recorded.";
+                    }
 
-            document.getElementById("result").innerHTML = `
+                    if (type === "both") {
+
+                        activeJourney.parkingLocation =
+                            pendingLocationClassification;
+
+                        activeJourney.startLocation =
+                            pendingLocationClassification;
+
+                        activeJourney.timeline.push(
+                            "🚗 Parking Saved: " +
+                            pendingLocationClassification
+                        );
+
+                        activeJourney.timeline.push(
+                            "🧭 Starting Location Saved: " +
+                            pendingLocationClassification
+                        );
+
+                        saveMessage =
+                            "Starting location and parking location recorded.";
+                    }
+
+                    pendingLocationClassification = "";
+
+                    showActiveJourneyBox();
+
+                    document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Location Saved</strong>
 
@@ -3259,33 +3287,33 @@ ${event}
     parking reminders, or arrival details?
 </div>
 `;
-        }
+                }
 
-        function filterJourneys() {
+                function filterJourneys() {
 
-            const search =
-                document.getElementById("journeySearch")
-                    .value
-                    .toLowerCase();
+                    const search =
+                        document.getElementById("journeySearch")
+                            .value
+                            .toLowerCase();
 
-            const journeyItems =
-                document.querySelectorAll("[data-journey]");
+                    const journeyItems =
+                        document.querySelectorAll("[data-journey]");
 
-            journeyItems.forEach(item => {
+                    journeyItems.forEach(item => {
 
-                const index =
-                    parseInt(
-                        item.querySelector("button")
-                            .getAttribute("onclick")
-                            .match(/\d+/)[0]
-                    );
+                        const index =
+                            parseInt(
+                                item.querySelector("button")
+                                    .getAttribute("onclick")
+                                    .match(/\d+/)[0]
+                            );
 
-                const journey =
-                    savedJourneys[index];
+                        const journey =
+                            savedJourneys[index];
 
-                if (!journey) return;
+                        if (!journey) return;
 
-                const searchableText = `
+                        const searchableText = `
 
 ${journey.destination || ""}
 
@@ -3303,26 +3331,26 @@ ${journey.directories?.join(" ") || ""}
 
 `.toLowerCase();
 
-                item.style.display =
-                    searchableText.includes(search)
-                        ? "block"
-                        : "none";
-            });
-        }
+                        item.style.display =
+                            searchableText.includes(search)
+                                ? "block"
+                                : "none";
+                    });
+                }
 
-        function showJourneyUpgradeBox() {
+                function showJourneyUpgradeBox() {
 
-            alert(
-                "🧭 Journey archive full.\n\n" +
-                "Upgrade for 25 additional saved journeys."
-            );
-        }
+                    alert(
+                        "🧭 Journey archive full.\n\n" +
+                        "Upgrade for 25 additional saved journeys."
+                    );
+                }
 
-        if (activeJourney) {
+                if (activeJourney) {
 
-            showActiveJourneyBox();
+                    showActiveJourneyBox();
 
-            document.getElementById("result").innerHTML = `
+                    document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>🧭 Active Journey Restored</strong>
 
@@ -3364,12 +3392,12 @@ ${journey.directories?.join(" ") || ""}
 <br>
 
 ${activeJourney.timeline?.length
-                    ? activeJourney.timeline[activeJourney.timeline.length - 1]
-                    : "No activity recorded yet."}
+                            ? activeJourney.timeline[activeJourney.timeline.length - 1]
+                            : "No activity recorded yet."}
 
 </div>
 `;
-        }
+                }
 
     </script>
 
