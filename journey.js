@@ -474,6 +474,15 @@ ${activeJourney.startLocation ||
 ${activeJourney.parkingLocation ||
         "No parking location saved yet."}
 
+${activeJourney.parkingLocation
+        ? `
+<br><br>
+<button onclick="openGoogleMapsToParkingLocation()">
+    🚗 Return To Parking
+</button>
+`
+        : ""}
+
 <br><br>
 
 <strong>📷 Photos:</strong><br>
