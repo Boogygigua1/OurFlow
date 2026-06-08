@@ -353,8 +353,6 @@ ${journey.staffInstructions &&
         <strong>Parking:</strong>
         ${journey.parkingLocation || "Not recorded"}
 
-        <br><br>
-
         ${journey.parkingLocation
             ? `
 <br><br>
