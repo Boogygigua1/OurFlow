@@ -41,3 +41,12 @@ function toggleLegal(button) {
         ? "▲ Hide AI, Usage & Platform Information"
         : "▼ AI, Usage & Platform Information";
 }
+
+function trackOurFlow(eventName, details = {}) {
+    if (window.va) {
+        window.va("event", {
+            name: eventName,
+            data: details
+        });
+    }
+}

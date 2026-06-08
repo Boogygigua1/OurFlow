@@ -6,8 +6,17 @@ function analyzeUserQuestion(question) {
         mentionsParking:
             text.includes("i'm parked") ||
             text.includes("i parked") ||
+            text.includes("parked at") ||
+            text.includes("parked by") ||
             text.includes("my car is") ||
+            text.includes("my ride is") ||
             text.includes("parking location:"),
+
+        mentionsStartLocation:
+            text.includes("i'm at") ||
+            text.includes("i am at") ||
+            text.includes("starting at") ||
+            text.includes("start location"),
 
         asksRoute:
             text.includes("directions") ||
