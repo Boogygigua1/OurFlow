@@ -5,18 +5,34 @@ function analyzeUserQuestion(question) {
     return {
         mentionsParking:
             text.includes("i'm parked") ||
+            text.includes("im parked") ||
             text.includes("i parked") ||
             text.includes("parked at") ||
             text.includes("parked by") ||
+            text.includes("parked near") ||
+            text.includes("parked on") ||
             text.includes("my car is") ||
+            text.includes("my car is at") ||
             text.includes("my ride is") ||
+            text.includes("my ride is at") ||
+            text.includes("my vehicle is") ||
+            text.includes("left my car") ||
+            text.includes("i left my car") ||
             text.includes("parking location:"),
 
         mentionsStartLocation:
             text.includes("i'm at") ||
+            text.includes("im at") ||
             text.includes("i am at") ||
             text.includes("starting at") ||
-            text.includes("start location"),
+            text.includes("start location") ||
+            text.includes("starting location") ||
+            text.includes("i'm by") ||
+            text.includes("im by") ||
+            text.includes("i am by") ||
+            text.includes("i'm near") ||
+            text.includes("im near") ||
+            text.includes("i am near"),
 
         asksRoute:
             text.includes("directions") ||
