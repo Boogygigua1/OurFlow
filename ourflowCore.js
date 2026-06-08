@@ -36,6 +36,49 @@ async function askOurFlow() {
             "📝 Photo Note Saved: " + question
         );
 
+        if (
+    question.toLowerCase().includes("where i parked") ||
+    question.toLowerCase().includes("where i'm parked") ||
+    question.toLowerCase().includes("where im parked") ||
+    question.toLowerCase().includes("parked here")
+) {
+    pendingLocationClassification = "Photo location";
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📷 Photo Note Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    This sounds like a parking photo.
+
+    <br><br>
+
+    Should I remember this photo location as?
+
+    <br><br>
+
+    <button onclick="saveLocationType('parking')">
+        🚗 Parking
+    </button>
+
+    <br><br>
+
+    <button onclick="saveLocationType('both')">
+        🚗🧭 Both
+    </button>
+</div>
+`;
+
+    pendingPhotoMemory = false;
+
+    return;
+}
+
         pendingPhotoMemory = false;
 
         localStorage.setItem(
