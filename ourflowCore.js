@@ -1735,7 +1735,15 @@ Can I help you get back there?
                     .replace(/i am by\s*/i, "")
                     .trim();
 
-
+                if (
+                    activeJourney.parkingLocation &&
+                    pendingLocationClassification.match(/\d{3,}/)
+                ) {
+                    pendingLocationClassification =
+                        activeJourney.parkingLocation + " - " +
+                        pendingLocationClassification;
+                }
+                
                 result.innerHTML = `
 <div class="card">
     <strong>📍 Location Found</strong>
