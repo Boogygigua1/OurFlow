@@ -2622,8 +2622,15 @@ Can I help you get back there?
                 ) {
 
                     if (activeJourney) {
+                        pendingLocationClassification = question
+                            .replace(/i'?m parked near\s*/i, "")
+                            .replace(/i'?m parked at\s*/i, "")
+                            .replace(/i parked near\s*/i, "")
+                            .replace(/i parked at\s*/i, "")
+                            .replace(/my car is at\s*/i, "")
+                            .replace(/my ride is at\s*/i, "")
+                            .trim();
 
-                        pendingLocationClassification = question;
 
                         result.innerHTML = `
 <div class="card">
