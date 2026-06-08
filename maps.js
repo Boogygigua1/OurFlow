@@ -79,3 +79,43 @@ function openGoogleMapsToParkingLocation() {
 
     window.open(mapUrl, "_blank");
 }
+
+
+
+async function getArrivalHelp(destination) {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    activeJourney.arrivalTips =
+        "Searching for arrival tips...";
+
+    showActiveJourneyBox();
+
+    const placeResponse = await fetch("/api/searchPlace", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            query: destination + " entrance parking directions"
+        })
+    });
+
+    const placeData = await placeResponse.json();
+
+    activeJourney.arrivalTips =
+        placeData.arrivalTip ||
+        "Map search ready. Open Google Maps and check Street View, reviews, parking, and entrance details before leaving.";
+
+    activeJourney.timeline.push(
+        "🚪 Arrival Help Saved: " +
+        activeJourney.arrivalTips
+    );
+
+    activeJourney.mapLink =
+        placeData.mapUrl;
+
+    showActiveJourneyBox();
+}
