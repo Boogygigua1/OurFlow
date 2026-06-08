@@ -659,6 +659,7 @@ Ready to save?
 
         if (
             activeJourney &&
+            !questionInfo.mentionsParking &&
             (
                 noteQuestion.includes("exact location") ||
                 noteQuestion.includes("the address is") ||
