@@ -12,6 +12,7 @@ export default async function handler(req, res) {
             question,
             history = [],
             destination = "",
+            destinationAddress = "",
             parkingLocation = "",
             arrivalTips = "",
             startLocation = "",
@@ -56,6 +57,10 @@ export default async function handler(req, res) {
 
 Destination:
 ${destination || "Not provided"}
+
+
+Destination Details:
+${destinationAddress || "Not provided"}
 
 Arrival Tips:
 ${arrivalTips || "No arrival tips available yet."}
@@ -321,7 +326,7 @@ When confidence is low, explain what additional clue would help identify the pla
   - Do not simply recommend checking a map if meaningful clues are already available.
   - If the destination is known, explain whether the image appears consistent with traveling toward that destination.
   - Help the user understand what the image means in relation to the destination.
-  
+
 - When an image is attached and the user asks a navigation question:
   - Treat the image as a location clue.
   - Compare visible landmarks against the current destination.

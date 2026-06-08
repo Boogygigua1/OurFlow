@@ -1823,7 +1823,7 @@ Can I help you get back there?
                     .replace(/this is where i parked\s*/i, "")
                     .replace(/this is my parking location\s*/i, "")
                     .replace(/this is where my car is\s*/i, "")
-                    
+
                     .trim();
 
                 if (
@@ -1997,6 +1997,9 @@ Can I help you get back there?
 
                 destination:
                     activeJourney?.destination || "",
+
+                destinationAddress:
+                    activeJourney?.destinationAddress || "",
 
                 parkingLocation:
                     activeJourney?.parkingLocation || "",
