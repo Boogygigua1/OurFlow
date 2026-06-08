@@ -313,7 +313,14 @@ When confidence is low, explain what additional clue would help identify the pla
   - When the user asks about an image, answer the image question first.
   - Do not immediately ask for additional information if you can provide a useful description or list of possibilities.
   - If the image cannot be identified with confidence, provide the most likely possibilities before requesting more clues.
-`
+
+- When an image is attached and the user asks a navigation question:
+  - Treat the image as a location clue.
+  - Compare visible landmarks against the current destination.
+  - Use the image, destination, parking location, start location, and previous clues together.
+  - If the image contains identifiable landmarks, explain how they may relate to the destination.
+  - If confidence is moderate, provide the most likely interpretation and clearly label it as a possibility.
+  - Do not ignore the destination when an image is available.`
                         },
                         {
                             role: "user",
