@@ -2337,6 +2337,7 @@ ${index + 1}. ${instruction}<br><br>
 
                 if (
                     recallQuestion.includes("where did i park") ||
+                    recallQuestion.includes("take me to my ride") ||
                     recallQuestion.includes("where am i parked") ||
                     recallQuestion.includes("were did i park") ||
                     recallQuestion.includes("where's my car") ||
@@ -2711,24 +2712,30 @@ Can I help you get back there?
                     question.toLowerCase();
 
                 if (
-                    navigationSearch.includes("directions") ||
-                    navigationSearch.includes("route") ||
-                    navigationSearch.includes("fastest route") ||
-                    navigationSearch.includes("walking to") ||
-                    navigationSearch.includes("walk to") ||
-                    navigationSearch.includes("drive to") ||
-                    navigationSearch.includes("driving to") ||
-                    navigationSearch.includes("ride to") ||
-                    navigationSearch.includes("bike to") ||
-                    navigationSearch.includes("navigate to") ||
-                    navigationSearch.includes("go to") ||
-                    navigationSearch.includes("get to") ||
-                    navigationSearch.includes("head to") ||
-                    navigationSearch.includes("travel to") ||
-                    navigationSearch.includes("on my way to") ||
-                    navigationSearch.includes("take me to") ||
-                    navigationSearch.includes("how do i get to")
-                ) {
+    (
+        navigationSearch.includes("directions") ||
+        navigationSearch.includes("route") ||
+        navigationSearch.includes("fastest route") ||
+        navigationSearch.includes("walking to") ||
+        navigationSearch.includes("walk to") ||
+        navigationSearch.includes("drive to") ||
+        navigationSearch.includes("driving to") ||
+        navigationSearch.includes("ride to") ||
+        navigationSearch.includes("bike to") ||
+        navigationSearch.includes("navigate to") ||
+        navigationSearch.includes("go to") ||
+        navigationSearch.includes("get to") ||
+        navigationSearch.includes("head to") ||
+        navigationSearch.includes("travel to") ||
+        navigationSearch.includes("on my way to") ||
+        navigationSearch.includes("how do i get to") ||
+        navigationSearch.includes("take me to")
+    )
+
+    &&
+
+    !navigationSearch.includes("take me to my ride")
+) {
                     const placeResponse = await fetch("/api/searchPlace", {
                         method: "POST",
                         headers: {
