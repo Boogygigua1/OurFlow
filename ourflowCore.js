@@ -1721,9 +1721,17 @@ Can I help you get back there?
                     .replace(/i parked near\s*/i, "")
                     .replace(/i parked at\s*/i, "")
                     .replace(/parked by\s*/i, "")
+                    .replace(/i'?m parked by\s*/i, "")
                     .replace(/my car is at\s*/i, "")
                     .replace(/my ride is at\s*/i, "")
                     .replace(/my ride is near\s*/i, "")
+                    .replace(/i'?m at\s*/i, "")
+                    .replace(/i'?m by\s*/i, "")
+                    .replace(/i'?m near\s*/i, "")
+                    .replace(/i'?m\s*/i, "")
+                    .replace(/i am at\s*/i, "")
+                    .replace(/i am near\s*/i, "")
+                    .replace(/i am by\s*/i, "")
                     .trim();
 
 
