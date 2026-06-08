@@ -303,14 +303,23 @@ async function askOurFlow() {
             return;
         }
 
-        if (
-            endQuestion === "end journey" ||
-            endQuestion.includes("all set") ||
-            endQuestion.includes("finished") ||
-            endQuestion.includes("that's all") ||
-            endQuestion.includes("thats all") ||
-            endQuestion.includes("no thanks")
-        ) {
+if (
+    endQuestion === "end journey" ||
+    endQuestion.includes("all set") ||
+    endQuestion.includes("finished") ||
+    endQuestion.includes("that's all") ||
+    endQuestion.includes("thats all") ||
+    endQuestion.includes("no thanks") ||
+    endQuestion.includes("i made it") ||
+    endQuestion.includes("made it") ||
+    endQuestion.includes("i'm here") ||
+    endQuestion.includes("im here") ||
+    endQuestion.includes("i am here") ||
+    endQuestion.includes("i've arrived") ||
+    endQuestion.includes("ive arrived") ||
+    endQuestion.includes("i have arrived") ||
+    endQuestion.includes("arrived")
+) {
 
             /* END JOURNEY BLOCK HERE */
 
