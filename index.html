@@ -449,36 +449,7 @@ margin-right:auto;
         }
 
 
-        
-        function previewLandmarkImage() {
-
-            const file =
-                document.getElementById("landmarkImage")
-                    .files[0];
-
-            if (!file) return;
-
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-
-                landmarkImageData = e.target.result;
-
-                document.getElementById("imagePreview")
-                    .innerHTML = `
-<img
-    src="${e.target.result}"
-    style="
-        max-width:300px;
-        margin-top:10px;
-        border-radius:10px;
-    "
->
-`;
-            };
-
-            reader.readAsDataURL(file);
-        }
+       
 
         async function analyzeLandmarkImage() {
 
@@ -3283,4 +3254,14 @@ ${activeJourney.timeline?.length
 
     </script>
 
+    <footer class="project-credit">
+        OurFlow © 2026 • A Vads Best Project
+        <br>
+        Created by Vad Monty • ChatGPT Aided
+    </footer>
 <script src="app.js"></script>
+<script src="journey.js"></script>
+<script src="photos.js"></script>
+</body>
+
+</html>
