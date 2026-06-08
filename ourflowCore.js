@@ -22,26 +22,26 @@ async function askOurFlow() {
     console.log(activeJourney);
 
     if (
-    activeJourney &&
-    pendingPhotoMemory &&
-    activeJourney.photos &&
-    activeJourney.photos.length > 0
-) {
-    const lastPhoto =
-        activeJourney.photos[activeJourney.photos.length - 1];
+        activeJourney &&
+        pendingPhotoMemory &&
+        activeJourney.photos &&
+        activeJourney.photos.length > 0
+    ) {
+        const lastPhoto =
+            activeJourney.photos[activeJourney.photos.length - 1];
 
-    pendingPhotoClassification = question;
+        pendingPhotoClassification = question;
 
-    pendingPhotoMemory = false;
+        pendingPhotoMemory = false;
 
-    localStorage.setItem(
-        "activeJourney",
-        JSON.stringify(activeJourney)
-    );
+        localStorage.setItem(
+            "activeJourney",
+            JSON.stringify(activeJourney)
+        );
 
-    showActiveJourneyBox();
+        showActiveJourneyBox();
 
-document.getElementById("result").innerHTML = `
+        document.getElementById("result").innerHTML = `
 <div class="card">
 
 <strong>📷 Photo Memory</strong>
@@ -80,10 +80,10 @@ How should I save this?
 
 </div>
 `;
-    document.getElementById("questionInput").value = "";
+        document.getElementById("questionInput").value = "";
 
-    return;
-}
+        return;
+    }
 
     if (
         !activeJourney &&
@@ -1819,6 +1819,11 @@ Can I help you get back there?
                     .replace(/i am at\s*/i, "")
                     .replace(/i am near\s*/i, "")
                     .replace(/i am by\s*/i, "")
+
+                    .replace(/this is where i parked\s*/i, "")
+                    .replace(/this is my parking location\s*/i, "")
+                    .replace(/this is where my car is\s*/i, "")
+                    
                     .trim();
 
                 if (
