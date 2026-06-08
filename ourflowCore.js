@@ -22,6 +22,49 @@ async function askOurFlow() {
     console.log(activeJourney);
 
     if (
+        activeJourney &&
+        pendingPhotoMemory &&
+        activeJourney.photos &&
+        activeJourney.photos.length > 0
+    ) {
+        const lastPhoto =
+            activeJourney.photos[activeJourney.photos.length - 1];
+
+        lastPhoto.note = question;
+
+        activeJourney.timeline.push(
+            "📝 Photo Note Saved: " + question
+        );
+
+        pendingPhotoMemory = false;
+
+        localStorage.setItem(
+            "activeJourney",
+            JSON.stringify(activeJourney)
+        );
+
+        showActiveJourneyBox();
+
+        document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📷 Photo Note Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I'll remember this with your most recent photo.
+</div>
+`;
+
+        document.getElementById("questionInput").value = "";
+
+        return;
+    }
+
+    if (
         !activeJourney &&
         (
             question.toLowerCase().startsWith("begin journey to ") ||
