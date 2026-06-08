@@ -483,8 +483,6 @@ ${activeJourney.parkingLocation
 `
         : ""}
 
-<br><br>
-
 ${activeJourney.startLocation
         ? `
 <br><br>
