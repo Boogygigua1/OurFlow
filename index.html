@@ -899,6 +899,20 @@ ${activeJourney.directories?.length
             window.open(mapUrl, "_blank");
         }
 
+        function openGoogleMapsToParkingLocation() {
+
+            if (!activeJourney?.parkingLocation) {
+                alert("No parking location recorded.");
+                return;
+            }
+
+            const mapUrl =
+                "https://www.google.com/maps/search/?api=1&query=" +
+                encodeURIComponent(activeJourney.parkingLocation);
+
+            window.open(mapUrl, "_blank");
+        }
+
         async function askOurFlow() {
 
             const question =
@@ -2414,6 +2428,53 @@ ${index + 1}. ${instruction}<br><br>
                     recallQuestion.includes("take me back to my starting location")
                 ) {
 
+                    if (
+                        recallQuestion.includes("where did i park") ||
+                        recallQuestion.includes("where is my car") ||
+                        recallQuestion.includes("take me to my ride") ||
+                        recallQuestion.includes("take me back to my car") ||
+                        recallQuestion.includes("return me to my vehicle") ||
+                        recallQuestion.includes("take me to my vehicle")
+                    ) {
+
+                        if (activeJourney?.parkingLocation) {
+
+                            result.innerHTML = `
+<div class="card">
+    <strong>🚗 Parking Location</strong>
+
+    <br><br>
+
+    Your vehicle is parked at:
+
+    <br><br>
+
+    ${activeJourney.parkingLocation}
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToParkingLocation()">
+        🚗 Navigate To My Ride
+    </button>
+</div>
+`;
+
+                            return;
+                        }
+
+                        result.innerHTML = `
+<div class="card">
+    <strong>🚗 Parking Reminder</strong>
+
+    <br><br>
+
+    I don't have a parking location recorded for this journey.
+</div>
+`;
+
+                        return;
+                    }
+
                     if (activeJourney?.startLocation) {
 
                         result.innerHTML = `
@@ -3235,8 +3296,8 @@ ${journey.directories?.join(" ") || ""}
 <br>
 
 ${activeJourney.timeline?.length
-    ? activeJourney.timeline[activeJourney.timeline.length - 1]
-    : "No activity recorded yet."}
+                    ? activeJourney.timeline[activeJourney.timeline.length - 1]
+                    : "No activity recorded yet."}
 
 </div>
 `;
