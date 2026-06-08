@@ -1702,6 +1702,15 @@ Can I help you get back there?
 
         if (
             activeJourney &&
+
+            !question.includes("?") &&
+
+            !noteQuestion.startsWith("can ") &&
+            !noteQuestion.startsWith("where ") &&
+            !noteQuestion.startsWith("find ") &&
+            !noteQuestion.startsWith("search ") &&
+            !noteQuestion.startsWith("help me find") &&
+
             (
                 noteQuestion.includes("department") ||
                 noteQuestion.includes("hematology") ||
