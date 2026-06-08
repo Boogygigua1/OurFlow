@@ -73,8 +73,11 @@ function saveJourneyPhoto() {
 
     activeJourney.photos.push({
         image: landmarkImageData,
-        timestamp: new Date().toLocaleString()
+        timestamp: new Date().toLocaleString(),
+        note: ""
     });
+
+    pendingPhotoMemory = true;
 
     activeJourney.timeline.push(
         "📷 Photo Saved"
@@ -82,7 +85,23 @@ function saveJourneyPhoto() {
 
     showActiveJourneyBox();
 
-    alert("📷 Photo saved to this journey.");
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📷 Photo Saved</strong>
+
+    <br><br>
+
+    What would you like me to remember about this photo?
+
+    <br><br>
+
+    Type a short note, like:
+
+    <br><br>
+
+    "This is where I parked"
+</div>
+`;
 }
 
 
