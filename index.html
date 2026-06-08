@@ -3212,7 +3212,22 @@ ${journey.directories?.join(" ") || ""}
 
     <br><br>
 
-    Your notes, questions, appointments, instructions, and other journey details have been restored.
+📝 Notes: ${activeJourney.notes?.length || 0}
+<br>
+
+❓ Questions: ${activeJourney.questionsForDoctor?.length || 0}
+<br>
+
+💊 Medications: ${activeJourney.medications?.length || 0}
+<br>
+
+📅 Appointments: ${activeJourney.appointments?.length || 0}
+<br>
+
+👩‍⚕️ Instructions: ${activeJourney.staffInstructions?.length || 0}
+<br>
+
+🏢 Directories: ${activeJourney.directories?.length || 0}
 </div>
 `;
         }
