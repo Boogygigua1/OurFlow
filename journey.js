@@ -355,6 +355,15 @@ ${journey.staffInstructions &&
 
         <br><br>
 
+        ${journey.parkingLocation
+            ? `
+<br><br>
+<button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(journey.parkingLocation)}', '_blank')">
+    🚗 Return To Parking
+</button>
+`
+            : ""}
+
         <strong>Journey Details</strong>
 
         <br><br>
@@ -412,7 +421,7 @@ ${event}
 
 }
 
-        
+
 function showActiveJourneyBox() {
 
     const result =
@@ -475,22 +484,22 @@ ${activeJourney.parkingLocation ||
         "No parking location saved yet."}
 
 ${activeJourney.parkingLocation
-        ? `
+            ? `
 <br><br>
 <button onclick="openGoogleMapsToParkingLocation()">
     🚗 Return To Parking
 </button>
 `
-        : ""}
+            : ""}
 
 ${activeJourney.startLocation
-        ? `
+            ? `
 <br><br>
 <button onclick="openGoogleMapsToStartLocation()">
     🧭 Return To Start
 </button>
 `
-        : ""}
+            : ""}
 
 <br><br>
 
