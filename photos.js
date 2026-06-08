@@ -28,3 +28,31 @@
 
             reader.readAsDataURL(file);
         }
+
+        
+        async function analyzeLandmarkImage() {
+
+            previewLandmarkImage();
+
+            const file =
+                document.getElementById("landmarkImage")
+                    .files[0];
+
+            if (!file) return;
+
+            document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📸 Photo Ready</strong>
+
+    <br><br>
+
+    Your image has been loaded.
+
+    <br><br>
+
+    <button onclick="saveJourneyPhoto()">
+        📷 Save To Journey
+    </button>
+</div>
+`;
+        }

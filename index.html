@@ -448,36 +448,6 @@ margin-right:auto;
             };
         }
 
-
-       
-
-        async function analyzeLandmarkImage() {
-
-            previewLandmarkImage();
-
-            const file =
-                document.getElementById("landmarkImage")
-                    .files[0];
-
-            if (!file) return;
-
-            document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>📸 Photo Ready</strong>
-
-    <br><br>
-
-    Your image has been loaded.
-
-    <br><br>
-
-    <button onclick="saveJourneyPhoto()">
-        📷 Save To Journey
-    </button>
-</div>
-`;
-        }
-
         // SAVE
 
         function clearNewList() {
@@ -487,73 +457,6 @@ margin-right:auto;
             document.getElementById("result").innerHTML = "";
 
         } // end clearNewList function
-
-        function saveJourney() {
-
-
-            const result =
-                document.getElementById("result");
-
-            if (!activeJourney) return;
-
-            if (savedJourneys.length >= JOURNEY_LIMIT) {
-
-                showJourneyUpgradeBox();
-
-                return;
-            }
-
-            const journeyToSave = { ...activeJourney };
-
-            savedJourneys.push(journeyToSave);
-
-            localStorage.setItem(
-                "savedJourneys",
-                JSON.stringify(savedJourneys)
-            );
-
-            result.innerHTML = `
-<div class="card">
-    <strong>🧭 Journey Saved</strong><br><br>
-
-    Destination:
-    ${journeyToSave.destination}
-
-    <br><br>
-
-    Events:
-    ${journeyToSave.timeline?.length || 0}
-
-    <br><br>
-
-    Your journey has been saved and closed.
-
-    <br><br>
-
-    Start a new journey anytime by typing:
-
-    <br><br>
-
-    Start journey to [destination]
-
-
-</div>
-`;
-
-            activeJourney = null;
-
-            localStorage.removeItem(
-                "activeJourney"
-            );
-
-            document.getElementById(
-                "activeJourneyBox"
-            ).innerHTML = "";
-
-            document.getElementById(
-                "questionInput"
-            ).value = "";
-        }
 
         // AI 
 
@@ -3262,6 +3165,7 @@ ${activeJourney.timeline?.length
 <script src="app.js"></script>
 <script src="journey.js"></script>
 <script src="photos.js"></script>
+<script src="mic.js"></script>
 </body>
 
 </html>
