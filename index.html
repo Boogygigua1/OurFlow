@@ -886,7 +886,6 @@ ${activeJourney.directories?.length
 
         function openGoogleMapsToStartLocation() {
 
-            alert("🧭 Return to Start clicked");
 
             if (!activeJourney?.startLocation) {
                 alert("No starting location recorded.");
@@ -3228,6 +3227,17 @@ ${journey.directories?.join(" ") || ""}
 <br>
 
 🏢 Directories: ${activeJourney.directories?.length || 0}
+
+<br><br>
+
+<strong>Last Activity:</strong>
+
+<br>
+
+${activeJourney.timeline?.length
+    ? activeJourney.timeline[activeJourney.timeline.length - 1]
+    : "No activity recorded yet."}
+
 </div>
 `;
         }
