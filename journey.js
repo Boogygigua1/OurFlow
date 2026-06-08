@@ -485,6 +485,17 @@ ${activeJourney.parkingLocation
 
 <br><br>
 
+${activeJourney.startLocation
+        ? `
+<br><br>
+<button onclick="openGoogleMapsToStartLocation()">
+    🧭 Return To Start
+</button>
+`
+        : ""}
+
+<br><br>
+
 <strong>📷 Photos:</strong><br>
 ${activeJourney.photos?.length || 0}
 
