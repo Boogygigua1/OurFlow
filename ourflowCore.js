@@ -22,73 +22,30 @@ async function askOurFlow() {
     console.log(activeJourney);
 
     if (
-        activeJourney &&
-        pendingPhotoMemory &&
-        activeJourney.photos &&
-        activeJourney.photos.length > 0
-    ) {
-        const lastPhoto =
-            activeJourney.photos[activeJourney.photos.length - 1];
-
-        lastPhoto.note = question;
-
-        activeJourney.timeline.push(
-            "📝 Photo Note Saved: " + question
-        );
-
-        if (
-    question.toLowerCase().includes("where i parked") ||
-    question.toLowerCase().includes("where i'm parked") ||
-    question.toLowerCase().includes("where im parked") ||
-    question.toLowerCase().includes("parked here")
+    activeJourney &&
+    pendingPhotoMemory &&
+    activeJourney.photos &&
+    activeJourney.photos.length > 0
 ) {
-    pendingLocationClassification = "Photo location";
+    const lastPhoto =
+        activeJourney.photos[activeJourney.photos.length - 1];
 
-    document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>📷 Photo Note Saved</strong>
+    lastPhoto.note = question;
 
-    <br><br>
-
-    ${question}
-
-    <br><br>
-
-    This sounds like a parking photo.
-
-    <br><br>
-
-    Should I remember this photo location as?
-
-    <br><br>
-
-    <button onclick="saveLocationType('parking')">
-        🚗 Parking
-    </button>
-
-    <br><br>
-
-    <button onclick="saveLocationType('both')">
-        🚗🧭 Both
-    </button>
-</div>
-`;
+    activeJourney.timeline.push(
+        "📝 Photo Note Saved: " + question
+    );
 
     pendingPhotoMemory = false;
 
-    return;
-}
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
 
-        pendingPhotoMemory = false;
+    showActiveJourneyBox();
 
-        localStorage.setItem(
-            "activeJourney",
-            JSON.stringify(activeJourney)
-        );
-
-        showActiveJourneyBox();
-
-        document.getElementById("result").innerHTML = `
+    document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📷 Photo Note Saved</strong>
 
@@ -102,10 +59,10 @@ async function askOurFlow() {
 </div>
 `;
 
-        document.getElementById("questionInput").value = "";
+    document.getElementById("questionInput").value = "";
 
-        return;
-    }
+    return;
+}
 
     if (
         !activeJourney &&
