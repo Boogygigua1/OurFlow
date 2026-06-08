@@ -1,72 +1,72 @@
 
-                function saveLocationType(type) {
+function saveLocationType(type) {
 
-                    if (!activeJourney ||
-                        !pendingLocationClassification) {
-                        return;
-                    }
+    if (!activeJourney ||
+        !pendingLocationClassification) {
+        return;
+    }
 
-                    if (!activeJourney.timeline) {
-                        activeJourney.timeline = [];
-                    }
+    if (!activeJourney.timeline) {
+        activeJourney.timeline = [];
+    }
 
-                    let saveMessage = "";
+    let saveMessage = "";
 
-                    if (type === "parking") {
+    if (type === "parking") {
 
-                        activeJourney.parkingLocation =
-                            pendingLocationClassification;
+        activeJourney.parkingLocation =
+            pendingLocationClassification;
 
-                        activeJourney.timeline.push(
-                            "🚗 Parking Saved: " +
-                            pendingLocationClassification
-                        );
+        activeJourney.timeline.push(
+            "🚗 Parking Saved: " +
+            pendingLocationClassification
+        );
 
-                        saveMessage =
-                            "Parking location recorded.";
-                    }
+        saveMessage =
+            "Parking location recorded.";
+    }
 
-                    if (type === "start") {
+    if (type === "start") {
 
-                        activeJourney.startLocation =
-                            pendingLocationClassification;
+        activeJourney.startLocation =
+            pendingLocationClassification;
 
-                        activeJourney.timeline.push(
-                            "🧭 Starting Location Saved: " +
-                            pendingLocationClassification
-                        );
+        activeJourney.timeline.push(
+            "🧭 Starting Location Saved: " +
+            pendingLocationClassification
+        );
 
-                        saveMessage =
-                            "Starting location recorded.";
-                    }
+        saveMessage =
+            "Starting location recorded.";
+    }
 
-                    if (type === "both") {
+    if (type === "both") {
 
-                        activeJourney.parkingLocation =
-                            pendingLocationClassification;
+        activeJourney.parkingLocation =
+            pendingLocationClassification;
 
-                        activeJourney.startLocation =
-                            pendingLocationClassification;
+        activeJourney.startLocation =
+            pendingLocationClassification;
 
-                        activeJourney.timeline.push(
-                            "🚗 Parking Saved: " +
-                            pendingLocationClassification
-                        );
+        activeJourney.timeline.push(
+            "🚗 Parking Saved: " +
+            pendingLocationClassification
+        );
 
-                        activeJourney.timeline.push(
-                            "🧭 Starting Location Saved: " +
-                            pendingLocationClassification
-                        );
+        activeJourney.timeline.push(
+            "🧭 Starting Location Saved: " +
+            pendingLocationClassification
+        );
 
-                        saveMessage =
-                            "Starting location and parking location recorded.";
-                    }
+        saveMessage =
+            "Starting location and parking location recorded.";
+    }
 
-                    pendingLocationClassification = "";
+    pendingLocationClassification = "";
 
-                    showActiveJourneyBox();
+    showActiveJourneyBox();
 
-                    document.getElementById("result").innerHTML = `
+    document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Location Saved</strong>
 
@@ -90,4 +90,4 @@
     parking reminders, or arrival details?
 </div>
 `;
-                }
+}

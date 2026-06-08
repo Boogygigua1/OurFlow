@@ -1,20 +1,20 @@
- 
-        function previewLandmarkImage() {
 
-            const file =
-                document.getElementById("landmarkImage")
-                    .files[0];
+function previewLandmarkImage() {
 
-            if (!file) return;
+    const file =
+        document.getElementById("landmarkImage")
+            .files[0];
 
-            const reader = new FileReader();
+    if (!file) return;
 
-            reader.onload = function (e) {
+    const reader = new FileReader();
 
-                landmarkImageData = e.target.result;
+    reader.onload = function (e) {
 
-                document.getElementById("imagePreview")
-                    .innerHTML = `
+        landmarkImageData = e.target.result;
+
+        document.getElementById("imagePreview")
+            .innerHTML = `
 <img
     src="${e.target.result}"
     style="
@@ -24,23 +24,26 @@
     "
 >
 `;
-            };
+    };
 
-            reader.readAsDataURL(file);
-        }
+    reader.readAsDataURL(file);
+}
 
-        
-        async function analyzeLandmarkImage() {
 
-            previewLandmarkImage();
 
-            const file =
-                document.getElementById("landmarkImage")
-                    .files[0];
 
-            if (!file) return;
 
-            document.getElementById("result").innerHTML = `
+async function analyzeLandmarkImage() {
+
+    previewLandmarkImage();
+
+    const file =
+        document.getElementById("landmarkImage")
+            .files[0];
+
+    if (!file) return;
+
+    document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📸 Photo Ready</strong>
 
@@ -55,4 +58,32 @@
     </button>
 </div>
 `;
-        }
+}
+
+
+function saveJourneyPhoto() {
+
+    if (!activeJourney || !landmarkImageData) {
+        return;
+    }
+
+    if (!activeJourney.photos) {
+        activeJourney.photos = [];
+    }
+
+    activeJourney.photos.push({
+        image: landmarkImageData,
+        timestamp: new Date().toLocaleString()
+    });
+
+    activeJourney.timeline.push(
+        "📷 Photo Saved"
+    );
+
+    showActiveJourneyBox();
+
+    alert("📷 Photo saved to this journey.");
+}
+
+
+

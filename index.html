@@ -2739,22 +2739,6 @@ details.style.display = "block";
 
 }
 
-function deleteJourney(index) {
-
-                    const confirmDelete =
-                        confirm("Delete this saved journey?");
-
-                    if (!confirmDelete) return;
-
-                    savedJourneys.splice(index, 1);
-
-                    localStorage.setItem(
-                        "savedJourneys",
-                        JSON.stringify(savedJourneys)
-                    );
-
-                    showSavedJourneys();
-                }
 
                 function savePendingParking() {
 
@@ -2770,29 +2754,6 @@ function deleteJourney(index) {
                     alert("📍 Parking location saved.");
                 }
 
-                function saveJourneyPhoto() {
-
-                    if (!activeJourney || !landmarkImageData) {
-                        return;
-                    }
-
-                    if (!activeJourney.photos) {
-                        activeJourney.photos = [];
-                    }
-
-                    activeJourney.photos.push({
-                        image: landmarkImageData,
-                        timestamp: new Date().toLocaleString()
-                    });
-
-                    activeJourney.timeline.push(
-                        "📷 Photo Saved"
-                    );
-
-                    showActiveJourneyBox();
-
-                    alert("📷 Photo saved to this journey.");
-                }
 
                 function filterJourneys() {
 

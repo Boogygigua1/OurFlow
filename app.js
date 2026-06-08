@@ -1,43 +1,43 @@
-        function handleKey(event) {
-            if (event.key === "Enter") {
-                askOurFlow();
-            }
-        }
+function handleKey(event) {
+    if (event.key === "Enter") {
+        askOurFlow();
+    }
+}
 
-        function toggleReadMore(button) {
+function toggleReadMore(button) {
 
-            const moreText = document.getElementById("moreText");
+    const moreText = document.getElementById("moreText");
 
-            const isHidden = moreText.style.display === "none" || moreText.style.display === "";
+    const isHidden = moreText.style.display === "none" || moreText.style.display === "";
 
-            moreText.style.display = isHidden ? "inline" : "none";
-            button.innerText = isHidden ? "Read less" : "Read more";
-        }
+    moreText.style.display = isHidden ? "inline" : "none";
+    button.innerText = isHidden ? "Read less" : "Read more";
+}
 
-        function togglePhilosophy(button) {
+function togglePhilosophy(button) {
 
-            const text = document.getElementById("philosophyText");
+    const text = document.getElementById("philosophyText");
 
-            const isHidden =
-                text.style.display === "none" || text.style.display === "";
+    const isHidden =
+        text.style.display === "none" || text.style.display === "";
 
-            text.style.display = isHidden ? "block" : "none";
+    text.style.display = isHidden ? "block" : "none";
 
-            button.innerText = isHidden
-                ? "Hide Philosophy"
-                : "✨ Our Philosophy";
-        }
+    button.innerText = isHidden
+        ? "Hide Philosophy"
+        : "✨ Our Philosophy";
+}
 
-        function toggleLegal(button) {
+function toggleLegal(button) {
 
-            const text = document.getElementById("legalText");
+    const text = document.getElementById("legalText");
 
-            const isHidden =
-                text.style.display === "none" || text.style.display === "";
+    const isHidden =
+        text.style.display === "none" || text.style.display === "";
 
-            text.style.display = isHidden ? "block" : "none";
+    text.style.display = isHidden ? "block" : "none";
 
-            button.innerText = isHidden
-                ? "▲ Hide AI, Usage & Platform Information"
-                : "▼ AI, Usage & Platform Information";
-        }
+    button.innerText = isHidden
+        ? "▲ Hide AI, Usage & Platform Information"
+        : "▼ AI, Usage & Platform Information";
+}

@@ -1,29 +1,29 @@
 
-        function saveJourney() {
+function saveJourney() {
 
 
-            const result =
-                document.getElementById("result");
+    const result =
+        document.getElementById("result");
 
-            if (!activeJourney) return;
+    if (!activeJourney) return;
 
-            if (savedJourneys.length >= JOURNEY_LIMIT) {
+    if (savedJourneys.length >= JOURNEY_LIMIT) {
 
-                showJourneyUpgradeBox();
+        showJourneyUpgradeBox();
 
-                return;
-            }
+        return;
+    }
 
-            const journeyToSave = { ...activeJourney };
+    const journeyToSave = { ...activeJourney };
 
-            savedJourneys.push(journeyToSave);
+    savedJourneys.push(journeyToSave);
 
-            localStorage.setItem(
-                "savedJourneys",
-                JSON.stringify(savedJourneys)
-            );
+    localStorage.setItem(
+        "savedJourneys",
+        JSON.stringify(savedJourneys)
+    );
 
-            result.innerHTML = `
+    result.innerHTML = `
 <div class="card">
     <strong>🧭 Journey Saved</strong><br><br>
 
@@ -51,17 +51,34 @@
 </div>
 `;
 
-            activeJourney = null;
+    activeJourney = null;
 
-            localStorage.removeItem(
-                "activeJourney"
-            );
+    localStorage.removeItem(
+        "activeJourney"
+    );
 
-            document.getElementById(
-                "activeJourneyBox"
-            ).innerHTML = "";
+    document.getElementById(
+        "activeJourneyBox"
+    ).innerHTML = "";
 
-            document.getElementById(
-                "questionInput"
-            ).value = "";
-        }
+    document.getElementById(
+        "questionInput"
+    ).value = "";
+}
+
+function deleteJourney(index) {
+
+    const confirmDelete =
+        confirm("Delete this saved journey?");
+
+    if (!confirmDelete) return;
+
+    savedJourneys.splice(index, 1);
+
+    localStorage.setItem(
+        "savedJourneys",
+        JSON.stringify(savedJourneys)
+    );
+
+    showSavedJourneys();
+}
