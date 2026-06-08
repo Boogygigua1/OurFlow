@@ -210,6 +210,10 @@
     </button>
 -->
 
+<button onclick="document.getElementById('landmarkImage').click()">
+    📷 Take Photo
+</button>
+
     <input type="file" id="landmarkImage" accept="image/*" capture="environment" onchange="analyzeLandmarkImage()"
         style="
         margin-top:10px;
@@ -2646,6 +2650,7 @@ Can I help you get back there?
                             .replace(/i'?m parked at\s*/i, "")
                             .replace(/i parked near\s*/i, "")
                             .replace(/i parked at\s*/i, "")
+                            .replace(/parked by\s*/i, "")
                             .replace(/my car is at\s*/i, "")
                             .replace(/my ride is at\s*/i, "")
                             .replace(/my ride is near\s*/i, "")
