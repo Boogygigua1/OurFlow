@@ -533,3 +533,11 @@ ${activeJourney.directories?.length
         JSON.stringify(activeJourney)
     );
 }
+
+function endJourneyFromArrival() {
+
+    document.getElementById("questionInput").value =
+        "end journey";
+
+    askOurFlow();
+}

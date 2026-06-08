@@ -297,29 +297,42 @@ async function askOurFlow() {
     <br><br>
 
     Just tell me naturally and I'll save it for this journey.
-</div>
+
+<br><br>
+
+<button onclick="endJourneyFromArrival()">
+    🏁 End Journey
+</button>
+
+<br><br>
+
+<button onclick="showActiveJourneyBox()">
+    ⬅ Continue Journey
+</button>
+
+    </div>
 `;
 
             return;
         }
 
-if (
-    endQuestion === "end journey" ||
-    endQuestion.includes("all set") ||
-    endQuestion.includes("finished") ||
-    endQuestion.includes("that's all") ||
-    endQuestion.includes("thats all") ||
-    endQuestion.includes("no thanks") ||
-    endQuestion.includes("i made it") ||
-    endQuestion.includes("made it") ||
-    endQuestion.includes("i'm here") ||
-    endQuestion.includes("im here") ||
-    endQuestion.includes("i am here") ||
-    endQuestion.includes("i've arrived") ||
-    endQuestion.includes("ive arrived") ||
-    endQuestion.includes("i have arrived") ||
-    endQuestion.includes("arrived")
-) {
+        if (
+            endQuestion === "end journey" ||
+            endQuestion.includes("all set") ||
+            endQuestion.includes("finished") ||
+            endQuestion.includes("that's all") ||
+            endQuestion.includes("thats all") ||
+            endQuestion.includes("no thanks") ||
+            endQuestion.includes("i made it") ||
+            endQuestion.includes("made it") ||
+            endQuestion.includes("i'm here") ||
+            endQuestion.includes("im here") ||
+            endQuestion.includes("i am here") ||
+            endQuestion.includes("i've arrived") ||
+            endQuestion.includes("ive arrived") ||
+            endQuestion.includes("i have arrived") ||
+            endQuestion.includes("arrived")
+        ) {
 
             /* END JOURNEY BLOCK HERE */
 
