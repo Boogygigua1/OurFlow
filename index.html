@@ -782,6 +782,9 @@ ${activeJourney.parkingLocation ||
 
 <br><br>
 
+<strong>📷 Photos:</strong><br>
+${activeJourney.photos?.length || 0}
+
 <strong>🏢 Directory Memory:</strong><br>
 ${activeJourney.directories?.length
                     ? "• " + activeJourney.directories.slice(-3).join("<br>• ")
