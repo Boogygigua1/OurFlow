@@ -37,10 +37,15 @@ function openGoogleMapsToParkingLocation() {
         return;
     }
 
+    const parkingQuery =
+        activeJourney.parkingLocation.match(/\d{3,}.*$/)
+            ? activeJourney.parkingLocation.match(/\d{3,}.*$/)[0]
+            : activeJourney.parkingLocation;
+
     const mapUrl =
         "https://www.google.com/maps/search/?api=1&query=" +
-        encodeURIComponent(activeJourney.parkingLocation);
-
+        encodeURIComponent(parkingQuery);
+        
     window.open(mapUrl, "_blank");
 }
 
