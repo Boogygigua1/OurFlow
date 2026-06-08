@@ -401,91 +401,6 @@ margin-right:auto;
         let JOURNEY_LIMIT =
             parseInt(localStorage.getItem("journeyLimit")) || 5;
 
-        function showActiveJourneyBox() {
-
-            const result =
-                document.getElementById("activeJourneyBox");
-
-            if (!activeJourney) {
-                return;
-            }
-
-            result.innerHTML = `
-<div class="card">
-
-    <strong>🧭 Journey Started</strong>
-
-    <br><br>
-
-    I see you're starting a journey to:
-
-    <br><br>
-
-    <strong>
-        ${activeJourney.destination || "Not set yet"}
-    </strong>
-
-    <br><br>
-
-    Here's a map in case you need it.
-
-    <br><br>
-
-    <button onclick="openGoogleMapsForJourney()">
-        Open Google Maps
-    </button>
-
-    <br><br>
-
-    <strong>Active Journey Info:</strong>
-    <br><br>
-
-
-    <strong>Arrival Help:</strong><br>
-${activeJourney.arrivalTips || "No arrival tips yet."}
-
-<br><br>
-
-<strong>📍 Destination Details:</strong><br>
-${activeJourney.destinationAddress ||
-                "No destination details saved yet."}
-
-<br><br>
-
-<strong>🧭 Starting Location:</strong><br>
-${activeJourney.startLocation ||
-                "No starting location saved yet."}
-
-<br><br>
-
-<strong>🚗 Parking Memory:</strong><br>
-${activeJourney.parkingLocation ||
-                "No parking location saved yet."}
-
-<br><br>
-
-<strong>📷 Photos:</strong><br>
-${activeJourney.photos?.length || 0}
-
-<br><br>
-
-<strong>🏢 Directory Memory:</strong><br>
-${activeJourney.directories?.length
-                    ? "• " + activeJourney.directories.slice(-3).join("<br>• ")
-                    : "No directory information saved yet."}
-    <br><br>
-
-    <button onclick="saveJourney()">
-        Save Journey
-    </button>
-</div>
-`;
-
-            localStorage.setItem(
-                "activeJourney",
-                JSON.stringify(activeJourney)
-            );
-        }
 
 
 
@@ -2468,7 +2383,185 @@ Can I help you get back there?
         }
 
 
-       
+        function toggleJourney(index) {
+
+            const details =
+                document.getElementById(`journey-${index}`);
+
+            const journey =
+                savedJourneys[index];
+
+            if (details.style.display === "block") {
+
+                details.style.display = "none";
+
+                return;
+            }
+
+            let html = `
+<div style="
+    background:#f8f8f8;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:10px;
+">
+    <strong>🧭 Journey Summary</strong>
+
+    <br><br>
+
+    Destination:
+    ${journey.destination}
+
+    <br>
+
+    Duration:
+    ${journey.duration || 0} minute(s)
+
+    <br>
+
+    Events:
+${journey.timeline?.length || 0}
+</div>
+
+<br><br>
+
+<strong>🧭 Quick Summary</strong>
+
+<br><br>
+
+${journey.notes &&
+                    journey.notes.length
+                    ? `<strong>📝 Notes:</strong><br>${journey.notes.map(n => `• ${n}<br>`).join("")}<br>`
+                    : ""}
+
+${journey.questionsForDoctor &&
+                    journey.questionsForDoctor.length
+                    ? `<strong>❓ Questions:</strong><br>${journey.questionsForDoctor.map(q => `• ${q}<br>`).join("")}<br>`
+                    : ""}
+
+${journey.medications &&
+                    journey.medications.length
+                    ? `<strong>💊 Medications:</strong><br>${journey.medications.map(m => `• ${m}<br>`).join("")}<br>`
+                    : ""}
+
+${journey.appointments &&
+                    journey.appointments.length
+                    ? `<strong>📅 Appointments:</strong><br>${journey.appointments.map(a => `• ${a}<br>`).join("")}<br>`
+                    : ""}
+
+${journey.parkingLocation
+                    ? `<strong>🚗 Parking:</strong><br>• ${journey.parkingLocation}<br><br>`
+                    : ""}
+
+${journey.startLocation
+                    ? `<strong>🧭 Starting Location:</strong><br>• ${journey.startLocation}<br><br>`
+                    : ""}  
+
+${journey.directories &&
+                    journey.directories.length
+                    ? `<strong>🏢 Directories:</strong><br>${journey.directories.map(d => `• ${d}<br>`).join("")}<br>`
+                    : ""}    
+                                      
+
+${journey.staffInstructions &&
+                    journey.staffInstructions.length
+                    ? `<strong>👩‍⚕️ Instructions:</strong><br>${journey.staffInstructions.map(i => `• ${i}<br>`).join("")}<br>`
+                    : ""}
+
+<hr>
+
+        <strong>Destination:</strong>
+        ${journey.destination}
+
+        <br><br>
+
+        <strong>📍 Destination Details:</strong>
+        ${journey.destinationAddress || "No destination details recorded"}
+
+        <br><br>
+
+        <strong>Started:</strong>
+        ${journey.startTime}
+
+        <br><br>
+
+        <strong>Ended:</strong>
+        ${journey.endTime || "Not recorded"}
+
+        <br><br>
+
+        <strong>Duration:</strong>
+        ${journey.duration || 0} minute(s)
+
+        <br><br>
+
+        <strong>🧭 Starting Location:</strong>
+        ${journey.startLocation || "Not recorded"}
+
+        <br><br>
+
+        <strong>Parking:</strong>
+        ${journey.parkingLocation || "Not recorded"}
+
+        <br><br>
+
+        <strong>Journey Details</strong>
+
+        <br><br>
+    `;
+
+            if (
+                !journey.timeline ||
+                journey.timeline.length === 0
+            ) {
+
+                html += `
+No journey events recorded.
+<br><br>
+`;
+            }
+
+            else {
+
+                journey.timeline.forEach(event => {
+
+                    html += `
+${event}
+<br><br>
+`;
+                });
+
+                if (journey.photos && journey.photos.length) {
+
+                    html += `
+    <br>
+
+    <strong>📷 Saved Photos</strong>
+
+    <br><br>
+
+    ${journey.photos.map(photo => `
+        <img
+            src="${photo.image}"
+            style="
+                max-width:200px;
+                border-radius:8px;
+                margin-bottom:10px;
+                display:block;
+            "
+        >
+    `).join("")}
+    `;
+                }
+
+details.innerHTML = html;
+
+details.style.display = "block";
+
+    }
+
+}
+
 
                 function savePendingParking() {
 
