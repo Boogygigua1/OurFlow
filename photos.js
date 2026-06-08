@@ -61,7 +61,7 @@ async function analyzeLandmarkImage() {
 }
 
 
-function saveJourneyPhoto() {
+async function saveJourneyPhoto() {
 
     if (!activeJourney || !landmarkImageData) {
         return;
@@ -77,32 +77,109 @@ function saveJourneyPhoto() {
         note: ""
     });
 
+    activeJourney.timeline.push("📷 Photo Saved");
+
+    const response = await fetch("/api/askOurFlow", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            question:
+                "Look at this image and suggest 3 short memory options the user may want to save. Return simple numbered options only.",
+            history: [],
+            destination: activeJourney?.destination || "",
+            parkingLocation: activeJourney?.parkingLocation || "",
+            startLocation: activeJourney?.startLocation || "",
+            journeyStatus: activeJourney?.journeyStatus || "",
+            landmarkImageData
+        })
+    });
+
+    const data = await response.json();
+
     pendingPhotoMemory = true;
 
+    showActiveJourneyBox();
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📷 Photo Analyzed</strong>
+
+    <br><br>
+
+    ${data.answer}
+
+    <br><br>
+
+    What should I remember about this photo?
+
+    <br><br>
+
+    <button onclick="savePhotoMemory('Photo memory option 1')">
+        Save Option 1
+    </button>
+
+    <br><br>
+
+    <button onclick="savePhotoMemory('Photo memory option 2')">
+        Save Option 2
+    </button>
+
+    <br><br>
+
+    <button onclick="savePhotoMemory('Photo memory option 3')">
+        Save Option 3
+    </button>
+
+    <br><br>
+
+    Or type your own note below and press Ask OurFlow.
+</div>
+`;
+}
+
+function savePhotoMemory(note) {
+
+    if (
+        !activeJourney ||
+        !activeJourney.photos ||
+        activeJourney.photos.length === 0
+    ) {
+        return;
+    }
+
+    const lastPhoto =
+        activeJourney.photos[activeJourney.photos.length - 1];
+
+    lastPhoto.note = note;
+
     activeJourney.timeline.push(
-        "📷 Photo Saved"
+        "📝 Photo Note Saved: " + note
+    );
+
+    pendingPhotoMemory = false;
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
     );
 
     showActiveJourneyBox();
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📷 Photo Saved</strong>
+    <strong>📷 Photo Note Saved</strong>
 
     <br><br>
 
-    What would you like me to remember about this photo?
+    ${note}
 
     <br><br>
 
-    Type a short note, like:
-
-    <br><br>
-
-    "This is where I parked"
+    I'll remember this with your most recent photo.
 </div>
 `;
 }
-
 
 
