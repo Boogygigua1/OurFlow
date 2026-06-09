@@ -1984,14 +1984,6 @@ Can I help you get back there?
 
             const placeData = await placeResponse.json();
 
-            const isInformationSearch =
-
-                navigationSearch.includes("search") ||
-                navigationSearch.includes("look up") ||
-                navigationSearch.includes("directory") ||
-                navigationSearch.includes("department") ||
-                navigationSearch.includes("office") ||
-                navigationSearch.includes("building");
 
             if (isInformationSearch) {
 
