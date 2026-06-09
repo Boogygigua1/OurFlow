@@ -29,6 +29,10 @@ export default async function handler(req, res) {
         "https://www.google.com/maps/search/?api=1&query=" +
         encodeURIComponent(searchQuery);
 
+    const webSearchUrl =
+        "https://www.google.com/search?q=" +
+        encodeURIComponent(cleanQuery);
+
     const aiResponse = await fetch(
         "https://api.openai.com/v1/chat/completions",
         {
@@ -89,6 +93,11 @@ ${cleanQuery}
     const arrivalTip =
         aiData?.choices?.[0]?.message?.content ||
         "Map search ready. Before leaving, check Google Maps for Street View, photos, reviews, parking, entrances, directories, suite numbers, and check-in details.";
+
+    const webSearchUrl =
+        "https://www.google.com/search?q=" +
+        encodeURIComponent(cleanQuery);
+
 
     return res.status(200).json({
         query,

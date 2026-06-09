@@ -1963,6 +1963,15 @@ Can I help you get back there?
                 question
             );
 
+            const isInformationSearch =
+
+                navigationSearch.includes("search") ||
+                navigationSearch.includes("look up") ||
+                navigationSearch.includes("directory") ||
+                navigationSearch.includes("department") ||
+                navigationSearch.includes("office") ||
+                navigationSearch.includes("building");
+
             const placeResponse = await fetch("/api/searchPlace", {
                 method: "POST",
                 headers: {
@@ -1975,11 +1984,80 @@ Can I help you get back there?
 
             const placeData = await placeResponse.json();
 
+            const isInformationSearch =
+
+                navigationSearch.includes("search") ||
+                navigationSearch.includes("look up") ||
+                navigationSearch.includes("directory") ||
+                navigationSearch.includes("department") ||
+                navigationSearch.includes("office") ||
+                navigationSearch.includes("building");
+
+            if (isInformationSearch) {
+
+                result.innerHTML = `
+<div class="card">
+    <strong>🔍 Information Search</strong>
+
+    <br><br>
+
+    Search prepared for:
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    <a href="${placeData.webSearchUrl}" target="_blank">
+        Search Google
+    </a>
+
+    <br><br>
+
+    After you find the building, office, or department,
+    paste it here and I'll save it to the journey.
+</div>
+`;
+
+                return;
+            }
+
             if (
                 questionInfo.mentionsParking &&
                 questionInfo.asksRoute
             ) {
                 pendingParkingLocation = question;
+            }
+
+            if (isInformationSearch) {
+
+                result.innerHTML = `
+<div class="card">
+    <strong>🔍 Information Search</strong>
+
+    <br><br>
+
+    Search prepared for:
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    <a href="${placeData.webSearchUrl}" target="_blank">
+        Search Google
+    </a>
+
+    <br><br>
+
+    After you find the department, office, or building,
+    paste it here and I'll remember it for this journey.
+</div>
+`;
+
+                return;
             }
 
             result.innerHTML = `
