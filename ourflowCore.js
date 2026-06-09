@@ -1932,6 +1932,17 @@ Can I help you get back there?
                 navigationSearch.includes("ride to") ||
                 navigationSearch.includes("bike to") ||
                 navigationSearch.includes("navigate to") ||
+
+                navigationSearch.includes("search for") ||
+                navigationSearch.includes("search the") ||
+                navigationSearch.includes("look up") ||
+                navigationSearch.includes("find the") ||
+                navigationSearch.includes("find ") ||
+                navigationSearch.includes("directory") ||
+                navigationSearch.includes("department") ||
+                navigationSearch.includes("office") ||
+                navigationSearch.includes("building") ||
+
                 navigationSearch.includes("go to") ||
                 navigationSearch.includes("get to") ||
                 navigationSearch.includes("head to") ||
@@ -1944,7 +1955,14 @@ Can I help you get back there?
             &&
 
             !navigationSearch.includes("take me to my ride")
+
         ) {
+
+            console.log(
+                "SEARCHPLACE TRIGGERED:",
+                question
+            );
+
             const placeResponse = await fetch("/api/searchPlace", {
                 method: "POST",
                 headers: {
