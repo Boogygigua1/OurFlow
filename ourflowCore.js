@@ -2040,8 +2040,14 @@ ${searchData.searchDomain || "No domain found"}
 
 <br><br>
 
-<a href="${placeData.webSearchUrl}" target="_blank">
-    Search Google
+<a
+href="https://www.google.com/search?q=${encodeURIComponent(
+    `site:${searchData.searchDomain} ${question}`
+)}"
+target="_blank">
+
+    🔍 Search ${activeJourney?.destination || "Site"}
+
 </a>
 
 <br><br>
