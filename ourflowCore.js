@@ -1987,13 +1987,31 @@ Can I help you get back there?
 
             if (isInformationSearch) {
 
+                const searchResponse =
+                    await fetch(
+                        "/api/searchDestinationInfo",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                destination:
+                                    activeJourney?.destination || "",
+                                question
+                            })
+                        }
+                    );
+
+                const searchData =
+                    await searchResponse.json();
+
                 pendingDestinationSearch =
                     question
                         .replace(/search the /i, "")
                         .replace(/directory for /i, "")
                         .replace(/search for /i, "")
                         .trim();
-
 
                 result.innerHTML = `
 <div class="card">
@@ -2005,11 +2023,19 @@ Can I help you get back there?
 
     <br><br>
 
-    ${question}
+   ${question}
 
-    <br><br>
+<br><br>
 
-    <a href="${placeData.webSearchUrl}" target="_blank">
+<strong>Search Domain:</strong>
+
+<br>
+
+${searchData.searchDomain || "No domain found"}
+
+<br><br>
+
+<a href="${placeData.webSearchUrl}" target="_blank">
     Search Google
 </a>
 
@@ -2034,64 +2060,6 @@ paste it here and I'll save it to the journey.
                 questionInfo.asksRoute
             ) {
                 pendingParkingLocation = question;
-            }
-
-            if (isInformationSearch) {
-
-                const searchResponse =
-                    await fetch(
-                        "/api/searchDestinationInfo",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-                            body: JSON.stringify({
-                                destination:
-                                    activeJourney?.destination || "",
-                                question
-                            })
-                        }
-                    );
-
-                const searchData =
-                    await searchResponse.json();
-
-                result.innerHTML = `
-<div class="card">
-    <strong>🔍 Information Search</strong>
-
-    <br><br>
-
-    Search prepared for:
-
-<br><br>
-
-${question}
-
-<br><br>
-
-<strong>Search Domain:</strong>
-
-<br>
-
-${searchData.searchDomain || "No domain found"}
-
-<br><br>
-
-<a href="${placeData.webSearchUrl}" target="_blank">
-        Search Google
-    </a>
-
-    <br><br>
-
-    After you find the department, office, or building,
-    paste it here and I'll remember it for this journey.
-</div>
-`;
-
-                return;
             }
 
             result.innerHTML = `
