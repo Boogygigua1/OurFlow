@@ -1,3 +1,4 @@
+console.log("MAPS.JS LOADED");
 
 function openGoogleMapsForJourney() {
 
