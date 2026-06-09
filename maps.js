@@ -8,8 +8,12 @@ function openGoogleMapsForJourney() {
 
     const mapDestination =
         activeJourney.mapLink ||
+
         "https://www.google.com/maps/search/?api=1&query=" +
-        encodeURIComponent(activeJourney.destination);
+        encodeURIComponent(
+            activeJourney.destinationAddress ||
+            activeJourney.destination
+        );
 
     window.open(mapDestination, "_blank");
 }
@@ -45,7 +49,7 @@ function openGoogleMapsToParkingLocation() {
     const mapUrl =
         "https://www.google.com/maps/search/?api=1&query=" +
         encodeURIComponent(parkingQuery);
-        
+
     window.open(mapUrl, "_blank");
 }
 
