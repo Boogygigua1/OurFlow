@@ -49,7 +49,21 @@ function openGoogleMapsToParkingLocation() {
     window.open(mapUrl, "_blank");
 }
 
+function openGoogleMapsToDestinationDetails() {
 
+    if (!activeJourney?.destinationAddress) {
+        alert("No destination details recorded.");
+        return;
+    }
+
+    const mapUrl =
+        "https://www.google.com/maps/search/?api=1&query=" +
+        encodeURIComponent(
+            activeJourney.destinationAddress
+        );
+
+    window.open(mapUrl, "_blank");
+}
 
 async function getArrivalHelp(destination) {
 

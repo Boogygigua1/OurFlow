@@ -330,6 +330,10 @@ ${journey.staffInstructions &&
 
         <br><br>
 
+<button onclick="openGoogleMapsToDestinationDetails()">
+    🧭 Navigate To Destination Details
+</button>
+
         <strong>Started:</strong>
         ${journey.startTime}
 
@@ -363,13 +367,13 @@ ${journey.staffInstructions &&
             : ""}
 
 ${journey.startLocation
-    ? `
+            ? `
 <br><br>
 <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(journey.startLocation)}', '_blank')">
     🧭 Return To Start
 </button>
 `
-    : ""}
+            : ""}
 <br><br>
 
         <strong>Journey Details</strong>
