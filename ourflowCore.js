@@ -1930,6 +1930,11 @@ Can I help you get back there?
         const navigationSearch =
             question.toLowerCase();
 
+        console.log(
+            "NAVIGATION SEARCH:",
+            navigationSearch
+        );
+
         if (
             (
                 navigationSearch.includes("directions") ||
