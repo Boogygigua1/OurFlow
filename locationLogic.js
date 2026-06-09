@@ -170,13 +170,6 @@ function savePendingParking() {
 
 function saveInformationSearchAsDestination() {
 
-    alert(
-        "activeJourney: " +
-        !!activeJourney +
-        "\npendingDestinationSearch: " +
-        pendingDestinationSearch
-    );
-
     if (!activeJourney) {
         return;
     }

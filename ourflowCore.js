@@ -1987,8 +1987,12 @@ Can I help you get back there?
 
             if (isInformationSearch) {
 
-                pendingDestinationSearch = question;
-
+                pendingDestinationSearch =
+                    question
+                        .replace(/search the /i, "")
+                        .replace(/directory for /i, "")
+                        .replace(/search for /i, "")
+                        .trim();
 
                 result.innerHTML = `
 <div class="card">
