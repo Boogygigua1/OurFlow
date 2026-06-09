@@ -13,6 +13,7 @@ export default async function handler(req, res) {
 
     const destinationDomains = {
         "chico state": "csuchico.edu",
+        "butte college": "butte.edu",
         "enloe": "enloe.org",
         "dmv": "dmv.ca.gov"
     };
