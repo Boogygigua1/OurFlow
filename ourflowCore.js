@@ -1970,7 +1970,12 @@ Can I help you get back there?
                 navigationSearch.includes("directory") ||
                 navigationSearch.includes("department") ||
                 navigationSearch.includes("office") ||
-                navigationSearch.includes("building");
+                navigationSearch.includes("building") ||
+                navigationSearch.includes("hematology") ||
+                navigationSearch.includes("radiology") ||
+                navigationSearch.includes("oncology") ||
+                navigationSearch.includes("financial aid") ||
+                navigationSearch.includes("admissions");
 
             const placeResponse = await fetch("/api/searchPlace", {
                 method: "POST",
