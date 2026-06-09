@@ -1950,6 +1950,7 @@ Can I help you get back there?
 
                 navigationSearch.includes("search for") ||
                 navigationSearch.includes("search the") ||
+                navigationSearch.startsWith("search ") ||
                 navigationSearch.includes("look up") ||
                 navigationSearch.includes("find the") ||
                 navigationSearch.includes("find ") ||
