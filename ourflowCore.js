@@ -777,6 +777,24 @@ Ready to save?
     <br><br>
 
     I'll remember this as part of the destination details.
+
+    <br><br>
+
+<button onclick="openGoogleMapsToDestinationDetails('walking')">
+    🚶 Walk There
+</button>
+
+<br><br>
+
+<button onclick="openGoogleMapsToDestinationDetails('bicycling')">
+    🚴 Bike There
+</button>
+
+<br><br>
+
+<button onclick="openGoogleMapsToDestinationDetails('driving')">
+    🚗 Drive There
+</button>
 </div>
 `;
 
