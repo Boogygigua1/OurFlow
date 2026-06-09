@@ -21,15 +21,17 @@ function openGoogleMapsForJourney() {
 
 function openGoogleMapsToStartLocation() {
 
-
     if (!activeJourney?.startLocation) {
         alert("No starting location recorded.");
         return;
     }
 
     const mapUrl =
-        "https://www.google.com/maps/search/?api=1&query=" +
-        encodeURIComponent(activeJourney.startLocation);
+        "https://www.google.com/maps/dir/?api=1" +
+        "&destination=" +
+        encodeURIComponent(
+            activeJourney.startLocation
+        );
 
     window.open(mapUrl, "_blank");
 }
@@ -41,17 +43,14 @@ function openGoogleMapsToParkingLocation() {
         return;
     }
 
-    const parkingQuery =
-        activeJourney.parkingLocation.match(/\d{3,}.*$/)
-            ? activeJourney.parkingLocation.match(/\d{3,}.*$/)[0]
-            : activeJourney.parkingLocation;
-
     const mapUrl =
-        "https://www.google.com/maps/search/?api=1&query=" +
-        encodeURIComponent(parkingQuery);
+        "https://www.google.com/maps/dir/?api=1" +
+        "&destination=" +
+        encodeURIComponent(
+            activeJourney.parkingLocation
+        );
 
     window.open(mapUrl, "_blank");
-
 }
 
 function openGoogleMapsToDestinationDetails(mode = "driving") {
