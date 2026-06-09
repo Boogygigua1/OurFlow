@@ -167,3 +167,42 @@ function savePendingParking() {
 
     alert("📍 Parking location saved.");
 }
+
+function saveInformationSearchAsDestination() {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    activeJourney.destinationAddress =
+        pendingDestinationSearch;
+
+    activeJourney.timeline.push(
+        "📍 Destination Detail Saved: " +
+        pendingDestinationSearch
+    );
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📍 Destination Detail Saved</strong>
+
+    <br><br>
+
+    ${pendingDestinationSearch}
+
+    <br><br>
+
+    I'll use this information for navigation and photo guidance.
+</div>
+`;
+
+pendingDestinationSearch = "";
+
+}

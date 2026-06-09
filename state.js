@@ -15,6 +15,8 @@ let pendingParkingLocation = "";
 
 let pendingLocationClassification = "";
 
+let pendingDestinationSearch = "";
+
 let savedJourneys =
     JSON.parse(localStorage.getItem("savedJourneys")) || [];
 

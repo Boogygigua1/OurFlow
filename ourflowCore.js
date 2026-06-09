@@ -1987,6 +1987,9 @@ Can I help you get back there?
 
             if (isInformationSearch) {
 
+                pendingDestinationSearch = question;
+
+
                 result.innerHTML = `
 <div class="card">
     <strong>🔍 Information Search</strong>
@@ -2002,13 +2005,19 @@ Can I help you get back there?
     <br><br>
 
     <a href="${placeData.webSearchUrl}" target="_blank">
-        Search Google
-    </a>
+    Search Google
+</a>
 
-    <br><br>
+<br><br>
 
-    After you find the building, office, or department,
-    paste it here and I'll save it to the journey.
+<button onclick="saveInformationSearchAsDestination()">
+    📍 Save As Destination
+</button>
+
+<br><br>
+
+After you find the building, office, or department,
+paste it here and I'll save it to the journey.
 </div>
 `;
 
