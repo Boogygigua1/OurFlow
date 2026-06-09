@@ -2042,8 +2042,8 @@ ${searchData.searchDomain || "No domain found"}
 
 <a
 href="https://www.google.com/search?q=${encodeURIComponent(
-    `site:${searchData.searchDomain} ${question}`
-)}"
+                    `site:${searchData.searchDomain} ${question}`
+                )}"
 target="_blank">
 
     🔍 Search ${activeJourney?.destination || "Site"}
@@ -2101,6 +2101,40 @@ paste it here and I'll save it to the journey.
     After you open it, come back and tell me what you see.
 </div>
 `;
+            return;
+        }
+
+        if (
+            activeJourney?.destinationAddress &&
+            (
+                lowerQuestion.includes("how do i get") ||
+                lowerQuestion.includes("directions") ||
+                lowerQuestion.includes("navigate") ||
+                lowerQuestion.includes("take me there") ||
+                lowerQuestion.includes("route to")
+            )
+        ) {
+
+            result.innerHTML = `
+<div class="card">
+    <strong>🧭 Navigation Available</strong>
+
+    <br><br>
+
+    Destination:
+
+    <br><br>
+
+    ${activeJourney.destinationAddress}
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestinationDetails()">
+        🧭 Open Google Maps
+    </button>
+</div>
+`;
+
             return;
         }
 
