@@ -334,6 +334,8 @@ ${journey.staffInstructions &&
     🧭 Navigate To Destination Details
 </button>
 
+<br><br>
+
         <strong>Started:</strong>
         ${journey.startTime}
 

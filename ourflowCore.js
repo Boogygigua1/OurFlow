@@ -1994,6 +1994,7 @@ Can I help you get back there?
                         .replace(/search for /i, "")
                         .trim();
 
+
                 result.innerHTML = `
 <div class="card">
     <strong>🔍 Information Search</strong>
@@ -2037,6 +2038,26 @@ paste it here and I'll save it to the journey.
 
             if (isInformationSearch) {
 
+                const searchResponse =
+                    await fetch(
+                        "/api/searchDestinationInfo",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body: JSON.stringify({
+                                destination:
+                                    activeJourney?.destination || "",
+                                question
+                            })
+                        }
+                    );
+
+                const searchData =
+                    await searchResponse.json();
+
                 result.innerHTML = `
 <div class="card">
     <strong>🔍 Information Search</strong>
@@ -2045,13 +2066,21 @@ paste it here and I'll save it to the journey.
 
     Search prepared for:
 
-    <br><br>
+<br><br>
 
-    ${question}
+${question}
 
-    <br><br>
+<br><br>
 
-    <a href="${placeData.webSearchUrl}" target="_blank">
+<strong>Search Domain:</strong>
+
+<br>
+
+${searchData.searchDomain || "No domain found"}
+
+<br><br>
+
+<a href="${placeData.webSearchUrl}" target="_blank">
         Search Google
     </a>
 
