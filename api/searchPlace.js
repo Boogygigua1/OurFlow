@@ -94,15 +94,11 @@ ${cleanQuery}
         aiData?.choices?.[0]?.message?.content ||
         "Map search ready. Before leaving, check Google Maps for Street View, photos, reviews, parking, entrances, directories, suite numbers, and check-in details.";
 
-    const webSearchUrl =
-        "https://www.google.com/search?q=" +
-        encodeURIComponent(cleanQuery);
-
-
     return res.status(200).json({
         query,
         searchQuery,
         mapUrl,
+        webSearchUrl,
         arrivalTip
     });
 }
