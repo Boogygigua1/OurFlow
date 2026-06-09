@@ -5,7 +5,10 @@ export default async function handler(req, res) {
         });
     }
 
-    const { query } = req.body;
+    const {
+        query,
+        searchType = "arrival"
+    } = req.body;
 
     if (!query) {
         return res.status(400).json({
