@@ -2078,8 +2078,19 @@ target="_blank">
 
 <br><br>
 
+<button onclick="saveVerifiedDestinationAddress()">
+    📬 Save Verified Address
+</button>
+
 After you find the building, office, or department,
-paste it here and I'll save it to the journey.
+copy the full address and paste it here.
+
+Example:
+
+Anthropology Lab
+Butte Hall
+400 W 1st St
+Chico, CA
 </div>
 `;
 

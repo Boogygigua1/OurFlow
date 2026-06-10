@@ -239,5 +239,44 @@ function saveInformationSearchAsDestination() {
 `;
 
     pendingDestinationSearch = "";
+}
 
+    function saveVerifiedDestinationAddress() {
+
+    const address = prompt(
+        "Paste the verified address:"
+    );
+
+    if (!address) {
+        return;
+    }
+
+    activeJourney.destinationAddress =
+        address;
+
+    activeJourney.timeline.push(
+        "📬 Verified Address Saved: " +
+        address
+    );
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📬 Verified Address Saved</strong>
+
+    <br><br>
+
+    ${address}
+
+    <br><br>
+
+    Navigation will now use this verified address.
+</div>
+`;
 }
