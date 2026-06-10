@@ -764,6 +764,11 @@ Ready to save?
         if (
             activeJourney &&
             !questionInfo.mentionsParking &&
+            
+            !noteQuestion.startsWith("find ") &&
+            !noteQuestion.startsWith("search ") &&
+            !noteQuestion.includes("department") &&
+            !noteQuestion.includes("directory") &&
             (
                 noteQuestion.includes("exact location") ||
                 noteQuestion.includes("the address is") ||
