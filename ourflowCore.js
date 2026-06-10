@@ -785,6 +785,9 @@ Ready to save?
                     .replace(/headed to\s*/i, "")
                     .trim();
 
+            activeJourney.destinationName =
+                cleanDestination;
+
             activeJourney.destinationAddress =
                 cleanDestination;
 
