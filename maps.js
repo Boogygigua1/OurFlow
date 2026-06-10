@@ -97,6 +97,11 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
         "&travelmode=" +
         mode;
 
+    console.log(
+        "DESTINATION MAP URL:",
+        mapUrl
+    );
+
     window.open(mapUrl, "_blank");
 }
 
