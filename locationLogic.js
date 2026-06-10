@@ -212,6 +212,24 @@ function saveInformationSearchAsDestination() {
     <br><br>
 
     I'll use this information for navigation and photo guidance.
+
+<br><br>
+
+<button onclick="openGoogleMapsToDestinationDetails('walking')">
+    🚶 Walk There
+</button>
+
+<br><br>
+
+<button onclick="openGoogleMapsToDestinationDetails('bicycling')">
+    🚴 Bike There
+</button>
+
+<br><br>
+
+<button onclick="openGoogleMapsToDestinationDetails('driving')">
+    🚗 Drive There
+</button>
 </div>
 `;
 
