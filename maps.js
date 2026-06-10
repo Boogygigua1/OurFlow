@@ -73,7 +73,9 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
     }
 
     const origin =
-        activeJourney?.startLocation || "";
+        activeJourney?.startLocationAddress ||
+        activeJourney?.startLocation ||
+        "";
 
 
     console.log(
