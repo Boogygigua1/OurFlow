@@ -44,11 +44,15 @@ function openGoogleMapsToParkingLocation() {
     }
 
     const mapUrl =
-        "https://www.google.com/maps/search/?api=1" +
-        "&destination=" +
+        "https://www.google.com/maps/search/?api=1&query=" +
         encodeURIComponent(
             activeJourney.parkingLocation
         );
+
+    console.log(
+        "PARKING MAP URL:",
+        mapUrl
+    );
 
     window.open(mapUrl, "_blank");
 }
