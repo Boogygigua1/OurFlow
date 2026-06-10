@@ -28,8 +28,7 @@ function openGoogleMapsToStartLocation() {
     }
 
     const mapUrl =
-        "https://www.google.com/maps/dir/?api=1" +
-        "&destination=" +
+        "https://www.google.com/maps/search/?api=1&query=" +
         encodeURIComponent(
             activeJourney.startLocation
         );
@@ -45,7 +44,7 @@ function openGoogleMapsToParkingLocation() {
     }
 
     const mapUrl =
-        "https://www.google.com/maps/dir/?api=1" +
+        "https://www.google.com/maps/search/?api=1" +
         "&destination=" +
         encodeURIComponent(
             activeJourney.parkingLocation
