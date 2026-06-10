@@ -54,6 +54,13 @@ function openGoogleMapsToParkingLocation() {
     window.open(mapUrl, "_blank");
 }
 
+console.log(
+    "MAP DEBUG",
+    activeJourney.startLocation,
+    activeJourney.parkingLocation,
+    activeJourney.destinationAddress
+);
+
 function openGoogleMapsToDestinationDetails(mode = "driving") {
 
     if (!activeJourney?.destinationAddress) {
