@@ -116,6 +116,8 @@ How should I save this?
             destination:
                 "Untitled Journey",
 
+            destinationName: "",
+
             destinationAddress: "",
 
             currentLocation: "",
