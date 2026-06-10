@@ -153,14 +153,8 @@ parking reminders, or arrival details?
 
 <br><br>
 
-<button onclick="openGoogleMapsToParkingLocation()">
-    🚗 Verify Parking
-</button>
-
-<br><br>
-
-<button onclick="openGoogleMapsToStartLocation()">
-    🧭 Verify Start
+<button onclick="verifySavedLocation()">
+    📍 Verify Location
 </button>
 </div>
 `;
@@ -279,4 +273,29 @@ function saveInformationSearchAsDestination() {
     Navigation will now use this verified address.
 </div>
 `;
+}
+
+function verifySavedLocation() {
+
+    if (
+        activeJourney?.parkingLocation
+    ) {
+
+        openGoogleMapsToParkingLocation();
+
+        return;
+    }
+
+    if (
+        activeJourney?.startLocation
+    ) {
+
+        openGoogleMapsToStartLocation();
+
+        return;
+    }
+
+    alert(
+        "No saved location found."
+    );
 }
