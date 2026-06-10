@@ -27,6 +27,7 @@ function openGoogleMapsToStartLocation() {
         return;
     }
 
+
     const mapUrl =
         "https://www.google.com/maps/search/?api=1&query=" +
         encodeURIComponent(
@@ -73,6 +74,13 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
 
     const origin =
         activeJourney?.startLocation || "";
+
+
+    console.log(
+        "DESTINATION DEBUG",
+        activeJourney.startLocation,
+        activeJourney.destinationAddress
+    );
 
     const mapUrl =
         "https://www.google.com/maps/dir/?api=1" +
