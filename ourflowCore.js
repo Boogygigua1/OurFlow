@@ -1732,6 +1732,12 @@ Can I help you get back there?
             !noteQuestion.startsWith("find ") &&
             !noteQuestion.startsWith("search ") &&
             !noteQuestion.startsWith("help me find") &&
+            !noteQuestion.startsWith("take me to") &&
+            !noteQuestion.startsWith("navigate to") &&
+            !noteQuestion.startsWith("directions to") &&
+            !noteQuestion.startsWith("go to") &&
+            !noteQuestion.startsWith("head to") &&
+            !noteQuestion.startsWith("headed to") &&
 
             (
                 noteQuestion.includes("department") ||

@@ -135,7 +135,7 @@
 -->
 
     <button onclick="document.getElementById('landmarkImage').click()">
-        📷 Take Photo
+        📷 Upload / Take Photo
     </button>
 
     <input type="file" id="landmarkImage" accept="image/*" capture="environment" onchange="analyzeLandmarkImage()"
@@ -145,8 +145,6 @@
         width:90%;
         max-width:420px;
     ">
-
-    <div id="imagePreview"></div>
 
     <p style="font-size:12px; color:#888; margin-top:6px;">
         🧭 To begin a trip, type:
@@ -163,6 +161,8 @@
     </div>
 
     <button onclick="askOurFlow()">Ask OurFlow 🧭</button>
+
+    <div id="imagePreview"></div>
 
     <button onclick="clearNewList()">🗑 Clear List</button>
 
@@ -359,17 +359,17 @@ margin-right:auto;
         Created by Vad Monty • ChatGPT Aided
     </footer>
 
-<script src="state.js"></script>
+    <script src="state.js"></script>
 
-<script src="maps.js"></script>
+    <script src="maps.js"></script>
 
-<script src="locationLogic.js"></script>
-<script src="photos.js"></script>
-<script src="journey.js"></script>
-<script src="mic.js"></script>
+    <script src="locationLogic.js"></script>
+    <script src="photos.js"></script>
+    <script src="journey.js"></script>
+    <script src="mic.js"></script>
 
-<script src="ourflowCore.js"></script>
-<script src="app.js"></script>
+    <script src="ourflowCore.js"></script>
+    <script src="app.js"></script>
 
 </body>
 
