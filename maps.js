@@ -61,8 +61,15 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
         return;
     }
 
+    const origin =
+        activeJourney?.startLocation || "";
+
     const mapUrl =
         "https://www.google.com/maps/dir/?api=1" +
+        (origin
+            ? "&origin=" +
+            encodeURIComponent(origin)
+            : "") +
         "&destination=" +
         encodeURIComponent(
             activeJourney.destinationAddress
