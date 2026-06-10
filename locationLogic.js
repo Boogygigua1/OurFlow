@@ -186,6 +186,11 @@ function saveInformationSearchAsDestination() {
         return;
     }
 
+    console.log(
+        "SAVE DESTINATION:",
+        pendingDestinationSearch
+    );
+
     activeJourney.destinationAddress =
         pendingDestinationSearch;
 
