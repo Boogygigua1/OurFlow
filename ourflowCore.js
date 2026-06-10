@@ -374,7 +374,19 @@ How should I save this?
 
 <br><br>
 
-<button onclick="showActiveJourneyBox()">
+<button onclick="
+showActiveJourneyBox();
+
+document.getElementById('questionInput').focus();
+
+document.getElementById('questionInput').scrollIntoView({
+    behavior:'smooth',
+    block:'center'
+});
+
+document.getElementById('questionInput').placeholder =
+    'What would you like me to remember?';
+">
     ⬅ Continue Journey
 </button>
 
@@ -761,11 +773,22 @@ Ready to save?
             )
         ) {
 
-            activeJourney.destinationAddress = question;
+            const cleanDestination =
+                question
+                    .replace(/navigate to\s*/i, "")
+                    .replace(/take me to\s*/i, "")
+                    .replace(/directions to\s*/i, "")
+                    .replace(/go to\s*/i, "")
+                    .replace(/head to\s*/i, "")
+                    .replace(/headed to\s*/i, "")
+                    .trim();
+
+            activeJourney.destinationAddress =
+                cleanDestination;
 
             activeJourney.timeline.push(
                 "📍 Destination Saved: " +
-                question
+                cleanDestination
             );
 
             showActiveJourneyBox();
@@ -776,7 +799,7 @@ Ready to save?
 
     <br><br>
 
-    ${question}
+    ${cleanDestination}
 
     <br><br>
 
