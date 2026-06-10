@@ -143,7 +143,11 @@ How should I save this?
 
             startLocation: "",
 
+            startLocationAddress: "",
+
             parkingLocation: "",
+
+            parkingLocationAddress: "",
 
             arrivalTips: "",
 

@@ -149,7 +149,19 @@ function saveLocationType(type) {
     <br><br>
 
     Can I help with directions, notes,
-    parking reminders, or arrival details?
+parking reminders, or arrival details?
+
+<br><br>
+
+<button onclick="openGoogleMapsToParkingLocation()">
+    🚗 Verify Parking
+</button>
+
+<br><br>
+
+<button onclick="openGoogleMapsToStartLocation()">
+    🧭 Verify Start
+</button>
 </div>
 `;
 }
