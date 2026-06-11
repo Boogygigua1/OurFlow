@@ -31,10 +31,13 @@ function previewLandmarkImage() {
 
 
 
-
 async function analyzeLandmarkImage() {
 
+    alert("analyzeLandmarkImage fired");
+
     previewLandmarkImage();
+
+    alert("previewLandmarkImage finished");
 
     const file =
         document.getElementById("landmarkImage")
