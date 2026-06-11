@@ -335,20 +335,11 @@ function savePhotoClassification(type) {
 `;
     }
 }
-
 function savePhotoAsLocation(type) {
 
     alert("Button clicked: " + type);
 
-    const location = prompt(
-        "What location should I save from this photo?"
-    );
-
-    if (
-        !activeJourney ||
-        !activeJourney.photos ||
-        activeJourney.photos.length === 0
-    ) {
+    if (!activeJourney) {
         return;
     }
 
