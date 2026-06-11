@@ -112,37 +112,6 @@ async function saveJourneyPhoto() {
 
     <br><br>
 
-    <button onclick="savePhotoClassification('verified')">
-        📬 Save As Verified Location
-    </button>
-
-    <br><br>
-
-    <button onclick="savePhotoClassification('directory')">
-        🏢 Save As Directory
-    </button>
-
-    <br><br>
-
-    <button onclick="savePhotoAsLocation('parking')">
-    🚗 Save As Parking
-</button>
-
-<br><br>
-
-<button onclick="savePhotoAsLocation('start')">
-    🧭 Save As Start Location
-</button>
-
-<br><br>
-
-<button onclick="savePhotoAsLocation('both')">
-    🚗🧭 Save As Both
-</button>
-
-<br><br>
-
-
     What should I remember about this photo?
 
     <br><br>
@@ -208,7 +177,52 @@ function savePhotoMemory(note) {
 
     <br><br>
 
-    I'll remember this with your most recent photo.
+    I'll remember this with your most recent photo.<br><br>
+
+<strong>
+How should I use this location?
+</strong>
+
+<br><br>
+
+<button onclick="savePhotoAsLocation('parking')">
+    🚗 Save As Parking
+</button>
+
+<br><br>
+
+<button onclick="savePhotoAsLocation('start')">
+    🧭 Save As Start Location
+</button>
+
+<br><br>
+
+<button onclick="savePhotoAsLocation('both')">
+    🚗🧭 Save As Both
+</button>
+
+<br><br>
+
+<button onclick="savePhotoClassification('verified')">
+    📬 Save As Verified Location
+</button>
+
+<br><br>
+
+<button onclick="savePhotoClassification('directory')">
+    🏢 Save As Directory
+</button>
+
+<br><br>
+
+<button onclick="
+showActiveJourneyBox();
+document.getElementById('questionInput').focus();
+">
+    ⬅ Continue Journey
+</button>
+
+
 </div>
 `;
 }
