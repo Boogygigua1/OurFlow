@@ -142,6 +142,7 @@ async function saveJourneyPhoto() {
 
 <br><br>
 
+
     What should I remember about this photo?
 
     <br><br>
