@@ -1,4 +1,3 @@
-
 function previewLandmarkImage() {
 
     const file =
@@ -251,13 +250,9 @@ function savePhotoClassification(type) {
 
     if (type === "verified") {
 
-        const lastPhoto =
-            activeJourney.photos[
-            activeJourney.photos.length - 1
-            ];
-
-        const location =
-            lastPhoto.note;
+        const location = prompt(
+            "What location should I verify from this photo?"
+        );
 
         if (!location) {
             return;
@@ -298,13 +293,9 @@ function savePhotoClassification(type) {
 
     if (type === "directory") {
 
-        const lastPhoto =
-            activeJourney.photos[
-            activeJourney.photos.length - 1
-            ];
-
-        const directoryInfo =
-            lastPhoto.note;
+        const directoryInfo = prompt(
+            "What directory information should I save from this photo?"
+        );
 
         if (!directoryInfo) {
             return;
@@ -344,6 +335,12 @@ function savePhotoClassification(type) {
 
 function savePhotoAsLocation(type) {
 
+    alert("Button clicked: " + type);
+
+    const location = prompt(
+        "What location should I save from this photo?"
+    );
+
     if (
         !activeJourney ||
         !activeJourney.photos ||
@@ -352,10 +349,9 @@ function savePhotoAsLocation(type) {
         return;
     }
 
-    const location =
-        activeJourney.photos[
-            activeJourney.photos.length - 1
-        ].note;
+    const location = prompt(
+        "What location should I save from this photo?"
+    );
 
     if (!location) {
         return;
