@@ -147,6 +147,8 @@ How should I save this?
 
             startLocationAddress: "",
 
+            verifiedDestinationAddress: "",
+
             parkingLocation: "",
 
             parkingLocationAddress: "",

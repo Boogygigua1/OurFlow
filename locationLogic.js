@@ -235,7 +235,7 @@ function saveInformationSearchAsDestination() {
     pendingDestinationSearch = "";
 }
 
-    function saveVerifiedDestinationAddress() {
+function saveVerifiedDestinationAddress() {
 
     const address = prompt(
         "Paste the verified address:"
@@ -246,6 +246,9 @@ function saveInformationSearchAsDestination() {
     }
 
     activeJourney.destinationAddress =
+        address;
+
+    activeJourney.verifiedDestinationAddress =
         address;
 
     activeJourney.timeline.push(
