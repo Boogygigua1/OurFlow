@@ -194,4 +194,93 @@ function savePhotoMemory(note) {
 `;
 }
 
+function savePhotoClassification(type) {
 
+    if (!activeJourney) {
+        return;
+    }
+
+    if (type === "verified") {
+
+        const location = prompt(
+            "What location should I verify from this photo?"
+        );
+
+        if (!location) {
+            return;
+        }
+
+        activeJourney.verifiedDestinationAddress =
+            location;
+
+        activeJourney.destinationAddress =
+            location;
+
+        activeJourney.timeline.push(
+            "📬 Verified Location From Photo: " +
+            location
+        );
+
+        localStorage.setItem(
+            "activeJourney",
+            JSON.stringify(activeJourney)
+        );
+
+        showActiveJourneyBox();
+
+        document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📬 Verified Location Saved</strong>
+
+    <br><br>
+
+    ${location}
+
+    <br><br>
+
+    Navigation will now use this location.
+</div>
+`;
+    }
+
+    if (type === "directory") {
+
+        const directoryInfo = prompt(
+            "What directory information should I save from this photo?"
+        );
+
+        if (!directoryInfo) {
+            return;
+        }
+
+        if (!activeJourney.directories) {
+            activeJourney.directories = [];
+        }
+
+        activeJourney.directories.push(
+            directoryInfo
+        );
+
+        activeJourney.timeline.push(
+            "🏢 Directory Saved From Photo: " +
+            directoryInfo
+        );
+
+        localStorage.setItem(
+            "activeJourney",
+            JSON.stringify(activeJourney)
+        );
+
+        showActiveJourneyBox();
+
+        document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>🏢 Directory Saved</strong>
+
+    <br><br>
+
+    ${directoryInfo}
+</div>
+`;
+    }
+}
