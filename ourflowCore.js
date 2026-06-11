@@ -377,7 +377,6 @@ How should I save this?
 </button>
 
 <br><br>
-
 <button onclick="
 showActiveJourneyBox();
 
@@ -390,10 +389,6 @@ document.getElementById('questionInput').scrollIntoView({
 
 document.getElementById('questionInput').placeholder =
     'What would you like me to remember?';
-">
-<button onclick="
-showActiveJourneyBox();
-document.getElementById('questionInput').focus();
 ">
     ⬅ Continue Journey
 </button>
@@ -733,22 +728,29 @@ Ready to save?
 
             if (teaMatch) {
                 activeJourney.destination = "Tea Bar";
+                activeJourney.destinationAddress = "Tea Bar";
             }
 
             if (chicoMatch) {
                 activeJourney.destination = "Chico State";
+                activeJourney.destinationAddress = "Chico State";
             }
 
             if (anthroMatch) {
                 activeJourney.destination =
+                    "Anthropology Lab";
+
+                activeJourney.destinationAddress =
                     "Anthropology Lab";
             }
 
             if (hospitalMatch) {
                 activeJourney.destination =
                     "Hospital Visit";
-            }
 
+                activeJourney.destinationAddress =
+                    "Hospital Visit";
+            }
 
         }
 
@@ -769,7 +771,7 @@ Ready to save?
         if (
             activeJourney &&
             !questionInfo.mentionsParking &&
-            
+
             !noteQuestion.startsWith("find ") &&
             !noteQuestion.startsWith("search ") &&
             !noteQuestion.includes("department") &&

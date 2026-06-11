@@ -154,7 +154,9 @@ parking reminders, or arrival details?
 <br><br>
 
 <button onclick="verifySavedLocation()">
-    📍 Verify Location
+    ${activeJourney?.verifiedDestinationAddress
+            ? "✅ Location Verified"
+            : "📍 Verify Location"}
 </button>
 </div>
 `;
