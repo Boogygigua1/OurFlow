@@ -98,6 +98,11 @@ async function saveJourneyPhoto() {
 
     const data = await response.json();
 
+    console.log(
+        "PHOTO AI RESPONSE:",
+        data.answer
+    );
+
     pendingPhotoMemory = true;
 
     showActiveJourneyBox();
@@ -235,9 +240,13 @@ function savePhotoClassification(type) {
 
     if (type === "verified") {
 
-        const location = prompt(
-            "What location should I verify from this photo?"
-        );
+        const lastPhoto =
+            activeJourney.photos[
+            activeJourney.photos.length - 1
+            ];
+
+        const location =
+            lastPhoto.note;
 
         if (!location) {
             return;
@@ -278,9 +287,13 @@ function savePhotoClassification(type) {
 
     if (type === "directory") {
 
-        const directoryInfo = prompt(
-            "What directory information should I save from this photo?"
-        );
+        const lastPhoto =
+            activeJourney.photos[
+            activeJourney.photos.length - 1
+            ];
+
+        const directoryInfo =
+            lastPhoto.note;
 
         if (!directoryInfo) {
             return;
@@ -320,11 +333,20 @@ function savePhotoClassification(type) {
 
 function savePhotoAsLocation(type) {
 
-    const location = prompt(
-        "What location should I save from this photo?"
-    );
+    if (
+        !activeJourney ||
+        !activeJourney.photos ||
+        activeJourney.photos.length === 0
+    ) {
+        return;
+    }
 
-    if (!location || !activeJourney) {
+    const location =
+        activeJourney.photos[
+            activeJourney.photos.length - 1
+        ].note;
+
+    if (!location) {
         return;
     }
 
