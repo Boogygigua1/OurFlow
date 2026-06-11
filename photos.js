@@ -84,7 +84,6 @@ async function saveJourneyPhoto() {
     }
 
     activeJourney.photos.push({
-        image: landmarkImageData,
         timestamp: new Date().toLocaleString(),
         note: ""
     });
