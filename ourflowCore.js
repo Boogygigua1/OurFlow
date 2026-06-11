@@ -391,9 +391,12 @@ document.getElementById('questionInput').scrollIntoView({
 document.getElementById('questionInput').placeholder =
     'What would you like me to remember?';
 ">
+<button onclick="
+showActiveJourneyBox();
+document.getElementById('questionInput').focus();
+">
     ⬅ Continue Journey
 </button>
-
     </div>
 `;
 

@@ -330,6 +330,11 @@ ${journey.staffInstructions &&
 
         <br><br>
 
+        <strong>📬 Verified Destination:</strong>
+        ${journey.verifiedDestinationAddress || "Not verified"}
+
+        <br><br>
+
 <button onclick="openGoogleMapsToDestinationDetails()">
     🧭 Navigate To Destination Details
 </button>
