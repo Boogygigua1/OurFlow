@@ -124,6 +124,24 @@ async function saveJourneyPhoto() {
 
     <br><br>
 
+    <button onclick="savePhotoAsLocation('parking')">
+    🚗 Save As Parking
+</button>
+
+<br><br>
+
+<button onclick="savePhotoAsLocation('start')">
+    🧭 Save As Start Location
+</button>
+
+<br><br>
+
+<button onclick="savePhotoAsLocation('both')">
+    🚗🧭 Save As Both
+</button>
+
+<br><br>
+
     What should I remember about this photo?
 
     <br><br>
@@ -283,4 +301,58 @@ function savePhotoClassification(type) {
 </div>
 `;
     }
+}
+
+function savePhotoAsLocation(type) {
+
+    const location = prompt(
+        "What location should I save from this photo?"
+    );
+
+    if (!location || !activeJourney) {
+        return;
+    }
+
+    if (type === "parking") {
+
+        activeJourney.parkingLocation =
+            location;
+
+        activeJourney.timeline.push(
+            "🚗 Parking Saved From Photo: " +
+            location
+        );
+    }
+
+    if (type === "start") {
+
+        activeJourney.startLocation =
+            location;
+
+        activeJourney.timeline.push(
+            "🧭 Starting Location Saved From Photo: " +
+            location
+        );
+    }
+
+    if (type === "both") {
+
+        activeJourney.parkingLocation =
+            location;
+
+        activeJourney.startLocation =
+            location;
+
+        activeJourney.timeline.push(
+            "🚗🧭 Parking & Start Location Saved From Photo: " +
+            location
+        );
+    }
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
 }
