@@ -488,6 +488,7 @@ ${activeJourney.arrivalTips || "No arrival tips yet."}
 
 <strong>📍 Destination Details:</strong><br>
 ${activeJourney.destinationAddress ||
+        activeJourney.destination ||
         "No destination details saved yet."}
 
 <br><br>
