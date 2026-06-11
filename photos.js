@@ -112,6 +112,18 @@ async function saveJourneyPhoto() {
 
     <br><br>
 
+    <button onclick="savePhotoClassification('verified')">
+        📬 Save As Verified Location
+    </button>
+
+    <br><br>
+
+    <button onclick="savePhotoClassification('directory')">
+        🏢 Save As Directory
+    </button>
+
+    <br><br>
+
     What should I remember about this photo?
 
     <br><br>
