@@ -448,6 +448,11 @@ document.getElementById('questionInput').placeholder =
 
             activeJourney.duration = minutes;
 
+            console.log(
+                "END JOURNEY CALLED",
+                new Date().toLocaleTimeString()
+            );
+
             activeJourney.timeline.push(
                 "🧭 Journey Ended: " +
                 activeJourney.destination
