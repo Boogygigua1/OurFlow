@@ -63,7 +63,19 @@ async function analyzeLandmarkImage() {
 
 async function saveJourneyPhoto() {
 
-    if (!activeJourney || !landmarkImageData) {
+    console.log(
+        "SAVE PHOTO DEBUG",
+        activeJourney,
+        landmarkImageData
+    );
+
+    if (!activeJourney) {
+        alert("No active journey");
+        return;
+    }
+
+    if (!landmarkImageData) {
+        alert("No image data");
         return;
     }
 
