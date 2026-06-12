@@ -79,8 +79,9 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
 
     const destination =
         activeJourney?.verifiedDestinationAddress ||
+        activeJourney?.destinationAddress ||
         activeJourney?.destinationDetail ||
-        activeJourney?.destinationAddress;
+        activeJourney?.destination;
 
     if (!destination) {
         alert("No destination details recorded.");
