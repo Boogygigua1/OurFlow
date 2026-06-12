@@ -468,6 +468,26 @@ function showActiveJourneyBox() {
 
     <br><br>
 
+<button onclick="verifySavedLocation()">
+    ${activeJourney?.verifiedDestinationAddress
+            ? "✅ Location Verified"
+            : "📍 Verify Location"}
+</button>
+
+  <br><br>
+
+${activeJourney?.verifiedDestinationAddress
+            ? `
+<strong>📬 Verified Destination:</strong><br>
+${activeJourney.verifiedDestinationAddress}
+`
+            : `
+<strong>⚠️ Destination Not Verified</strong><br>
+Verify the location before navigating.
+`}
+
+<br><br>
+
     Here's a map in case you need it.
 
     <br><br>
