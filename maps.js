@@ -92,6 +92,25 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
         activeJourney?.startLocation ||
         "";
 
+    console.log(
+        "VERIFIED:",
+        activeJourney.verifiedDestinationAddress
+    );
+
+    console.log(
+        "DETAIL:",
+        activeJourney.destinationDetail
+    );
+
+    console.log(
+        "ADDRESS:",
+        activeJourney.destinationAddress
+    );
+
+    console.log(
+        "DESTINATION FIELD:",
+        destination
+    );
 
     console.log(
         "DESTINATION DEBUG",
