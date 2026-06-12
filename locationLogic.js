@@ -364,25 +364,56 @@ function saveVerifiedDestinationAddress() {
 
 function verifySavedLocation() {
 
-    if (
-        activeJourney?.parkingLocation
-    ) {
-
-        openGoogleMapsToParkingLocation();
-
-        return;
-    }
-
-    if (
-        activeJourney?.startLocation
-    ) {
-
-        openGoogleMapsToStartLocation();
-
-        return;
-    }
-
-    alert(
-        "No saved location found."
+    const address = prompt(
+        "Paste the verified address:"
     );
+
+    if (!address) {
+        return;
+    }
+
+    activeJourney.destinationAddress =
+        address;
+
+    activeJourney.verifiedDestinationAddress =
+        address;
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📬 Verified Address Saved</strong>
+
+    <br><br>
+
+    ${address}
+
+    <br><br>
+
+    Navigation will now use this verified address.
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestinationDetails('walking')">
+        🚶 Walk There
+    </button>
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestinationDetails('bicycling')">
+        🚴 Bike There
+    </button>
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestinationDetails('driving')">
+        🚗 Drive There
+    </button>
+</div>
+`;
 }
