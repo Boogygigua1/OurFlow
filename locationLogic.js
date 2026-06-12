@@ -128,6 +128,13 @@ function saveLocationType(type) {
 
     showActiveJourneyBox();
 
+const hasDestination =
+    activeJourney?.verifiedDestinationAddress ||
+    activeJourney?.destinationAddress ||
+    activeJourney?.destination;
+
+if (hasDestination) {
+
     document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Location Saved</strong>
@@ -138,7 +145,7 @@ function saveLocationType(type) {
 
     <br><br>
 
-    Destination:
+    Ready to navigate to:
 
     <br><br>
 
@@ -148,16 +155,54 @@ function saveLocationType(type) {
 
     <br><br>
 
+    <button onclick="openGoogleMapsToDestinationDetails('walking')">
+        🚶 Walk There
+    </button>
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestinationDetails('bicycling')">
+        🚴 Bike There
+    </button>
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestinationDetails('driving')">
+        🚗 Drive There
+    </button>
+
+    <br><br>
+
+    <button onclick="verifySavedLocation()">
+        ${activeJourney?.verifiedDestinationAddress
+                ? "✅ Location Verified"
+                : "📍 Verify Location"}
+    </button>
+</div>
+`;
+    return;
+}
+
+document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📍 Location Saved</strong>
+
+    <br><br>
+
+    ${saveMessage}
+
+    <br><br>
+
     Can I help with directions, notes,
-parking reminders, or arrival details?
+    parking reminders, or arrival details?
 
-<br><br>
+    <br><br>
 
-<button onclick="verifySavedLocation()">
-    ${activeJourney?.verifiedDestinationAddress
-            ? "✅ Location Verified"
-            : "📍 Verify Location"}
-</button>
+    <button onclick="verifySavedLocation()">
+        ${activeJourney?.verifiedDestinationAddress
+                ? "✅ Location Verified"
+                : "📍 Verify Location"}
+    </button>
 </div>
 `;
 }
