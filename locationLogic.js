@@ -187,7 +187,7 @@ function saveInformationSearchAsDestination() {
         pendingDestinationSearch
     );
 
-    activeJourney.destinationAddress =
+    activeJourney.destinationDetail =
         pendingDestinationSearch;
 
     activeJourney.timeline.push(

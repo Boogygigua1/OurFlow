@@ -120,6 +120,8 @@ How should I save this?
 
             destinationAddress: "",
 
+            destinationDetail: "",
+
             currentLocation: "",
 
             travelMode: "",
@@ -246,6 +248,8 @@ How should I save this?
                     destination,
 
                 destinationAddress: looksLikeAddress ? question : "",
+
+                destinationDetail: "",
 
                 currentLocation: "",
 

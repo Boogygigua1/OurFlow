@@ -326,7 +326,8 @@ ${journey.staffInstructions &&
         <br><br>
 
         <strong>📍 Destination Details:</strong>
-        ${journey.destinationAddress || "No destination details recorded"}
+        ${journey.destinationDetail ||
+        "No destination details recorded"}
 
         <br><br>
 
@@ -487,10 +488,8 @@ ${activeJourney.arrivalTips || "No arrival tips yet."}
 <br><br>
 
 <strong>📍 Destination Details:</strong><br>
-${activeJourney.destinationAddress ||
-        activeJourney.destination ||
+${activeJourney.destinationDetail ||
         "No destination details saved yet."}
-
 <br><br>
 
 <strong>🧭 Starting Location:</strong><br>
