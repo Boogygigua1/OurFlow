@@ -41,6 +41,8 @@ async function askOurFlow() {
 
         showActiveJourneyBox();
 
+        alert("Destination saved successfully");
+
         document.getElementById("result").innerHTML = `
 <div class="card">
 
