@@ -77,7 +77,12 @@ function openGoogleMapsToParkingLocation() {
 
 function openGoogleMapsToDestinationDetails(mode = "driving") {
 
-    if (!activeJourney?.destinationAddress) {
+    const destination =
+        activeJourney?.verifiedDestinationAddress ||
+        activeJourney?.destinationDetail ||
+        activeJourney?.destinationAddress;
+
+    if (!destination) {
         alert("No destination details recorded.");
         return;
     }
@@ -87,15 +92,11 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
         activeJourney?.startLocation ||
         "";
 
-    const destination =
-        activeJourney?.verifiedDestinationAddress ||
-        activeJourney?.destinationAddress;
-
 
     console.log(
         "DESTINATION DEBUG",
         activeJourney.startLocation,
-        activeJourney.destinationAddress
+        destination
     );
 
     const mapUrl =
