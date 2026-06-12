@@ -192,8 +192,18 @@ function saveInformationSearchAsDestination() {
         pendingDestinationSearch
     );
 
+    console.log(
+        "SAVING DESTINATION DETAIL:",
+        pendingDestinationSearch
+    );
+
     activeJourney.destinationDetail =
         pendingDestinationSearch;
+
+    console.log(
+        "AFTER SAVE:",
+        activeJourney.destinationDetail
+    );
 
     activeJourney.timeline.push(
         "📍 Destination Detail Saved: " +
