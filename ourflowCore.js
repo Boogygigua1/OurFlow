@@ -249,7 +249,11 @@ How should I save this?
                 destination:
                     destination,
 
-                destinationAddress: looksLikeAddress ? question : "",
+                destinationAddress:
+                    looksLikeAddress ? destination : "",
+
+                verifiedDestinationAddress:
+                    looksLikeAddress ? destination : "",
 
                 destinationDetail: "",
 
