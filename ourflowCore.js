@@ -2035,7 +2035,7 @@ Can I help you get back there?
 
             console.log(
                 "SEARCHPLACE TRIGGERED:",
-                question
+                cleanedSearch
             );
 
             const isInformationSearch =
@@ -2052,13 +2052,26 @@ Can I help you get back there?
                 navigationSearch.includes("financial aid") ||
                 navigationSearch.includes("admissions");
 
+            const cleanedSearch =
+                question
+                    .replace(
+                        /^(search the|search for|search|directory for|go to|find)\s+/i,
+                        ""
+                    )
+                    .trim();
+
+            console.log(
+                "SEARCHPLACE TRIGGERED:",
+                cleanedSearch
+            );
+
             const placeResponse = await fetch("/api/searchPlace", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    query: question
+                    query: cleanedSearch
                 })
             });
 
