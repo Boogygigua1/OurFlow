@@ -2033,14 +2033,6 @@ Can I help you get back there?
 
 ) {
 
-    const cleanedSearch =
-        question
-            .replace(
-                /^(search the|search for|search|directory for|go to|find)\s+/i,
-                ""
-            )
-            .trim();
-
     console.log(
         "SEARCHPLACE TRIGGERED:",
         cleanedSearch
