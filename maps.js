@@ -87,6 +87,10 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
         activeJourney?.startLocation ||
         "";
 
+    const destination =
+        activeJourney?.verifiedDestinationAddress ||
+        activeJourney?.destinationAddress;
+
 
     console.log(
         "DESTINATION DEBUG",
@@ -102,7 +106,7 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
             : "") +
         "&destination=" +
         encodeURIComponent(
-            activeJourney.destinationAddress
+            destination
         ) +
         "&travelmode=" +
         mode;
