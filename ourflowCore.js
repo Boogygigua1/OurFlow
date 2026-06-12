@@ -2088,9 +2088,10 @@ Can I help you get back there?
 
                 pendingDestinationSearch =
                     question
-                        .replace(/search the /i, "")
-                        .replace(/directory for /i, "")
-                        .replace(/search for /i, "")
+                        .replace(
+                            /^(search the|search for|search|directory for|go to|find)\s+/i,
+                            ""
+                        )
                         .trim();
 
                 result.innerHTML = `
