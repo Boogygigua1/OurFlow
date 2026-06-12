@@ -183,6 +183,11 @@ function saveInformationSearchAsDestination() {
     }
 
     console.log(
+        "PENDING DESTINATION:",
+        pendingDestinationSearch
+    );
+
+    console.log(
         "SAVE DESTINATION:",
         pendingDestinationSearch
     );
