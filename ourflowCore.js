@@ -2029,16 +2029,25 @@ Can I help you get back there?
 
             &&
 
-!navigationSearch.includes("take me to my ride")
+            !navigationSearch.includes("take me to my ride")
 
-) {
+        ) {
 
-    console.log(
-        "SEARCHPLACE TRIGGERED:",
-        cleanedSearch
-    );
+            const cleanedSearch =
+                question
+                    .replace(
+                        /^(search the|search for|search|directory for|go to|find)\s+/i,
+                        ""
+                    )
+                    .trim();
 
-    const isInformationSearch =
+
+            console.log(
+                "SEARCHPLACE TRIGGERED:",
+                cleanedSearch
+            );
+
+            const isInformationSearch =
 
                 navigationSearch.includes("search") ||
                 navigationSearch.includes("look up") ||
@@ -2052,18 +2061,6 @@ Can I help you get back there?
                 navigationSearch.includes("financial aid") ||
                 navigationSearch.includes("admissions");
 
-            const cleanedSearch =
-                question
-                    .replace(
-                        /^(search the|search for|search|directory for|go to|find)\s+/i,
-                        ""
-                    )
-                    .trim();
-
-            console.log(
-                "SEARCHPLACE TRIGGERED:",
-                cleanedSearch
-            );
 
             const placeResponse = await fetch("/api/searchPlace", {
                 method: "POST",
