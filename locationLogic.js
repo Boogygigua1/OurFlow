@@ -268,6 +268,9 @@ function saveVerifiedDestinationAddress() {
     activeJourney.verifiedDestinationAddress =
         address;
 
+    activeJourney.destinationDetail =
+        pendingDestinationSearch;
+
     activeJourney.timeline.push(
         "📬 Verified Address Saved: " +
         address
@@ -291,6 +294,25 @@ function saveVerifiedDestinationAddress() {
     <br><br>
 
     Navigation will now use this verified address.
+
+<br><br>
+
+<button onclick="openGoogleMapsToDestinationDetails('walking')">
+    🚶 Walk There
+</button>
+
+<br><br>
+
+<button onclick="openGoogleMapsToDestinationDetails('bicycling')">
+    🚴 Bike There
+</button>
+
+<br><br>
+
+<button onclick="openGoogleMapsToDestinationDetails('driving')">
+    🚗 Drive There
+</button>
+
 </div>
 `;
 }

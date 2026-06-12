@@ -2140,17 +2140,12 @@ target="_blank">
 
 <br><br>
 
-<button onclick="saveInformationSearchAsDestination()">
-    📍 Save As Destination
-</button>
-
-<br><br>
-
 <button onclick="saveVerifiedDestinationAddress()">
-    📬 Save Verified Address
+    📍 Save Destination
 </button>
 
 <br><br>
+
 
 After you find the building, office, or department,
 copy the full address and paste it here.
