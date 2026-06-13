@@ -235,7 +235,11 @@ function savePendingParking() {
 
 async function verifyParkingLocation() {
 
-    if (!pendingParkingLocation) {
+    const parkingLocation =
+        pendingParkingLocation ||
+        activeJourney?.parkingLocation;
+
+    if (!parkingLocation) {
         alert("No parking location found.");
         return;
     }
@@ -246,7 +250,7 @@ async function verifyParkingLocation() {
 
     <br><br>
 
-    ${pendingParkingLocation}
+    ${parkingLocation}
 
     <br><br>
 
@@ -263,7 +267,7 @@ async function verifyParkingLocation() {
             },
             body: JSON.stringify({
                 destination:
-                    pendingParkingLocation
+                    parkingLocation
             })
         }
     );
@@ -282,7 +286,7 @@ async function verifyParkingLocation() {
 
     <button onclick="
 activeJourney.parkingLocation =
-'${pendingParkingLocation}';
+'${parkingLocation}';
 
 activeJourney.parkingLocationAddress =
 prompt(
