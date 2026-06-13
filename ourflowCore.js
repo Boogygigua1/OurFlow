@@ -2161,8 +2161,16 @@ target="_blank">
 
 <br><br>
 
-<button onclick="verifySavedLocation()">
-    📍 Verify / Save Location
+<button onclick="
+const address = prompt(
+'Paste the verified address you found:'
+);
+
+if (address) {
+    saveVerifiedDestinationAddress(address);
+}
+">
+    📍 Save Verified Address
 </button>
 
 <br><br>
