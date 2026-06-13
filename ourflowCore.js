@@ -2161,8 +2161,8 @@ target="_blank">
 
 <br><br>
 
-<button onclick="saveVerifiedDestinationAddress()">
-    📍 Save Destination
+<button onclick="verifySavedLocation()">
+    📍 Verify / Save Location
 </button>
 
 <br><br>
