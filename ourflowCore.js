@@ -2192,8 +2192,7 @@ Chico, CA
             }
 
             if (
-                questionInfo.mentionsParking &&
-                questionInfo.asksRoute
+                questionInfo.mentionsParking
             ) {
                 pendingParkingLocation = question;
             }
