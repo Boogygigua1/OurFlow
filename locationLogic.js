@@ -128,14 +128,14 @@ function saveLocationType(type) {
 
     showActiveJourneyBox();
 
-const hasDestination =
-    activeJourney?.verifiedDestinationAddress ||
-    activeJourney?.destinationAddress ||
-    activeJourney?.destination;
+    const hasDestination =
+        activeJourney?.verifiedDestinationAddress ||
+        activeJourney?.destinationAddress ||
+        activeJourney?.destination;
 
-if (hasDestination) {
+    if (hasDestination) {
 
-    document.getElementById("result").innerHTML = `
+        document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Location Saved</strong>
 
@@ -180,10 +180,10 @@ if (hasDestination) {
     </button>
 </div>
 `;
-    return;
-}
+        return;
+    }
 
-document.getElementById("result").innerHTML = `
+    document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Location Saved</strong>
 
@@ -200,8 +200,8 @@ document.getElementById("result").innerHTML = `
 
     <button onclick="verifySavedLocation()">
         ${activeJourney?.verifiedDestinationAddress
-                ? "✅ Location Verified"
-                : "📍 Verify Location"}
+            ? "✅ Location Verified"
+            : "📍 Verify Location"}
     </button>
 </div>
 `;
@@ -416,27 +416,27 @@ async function verifySavedLocation() {
 </div>
 `;
 
-const response = await fetch(
-    "/api/findDestinationAddress",
-    {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            destination
-        })
-    }
-);
+    const response = await fetch(
+        "/api/findDestinationAddress",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                destination
+            })
+        }
+    );
 
-const data = await response.json();
+    const data = await response.json();
 
-console.log(
-    "ADDRESS SUGGESTION:",
-    data
-);
+    console.log(
+        "ADDRESS SUGGESTION:",
+        data
+    );
 
-document.getElementById("result").innerHTML = `
+    document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Suggested Location</strong>
 
@@ -461,9 +461,32 @@ if(address){
 
     <br><br>
 
-    <button onclick="verifySavedLocation()">
-        ✏ Try Again
-    </button>
+    <button onclick="
+window.open(
+'https://www.google.com/search?q=' +
+encodeURIComponent(
+activeJourney?.destinationDetail ||
+activeJourney?.destination
+),
+'_blank'
+);
+">
+    🔍 Look Up Address
+</button>
+
+<br><br>
+
+<button onclick="
+const address = prompt(
+'Paste the verified address:'
+);
+
+if(address){
+    saveVerifiedDestinationAddress(address);
+}
+">
+    ✏ Enter Address Manually
+</button>
 </div>
 `;
 }
