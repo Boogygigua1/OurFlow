@@ -122,8 +122,7 @@ How should I save this?
 
             destinationAddress: "",
 
-            destinationDetail:
-                destination,
+            destinationDetail: "",
 
             currentLocation: "",
 
