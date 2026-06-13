@@ -1912,6 +1912,7 @@ Can I help you get back there?
 
             if (activeJourney) {
                 pendingLocationClassification = question
+                    .replace(/start journey\s*/i, "")
                     .replace(/i'?m parked near\s*/i, "")
                     .replace(/i'?m parked at\s*/i, "")
                     .replace(/i parked near\s*/i, "")
@@ -1935,6 +1936,10 @@ Can I help you get back there?
 
                     .trim();
 
+                console.log(
+                    "CLEANED PARKING:",
+                    pendingLocationClassification
+                );
 
                 result.innerHTML = `
 <div class="card">
