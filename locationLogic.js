@@ -361,16 +361,67 @@ function saveVerifiedDestinationAddress() {
 </div>
 `;
 }
+async function verifySavedLocation() {
 
-function verifySavedLocation() {
+    const destination =
+        activeJourney?.destinationDetail ||
+        activeJourney?.destination;
 
-    const address = prompt(
-        "Paste the verified address:"
-    );
-
-    if (!address) {
+    if (!destination) {
+        alert("No destination found.");
         return;
     }
+
+    const useSuggested = confirm(
+        "Would you like OurFlow to search for this location?\n\n" +
+        destination +
+        "\n\n" +
+        "Press OK to search.\n" +
+        "Press Cancel to enter an address manually."
+    );
+
+    if (!useSuggested) {
+
+        const manualAddress = prompt(
+            "Paste the verified address:"
+        );
+
+        if (!manualAddress) {
+            return;
+        }
+
+        saveVerifiedDestinationAddress(
+            manualAddress
+        );
+
+        return;
+    }
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📍 Verify Location</strong>
+
+    <br><br>
+
+    Searching for:
+
+    <br><br>
+
+    <strong>${destination}</strong>
+
+    <br><br>
+
+    Please wait...
+</div>
+`;
+
+    document.getElementById("questionInput").value =
+        "search for " + destination;
+
+    askOurFlow();
+}
+
+function saveVerifiedDestinationAddress(address) {
 
     activeJourney.destinationAddress =
         address;
