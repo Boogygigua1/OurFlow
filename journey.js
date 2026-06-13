@@ -612,17 +612,60 @@ function showArrivalMode() {
     ${activeJourney.verifiedDestinationAddress ||
         "Not verified"}
 
-    <br><br>
+<br><br>
 
-    <button onclick="openGoogleMapsToParkingLocation()">
-        🚗 Return To Parking
-    </button>
+<button onclick="startArrivalPhoto()">
+    📷 Save Arrival Photo
+</button>
+
+<br><br>
+
+<button onclick="openGoogleMapsToParkingLocation()">
+    🚗 Return To Parking
+</button>
 
     <br><br>
 
     <button onclick="endJourneyFromArrival()">
         🏁 End Journey
     </button>
+
+</div>
+`;
+}
+
+function startArrivalPhoto() {
+
+    pendingPhotoMemory = true;
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+
+    <strong>📷 Arrival Photo</strong>
+
+    <br><br>
+
+    Take a photo of:
+
+    <br><br>
+
+    • Building Entrance
+
+    <br>
+
+    • Room Number
+
+    <br>
+
+    • Directory Sign
+
+    <br>
+
+    • Landmark
+
+    <br><br>
+
+    After uploading the photo, I'll help save it.
 
 </div>
 `;
