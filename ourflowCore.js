@@ -1590,6 +1590,23 @@ ${index + 1}. ${instruction}<br><br>
         }
 
         if (
+
+            recallQuestion.includes("i arrived") ||
+
+            recallQuestion.includes("ive arrived") ||
+
+            recallQuestion.includes("i am here") ||
+
+            recallQuestion.includes("arrived at destination")
+
+        ) {
+
+            showArrivalMode();
+
+            return;
+        }
+
+        if (
             recallQuestion.includes("where did i park") ||
             recallQuestion.includes("take me to my ride") ||
             recallQuestion.includes("where am i parked") ||
@@ -1600,7 +1617,6 @@ ${index + 1}. ${instruction}<br><br>
             recallQuestion.includes("where is my bike") ||
             recallQuestion.includes("find my bike") ||
             recallQuestion.includes("take me back to my bike") ||
-
 
 
             recallQuestion.includes("where is my ride") ||

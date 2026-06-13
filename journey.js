@@ -572,3 +572,58 @@ function endJourneyFromArrival() {
 
     askOurFlow();
 }
+
+function showArrivalMode() {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+
+    <strong>🏁 Arrival Mode</strong>
+
+    <br><br>
+
+    Welcome to:
+
+    <br><br>
+
+    <strong>
+        ${activeJourney.destination}
+    </strong>
+
+    <br><br>
+
+    <strong>📍 Destination Details:</strong>
+
+    <br><br>
+
+    ${activeJourney.destinationDetail ||
+        "No destination details recorded."}
+
+    <br><br>
+
+    <strong>📬 Verified Destination:</strong>
+
+    <br><br>
+
+    ${activeJourney.verifiedDestinationAddress ||
+        "Not verified"}
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToParkingLocation()">
+        🚗 Return To Parking
+    </button>
+
+    <br><br>
+
+    <button onclick="endJourneyFromArrival()">
+        🏁 End Journey
+    </button>
+
+</div>
+`;
+}
