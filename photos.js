@@ -132,27 +132,45 @@ async function saveJourneyPhoto() {
 
     What should I remember about this photo?
 
-    <br><br>
+<br><br>
 
-    <button onclick="savePhotoMemory('Photo memory option 1')">
-        Save Option 1
-    </button>
+<button onclick="savePhotoMemory('🚪 Entrance')">
+    🚪 Entrance
+</button>
 
-    <br><br>
+<br><br>
 
-    <button onclick="savePhotoMemory('Photo memory option 2')">
-        Save Option 2
-    </button>
+<button onclick="savePhotoMemory('🏢 Building Sign')">
+    🏢 Building Sign
+</button>
 
-    <br><br>
+<br><br>
 
-    <button onclick="savePhotoMemory('Photo memory option 3')">
-        Save Option 3
-    </button>
+<button onclick="savePhotoMemory('📍 Landmark')">
+    📍 Landmark
+</button>
 
-    <br><br>
+<br><br>
 
-    Or type your own note below and press Ask OurFlow.
+<button onclick="savePhotoMemory('🪧 Directory')">
+    🪧 Directory
+</button>
+
+<br><br>
+
+<button onclick="savePhotoMemory('🚪 Room Number')">
+    🚪 Room Number
+</button>
+
+<br><br>
+
+<button onclick="savePhotoMemory('📝 Other')">
+    📝 Other
+</button>
+
+<br><br>
+
+Or type your own note below and press Ask OurFlow.
 </div>
 `;
 }
