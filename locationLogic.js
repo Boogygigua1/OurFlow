@@ -361,6 +361,7 @@ function saveVerifiedDestinationAddress() {
 </div>
 `;
 }
+
 async function verifySavedLocation() {
 
     const destination =
@@ -415,10 +416,56 @@ async function verifySavedLocation() {
 </div>
 `;
 
-    document.getElementById("questionInput").value =
-        "search for " + destination;
+const response = await fetch(
+    "/api/findDestinationAddress",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            destination
+        })
+    }
+);
 
-    askOurFlow();
+const data = await response.json();
+
+console.log(
+    "ADDRESS SUGGESTION:",
+    data
+);
+
+document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📍 Suggested Location</strong>
+
+    <br><br>
+
+    ${data.suggestion || "No suggestion found."}
+
+    <br><br>
+
+    <button onclick="
+const address = prompt(
+'Confirm or edit the address:',
+\`${data.suggestion || ""}\`
+);
+
+if(address){
+    saveVerifiedDestinationAddress(address);
+}
+">
+        📍 Save This Location
+    </button>
+
+    <br><br>
+
+    <button onclick="verifySavedLocation()">
+        ✏ Try Again
+    </button>
+</div>
+`;
 }
 
 function saveVerifiedDestinationAddress(address) {
