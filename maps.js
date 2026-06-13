@@ -52,9 +52,11 @@ function openGoogleMapsToParkingLocation() {
     }
 
     const origin =
-        activeJourney?.destination ||
-        activeJourney?.destinationAddress ||
-        "";
+    activeJourney?.verifiedDestinationAddress ||
+    activeJourney?.destinationAddress ||
+    activeJourney?.destinationDetail ||
+    activeJourney?.destination ||
+    "";
 
     const mapUrl =
         "https://www.google.com/maps/dir/?api=1" +
