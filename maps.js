@@ -26,8 +26,10 @@ function openGoogleMapsToStartLocation() {
     }
 
     const origin =
-        activeJourney?.destination ||
+        activeJourney?.verifiedDestinationAddress ||
         activeJourney?.destinationAddress ||
+        activeJourney?.destinationDetail ||
+        activeJourney?.destination ||
         "";
 
     const mapUrl =
@@ -52,11 +54,11 @@ function openGoogleMapsToParkingLocation() {
     }
 
     const origin =
-    activeJourney?.verifiedDestinationAddress ||
-    activeJourney?.destinationAddress ||
-    activeJourney?.destinationDetail ||
-    activeJourney?.destination ||
-    "";
+        activeJourney?.verifiedDestinationAddress ||
+        activeJourney?.destinationAddress ||
+        activeJourney?.destinationDetail ||
+        activeJourney?.destination ||
+        "";
 
     const mapUrl =
         "https://www.google.com/maps/dir/?api=1" +
