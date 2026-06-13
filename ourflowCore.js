@@ -255,7 +255,8 @@ How should I save this?
                 verifiedDestinationAddress:
                     looksLikeAddress ? destination : "",
 
-                destinationDetail: "",
+                destinationDetail:
+                    destination,
 
                 currentLocation: "",
 
