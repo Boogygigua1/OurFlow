@@ -46,8 +46,16 @@ Keep the response under 50 words.
                         },
                         {
                             role: "user",
-                            content:
-                                destination
+                            content: `
+Destination:
+${destination}
+
+Possible context:
+This may be located at California State University, Chico
+in Chico, California.
+
+Try to identify the most likely building and address.
+`
                         }
                     ]
                 })
