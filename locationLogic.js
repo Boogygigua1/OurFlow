@@ -174,10 +174,16 @@ function saveLocationType(type) {
     <br><br>
 
     <button onclick="verifySavedLocation()">
-        ${activeJourney?.verifiedDestinationAddress
-                ? "✅ Location Verified"
-                : "📍 Verify Location"}
-    </button>
+    ${activeJourney?.verifiedDestinationAddress
+                ? "✅ Destination Verified"
+                : "📍 Verify Destination"}
+</button>
+
+<br><br>
+
+<button onclick="verifyParkingLocation()">
+    🚗 Verify Parking Address
+</button>
 </div>
 `;
         return;
@@ -199,10 +205,16 @@ function saveLocationType(type) {
     <br><br>
 
     <button onclick="verifySavedLocation()">
-        ${activeJourney?.verifiedDestinationAddress
-            ? "✅ Location Verified"
-            : "📍 Verify Location"}
-    </button>
+    ${activeJourney?.verifiedDestinationAddress
+            ? "✅ Destination Verified"
+            : "📍 Verify Destination"}
+</button>
+
+<br><br>
+
+<button onclick="verifyParkingLocation()">
+    🚗 Verify Parking Address
+</button>
 </div>
 `;
 }
