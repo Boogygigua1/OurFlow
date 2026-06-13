@@ -221,6 +221,76 @@ function savePendingParking() {
     alert("📍 Parking location saved.");
 }
 
+async function verifyParkingLocation() {
+
+    if (!pendingParkingLocation) {
+        alert("No parking location found.");
+        return;
+    }
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>🚗 Verifying Parking Location</strong>
+
+    <br><br>
+
+    ${pendingParkingLocation}
+
+    <br><br>
+
+    Please wait...
+</div>
+`;
+
+    const response = await fetch(
+        "/api/findDestinationAddress",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                destination:
+                    pendingParkingLocation
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>🚗 Suggested Parking Location</strong>
+
+    <br><br>
+
+    ${data.suggestion || "No suggestion found."}
+
+    <br><br>
+
+    <button onclick="
+activeJourney.parkingLocation =
+'${pendingParkingLocation}';
+
+activeJourney.parkingLocationAddress =
+prompt(
+'Confirm or edit parking address:',
+'${data.suggestion || ""}'
+);
+
+localStorage.setItem(
+'activeJourney',
+JSON.stringify(activeJourney)
+);
+
+alert('🚗 Parking address saved.');
+">
+        🚗 Save Parking Location
+    </button>
+</div>
+`;
+}
+
 function saveInformationSearchAsDestination() {
 
     if (!activeJourney) {

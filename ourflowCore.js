@@ -2205,11 +2205,19 @@ Chico, CA
     ${pendingParkingLocation
                     ? `
             <br><br>
-            <strong>📍 Parking location detected.</strong>
-            <br><br>
-            <button onclick="savePendingParking()">
-                Save Parking
-            </button>
+<strong>📍 Parking location detected.</strong>
+
+<br><br>
+
+<button onclick="verifyParkingLocation()">
+    🚗 Verify Parking Address
+</button>
+
+<br><br>
+
+<button onclick="savePendingParking()">
+    📍 Save Parking As Entered
+</button>
             `
                     : ""
                 }
