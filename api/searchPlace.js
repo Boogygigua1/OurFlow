@@ -81,6 +81,14 @@ Do not say "safe travels."
                         content: `
 Destination:
 ${cleanQuery}
+
+Find the building's physical street address.
+
+If this is a university department, identify the building
+and provide the building's street address.
+
+Do not return only the department name.
+Do not return only the campus name.
 `
                     }
                 ]
