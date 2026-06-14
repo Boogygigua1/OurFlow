@@ -271,9 +271,22 @@ async function verifyParkingLocation() {
 
     <br><br>
 
-    <button onclick="alert('Parking button clicked')">
-        🚗 Save This Parking Location
-    </button>
+    <button onclick="
+activeJourney.parkingLocation =
+'${parkingLocation}';
+
+activeJourney.parkingLocationAddress =
+'${data.suggestion || ""}';
+
+localStorage.setItem(
+'activeJourney',
+JSON.stringify(activeJourney)
+);
+
+alert('🚗 Parking address saved.');
+">
+    🚗 Save This Parking Location
+</button>
 
     <br><br>
 
