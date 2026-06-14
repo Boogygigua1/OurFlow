@@ -271,10 +271,11 @@ async function verifyParkingLocation() {
 
     <br><br>
 
-    <button onclick="alert('SAVE WORKS')">
+    <button onclick="
+savePendingParking();
+">
     🚗 Save This Parking Location
 </button>
-
     <br><br>
 
     <button onclick="alert('LOOKUP WORKS')">
@@ -445,7 +446,7 @@ async function verifySavedLocation() {
     );
 
     window.suggestedAddress =
-    data.suggestion || "No suggestion found.";
+        data.suggestion || "No suggestion found.";
 
     document.getElementById("result").innerHTML = `
 <div class="card">
