@@ -416,8 +416,12 @@ function saveVerifiedDestinationAddress() {
         return;
     }
 
+    console.log("SAVE VERIFIED DESTINATION FIRED:", address);
+
     activeJourney.destinationAddress =
         address;
+
+    console.log("ACTIVE JOURNEY AFTER SAVE:", activeJourney);
 
     activeJourney.verifiedDestinationAddress =
         address;
