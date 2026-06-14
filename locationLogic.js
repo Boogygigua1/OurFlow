@@ -365,75 +365,6 @@ function saveInformationSearchAsDestination() {
     pendingDestinationSearch = "";
 }
 
-function saveVerifiedDestinationAddress() {
-
-    const address = prompt(
-        "Paste the verified address:"
-    );
-
-    if (!address) {
-        return;
-    }
-
-    console.log("SAVE VERIFIED DESTINATION FIRED:", address);
-
-    activeJourney.destinationAddress =
-        address;
-
-    console.log("ACTIVE JOURNEY AFTER SAVE:", activeJourney);
-
-    activeJourney.verifiedDestinationAddress =
-        address;
-
-    activeJourney.destinationDetail =
-        pendingDestinationSearch;
-
-    activeJourney.timeline.push(
-        "📬 Verified Address Saved: " +
-        address
-    );
-
-    localStorage.setItem(
-        "activeJourney",
-        JSON.stringify(activeJourney)
-    );
-
-    showActiveJourneyBox();
-
-    document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>📬 Verified Address Saved</strong>
-
-    <br><br>
-
-    ${address}
-
-    <br><br>
-
-    Navigation will now use this verified address.
-
-<br><br>
-
-<button onclick="openGoogleMapsToDestinationDetails('walking')">
-    🚶 Walk There
-</button>
-
-<br><br>
-
-<button onclick="openGoogleMapsToDestinationDetails('bicycling')">
-    🚴 Bike There
-</button>
-
-<br><br>
-
-<button onclick="openGoogleMapsToDestinationDetails('driving')">
-    🚗 Drive There
-</button>
-
-</div>
-`;
-}
-
 async function verifySavedLocation() {
 
     const destination =
@@ -523,7 +454,11 @@ async function verifySavedLocation() {
 
     <br><br>
 
-    <button onclick="alert('SAVE BUTTON WORKS')">
+    <button onclick="
+saveVerifiedDestinationAddress(
+${JSON.stringify(data.suggestion || "No suggestion found.")}
+);
+">
     📍 Save This Location
 </button>
 
