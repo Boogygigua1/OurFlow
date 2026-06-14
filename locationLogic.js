@@ -455,9 +455,12 @@ async function verifySavedLocation() {
     <br><br>
 
     <button onclick="
-saveVerifiedDestinationAddress(
-'TEST ADDRESS'
+alert(
+${JSON.stringify(data.suggestion || "No suggestion found.")}
 );
+">
+    📍 Save This Location
+</button>
 
 alert('SAVE FINISHED');
 ">
