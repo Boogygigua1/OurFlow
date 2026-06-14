@@ -444,6 +444,9 @@ async function verifySavedLocation() {
         data.suggestion
     );
 
+    window.suggestedAddress =
+    data.suggestion || "No suggestion found.";
+
     document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Suggested Location</strong>
@@ -455,12 +458,14 @@ async function verifySavedLocation() {
     <br><br>
 
 <button onclick="
-saveVerifiedDestinationAddress(
-prompt(
+const address = prompt(
 'Confirm or edit the address:',
-${JSON.stringify(data.suggestion || "No suggestion found.")}
-)
+window.suggestedAddress
 );
+
+if(address){
+    saveVerifiedDestinationAddress(address);
+}
 ">
     📍 Save This Location
 </button>
