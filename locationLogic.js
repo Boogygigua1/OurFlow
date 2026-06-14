@@ -271,60 +271,20 @@ async function verifyParkingLocation() {
 
     <br><br>
 
-    <button onclick="
-activeJourney.parkingLocation =
-${JSON.stringify(parkingLocation)};
-
-activeJourney.parkingLocationAddress =
-${JSON.stringify(data.suggestion || "")};
-
-localStorage.setItem(
-'activeJourney',
-JSON.stringify(activeJourney)
-);
-
-alert('🚗 Parking address saved.');
-">
+    <button onclick="alert('SAVE WORKS')">
     🚗 Save This Parking Location
 </button>
 
     <br><br>
 
-    <button onclick="
-window.open(
-'https://www.google.com/search?q=' +
-encodeURIComponent('${parkingLocation}'),
-'_blank'
-);
-">
-        🔍 Look Up Parking Address
-    </button>
-
+    <button onclick="alert('LOOKUP WORKS')">
+    🔍 Look Up Parking Address
+</button>
     <br><br>
 
-    <button onclick="
-const address = prompt(
-'Paste the verified parking address:'
-);
-
-if(address){
-
-    activeJourney.parkingLocation =
-    ${JSON.stringify(parkingLocation)};
-
-    activeJourney.parkingLocationAddress =
-        address;
-
-    localStorage.setItem(
-        'activeJourney',
-        JSON.stringify(activeJourney)
-    );
-
-    alert('🚗 Parking address saved.');
-}
-">
-        ✏ Enter Parking Address Manually
-    </button>
+    <button onclick="alert('MANUAL WORKS')">
+    ✏ Enter Parking Address Manually
+</button>
 </div>
 `;
 }
