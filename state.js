@@ -15,6 +15,8 @@ let pendingParkingLocation = "";
 
 let pendingLocationClassification = "";
 
+let pendingLocationType = "";
+
 let pendingDestinationSearch = "";
 
 let savedJourneys =

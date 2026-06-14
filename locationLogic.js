@@ -76,16 +76,14 @@ function saveLocationType(type) {
 
     if (type === "parking") {
 
-        activeJourney.parkingLocation =
+        pendingLocationType = type;
+
+        pendingParkingLocation =
             pendingLocationClassification;
 
-        activeJourney.timeline.push(
-            "🚗 Parking Saved: " +
-            pendingLocationClassification
-        );
+        verifyParkingLocation();
 
-        saveMessage =
-            "Parking location recorded.";
+        return;
     }
 
     if (type === "start") {
@@ -104,24 +102,14 @@ function saveLocationType(type) {
 
     if (type === "both") {
 
-        activeJourney.parkingLocation =
+        pendingLocationType = type;
+
+        pendingParkingLocation =
             pendingLocationClassification;
 
-        activeJourney.startLocation =
-            pendingLocationClassification;
+        verifyParkingLocation();
 
-        activeJourney.timeline.push(
-            "🚗 Parking Saved: " +
-            pendingLocationClassification
-        );
-
-        activeJourney.timeline.push(
-            "🧭 Starting Location Saved: " +
-            pendingLocationClassification
-        );
-
-        saveMessage =
-            "Starting location and parking location recorded.";
+        return;
     }
 
     pendingLocationClassification = "";
