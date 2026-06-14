@@ -77,6 +77,12 @@ function openGoogleMapsToParkingLocation() {
         mapUrl
     );
 
+    console.log(
+        "PARKING DESTINATION:",
+        activeJourney.parkingLocationAddress ||
+        activeJourney.parkingLocation
+    );
+
     window.open(mapUrl, "_blank");
 }
 
