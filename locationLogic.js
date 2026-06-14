@@ -556,6 +556,8 @@ async function verifySavedLocation() {
     <br><br>
 
     <button onclick="
+alert('SAVE LOCATION CLICKED');
+
 const address = prompt(
 'Confirm or edit the address:',
 '${data.suggestion || ""}'
@@ -565,12 +567,12 @@ if(address){
     saveVerifiedDestinationAddress(address);
 }
 ">
-        📍 Save This Location
-    </button>
+    📍 Save This Location
+</button>
 
-    <br><br>
+<br><br>
 
-    <button onclick="
+<button onclick="
 window.open(
 'https://www.google.com/search?q=' +
 encodeURIComponent(
