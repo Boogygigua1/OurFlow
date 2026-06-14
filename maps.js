@@ -68,6 +68,7 @@ function openGoogleMapsToParkingLocation() {
             : "") +
         "&destination=" +
         encodeURIComponent(
+            activeJourney.parkingLocationAddress ||
             activeJourney.parkingLocation
         );
 
