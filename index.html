@@ -26,20 +26,30 @@
 <body>
 
     <!-- Under Construction Notice -->
-    <div style="
-    background: #fff3cd;
-    color: #664d03;
-    border: 1px solid #ffecb5;
-    padding: 14px;
-    margin: 12px;
-    border-radius: 8px;
-    font-family: Arial, sans-serif;
-    text-align: center;
+    <div id="betaNotice" style="
+    background:#fff3cd;
+    color:#664d03;
+    border:1px solid #ffecb5;
+    padding:14px;
+    margin:12px;
+    border-radius:8px;
+    text-align:center;
 ">
-        <strong>🚧 OurFlow is currently under construction.</strong>
+        <strong>🚧 OurFlow Beta Development Build</strong>
+
         <br><br>
-        This app is in private development and testing.
-        Please do not copy, reuse, or rely on this code or workflow yet.
+
+        This application is currently under active development and testing.
+
+        Features may change without notice and may not function as intended.
+
+        <br><br>
+
+        <button onclick="
+        document.getElementById('betaNotice').style.display='none';
+    ">
+            Continue to Beta
+        </button>
     </div>
 
     <div style="
