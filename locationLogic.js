@@ -454,7 +454,12 @@ async function verifySavedLocation() {
 
     <br><br>
 
-    <button onclick="alert('SAVE BUTTON CLICKED')">
+    <button onclick="
+saveVerifiedDestinationAddress(
+'${(data.suggestion || "No suggestion found.")
+    .replace(/'/g, "\\'")}'
+);
+">
     📍 Save This Location
 </button>
 
