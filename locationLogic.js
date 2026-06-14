@@ -289,10 +289,7 @@ activeJourney.parkingLocation =
 '${parkingLocation}';
 
 activeJourney.parkingLocationAddress =
-prompt(
-'Confirm or edit parking address:',
-'${data.suggestion || ""}'
-);
+'${data.suggestion || ""}';
 
 localStorage.setItem(
 'activeJourney',
@@ -301,8 +298,46 @@ JSON.stringify(activeJourney)
 
 alert('🚗 Parking address saved.');
 ">
-        🚗 Save Parking Location
-    </button>
+    🚗 Save This Parking Location
+</button>
+
+<br><br>
+
+<button onclick="
+window.open(
+'https://www.google.com/search?q=' +
+encodeURIComponent('${parkingLocation}'),
+'_blank'
+);
+">
+    🔍 Look Up Parking Address
+</button>
+
+<br><br>
+
+<button onclick="
+const address = prompt(
+'Paste the verified parking address:'
+);
+
+if(address){
+
+    activeJourney.parkingLocation =
+        '${parkingLocation}';
+
+    activeJourney.parkingLocationAddress =
+        address;
+
+    localStorage.setItem(
+        'activeJourney',
+        JSON.stringify(activeJourney)
+    );
+
+    alert('🚗 Parking address saved.');
+}
+">
+    ✏ Enter Parking Address Manually
+</button>
 </div>
 `;
 }
