@@ -548,6 +548,11 @@ async function verifySavedLocation() {
         data
     );
 
+    console.log(
+    "SUGGESTION STRING:",
+    data.suggestion
+);
+
     document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Suggested Location</strong>
@@ -595,7 +600,9 @@ const address = prompt(
 );
 
 if(address){
+    console.log("ABOUT TO SAVE:", address);
     saveVerifiedDestinationAddress(address);
+    console.log("SAVE FUNCTION FINISHED");
 }
 ">
     ✏ Enter Address Manually
