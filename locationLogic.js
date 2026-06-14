@@ -206,20 +206,31 @@ function saveLocationType(type) {
 </div>
 `;
 }
-
 function savePendingParking() {
 
-    if (!pendingParkingLocation) return;
+```
+if (!pendingParkingLocation) return;
 
-    if (activeJourney) {
-        activeJourney.parkingLocation =
-            pendingParkingLocation;
-    }
+if (activeJourney) {
 
-    pendingParkingLocation = "";
+    activeJourney.parkingLocation =
+        pendingParkingLocation;
 
-    alert("📍 Parking location saved.");
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
 }
+
+pendingParkingLocation = "";
+
+alert("📍 Parking location saved.");
+```
+
+}
+
 
 async function verifyParkingLocation() {
 
