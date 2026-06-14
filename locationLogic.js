@@ -562,8 +562,7 @@ async function verifySavedLocation() {
 alert('SAVE LOCATION CLICKED');
 
 const address = prompt(
-'Confirm or edit the address:',
-'${data.suggestion || ""}'
+'Confirm or edit the address:'
 );
 
 if(address){
