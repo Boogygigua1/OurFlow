@@ -254,8 +254,7 @@ async function verifyParkingLocation() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                destination:
-                    parkingLocation
+                destination: parkingLocation
             })
         }
     );
@@ -272,38 +271,25 @@ async function verifyParkingLocation() {
 
     <br><br>
 
+    <button onclick="alert('Parking button clicked')">
+        🚗 Save This Parking Location
+    </button>
+
+    <br><br>
+
     <button onclick="
-activeJourney.parkingLocation =
-'${parkingLocation}';
-
-activeJourney.parkingLocationAddress =
-'${data.suggestion || ""}';
-
-localStorage.setItem(
-'activeJourney',
-JSON.stringify(activeJourney)
-);
-
-alert('🚗 Parking address saved.');
-">
-    🚗 Save This Parking Location
-</button>
-
-<br><br>
-
-<button onclick="
 window.open(
 'https://www.google.com/search?q=' +
 encodeURIComponent('${parkingLocation}'),
 '_blank'
 );
 ">
-    🔍 Look Up Parking Address
-</button>
+        🔍 Look Up Parking Address
+    </button>
 
-<br><br>
+    <br><br>
 
-<button onclick="
+    <button onclick="
 const address = prompt(
 'Paste the verified parking address:'
 );
@@ -324,8 +310,8 @@ if(address){
     alert('🚗 Parking address saved.');
 }
 ">
-    ✏ Enter Parking Address Manually
-</button>
+        ✏ Enter Parking Address Manually
+    </button>
 </div>
 `;
 }
