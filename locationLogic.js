@@ -523,13 +523,7 @@ async function verifySavedLocation() {
 
     <br><br>
 
-    <button onclick="
-saveVerifiedDestinationAddress(
-${JSON.stringify(data.suggestion || "")}
-);
-
-alert('📍 Destination address saved.');
-">
+    <button onclick="alert('SAVE BUTTON WORKS')">
     📍 Save This Location
 </button>
 
