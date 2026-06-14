@@ -276,6 +276,19 @@ activeJourney.parkingLocation =
 ${JSON.stringify(parkingLocation)};
 
 activeJourney.parkingLocationAddress =
+${JSON.stringify(data.suggestion || "")};
+
+localStorage.setItem(
+'activeJourney',
+JSON.stringify(activeJourney)
+);
+
+alert('🚗 Parking address saved.');
+">
+    🚗 Save This Parking Location
+</button>
+
+activeJourney.parkingLocationAddress =
 '${data.suggestion || ""}';
 
 localStorage.setItem(
