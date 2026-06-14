@@ -273,7 +273,7 @@ async function verifyParkingLocation() {
 
     <button onclick="
 activeJourney.parkingLocation =
-'${parkingLocation}';
+${JSON.stringify(parkingLocation)};
 
 activeJourney.parkingLocationAddress =
 '${data.suggestion || ""}';
@@ -310,7 +310,7 @@ const address = prompt(
 if(address){
 
     activeJourney.parkingLocation =
-        '${parkingLocation}';
+    ${JSON.stringify(parkingLocation)};
 
     activeJourney.parkingLocationAddress =
         address;
@@ -549,9 +549,9 @@ async function verifySavedLocation() {
     );
 
     console.log(
-    "SUGGESTION STRING:",
-    data.suggestion
-);
+        "SUGGESTION STRING:",
+        data.suggestion
+    );
 
     document.getElementById("result").innerHTML = `
 <div class="card">
