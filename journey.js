@@ -373,7 +373,13 @@ ${journey.parkingLocation
     ? `
 <br><br>
 <button onclick="
+console.log('RETURN TO PARKING CLICKED');
+console.log('JOURNEY:', journey);
+
 activeJourney = journey;
+
+console.log('ACTIVE JOURNEY:', activeJourney);
+
 openGoogleMapsToParkingLocation();
 ">
     🚗 Return To Parking
@@ -628,7 +634,7 @@ function showArrivalMode() {
 <br><br>
 
 <button onclick="openGoogleMapsToParkingLocation()">
-    🚗 Return To Parking
+    
 </button>
 
     <br><br>
