@@ -245,6 +245,8 @@ function toggleJourney(index) {
     const journey =
         savedJourneys[index];
 
+    activeJourney = journey;
+
     if (details.style.display === "block") {
 
         details.style.display = "none";
@@ -370,7 +372,7 @@ ${journey.staffInstructions &&
         ${journey.parkingLocation || "Not recorded"}
 
 ${journey.parkingLocation
-    ? `
+            ? `
 <br><br>
 <button onclick="
 openGoogleMapsToParkingLocation();
@@ -378,7 +380,7 @@ openGoogleMapsToParkingLocation();
     🚗 Return To Parking
 </button>
 `
-    : ""}
+            : ""}
 
 ${journey.startLocation
             ? `
