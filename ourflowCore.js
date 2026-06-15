@@ -1108,7 +1108,16 @@ Ready to save?
 
         if (
             activeJourney &&
-            noteQuestion.startsWith("save question:")
+            (
+                noteQuestion.startsWith("save question:") ||
+
+                noteQuestion.startsWith("where ") ||
+                noteQuestion.startsWith("what ") ||
+                noteQuestion.startsWith("who ") ||
+                noteQuestion.startsWith("when ") ||
+                noteQuestion.startsWith("why ") ||
+                noteQuestion.startsWith("how ")
+            )
         ) {
 
             console.log("SAVE QUESTION BLOCK FIRED");
