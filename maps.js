@@ -99,10 +99,12 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
         return;
     }
 
-    const origin =
-        activeJourney?.startLocationAddress ||
-        activeJourney?.startLocation ||
-        "";
+const origin =
+    activeJourney?.parkingLocationAddress ||
+    activeJourney?.parkingLocation ||
+    activeJourney?.startLocationAddress ||
+    activeJourney?.startLocation ||
+    "";
 
     console.log(
         "VERIFIED:",
