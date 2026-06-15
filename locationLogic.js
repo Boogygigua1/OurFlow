@@ -268,6 +268,9 @@ async function verifyParkingLocation() {
 
     const data = await response.json();
 
+    window.parkingLookupAddress =
+        parkingLocation;
+
     document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>🚗 Suggested Parking Location</strong>
@@ -289,7 +292,7 @@ savePendingParking();
 window.open(
 'https://www.google.com/search?q=' +
 encodeURIComponent(
-'${parkingLocation}'
+window.parkingLookupAddress
 ),
 '_blank'
 );
