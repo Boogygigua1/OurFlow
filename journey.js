@@ -369,14 +369,17 @@ ${journey.staffInstructions &&
         <strong>Parking:</strong>
         ${journey.parkingLocation || "Not recorded"}
 
-        ${journey.parkingLocation
-            ? `
+${journey.parkingLocation
+    ? `
 <br><br>
-<button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(journey.parkingLocation)}', '_blank')">
+<button onclick="
+activeJourney = journey;
+openGoogleMapsToParkingLocation();
+">
     🚗 Return To Parking
 </button>
 `
-            : ""}
+    : ""}
 
 ${journey.startLocation
             ? `
