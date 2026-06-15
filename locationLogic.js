@@ -225,7 +225,33 @@ function savePendingParking() {
 
     pendingParkingLocation = "";
 
-    alert("📍 Parking location saved.");
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>🚗 Parking Saved</strong>
+
+    <br><br>
+
+    Your parking location has been recorded.
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestinationDetails('walking')">
+        🚶 Walk There
+    </button>
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestinationDetails('bicycling')">
+        🚴 Bike There
+    </button>
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestinationDetails('driving')">
+        🚗 Drive There
+    </button>
+</div>
+`;
 }
 
 async function verifyParkingLocation() {
