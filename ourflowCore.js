@@ -807,7 +807,7 @@ Ready to save?
                 noteQuestion.includes("this is the address") ||
                 noteQuestion.includes("enter at") ||
                 noteQuestion.includes("located at") ||
-                question.match(/\d{3,}/)
+                question.match(/^\d+\s/)
             )
         ) {
 
