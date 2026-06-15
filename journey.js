@@ -629,7 +629,7 @@ function showArrivalMode() {
 <br><br>
 
 <button onclick="openGoogleMapsToParkingLocation()">
-    
+    🚗 Return To Parking
 </button>
 
     <br><br>
