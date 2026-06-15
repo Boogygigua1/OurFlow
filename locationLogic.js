@@ -288,7 +288,9 @@ savePendingParking();
     <button onclick="
 window.open(
 'https://www.google.com/search?q=' +
-encodeURIComponent(parkingLocation),
+encodeURIComponent(
+'${parkingLocation}'
+),
 '_blank'
 );
 ">
