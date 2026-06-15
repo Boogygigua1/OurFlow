@@ -1272,7 +1272,16 @@ Ready to save?
 
         if (
             activeJourney &&
-            noteQuestion.startsWith("save instruction:")
+            (
+                noteQuestion.startsWith("save instruction:") ||
+
+                noteQuestion.startsWith("i should ") ||
+                noteQuestion.startsWith("remember to ") ||
+                noteQuestion.startsWith("don't forget ") ||
+                noteQuestion.startsWith("dont forget ") ||
+                noteQuestion.startsWith("need to remember ") ||
+                noteQuestion.startsWith("make sure to ")
+            )
         ) {
 
             const instruction = question
