@@ -148,11 +148,6 @@ async function getArrivalHelp(destination) {
         activeJourney.timeline = [];
     }
 
-    activeJourney.timeline.push(
-        "🚪 Arrival Help Saved: " +
-        activeJourney.arrivalTips
-    );
-
     activeJourney.mapLink =
         placeData.mapUrl;
 
