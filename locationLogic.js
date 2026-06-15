@@ -498,16 +498,6 @@ async function verifySavedLocation() {
 
     const data = await response.json();
 
-    console.log(
-        "ADDRESS SUGGESTION:",
-        data
-    );
-
-    console.log(
-        "SUGGESTION STRING:",
-        data.suggestion
-    );
-
     window.suggestedAddress =
         data.suggestion || "No suggestion found.";
 
@@ -556,11 +546,6 @@ const address = prompt(
 'Paste the verified address:'
 );
 
-if(address){
-    console.log("ABOUT TO SAVE:", address);
-    saveVerifiedDestinationAddress(address);
-    console.log("SAVE FUNCTION FINISHED");
-}
 ">
     ✏ Enter Address Manually
 </button>

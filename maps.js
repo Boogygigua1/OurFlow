@@ -1,5 +1,3 @@
-console.log("MAPS.JS LOADED");
-
 function openGoogleMapsForJourney() {
 
     if (!activeJourney) {
@@ -72,17 +70,6 @@ function openGoogleMapsToParkingLocation() {
             activeJourney.parkingLocation
         );
 
-    console.log(
-        "PARKING MAP URL:",
-        mapUrl
-    );
-
-    console.log(
-        "PARKING DESTINATION:",
-        activeJourney.parkingLocationAddress ||
-        activeJourney.parkingLocation
-    );
-
     window.open(mapUrl, "_blank");
 }
 
@@ -106,32 +93,6 @@ const origin =
     activeJourney?.startLocation ||
     "";
 
-    console.log(
-        "VERIFIED:",
-        activeJourney.verifiedDestinationAddress
-    );
-
-    console.log(
-        "DETAIL:",
-        activeJourney.destinationDetail
-    );
-
-    console.log(
-        "ADDRESS:",
-        activeJourney.destinationAddress
-    );
-
-    console.log(
-        "DESTINATION FIELD:",
-        destination
-    );
-
-    console.log(
-        "DESTINATION DEBUG",
-        activeJourney.startLocation,
-        destination
-    );
-
     const mapUrl =
         "https://www.google.com/maps/dir/?api=1" +
         (origin
@@ -145,10 +106,6 @@ const origin =
         "&travelmode=" +
         mode;
 
-    console.log(
-        "DESTINATION MAP URL:",
-        mapUrl
-    );
 
     window.open(mapUrl, "_blank");
 }
