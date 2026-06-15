@@ -1228,7 +1228,14 @@ Ready to save?
 
         if (
             activeJourney &&
-            noteQuestion.startsWith("save appointment:")
+            (
+                noteQuestion.startsWith("save appointment:") ||
+
+                noteQuestion.startsWith("i have an appointment") ||
+                noteQuestion.startsWith("my appointment") ||
+                noteQuestion.startsWith("appointment at") ||
+                noteQuestion.startsWith("meeting with")
+            )
         ) {
 
             const appointment = question
