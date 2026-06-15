@@ -206,9 +206,8 @@ function saveLocationType(type) {
 </div>
 `;
 }
-function savePendingParking() {
 
-```
+function savePendingParking() {
 if (!pendingParkingLocation) return;
 
 if (activeJourney) {
@@ -227,10 +226,7 @@ if (activeJourney) {
 pendingParkingLocation = "";
 
 alert("📍 Parking location saved.");
-```
-
 }
-
 
 async function verifyParkingLocation() {
 
