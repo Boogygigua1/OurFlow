@@ -792,6 +792,14 @@ Ready to save?
             !noteQuestion.startsWith("search ") &&
             !noteQuestion.includes("department") &&
             !noteQuestion.includes("directory") &&
+
+            !noteQuestion.startsWith("save medication:") &&
+            !noteQuestion.startsWith("save appointment:") &&
+            !noteQuestion.startsWith("save instruction:") &&
+            !noteQuestion.startsWith("save note:") &&
+            !noteQuestion.startsWith("save question:") &&
+            !noteQuestion.startsWith("save directory:") &&
+
             (
                 noteQuestion.includes("exact location") ||
                 noteQuestion.includes("the address is") ||
