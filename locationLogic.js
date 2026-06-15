@@ -208,24 +208,24 @@ function saveLocationType(type) {
 }
 
 function savePendingParking() {
-if (!pendingParkingLocation) return;
+    if (!pendingParkingLocation) return;
 
-if (activeJourney) {
+    if (activeJourney) {
 
-    activeJourney.parkingLocation =
-        pendingParkingLocation;
+        activeJourney.parkingLocation =
+            pendingParkingLocation;
 
-    localStorage.setItem(
-        "activeJourney",
-        JSON.stringify(activeJourney)
-    );
+        localStorage.setItem(
+            "activeJourney",
+            JSON.stringify(activeJourney)
+        );
 
-    showActiveJourneyBox();
-}
+        showActiveJourneyBox();
+    }
 
-pendingParkingLocation = "";
+    pendingParkingLocation = "";
 
-alert("📍 Parking location saved.");
+    alert("📍 Parking location saved.");
 }
 
 async function verifyParkingLocation() {
@@ -285,12 +285,37 @@ savePendingParking();
 </button>
     <br><br>
 
-    <button onclick="alert('LOOKUP WORKS')">
+    <button onclick="
+window.open(
+'https://www.google.com/search?q=' +
+encodeURIComponent(parkingLocation),
+'_blank'
+);
+">
     🔍 Look Up Parking Address
 </button>
     <br><br>
 
-    <button onclick="alert('MANUAL WORKS')">
+    <button onclick="
+const address = prompt(
+'Paste the verified parking address:'
+);
+
+if(address){
+
+    activeJourney.parkingLocationAddress =
+        address;
+
+    localStorage.setItem(
+        'activeJourney',
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+
+    alert('🚗 Parking address saved.');
+}
+">
     ✏ Enter Parking Address Manually
 </button>
 </div>
