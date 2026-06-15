@@ -914,7 +914,13 @@ Ready to save?
                 noteQuestion.startsWith("taking ") ||
                 noteQuestion.startsWith("started ") ||
                 noteQuestion.startsWith("using ") ||
-                noteQuestion.startsWith("prescribed ")
+                noteQuestion.startsWith("prescribed ") ||
+
+                noteQuestion.startsWith("i need to take ") ||
+                noteQuestion.startsWith("need to take ") ||
+                noteQuestion.startsWith("i take ") ||
+                noteQuestion.startsWith("i'm taking ") ||
+                noteQuestion.startsWith("im taking ")
             )
         ) {
 
