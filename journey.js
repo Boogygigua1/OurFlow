@@ -202,8 +202,12 @@ function showSavedJourneys() {
 
     <br>
 
-    Parking:
-    ${journey.parkingLocation || "Not recorded"}
+    Destination:
+${journey.verifiedDestinationAddress ||
+            journey.destinationAddress ||
+            journey.destinationDetail ||
+            journey.destination ||
+            "Not recorded"}
 
     <br>
 
