@@ -19,8 +19,6 @@ async function askOurFlow() {
         activeJourney.travelMode = questionInfo.travelMode;
     }
 
-    console.log(activeJourney);
-
     if (
         activeJourney &&
         pendingPhotoMemory &&
@@ -310,8 +308,6 @@ How should I save this?
                 destination
             );
 
-            console.log(activeJourney.timeline);
-
             showActiveJourneyBox();
 
             await getArrivalHelp(destination);
@@ -459,10 +455,6 @@ document.getElementById('questionInput').placeholder =
 
             activeJourney.duration = minutes;
 
-            console.log(
-                "END JOURNEY CALLED",
-                new Date().toLocaleTimeString()
-            );
 
             activeJourney.timeline.push(
                 "🧭 Journey Ended: " +
@@ -777,11 +769,6 @@ Ready to save?
                 .replace(/[?.!,]/g, "")
                 .trim();
 
-        console.log(
-            "RECALL CHECK:",
-            recallQuestion
-        );
-
         const noteQuestion = question.toLowerCase();
 
         if (
@@ -956,42 +943,6 @@ Ready to save?
         if (
             activeJourney &&
             (
-                noteQuestion.startsWith("appointment ") ||
-                noteQuestion.startsWith("my appointment is ")
-            )
-        ) {
-
-            activeJourney.appointments.push(
-                question
-            );
-
-            activeJourney.timeline.push(
-                "📅 Appointment Saved: " +
-                question
-            );
-
-            showActiveJourneyBox();
-
-
-            result.innerHTML = `
-<div class="card">
-    <strong>📅 Appointment Saved</strong>
-
-    <br><br>
-
-    ${question}
-
-    <br><br>
-
-    I'll remember that for this journey.
-</div>
-`;
-
-            return;
-        }
-        if (
-            activeJourney &&
-            (
                 noteQuestion.startsWith("follow up in ") ||
                 noteQuestion.startsWith("return in ") ||
                 noteQuestion.startsWith("schedule another ") ||
@@ -1040,10 +991,7 @@ Ready to save?
         if (
             activeJourney &&
             (
-                noteQuestion.startsWith("need to ") ||
-                noteQuestion.startsWith("remember to ") ||
-                noteQuestion.startsWith("don't forget to ") ||
-                noteQuestion.startsWith("dont forget to ")
+                noteQuestion.startsWith("need to ")
             )
         ) {
 
@@ -1120,7 +1068,6 @@ Ready to save?
             )
         ) {
 
-            console.log("SAVE QUESTION BLOCK FIRED");
 
             const doctorQuestion = question
                 .replace(/save question:/i, "")
@@ -1280,7 +1227,10 @@ Ready to save?
                 noteQuestion.startsWith("don't forget ") ||
                 noteQuestion.startsWith("dont forget ") ||
                 noteQuestion.startsWith("need to remember ") ||
-                noteQuestion.startsWith("make sure to ")
+                noteQuestion.startsWith("i need to remember ") ||
+                noteQuestion.startsWith("make sure to ") ||
+                noteQuestion.startsWith("be sure to ")
+                
             )
         ) {
 
@@ -1909,12 +1859,6 @@ Can I help you get back there?
 
         const parkingQuestion = question.toLowerCase();
 
-        console.log(
-            "PARKING CHECK:",
-            parkingQuestion,
-            activeJourney
-        );
-
         if (
             parkingQuestion.startsWith("parking location:") ||
             parkingQuestion.startsWith("save parking:") ||
@@ -1975,10 +1919,6 @@ Can I help you get back there?
 
                     .trim();
 
-                console.log(
-                    "CLEANED PARKING:",
-                    pendingLocationClassification
-                );
 
                 result.innerHTML = `
 <div class="card">
@@ -2056,10 +1996,6 @@ Can I help you get back there?
         const navigationSearch =
             question.toLowerCase();
 
-        console.log(
-            "NAVIGATION SEARCH:",
-            navigationSearch
-        );
 
         if (
             (
@@ -2106,11 +2042,6 @@ Can I help you get back there?
                     )
                     .trim();
 
-
-            console.log(
-                "SEARCHPLACE TRIGGERED:",
-                cleanedSearch
-            );
 
             const isInformationSearch =
 
