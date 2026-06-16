@@ -382,7 +382,7 @@ How should I save this?
         // creating another lowercase variable.
 
         const endQuestion =
-            lowerQuestion.trim();
+            question.toLowerCase().trim();
 
         if (
             activeJourney &&
