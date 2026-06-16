@@ -34,9 +34,9 @@ async function askOurFlow() {
         activeJourney.travelMode = questionInfo.travelMode;
     }
 
-// ========================================
-// PHOTO MEMORY PROCESSING
-// ========================================
+    // ========================================
+    // PHOTO MEMORY PROCESSING
+    // ========================================
 
     if (
         activeJourney &&
@@ -45,8 +45,8 @@ async function askOurFlow() {
         activeJourney.photos.length > 0
     ) {
 
-// REVIEW:
-// lastPhoto may be unused
+        // REVIEW:
+        // lastPhoto may be unused
 
         const lastPhoto =
             activeJourney.photos[activeJourney.photos.length - 1];
@@ -62,15 +62,15 @@ async function askOurFlow() {
 
         showActiveJourneyBox();
 
-// REVIEW:
-// May be redundant.
-// User already receives card feedback below.
+        // REVIEW:
+        // May be redundant.
+        // User already receives card feedback below.
 
         alert("Destination saved successfully");
 
-// ========================================
-// PHOTO CLASSIFICATION UI
-// ========================================
+        // ========================================
+        // PHOTO CLASSIFICATION UI
+        // ========================================
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -116,13 +116,13 @@ How should I save this?
         return;
     }
 
-// ========================================
-// JOURNEY CREATION / START JOURNEY
-// ========================================
+    // ========================================
+    // JOURNEY CREATION / START JOURNEY
+    // ========================================
 
-// CLEANUP:
-// Replace repeated question.toLowerCase()
-// with lowerQuestion
+    // CLEANUP:
+    // Replace repeated question.toLowerCase()
+    // with lowerQuestion
 
     if (
         !activeJourney &&
@@ -215,9 +215,9 @@ How should I save this?
         return;
     }
 
-// ========================================
-// QUESTION VALIDATION
-// ========================================
+    // ========================================
+    // QUESTION VALIDATION
+    // ========================================
 
     const result = document.getElementById("result");
 
@@ -228,21 +228,21 @@ How should I save this?
     </div>
     `;
 
-// ========================================
-// LOADING UI
-// ========================================
+    // ========================================
+    // LOADING UI
+    // ========================================
 
     try {
 
         conversationHistory.push(question);
 
-// ========================================
-// MAIN PROCESSING
-// ========================================
+        // ========================================
+        // MAIN PROCESSING
+        // ========================================
 
-// REVIEW:
-// Possible duplicate Journey Creation logic.
-// Compare with earlier !activeJourney block.
+        // REVIEW:
+        // Possible duplicate Journey Creation logic.
+        // Compare with earlier !activeJourney block.
 
         if (
             question.toLowerCase().startsWith("begin journey to ") ||
@@ -373,15 +373,16 @@ How should I save this?
 
         }
 
-// ========================================
-// ARRIVAL DETECTION
-// ========================================
+        // ========================================
+        // ARRIVAL DETECTION
+        // ========================================
 
-// CLEANUP:
-// Could reuse lowerQuestion instead of
-// creating another lowercase variable.
+        // CLEANUP:
+        // Could reuse lowerQuestion instead of
+        // creating another lowercase variable.
 
-        const endQuestion = question.toLowerCase().trim();
+        const endQuestion =
+            lowerQuestion.trim();
 
         if (
             activeJourney &&
@@ -400,9 +401,9 @@ How should I save this?
 
             activeJourney.journeyStatus = "arrived";
 
-// ========================================
-// ARRIVAL MEMORY CAPTURE
-// ========================================
+            // ========================================
+            // ARRIVAL MEMORY CAPTURE
+            // ========================================
 
             result.innerHTML = `
 <div class="card">
@@ -472,13 +473,13 @@ document.getElementById('questionInput').placeholder =
             return;
         }
 
-// ========================================
-// END JOURNEY DETECTION
-// ========================================
+        // ========================================
+        // END JOURNEY DETECTION
+        // ========================================
 
-// CLEANUP:
-// Reuses endQuestion.
-// Good candidate for lowerQuestion.
+        // CLEANUP:
+        // Reuses endQuestion.
+        // Good candidate for lowerQuestion.
 
         if (
             endQuestion === "end journey" ||
@@ -500,9 +501,9 @@ document.getElementById('questionInput').placeholder =
 
             /* END JOURNEY BLOCK HERE */
 
-// ========================================
-// END JOURNEY PROCESSING
-// ========================================
+            // ========================================
+            // END JOURNEY PROCESSING
+            // ========================================
 
             if (!activeJourney) {
 
@@ -524,9 +525,9 @@ document.getElementById('questionInput').placeholder =
                 JSON.stringify(activeJourney)
             );
 
-// CLEANUP:
-// Duration calculation could become
-// a helper function later.
+            // CLEANUP:
+            // Duration calculation could become
+            // a helper function later.
 
             const start = new Date(activeJourney.startTime);
             const end = new Date(activeJourney.endTime);
@@ -542,9 +543,9 @@ document.getElementById('questionInput').placeholder =
                 activeJourney.destination
             );
 
-// CLEANUP:
-// Large recap card.
-// Candidate for showJourneyRecap().
+            // CLEANUP:
+            // Large recap card.
+            // Candidate for showJourneyRecap().
 
             result.innerHTML = `
 <div class="card">
@@ -616,20 +617,20 @@ Ready to save?
             return;
         }
 
-// ========================================
-// QUESTION CLASSIFICATION
-// ========================================
+        // ========================================
+        // QUESTION CLASSIFICATION
+        // ========================================
 
         const lowerQuestion =
             question.toLowerCase();
 
-// CLEANUP:
-// Preferred lowercase variable.
-// Other sections should eventually use this.
+        // CLEANUP:
+        // Preferred lowercase variable.
+        // Other sections should eventually use this.
 
-// ========================================
-// UTILITY QUESTION DETECTION
-// ========================================
+        // ========================================
+        // UTILITY QUESTION DETECTION
+        // ========================================
 
         const isUtilityQuestion =
 
@@ -668,21 +669,21 @@ Ready to save?
             && !lowerQuestion.includes("my bike")
             && !lowerQuestion.includes("my car");
 
-// ========================================
-// MEMORY COMMAND DETECTION
-// ========================================
+        // ========================================
+        // MEMORY COMMAND DETECTION
+        // ========================================
 
-// CLEANUP:
-// Largest detection block in file.
-// Candidate for arrays:
-// rideTerms
-// parkingTerms
-// memoryCommands
-// confirmationTerms
+        // CLEANUP:
+        // Largest detection block in file.
+        // Candidate for arrays:
+        // rideTerms
+        // parkingTerms
+        // memoryCommands
+        // confirmationTerms
 
-// REVIEW:
-// Convert to grouped arrays later.
-// No behavior changes during cleanup.
+        // REVIEW:
+        // Convert to grouped arrays later.
+        // No behavior changes during cleanup.
 
         const isMemoryCommand =
 
@@ -810,9 +811,9 @@ Ready to save?
 
             lowerQuestion.includes("bike is parked");
 
-// ========================================
-// DIRECTORY ENTRY DETECTION
-// ========================================
+        // ========================================
+        // DIRECTORY ENTRY DETECTION
+        // ========================================
 
         if (activeJourney) {
 
@@ -823,11 +824,17 @@ Ready to save?
                 lowerQuestion.includes("elevator") ||
                 lowerQuestion.includes("directory") ||
                 lowerQuestion.includes("check-in") ||
-                lowerQuestion.includes("reception");
+                lowerQuestion.includes("reception") ||
+                lowerQuestion.includes("office") ||
+                lowerQuestion.includes("room") ||
+                lowerQuestion.includes("suite") ||
+                lowerQuestion.includes("floor") ||
+                lowerQuestion.includes("unit") ||
+                lowerQuestion.includes("building");
 
-// ========================================
-// AUTOMATIC QUESTION CAPTURE
-// ========================================
+            // ========================================
+            // AUTOMATIC QUESTION CAPTURE
+            // ========================================
 
             if (
                 !isMemoryCommand &&
@@ -839,12 +846,12 @@ Ready to save?
             }
         }
 
-// ========================================
-// DESTINATION AUTO-DETECTION
-// ========================================
+        // ========================================
+        // DESTINATION AUTO-DETECTION
+        // ========================================
 
-// CLEANUP:
-// Candidate for detectDestination()
+        // CLEANUP:
+        // Candidate for detectDestination()
 
         if (
             activeJourney &&
@@ -891,9 +898,9 @@ Ready to save?
 
         }
 
-// ========================================
-// MEMORY PROCESSING SETUP
-// ========================================
+        // ========================================
+        // MEMORY PROCESSING SETUP
+        // ========================================
 
         const recallQuestion =
             question
@@ -901,21 +908,21 @@ Ready to save?
                 .replace(/[?.!,]/g, "")
                 .trim();
 
-// CLEANUP:
-// Could reuse lowerQuestion
+        // CLEANUP:
+        // Could reuse lowerQuestion
 
-// FUTURE REFACTOR:
-// Replace noteQuestion with lowerQuestion
+        // FUTURE REFACTOR:
+        // Replace noteQuestion with lowerQuestion
 
         const noteQuestion = lowerQuestion;
 
-// ========================================
-// DESTINATION DETAIL SAVE
-// ========================================
+        // ========================================
+        // DESTINATION DETAIL SAVE
+        // ========================================
 
-// REVIEW:
-// This may be related to the
-// "office / room / floor" bug.
+        // REVIEW:
+        // This may be related to the
+        // "office / room / floor" bug.
 
         if (
             activeJourney &&
@@ -1002,9 +1009,9 @@ Ready to save?
             return;
         }
 
-// ========================================
-// QUESTION SAVE
-// ========================================        
+        // ========================================
+        // QUESTION SAVE
+        // ========================================        
 
         if (
             activeJourney &&
@@ -1045,9 +1052,9 @@ Ready to save?
             return;
         }
 
-// ========================================
-// MEDICATION SAVE
-// ========================================
+        // ========================================
+        // MEDICATION SAVE
+        // ========================================
 
 
         if (
@@ -1095,15 +1102,15 @@ Ready to save?
             return;
         }
 
-// ========================================
-// MEDICAL FOLLOW-UP INSTRUCTION SAVE
-// ========================================
+        // ========================================
+        // MEDICAL FOLLOW-UP INSTRUCTION SAVE
+        // ========================================
 
-// CLEANUP:
-// Candidate for saveMedication()
+        // CLEANUP:
+        // Candidate for saveMedication()
 
-// CLEANUP:
-// Candidate for saveInstruction()
+        // CLEANUP:
+        // Candidate for saveInstruction()
 
 
         if (
@@ -1154,16 +1161,16 @@ Ready to save?
             return;
         }
 
-// ========================================
-// GENERAL INSTRUCTION SAVE
-// ========================================
+        // ========================================
+        // GENERAL INSTRUCTION SAVE
+        // ========================================
 
-// REVIEW:
-// Earlier cleanup removed
-// remember to
-// don't forget
-// from this block.
-// Those now route to Instructions.
+        // REVIEW:
+        // Earlier cleanup removed
+        // remember to
+        // don't forget
+        // from this block.
+        // Those now route to Instructions.
 
         if (
             activeJourney &&
@@ -1197,9 +1204,9 @@ Ready to save?
             return;
         }
 
-// ========================================
-// MANUAL NOTE SAVE
-// ========================================
+        // ========================================
+        // MANUAL NOTE SAVE
+        // ========================================
 
         if (
             activeJourney &&
@@ -1235,13 +1242,13 @@ Ready to save?
             return;
         }
 
-// ========================================
-// QUESTION DETECTION & SAVE
-// ========================================
+        // ========================================
+        // QUESTION DETECTION & SAVE
+        // ========================================
 
-// ========================================
-// MANUAL MEDICATION SAVE
-// ========================================
+        // ========================================
+        // MANUAL MEDICATION SAVE
+        // ========================================
 
         if (
             activeJourney &&
@@ -1290,9 +1297,9 @@ Ready to save?
             return;
         }
 
-// ========================================
-// MANUAL DIRECTORY SAVE
-// ========================================
+        // ========================================
+        // MANUAL DIRECTORY SAVE
+        // ========================================
 
         if (
             activeJourney &&
@@ -1331,12 +1338,12 @@ Ready to save?
             return;
         }
 
-// REVIEW:
-// Manual Save Section
-// save note:
-// save question:
-// save medication:
-// save directory:
+        // REVIEW:
+        // Manual Save Section
+        // save note:
+        // save question:
+        // save medication:
+        // save directory:
 
         if (
             activeJourney &&
@@ -1373,13 +1380,13 @@ Ready to save?
             return;
         }
 
-// ========================================
-// APPOINTMENT SAVE
-// ========================================
+        // ========================================
+        // APPOINTMENT SAVE
+        // ========================================
 
-// REVIEW:
-// Earlier duplicate appointment block removed.
-// This is now the primary appointment handler.
+        // REVIEW:
+        // Earlier duplicate appointment block removed.
+        // This is now the primary appointment handler.
 
         if (
             activeJourney &&
@@ -1425,16 +1432,16 @@ Ready to save?
             return;
         }
 
-// ========================================
-// GENERAL INSTRUCTION SAVE
-// ========================================
+        // ========================================
+        // GENERAL INSTRUCTION SAVE
+        // ========================================
 
-// REVIEW:
-// Handles:
-// remember to
-// don't forget
-// make sure to
-// be sure to
+        // REVIEW:
+        // Handles:
+        // remember to
+        // don't forget
+        // make sure to
+        // be sure to
 
         if (
             activeJourney &&
@@ -1449,7 +1456,7 @@ Ready to save?
                 noteQuestion.startsWith("i need to remember ") ||
                 noteQuestion.startsWith("make sure to ") ||
                 noteQuestion.startsWith("be sure to ")
-                
+
             )
         ) {
 
@@ -1485,9 +1492,9 @@ Ready to save?
             return;
         }
 
-// ========================================
-// START LOCATION SAVE
-// ========================================
+        // ========================================
+        // START LOCATION SAVE
+        // ========================================
 
         if (
             activeJourney &&
@@ -1525,9 +1532,9 @@ Ready to save?
             return;
         }
 
-// ========================================
-// MEMORY RECALL
-// ========================================
+        // ========================================
+        // MEMORY RECALL
+        // ========================================
 
         if (
             activeJourney &&
@@ -1553,8 +1560,8 @@ Ready to save?
                 return;
             }
 
-// CLEANUP:
-// Candidate for buildListHtml()
+            // CLEANUP:
+            // Candidate for buildListHtml()
 
             let directoriesHtml = "";
 
@@ -1578,9 +1585,9 @@ ${index + 1}. ${directory}<br><br>
             return;
         }
 
-// ========================================
-// SHOW DIRECTORIES
-// ========================================
+        // ========================================
+        // SHOW DIRECTORIES
+        // ========================================
 
         if (
             activeJourney &&
@@ -1606,11 +1613,11 @@ ${index + 1}. ${directory}<br><br>
                 return;
             }
 
-// CLEANUP:
-// Candidate for buildListHtml()
+            // CLEANUP:
+            // Candidate for buildListHtml()
 
-// CLEANUP:
-// Same pattern as directories.
+            // CLEANUP:
+            // Same pattern as directories.
 
             let notesHtml = "";
 
@@ -1634,9 +1641,9 @@ ${index + 1}. ${note}<br><br>
             return;
         }
 
-// ========================================
-// SHOW QUESTIONS
-// ========================================
+        // ========================================
+        // SHOW QUESTIONS
+        // ========================================
 
         if (
             activeJourney &&
@@ -1662,9 +1669,9 @@ ${index + 1}. ${note}<br><br>
                 return;
             }
 
-// CLEANUP:
-// Same pattern as Show Notes
-// and Show Directories.
+            // CLEANUP:
+            // Same pattern as Show Notes
+            // and Show Directories.
 
             let questionsHtml = "";
 
@@ -1688,9 +1695,9 @@ ${index + 1}. ${question}<br><br>
             return;
         }
 
-// ========================================
-// SHOW MEDICATIONS
-// ========================================
+        // ========================================
+        // SHOW MEDICATIONS
+        // ========================================
 
         if (
             activeJourney &&
@@ -1716,8 +1723,8 @@ ${index + 1}. ${question}<br><br>
                 return;
             }
 
-// CLEANUP:
-// Same pattern as Show Questions.
+            // CLEANUP:
+            // Same pattern as Show Questions.
 
             let medicationsHtml = "";
 
@@ -1741,9 +1748,9 @@ ${index + 1}. ${medication}<br><br>
             return;
         }
 
-// ========================================
-// SHOW APPOINTMENTS
-// ========================================
+        // ========================================
+        // SHOW APPOINTMENTS
+        // ========================================
 
         if (
             activeJourney &&
@@ -1769,9 +1776,9 @@ ${index + 1}. ${medication}<br><br>
                 return;
             }
 
-// CLEANUP:
-// Same pattern as Notes,
-// Questions, Medications.
+            // CLEANUP:
+            // Same pattern as Notes,
+            // Questions, Medications.
 
             let appointmentsHtml = "";
 
@@ -1795,9 +1802,9 @@ ${index + 1}. ${appointment}<br><br>
             return;
         }
 
-// ========================================
-// SHOW INSTRUCTIONS
-// ========================================
+        // ========================================
+        // SHOW INSTRUCTIONS
+        // ========================================
 
         if (
             activeJourney &&
@@ -1822,8 +1829,8 @@ ${index + 1}. ${appointment}<br><br>
 
                 return;
             }
-// CLEANUP:
-// Same pattern as Appointments.
+            // CLEANUP:
+            // Same pattern as Appointments.
             let instructionsHtml = "";
 
             activeJourney.staffInstructions.forEach((instruction, index) => {
@@ -1845,9 +1852,9 @@ ${index + 1}. ${instruction}<br><br>
 
             return;
         }
-// ========================================
-// ARRIVAL RECALL SHORTCUTS
-// ========================================
+        // ========================================
+        // ARRIVAL RECALL SHORTCUTS
+        // ========================================
         if (
 
             recallQuestion.includes("i arrived") ||
@@ -1864,13 +1871,13 @@ ${index + 1}. ${instruction}<br><br>
 
             return;
         }
-// ========================================
-// PARKING & VEHICLE RECALL
-// ========================================
+        // ========================================
+        // PARKING & VEHICLE RECALL
+        // ========================================
 
-// CLEANUP:
-// Large recall block.
-// Candidate for parkingRecallTerms[]
+        // CLEANUP:
+        // Large recall block.
+        // Candidate for parkingRecallTerms[]
 
         if (
             recallQuestion.includes("where did i park") ||
@@ -1957,12 +1964,12 @@ ${index + 1}. ${instruction}<br><br>
             return;
         }
 
-// ========================================
-// RETURN TO START LOCATION
-// ========================================
+        // ========================================
+        // RETURN TO START LOCATION
+        // ========================================
 
-// CLEANUP:
-// Candidate for navigationRecallTerms[]
+        // CLEANUP:
+        // Candidate for navigationRecallTerms[]
 
         if (
             recallQuestion.includes("take me back") ||
@@ -2024,13 +2031,13 @@ ${index + 1}. ${instruction}<br><br>
 
                 return;
             }
-// ========================================
-// RETURN TO START LOCATION
-// ========================================
+            // ========================================
+            // RETURN TO START LOCATION
+            // ========================================
 
-// CLEANUP:
-// Similar pattern to Parking Recall.
-// Candidate for showLocationCard().
+            // CLEANUP:
+            // Similar pattern to Parking Recall.
+            // Candidate for showLocationCard().
 
             if (activeJourney?.startLocation) {
 
@@ -2073,17 +2080,17 @@ Can I help you get back there?
 
             return;
         }
-// ========================================
-// AUTOMATIC DIRECTORY DETECTION
-// ========================================
+        // ========================================
+        // AUTOMATIC DIRECTORY DETECTION
+        // ========================================
 
-// REVIEW:
-// May need expansion:
-// office
-// room
-// suite
-// floor
-// building
+        // REVIEW:
+        // May need expansion:
+        // office
+        // room
+        // suite
+        // floor
+        // building
         if (
             activeJourney &&
 
@@ -2107,7 +2114,13 @@ Can I help you get back there?
                 noteQuestion.includes("elevator") ||
                 noteQuestion.includes("directory") ||
                 noteQuestion.includes("check-in") ||
-                noteQuestion.includes("reception")
+                noteQuestion.includes("reception") ||
+                lowerQuestion.includes("office") ||
+                lowerQuestion.includes("room") ||
+                lowerQuestion.includes("suite") ||
+                lowerQuestion.includes("floor") ||
+                lowerQuestion.includes("unit") ||
+                lowerQuestion.includes("building")
             )
         ) {
 
@@ -2157,21 +2170,21 @@ Can I help you get back there?
 
             return;
         }
-// ========================================
-// PARKING LOCATION DETECTION
-// ========================================
+        // ========================================
+        // PARKING LOCATION DETECTION
+        // ========================================
 
-// CLEANUP:
-// Could reuse lowerQuestion
-// instead of parkingQuestion.
+        // CLEANUP:
+        // Could reuse lowerQuestion
+        // instead of parkingQuestion.
 
-// REVIEW:
-// Duplicate checks found:
-// i parked
-// my car is parked
-// my vehicle is parked
+        // REVIEW:
+        // Duplicate checks found:
+        // i parked
+        // my car is parked
+        // my vehicle is parked
 
-        const parkingQuestion = question.toLowerCase();
+        const parkingQuestion = lowerQuestion;
 
         if (
             parkingQuestion.startsWith("parking location:") ||
@@ -2206,13 +2219,13 @@ Can I help you get back there?
             parkingQuestion.includes("by the stairs") ||
             parkingQuestion.includes("parking structure")
         ) {
-// ========================================
-// LOCATION CLASSIFICATION
-// ========================================
+            // ========================================
+            // LOCATION CLASSIFICATION
+            // ========================================
 
-// CLEANUP:
-// Long replace chain.
-// Candidate for cleanLocationText()
+            // CLEANUP:
+            // Long replace chain.
+            // Candidate for cleanLocationText()
 
             if (activeJourney) {
                 pendingLocationClassification = question
@@ -2273,16 +2286,16 @@ Can I help you get back there?
             }
         }
 
-// ========================================
-// DESTINATION UPDATE DETECTION
-// ========================================
+        // ========================================
+        // DESTINATION UPDATE DETECTION
+        // ========================================
 
-// CLEANUP:
-// Could reuse lowerQuestion
-// instead of destinationUpdate.
+        // CLEANUP:
+        // Could reuse lowerQuestion
+        // instead of destinationUpdate.
 
         const destinationUpdate =
-            question.toLowerCase();
+            lowerQuestion;
 
         if (
             activeJourney &&
@@ -2322,19 +2335,19 @@ Can I help you get back there?
             return;
         }
 
-// ========================================
-// SEARCH & NAVIGATION REQUESTS
-// ========================================
+        // ========================================
+        // SEARCH & NAVIGATION REQUESTS
+        // ========================================
 
-// CLEANUP:
-// Could reuse lowerQuestion
-// instead of navigationSearch.
+        // CLEANUP:
+        // Could reuse lowerQuestion
+        // instead of navigationSearch.
 
-// FUTURE REFACTOR:
-// Replace with lowerQuestion
+        // FUTURE REFACTOR:
+        // Replace with lowerQuestion
 
         const navigationSearch =
-            question.toLowerCase();
+            lowerQuestion;
 
 
         if (
@@ -2374,9 +2387,9 @@ Can I help you get back there?
 
         ) {
 
-// ========================================
-// SEARCH QUERY CLEANUP
-// ========================================
+            // ========================================
+            // SEARCH QUERY CLEANUP
+            // ========================================
 
             const cleanedSearch =
                 question
@@ -2386,17 +2399,17 @@ Can I help you get back there?
                     )
                     .trim();
 
-// ========================================
-// INFORMATION SEARCH DETECTION
-// ========================================
+            // ========================================
+            // INFORMATION SEARCH DETECTION
+            // ========================================
 
-// REVIEW:
-// Hospital directory searches:
-// hematology
-// radiology
-// oncology
-// admissions
-// financial aid
+            // REVIEW:
+            // Hospital directory searches:
+            // hematology
+            // radiology
+            // oncology
+            // admissions
+            // financial aid
 
             const isInformationSearch =
 
@@ -2443,9 +2456,9 @@ Can I help you get back there?
 
                 const searchData =
                     await searchResponse.json();
-// CLEANUP:
-// Duplicate search cleanup logic.
-// Similar to cleanedSearch above.
+                // CLEANUP:
+                // Duplicate search cleanup logic.
+                // Similar to cleanedSearch above.
 
                 pendingDestinationSearch =
                     question
@@ -2455,9 +2468,9 @@ Can I help you get back there?
                         )
                         .trim();
 
-// ========================================
-// INFORMATION SEARCH UI
-// ========================================
+                // ========================================
+                // INFORMATION SEARCH UI
+                // ========================================
 
                 result.innerHTML = `
 <div class="card">
@@ -2522,9 +2535,9 @@ Chico, CA
 
                 return;
             }
-// ========================================
-// VERIFIED MAP SEARCH
-// ========================================
+            // ========================================
+            // VERIFIED MAP SEARCH
+            // ========================================
             if (
                 questionInfo.mentionsParking
             ) {
@@ -2569,9 +2582,9 @@ Chico, CA
 `;
             return;
         }
-// ========================================
-// DESTINATION NAVIGATION SHORTCUT
-// ========================================
+        // ========================================
+        // DESTINATION NAVIGATION SHORTCUT
+        // ========================================
         if (
             activeJourney?.destinationAddress &&
             (
@@ -2605,9 +2618,9 @@ Chico, CA
 
             return;
         }
-// ========================================
-// AI FALLBACK RESPONSE
-// ========================================
+        // ========================================
+        // AI FALLBACK RESPONSE
+        // ========================================
         const response = await fetch("/api/askOurFlow", {
             method: "POST",
             headers: {
@@ -2640,9 +2653,9 @@ Chico, CA
         });
 
         const data = await response.json();
-// ========================================
-// ANSWER HISTORY STORAGE
-// ========================================
+        // ========================================
+        // ANSWER HISTORY STORAGE
+        // ========================================
         if (
             activeJourney &&
             !isMemoryCommand &&
@@ -2658,9 +2671,9 @@ Chico, CA
     ${data.answer}
 </div>
 `;
-// ========================================
-// ERROR HANDLING
-// ========================================
+        // ========================================
+        // ERROR HANDLING
+        // ========================================
     } catch (error) {
 
         console.error(error);
