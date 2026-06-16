@@ -149,7 +149,9 @@ How should I save this?
             looksLikeAddress
         )
     ) {
-
+// ========================================
+// BLANK JOURNEY CREATION
+// ========================================
         activeJourney = {
 
             destination:
@@ -296,7 +298,9 @@ How should I save this?
                 .replace(/traveling to /i, "")
                 .replace(/travelling to /i, "")
                 .trim();
-
+// ========================================
+// DESTINATION JOURNEY CREATION
+// ========================================
             activeJourney = {
 
                 destination:
@@ -1178,7 +1182,11 @@ Ready to save?
                 noteQuestion.startsWith("need to ")
             )
         ) {
-
+// ========================================
+// NOTE SAVE HANDLER
+// FUTURE REFACTOR:
+// Candidate for saveJourneyItem()
+// ========================================
             activeJourney.notes.push(question);
 
             activeJourney.timeline.push(
@@ -1216,7 +1224,11 @@ Ready to save?
             const note = question
                 .replace(/save note:/i, "")
                 .trim();
-
+// ========================================
+// NOTE SAVE HANDLER
+// FUTURE REFACTOR:
+// Candidate for saveJourneyItem()
+// ========================================
             activeJourney.notes.push(note);
 
             activeJourney.timeline.push(
@@ -1403,7 +1415,11 @@ Ready to save?
             const appointment = question
                 .replace(/save appointment:/i, "")
                 .trim();
-
+// ========================================
+// APPOINTMENT SAVE HANDLER
+// FUTURE REFACTOR:
+// Candidate for saveJourneyItem()
+// ========================================
             activeJourney.appointments.push(
                 appointment
             );
@@ -1463,7 +1479,11 @@ Ready to save?
             const instruction = question
                 .replace(/save instruction:/i, "")
                 .trim();
-
+// ========================================
+// INSTRUCTION SAVE HANDLER
+// FUTURE REFACTOR:
+// Candidate for saveJourneyItem()
+// ========================================
             activeJourney.staffInstructions.push(
                 instruction
             );
