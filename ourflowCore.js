@@ -1149,17 +1149,11 @@ Ready to save?
                 || noteQuestion.startsWith("contact us if ")
             )
         ) {
-
-            activeJourney.staffInstructions.push(
-                question
+            saveJourneyItem(
+                "staffInstructions",
+                question,
+                "👩‍⚕️ Instruction Saved: "
             );
-
-            activeJourney.timeline.push(
-                "👩‍⚕️ Instruction Saved: " +
-                question
-            );
-
-            showActiveJourneyBox();
 
 
             result.innerHTML = `
