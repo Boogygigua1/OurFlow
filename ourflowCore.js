@@ -23,6 +23,46 @@ function saveJourneyItem(
 
     showActiveJourneyBox();
 }
+
+function showJourneyList(
+    title,
+    items
+) {
+
+    if (items.length === 0) {
+
+        result.innerHTML = `
+<div class="card">
+    <strong>${title}</strong>
+
+    <br><br>
+
+    No items saved for this journey yet.
+</div>
+`;
+
+        return;
+    }
+
+    let listHtml = "";
+
+    items.forEach((item, index) => {
+
+        listHtml += `
+${index + 1}. ${item}<br><br>
+`;
+    });
+
+    result.innerHTML = `
+<div class="card">
+    <strong>${title}</strong>
+
+    <br><br>
+
+    ${listHtml}
+</div>
+`;
+}
 // ========================================
 // ASK OURFLOW ENTRY POINT
 // ========================================
@@ -1788,24 +1828,10 @@ ${index + 1}. ${medication}<br><br>
             // Same pattern as Notes,
             // Questions, Medications.
 
-            let appointmentsHtml = "";
-
-            activeJourney.appointments.forEach((appointment, index) => {
-
-                appointmentsHtml += `
-${index + 1}. ${appointment}<br><br>
-`;
-            });
-
-            result.innerHTML = `
-<div class="card">
-    <strong>📅 Appointments</strong>
-
-    <br><br>
-
-    ${appointmentsHtml}
-</div>
-`;
+            showJourneyList(
+                "📅 Appointments",
+                activeJourney.appointments
+            );
 
             return;
         }
