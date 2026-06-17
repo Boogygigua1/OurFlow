@@ -1760,8 +1760,12 @@ ${index + 1}. ${medication}<br><br>
             activeJourney &&
             (
                 noteQuestion === "show my appointments" ||
-                noteQuestion === "show appointments" ||
-                noteQuestion === "what appointments do i have"
+                noteQuestion === "what appointments do i have" ||
+                noteQuestion === "when are my appointments" ||
+                noteQuestion === "what are my appointments" ||
+                noteQuestion === "do i have any appointments" ||
+                noteQuestion === "what appointments do i have" ||
+                noteQuestion === "show appointments"
             )
         ) {
 
