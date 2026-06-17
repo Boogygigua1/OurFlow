@@ -1041,16 +1041,11 @@ Ready to save?
             )
         ) {
 
-            activeJourney.questionsForDoctor.push(
-                question
+            saveJourneyItem(
+                "questionsForDoctor",
+                question,
+                "❓ Question Saved: "
             );
-
-            activeJourney.timeline.push(
-                "❓ Question Saved: " +
-                question
-            );
-
-            showActiveJourneyBox();
 
 
             result.innerHTML = `
