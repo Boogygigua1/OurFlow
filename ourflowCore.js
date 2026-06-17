@@ -1756,6 +1756,9 @@ Ready to save?
                 noteQuestion === "what are my appointments" ||
                 noteQuestion === "do i have any appointments" ||
                 noteQuestion === "what appointments do i have" ||
+                noteQuestion === "where is my appointment" ||
+                noteQuestion === "where's my appointment" ||
+                noteQuestion === "where are my appointments" ||
                 noteQuestion === "show appointments"
             )
         ) {
