@@ -708,6 +708,13 @@ Ready to save?
                 lowerQuestion.includes("gas station") ||
                 lowerQuestion.includes("hotel") ||
 
+                lowerQuestion === "when are my appointments" ||
+                lowerQuestion === "when is my next appointment" ||
+                lowerQuestion === "what is my next appointment" ||
+                lowerQuestion === "what's my next appointment" ||
+                lowerQuestion === "do i have any appointments" ||
+                lowerQuestion === "what appointments do i have" ||
+
                 (
                     lowerQuestion.includes("hospital")
                     &&
