@@ -1607,24 +1607,10 @@ Ready to save?
             // CLEANUP:
             // Candidate for buildListHtml()
 
-            let directoriesHtml = "";
-
-            activeJourney.directories.forEach((directory, index) => {
-
-                directoriesHtml += `
-${index + 1}. ${directory}<br><br>
-`;
-            });
-
-            result.innerHTML = `
-<div class="card">
-    <strong>🏢 Saved Directory Information</strong>
-
-    <br><br>
-
-    ${directoriesHtml}
-</div>
-`;
+            showJourneyList(
+                "🏢 Saved Directory Information",
+                activeJourney.directories
+            );
 
             return;
         }
@@ -1663,24 +1649,10 @@ ${index + 1}. ${directory}<br><br>
             // CLEANUP:
             // Same pattern as directories.
 
-            let notesHtml = "";
-
-            activeJourney.notes.forEach((note, index) => {
-
-                notesHtml += `
-${index + 1}. ${note}<br><br>
-`;
-            });
-
-            result.innerHTML = `
-<div class="card">
-    <strong>📝 Notes</strong>
-
-    <br><br>
-
-    ${notesHtml}
-</div>
-`;
+            showJourneyList(
+                "📝 Notes",
+                activeJourney.notes
+            );
 
             return;
         }
@@ -1717,24 +1689,10 @@ ${index + 1}. ${note}<br><br>
             // Same pattern as Show Notes
             // and Show Directories.
 
-            let questionsHtml = "";
-
-            activeJourney.questionsForDoctor.forEach((question, index) => {
-
-                questionsHtml += `
-${index + 1}. ${question}<br><br>
-`;
-            });
-
-            result.innerHTML = `
-<div class="card">
-    <strong>❓ Saved Questions</strong>
-
-    <br><br>
-
-    ${questionsHtml}
-</div>
-`;
+            showJourneyList(
+                "❓ Questions",
+                activeJourney.questionsForDoctor
+            );
 
             return;
         }
@@ -1770,24 +1728,10 @@ ${index + 1}. ${question}<br><br>
             // CLEANUP:
             // Same pattern as Show Questions.
 
-            let medicationsHtml = "";
-
-            activeJourney.medications.forEach((medication, index) => {
-
-                medicationsHtml += `
-${index + 1}. ${medication}<br><br>
-`;
-            });
-
-            result.innerHTML = `
-<div class="card">
-    <strong>💊 Medications</strong>
-
-    <br><br>
-
-    ${medicationsHtml}
-</div>
-`;
+            showJourneyList(
+                "💊 Medications",
+                activeJourney.medications
+            );
 
             return;
         }
@@ -1865,24 +1809,10 @@ ${index + 1}. ${medication}<br><br>
             }
             // CLEANUP:
             // Same pattern as Appointments.
-            let instructionsHtml = "";
-
-            activeJourney.staffInstructions.forEach((instruction, index) => {
-
-                instructionsHtml += `
-${index + 1}. ${instruction}<br><br>
-`;
-            });
-
-            result.innerHTML = `
-<div class="card">
-    <strong>👩‍⚕️ Instructions</strong>
-
-    <br><br>
-
-    ${instructionsHtml}
-</div>
-`;
+            showJourneyList(
+                "👩‍⚕️ Instructions",
+                activeJourney.staffInstructions
+            );
 
             return;
         }
