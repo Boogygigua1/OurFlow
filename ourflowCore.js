@@ -1091,16 +1091,11 @@ Ready to save?
             )
         ) {
 
-            activeJourney.medications.push(
-                question
+            saveJourneyItem(
+                "medications",
+                question,
+                "💊 Medication Saved: "
             );
-
-            activeJourney.timeline.push(
-                "💊 Medication Saved: " +
-                question
-            );
-
-            showActiveJourneyBox();
 
 
             result.innerHTML = `
@@ -1195,13 +1190,11 @@ Ready to save?
             // FUTURE REFACTOR:
             // Candidate for saveJourneyItem()
             // ========================================
-            activeJourney.notes.push(question);
-
-            activeJourney.timeline.push(
-                "📝 Note Saved: " + question
+            saveJourneyItem(
+                "notes",
+                question,
+                "📝 Note Saved: "
             );
-
-            showActiveJourneyBox();
 
             result.innerHTML = `
 <div class="card">
@@ -1237,13 +1230,11 @@ Ready to save?
             // FUTURE REFACTOR:
             // Candidate for saveJourneyItem()
             // ========================================
-            activeJourney.notes.push(note);
-
-            activeJourney.timeline.push(
-                "📝 Note Saved: " + note
+            saveJourneyItem(
+                "notes",
+                note,
+                "📝 Note Saved: "
             );
-
-            showActiveJourneyBox();
 
             result.innerHTML = `
 <div class="card">
@@ -2163,14 +2154,11 @@ Can I help you get back there?
                 return;
             }
 
-            activeJourney.directories.push(question);
-
-            activeJourney.timeline.push(
-                "🏢 Directory Saved: " +
-                question
+            saveJourneyItem(
+                "directories",
+                question,
+                "🏢 Directory Saved: "
             );
-
-            showActiveJourneyBox();
 
             result.innerHTML = `
 <div class="card">
