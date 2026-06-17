@@ -1429,16 +1429,16 @@ Ready to save?
             const appointment = question
                 .replace(/save appointment:/i, "")
                 .trim();
-// ========================================
-// APPOINTMENT SAVE HANDLER
-// FUTURE REFACTOR:
-// Candidate for saveJourneyItem()
-// ========================================
-saveJourneyItem(
-    "appointments",
-    appointment,
-    "📅 Appointment Saved: "
-);
+            // ========================================
+            // APPOINTMENT SAVE HANDLER
+            // FUTURE REFACTOR:
+            // Candidate for saveJourneyItem()
+            // ========================================
+            saveJourneyItem(
+                "appointments",
+                appointment,
+                "📅 Appointment Saved: "
+            );
 
             result.innerHTML = `
 <div class="card">
@@ -1493,16 +1493,11 @@ saveJourneyItem(
             // FUTURE REFACTOR:
             // Candidate for saveJourneyItem()
             // ========================================
-            activeJourney.staffInstructions.push(
-                instruction
+            saveJourneyItem(
+                "staffInstructions",
+                instruction,
+                "👩‍⚕️ Instruction Saved: "
             );
-
-            activeJourney.timeline.push(
-                "👩‍⚕️ Instruction Saved: " +
-                instruction
-            );
-
-            showActiveJourneyBox();
 
             result.innerHTML = `
 <div class="card">
