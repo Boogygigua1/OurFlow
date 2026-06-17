@@ -904,7 +904,8 @@ Ready to save?
             if (
                 !isMemoryCommand &&
                 !isUtilityQuestion &&
-                !isDirectoryEntry
+                !isDirectoryEntry &&
+                !lowerQuestion.includes("appointment")
             ) {
 
                 activeJourney.questions.push(question);
