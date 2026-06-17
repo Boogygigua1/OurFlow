@@ -1434,11 +1434,11 @@ Ready to save?
 // FUTURE REFACTOR:
 // Candidate for saveJourneyItem()
 // ========================================
-            saveJourneyItem(
-                "appointments",
-                appointment,
-                "📅 Appointment Saved: "
-            );
+saveJourneyItem(
+    "appointments",
+    appointment,
+    "📅 Appointment Saved: "
+);
 
             result.innerHTML = `
 <div class="card">
