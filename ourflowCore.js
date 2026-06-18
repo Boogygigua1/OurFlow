@@ -836,6 +836,7 @@ Ready to save?
             noteQuestion.startsWith("i take ") ||
             noteQuestion.startsWith("i'm taking") ||
             noteQuestion.startsWith("im taking") ||
+            noteQuestion.startsWith("i am taking") ||
 
             isDirectoryPhrase(noteQuestion) ||
 
@@ -1038,6 +1039,7 @@ Ready to save?
                 noteQuestion.startsWith("i need to take ") ||
                 noteQuestion.startsWith("need to take ") ||
                 noteQuestion.startsWith("i take ") ||
+                noteQuestion.startsWith("i am taking ") ||
                 noteQuestion.startsWith("i'm taking ") ||
                 noteQuestion.startsWith("im taking ")
             )

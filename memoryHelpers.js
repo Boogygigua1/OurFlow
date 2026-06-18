@@ -649,3 +649,32 @@ function isNotePhrase(question) {
         text.startsWith("note to self ")
     );
 }
+
+function isMedicationPhrase(question) {
+
+    const text =
+        question.toLowerCase().trim();
+
+    return (
+
+        text.startsWith("taking ") ||
+
+        text.startsWith("started ") ||
+
+        text.startsWith("using ") ||
+
+        text.startsWith("prescribed ") ||
+
+        text.startsWith("i need to take ") ||
+
+        text.startsWith("need to take ") ||
+
+        text.startsWith("i take ") ||
+
+        text.startsWith("i'm taking ") ||
+
+        text.startsWith("im taking ") ||
+
+        text.startsWith("i am taking ")
+    );
+}
