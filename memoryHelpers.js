@@ -106,7 +106,20 @@ function isAppointmentRecall(question) {
         "list my appointment",
 
         "when is my appointment",
-        "show my appointments"
+        "show my appointments",
+        "did i save any appointments",
+
+        "did i save any appointment",
+
+        "what appointments do i have",
+
+        "what appointment do i have",
+
+        "what is my appointment",
+
+        "what was my appointment",
+
+        "tell me my appointments"
     ];
 
     const text = question
@@ -201,28 +214,45 @@ function isInstructionRecall(question) {
             .replace(/[?.!,]/g, "")
             .trim();
 
-    const instructionRecallPhrases = [
+   const instructionRecallPhrases = [
 
-        "show my instructions",
-        "show instructions",
-        "show me my instructions",
+    "show my instructions",
+    "show instructions",
 
-        "what instructions do i have",
-        "what instruction do i have",
+    "show me my instructions",
 
-        "what are my instructions",
-        "what is my instruction",
+    "give me my instructions",
 
-        "do i have any instructions",
+    "what instructions do i have",
+    "what instruction do i have",
 
-        "list my instructions",
+    "what are my instructions",
+    "what is my instruction",
 
-        "read my instructions",
+    "do i have any instructions",
 
-        "tell me my instructions",
+    "list my instructions",
 
-        "give me my instructions"
-    ];
+    "read my instructions",
+
+    "tell me my instructions",
+
+    "did i save any instructions",
+
+    "what was i supposed to remember",
+
+    "what did they tell me to do",
+
+    "what was i supposed to bring",
+
+    "what did i need to remember",
+
+    "what do i need to remember",
+
+    "show me my reminders",
+
+    "what reminders do i have"
+];
 
     return instructionRecallPhrases.includes(text);
 }
@@ -237,31 +267,43 @@ function isNoteRecall(question) {
 
     const noteRecallPhrases = [
 
-        "show my notes",
-        "show notes",
+    "show my notes",
+    "show notes",
 
-        "what notes do i have",
+    "show me my notes",
 
-        "what are my notes",
+    "give me my notes",
 
-        "do i have any notes",
+    "what notes do i have",
 
-        "list my notes",
+    "what are my notes",
 
-        "show me my notes",
+    "do i have any notes",
 
-        "give me my notes",
+    "list my notes",
 
-        "show my note",
+    "tell me my notes",
 
-        "what is my note",
+    "show my note",
 
-        "tell me my note",
+    "what is my note",
 
-        "list my note",
+    "tell me my note",
 
-        "tell me my notes"
-    ];
+    "list my note",
+
+    "did i save any notes",
+
+    "did i write anything down",
+
+    "what did i write down",
+
+    "what did i note",
+
+    "what notes did i save",
+
+    "what was in my notes"
+];
 
     return noteRecallPhrases.includes(text);
 }
@@ -276,34 +318,47 @@ function isQuestionRecall(question) {
 
     const questionRecallPhrases = [
 
-        "show my questions",
-        "show questions",
+    "show my questions",
+    "show questions",
 
-        "what questions do i have",
+    "show me my questions",
 
-        "what are my questions",
+    "give me my questions",
 
-        "do i have any questions",
+    "what questions do i have",
 
-        "list my questions",
+    "what are my questions",
 
-        "read my questions",
+    "do i have any questions",
 
-        "show me my questions",
+    "list my questions",
 
-        "give me my questions",
+    "read my questions",
 
-        "show my question",
+    "tell me my questions",
 
-        "what is my question",
+    "show my question",
 
-        "tell me my question",
+    "what is my question",
 
-        "list my question",
+    "tell me my question",
 
-        "tell me my questions"
-    ];
+    "list my question",
 
+    "did i save any questions",
+
+    "what did i need to ask",
+
+    "what was i going to ask",
+
+    "what did i want to ask",
+
+    "what was i supposed to ask",
+
+    "what questions did i save",
+
+    "show me the questions i saved"
+];
     return questionRecallPhrases.includes(text);
 }
 
@@ -339,41 +394,57 @@ function isMedicationRecall(question) {
 
     const medicationRecallPhrases = [
 
-        "show my medications",
-        "show medications",
+    "show my medications",
+    "show medications",
 
-        "what medications do i have",
+    "show me my medications",
 
-        "what are my medications",
+    "give me my medications",
 
-        "do i have any medications",
+    "show my medication",
 
-        "list my medications",
+    "show me my medication",
 
-        "read my medications",
+    "show my meds",
 
-        "show me my medications",
+    "show me my meds",
 
-        "give me my medications",
+    "what medications do i have",
 
-        "show my medication",
+    "what are my medications",
 
-        "show me my medication",
+    "what is my medication",
 
-        "what is my medication",
+    "what medications am i taking",
 
-        "what medications am i taking",
+    "what medication am i taking",
 
-        "what medication am i taking",
+    "what meds am i taking",
 
-        "what meds am i taking",
+    "do i have any medications",
 
-        "show my meds",
+    "list my medications",
 
-        "show me my meds",
+    "read my medications",
 
-        "tell me my medications"
-    ];
+    "tell me my medications",
+
+    "did i save any medications",
+
+    "did i save any medication",
+
+    "what medications did i save",
+
+    "what meds did i save",
+
+    "what medicine am i taking",
+
+    "what medicines am i taking",
+
+    "do i take any medications",
+
+    "am i taking any medications"
+];
 
     return medicationRecallPhrases.includes(text);
 }
@@ -386,34 +457,50 @@ function isDirectoryRecall(question) {
             .replace(/[?.!,]/g, "")
             .trim();
 
-    const directoryRecallPhrases = [
+   const directoryRecallPhrases = [
 
-        "show directories",
+    "show directories",
 
-        "show my directories",
+    "show my directories",
 
-        "show me my directories",
+    "show me my directories",
 
-        "give me my directory",
+    "give me my directory",
 
-        "give me my directories",
+    "give me my directories",
 
-        "what directories do i have",
+    "what directories do i have",
 
-        "what are my directories",
+    "what are my directories",
 
-        "what is my directory",
+    "what is my directory",
 
-        "do i have any directories",
+    "do i have any directories",
 
-        "list my directories",
+    "list my directories",
 
-        "read my directories",
+    "read my directories",
 
-        "tell me my directory",
+    "tell me my directory",
 
-        "tell me my directories"
-    ];
+    "tell me my directories",
+
+    "did i save any directories",
+
+    "did i save any directory information",
+
+    "what directory information do i have",
+
+    "what room was i looking for",
+
+    "what office was i looking for",
+
+    "what department was i looking for",
+
+    "what locations did i save",
+
+    "what buildings did i save"
+];
 
     return directoryRecallPhrases.includes(text);
 }
