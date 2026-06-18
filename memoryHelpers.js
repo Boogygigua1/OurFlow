@@ -100,8 +100,13 @@ function isAppointmentRecall(question) {
         "show my appointments"
     ];
 
+    const text = question
+        .toLowerCase()
+        .replace(/[?.!]/g, "")
+        .trim();
+
     return appointmentRecallPhrases.includes(
-        question.toLowerCase().trim()
+        text
     );
 }
 
