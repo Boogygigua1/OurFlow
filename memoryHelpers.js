@@ -585,3 +585,30 @@ function isParkingMemoryCommand(question) {
 
     );
 }
+
+function isAppointmentPhrase(question) {
+
+    const text =
+        question.toLowerCase().trim();
+
+    return (
+
+        text.startsWith("i have an appointment") ||
+
+        text.startsWith("my appointment") ||
+
+        text.startsWith("appointment at") ||
+
+        text.startsWith("meeting with") ||
+
+        text.startsWith("i'm meeting") ||
+
+        text.startsWith("im meeting") ||
+
+        text.startsWith("i am meeting") ||
+
+        text.includes("appointment") ||
+
+        text.includes("meeting")
+    );
+}

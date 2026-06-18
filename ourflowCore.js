@@ -685,6 +685,8 @@ Ready to save?
 
             isParkingRecall(lowerQuestion) ||
 
+            isAppointmentPhrase(lowerQuestion) ||
+
             lowerQuestion.startsWith("save appointment:") ||
 
             isAppointmentRecall(lowerQuestion) ||
@@ -706,6 +708,8 @@ Ready to save?
             isQuestionRecall(lowerQuestion) ||
 
             isMedicationRecall(lowerQuestion) ||
+
+            isAppointmentPhrase(lowerQuestion) ||
 
             isParkingMemoryCommand(lowerQuestion);
 
