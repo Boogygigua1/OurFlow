@@ -70,11 +70,6 @@ ${index + 1}. ${item}<br><br>
 
 function isAppointmentRecall(question) {
 
-    console.log(
-        "Appointment Recall Check:",
-        question
-    );
-
     const appointmentRecallPhrases = [
 
         "when is my next appointment",
@@ -190,7 +185,9 @@ function isInstructionRecall(question) {
 
         text === "show my instructions" ||
         text === "show instructions" ||
-        text === "what instructions do i have"
+        text === "what instructions do i have" ||
+        text === "what are my instructions" ||
+        text === "what is my instruction"
 
     );
 }
