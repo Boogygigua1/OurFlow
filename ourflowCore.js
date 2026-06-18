@@ -1301,10 +1301,10 @@ Ready to save?
         )
 
 
-        console.log(
-            "Starts With I'm Meeting:",
-            noteQuestion.startsWith("i'm meeting")
-        );
+            console.log(
+                "Starts With I'm Meeting:",
+                noteQuestion.startsWith("i'm meeting")
+            );
 
         console.log(
             "noteQuestion raw =",
@@ -1330,6 +1330,10 @@ Ready to save?
                 noteQuestion.startsWith("my appointment") ||
                 noteQuestion.startsWith("appointment at") ||
                 noteQuestion.startsWith("meeting with")
+
+                || noteQuestion.startsWith("i'm meeting")
+                || noteQuestion.startsWith("im meeting")
+                || noteQuestion.startsWith("i am meeting")
             )
         ) {
 
