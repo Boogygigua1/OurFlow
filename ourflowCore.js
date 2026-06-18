@@ -1599,6 +1599,10 @@ Ready to save?
             isInstructionRecall(noteQuestion)
         ) {
 
+            console.log(
+                "ENTERED SHOW INSTRUCTIONS"
+            );
+
             if (activeJourney.staffInstructions.length === 0) {
 
                 result.innerHTML = `
