@@ -108,7 +108,10 @@ function isAppointmentRecall(question) {
 function isQuestionWord(question) {
 
     const text =
-        question.toLowerCase().trim();
+        question
+            .toLowerCase()
+            .replace(/[?.!]/g, "")
+            .trim();
 
     return (
 
