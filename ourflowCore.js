@@ -802,6 +802,11 @@ Ready to save?
 
         const noteQuestion = lowerQuestion;
 
+        console.log(
+            "activeJourney =",
+            activeJourney
+        );
+
         // ========================================
         // DESTINATION DETAIL SAVE
         // ========================================
