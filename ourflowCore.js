@@ -647,6 +647,8 @@ Ready to save?
                 (
                     lowerQuestion.includes("hospital")
                     &&
+                    !lowerQuestion.includes("appointment")
+                    &&
                     !lowerQuestion.startsWith("start journey")
                     &&
                     !lowerQuestion.startsWith("start a journey")
