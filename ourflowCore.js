@@ -1284,7 +1284,7 @@ Ready to save?
         // REVIEW:
         // Earlier duplicate appointment block removed.
         // This is now the primary appointment handler.
-        
+
         if (
             activeJourney &&
             (
@@ -1293,11 +1293,10 @@ Ready to save?
                 noteQuestion.startsWith("i have an appointment") ||
                 noteQuestion.startsWith("my appointment") ||
                 noteQuestion.startsWith("appointment at") ||
-                noteQuestion.startsWith("meeting with")
+                noteQuestion.startsWith("meeting with") ||
 
-                || noteQuestion.startsWith("i'm meeting")
-                || noteQuestion.startsWith("im meeting")
-                || noteQuestion.startsWith("i am meeting")
+                noteQuestion.includes("meeting") ||
+                noteQuestion.includes("appointment")
             )
         ) {
 
