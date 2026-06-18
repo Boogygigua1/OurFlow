@@ -802,10 +802,23 @@ Ready to save?
 
         const noteQuestion = lowerQuestion;
 
-        console.log(
-            "activeJourney =",
-            activeJourney
-        );
+ 
+        const looksLikeMemoryEntry =
+            noteQuestion.startsWith("i'm meeting") ||
+            noteQuestion.startsWith("im meeting") ||
+            noteQuestion.startsWith("i am meeting") ||
+
+            isInstructionPhrase(noteQuestion) ||
+
+            noteQuestion.startsWith("taking ") ||
+            noteQuestion.startsWith("i take ") ||
+            noteQuestion.startsWith("i'm taking") ||
+            noteQuestion.startsWith("im taking") ||
+
+            isDirectoryPhrase(noteQuestion) ||
+
+            noteQuestion.startsWith("ask about ") ||
+            noteQuestion.startsWith("ask doctor about ");
 
         // ========================================
         // DESTINATION DETAIL SAVE
@@ -1128,23 +1141,6 @@ Ready to save?
         // ========================================
         // MANUAL MEDICATION SAVE
         // ========================================
-
-        console.log("noteQuestion =", noteQuestion);
-
-        console.log(
-            "appointment recall =",
-            isAppointmentRecall(noteQuestion)
-        );
-
-        console.log(
-            "Instruction Recall:",
-            isInstructionRecall(noteQuestion)
-        );
-
-        console.log(
-            "Directory Recall:",
-            isDirectoryRecall(noteQuestion)
-        );
 
         if (
             activeJourney &&
