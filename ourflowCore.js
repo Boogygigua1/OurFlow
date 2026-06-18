@@ -640,7 +640,9 @@ Ready to save?
                 lowerQuestion.includes("gas station") ||
                 lowerQuestion.includes("hotel") ||
 
-                isAppointmentRecall(lowerQuestion)
+                isAppointmentRecall(lowerQuestion) 
+
+                ||
 
                     (
                         lowerQuestion.includes("hospital")
