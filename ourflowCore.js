@@ -1301,10 +1301,15 @@ Ready to save?
         )
 
 
-            console.log(
-                "Starts With I'm Meeting:",
-                noteQuestion.startsWith("i'm meeting")
-            );
+        console.log(
+            "Starts With I'm Meeting:",
+            noteQuestion.startsWith("i'm meeting")
+        );
+
+        console.log(
+            "noteQuestion raw =",
+            noteQuestion
+        );
 
         console.log(
             "Starts With Im Meeting:",
@@ -1315,7 +1320,7 @@ Ready to save?
             "Starts With I Am Meeting:",
             noteQuestion.startsWith("i am meeting")
         );
-        
+
         if (
             activeJourney &&
             (
