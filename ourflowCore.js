@@ -1,149 +1,4 @@
-function showCard(title, body) {
-    document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>${title}</strong>
-    <br><br>
-    ${body}
-</div>
-`;
-}
 
-function saveJourneyItem(
-    arrayName,
-    value,
-    timelineLabel
-) {
-    activeJourney[arrayName].push(
-        value
-    );
-
-    activeJourney.timeline.push(
-        timelineLabel + value
-    );
-
-    showActiveJourneyBox();
-}
-
-function showJourneyList(
-    title,
-    items
-) {
-
-    if (items.length === 0) {
-
-        result.innerHTML = `
-<div class="card">
-    <strong>${title}</strong>
-
-    <br><br>
-
-    No items saved for this journey yet.
-</div>
-`;
-
-        return;
-    }
-
-    let listHtml = "";
-
-    items.forEach((item, index) => {
-
-        listHtml += `
-${index + 1}. ${item}<br><br>
-`;
-    });
-
-    result.innerHTML = `
-<div class="card">
-    <strong>${title}</strong>
-
-    <br><br>
-
-    ${listHtml}
-</div>
-`;
-}
-
-// ========================================
-// QUESTION TYPE HELPERS
-// ========================================
-
-function isAppointmentRecall(question) {
-
-    const appointmentRecallPhrases = [
-
-        "when is my next appointment",
-        "when are my appointments",
-
-        "what is my next appointment",
-        "what's my next appointment",
-
-        "what appointments do i have",
-        "what are my appointments",
-
-        "do i have any appointments",
-
-        "where is my appointment",
-        "where's my appointment",
-
-        "where are my appointments",
-
-        "show appointments",
-        "show my appointments"
-    ];
-
-    return appointmentRecallPhrases.includes(
-        question.toLowerCase().trim()
-    );
-}
-
-function isQuestionWord(question) {
-
-    const text =
-        question.toLowerCase().trim();
-
-    return (
-
-        text.startsWith("where ") ||
-
-        text.startsWith("what ") ||
-
-        text.startsWith("who ") ||
-
-        text.startsWith("when ") ||
-
-        text.startsWith("why ") ||
-
-        text.startsWith("how ")
-
-    );
-}
-
-function isInstructionPhrase(question) {
-
-    const text =
-        question.toLowerCase().trim();
-
-    return (
-
-        text.startsWith("remember to ") ||
-
-        text.startsWith("don't forget ") ||
-
-        text.startsWith("dont forget ") ||
-
-        text.startsWith("make sure to ") ||
-
-        text.startsWith("be sure to ") ||
-
-        text.startsWith("i should ") ||
-
-        text.startsWith("need to remember ") ||
-
-        text.startsWith("i need to remember ")
-
-    );
-}
 // ========================================
 // ASK OURFLOW ENTRY POINT
 // ========================================
@@ -829,29 +684,15 @@ Ready to save?
 
         const isMemoryCommand =
 
-            lowerQuestion.includes("where's my ride") ||
-            lowerQuestion.includes("where is my ride") ||
-            lowerQuestion.includes("find my ride") ||
-
-            lowerQuestion.includes("where's my bike") ||
-            lowerQuestion.includes("where is my bike") ||
-            lowerQuestion.includes("find my bike") ||
-
-            lowerQuestion.includes("where's my car") ||
-            lowerQuestion.includes("where is my car") ||
-            lowerQuestion.includes("find my car") ||
+            isParkingRecall(lowerQuestion) ||
 
             lowerQuestion.startsWith("save appointment:") ||
 
-            lowerQuestion === "show my appointments" ||
-
-            lowerQuestion === "show appointments" ||
+            isAppointmentRecall(lowerQuestion) ||
 
             lowerQuestion.startsWith("save instruction:") ||
 
-            lowerQuestion === "show my instructions" ||
-
-            lowerQuestion === "show instructions" ||
+            isInstructionRecall(lowerQuestion) ||
 
             lowerQuestion.startsWith("save note:") ||
 
@@ -861,97 +702,14 @@ Ready to save?
 
             lowerQuestion.startsWith("save medication:") ||
 
-            lowerQuestion === "show my notes" ||
+            isNoteRecall(lowerQuestion) ||
 
-            lowerQuestion === "show notes" ||
+            isQuestionRecall(lowerQuestion) ||
 
-            lowerQuestion === "show my questions" ||
+            isMedicationRecall(lowerQuestion) ||
 
-            lowerQuestion === "show questions" ||
+            isParkingMemoryCommand(lowerQuestion);
 
-            lowerQuestion === "show my medications" ||
-
-            lowerQuestion === "show medications" ||
-
-            lowerQuestion.includes("i'm parked") ||
-
-            lowerQuestion.includes("im parked") ||
-
-            lowerQuestion.includes("i parked") ||
-
-            lowerQuestion.includes("parked on") ||
-
-            lowerQuestion.includes("parked near") ||
-
-            lowerQuestion.includes("parked at") ||
-
-            lowerQuestion.includes("left my car") ||
-
-            lowerQuestion.includes("i left my car") ||
-
-            lowerQuestion.includes("left my bike") ||
-
-            lowerQuestion.includes("i left my bike") ||
-
-            lowerQuestion.includes("left my bide") ||
-            lowerQuestion.includes("my bide is") ||
-            lowerQuestion.includes("bike is") ||
-            lowerQuestion.includes("bicycle") ||
-
-            lowerQuestion.includes("left my ride") ||
-            lowerQuestion.includes("i left my ride") ||
-            lowerQuestion.includes("my ride is") ||
-            lowerQuestion.includes("where is my ride") ||
-            lowerQuestion.includes("find my ride") ||
-
-            lowerQuestion.includes("where's my ride") ||
-            lowerQuestion.includes("wheres my ride") ||
-
-            lowerQuestion.includes("where's my bike") ||
-            lowerQuestion.includes("wheres my bike") ||
-
-            lowerQuestion.includes("where's my car") ||
-            lowerQuestion.includes("wheres my car") ||
-
-            lowerQuestion.includes("my car is parked") ||
-
-            lowerQuestion.includes("my vehicle is parked") ||
-
-            lowerQuestion.includes("where did i park") ||
-
-            lowerQuestion.includes("where am i parked") ||
-
-            lowerQuestion.includes("where did i start") ||
-
-            lowerQuestion.includes("take me back to where i started") ||
-
-            lowerQuestion.includes("take me back") ||
-            lowerQuestion.includes("go back") ||
-            lowerQuestion.includes("return me") ||
-
-            lowerQuestion.includes("get back there") ||
-            lowerQuestion.includes("help me get back") ||
-            lowerQuestion.includes("get me back") ||
-
-            lowerQuestion.includes("return me to my starting location") ||
-
-            lowerQuestion === "parking" ||
-
-            lowerQuestion === "start" ||
-
-            lowerQuestion === "both" ||
-
-            lowerQuestion === "yes" ||
-            lowerQuestion === "y" ||
-            lowerQuestion === "yeah" ||
-            lowerQuestion === "yep" ||
-            lowerQuestion === "sure" ||
-            lowerQuestion === "ok" ||
-            lowerQuestion === "okay" ||
-            lowerQuestion === "no" ||
-            lowerQuestion === "nope" ||
-
-            lowerQuestion.includes("bike is parked");
 
         // ========================================
         // DIRECTORY ENTRY DETECTION
@@ -960,19 +718,7 @@ Ready to save?
         if (activeJourney) {
 
             const isDirectoryEntry =
-
-                lowerQuestion.includes("department") ||
-                lowerQuestion.includes("hematology") ||
-                lowerQuestion.includes("elevator") ||
-                lowerQuestion.includes("directory") ||
-                lowerQuestion.includes("check-in") ||
-                lowerQuestion.includes("reception") ||
-                lowerQuestion.includes("office") ||
-                lowerQuestion.includes("room") ||
-                lowerQuestion.includes("suite") ||
-                lowerQuestion.includes("floor") ||
-                lowerQuestion.includes("unit") ||
-                lowerQuestion.includes("building");
+                isDirectoryPhrase(lowerQuestion);
 
             // ========================================
             // AUTOMATIC QUESTION CAPTURE
@@ -1575,16 +1321,7 @@ Ready to save?
             activeJourney &&
             (
                 noteQuestion.startsWith("save instruction:") ||
-
-                noteQuestion.startsWith("i should ") ||
-                noteQuestion.startsWith("remember to ") ||
-                noteQuestion.startsWith("don't forget ") ||
-                noteQuestion.startsWith("dont forget ") ||
-                noteQuestion.startsWith("need to remember ") ||
-                noteQuestion.startsWith("i need to remember ") ||
-                noteQuestion.startsWith("make sure to ") ||
-                noteQuestion.startsWith("be sure to ")
-
+                isInstructionPhrase(noteQuestion)
             )
         ) {
 
@@ -1665,11 +1402,7 @@ Ready to save?
 
         if (
             activeJourney &&
-            (
-                noteQuestion === "show directories" ||
-                noteQuestion === "show my directories" ||
-                noteQuestion === "what directories do i have"
-            )
+            isDirectoryRecall(noteQuestion)
         ) {
 
             if (!activeJourney.directories || activeJourney.directories.length === 0) {
@@ -1704,11 +1437,7 @@ Ready to save?
 
         if (
             activeJourney &&
-            (
-                noteQuestion === "show my notes" ||
-                noteQuestion === "show notes" ||
-                noteQuestion === "what notes do i have"
-            )
+            isNoteRecall(noteQuestion)
         ) {
 
             if (activeJourney.notes.length === 0) {
@@ -1746,11 +1475,7 @@ Ready to save?
 
         if (
             activeJourney &&
-            (
-                noteQuestion === "show my questions" ||
-                noteQuestion === "show questions" ||
-                noteQuestion === "what questions do i have"
-            )
+            isQuestionRecall(noteQuestion)
         ) {
 
             if (activeJourney.questionsForDoctor.length === 0) {
@@ -1786,11 +1511,7 @@ Ready to save?
 
         if (
             activeJourney &&
-            (
-                noteQuestion === "show my medications" ||
-                noteQuestion === "show medications" ||
-                noteQuestion === "what medications do i have"
-            )
+            isMedicationRecall(noteQuestion)
         ) {
 
             if (activeJourney.medications.length === 0) {
@@ -1861,11 +1582,7 @@ Ready to save?
 
         if (
             activeJourney &&
-            (
-                noteQuestion === "show my instructions" ||
-                noteQuestion === "show instructions" ||
-                noteQuestion === "what instructions do i have"
-            )
+            isInstructionRecall(noteQuestion)
         ) {
 
             if (activeJourney.staffInstructions.length === 0) {
@@ -2148,18 +1865,7 @@ Can I help you get back there?
             !noteQuestion.startsWith("headed to") &&
 
             (
-                noteQuestion.includes("department") ||
-                noteQuestion.includes("hematology") ||
-                noteQuestion.includes("elevator") ||
-                noteQuestion.includes("directory") ||
-                noteQuestion.includes("check-in") ||
-                noteQuestion.includes("reception") ||
-                lowerQuestion.includes("office") ||
-                lowerQuestion.includes("room") ||
-                lowerQuestion.includes("suite") ||
-                lowerQuestion.includes("floor") ||
-                lowerQuestion.includes("unit") ||
-                lowerQuestion.includes("building")
+                isDirectoryPhrase(noteQuestion)
             )
         ) {
 
