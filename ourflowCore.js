@@ -1153,6 +1153,9 @@ Ready to save?
             )
         ) {
 
+            console.log(
+                "ENTERED QUESTION SAVE"
+            );
 
             const doctorQuestion = question
                 .replace(/save question:/i, "")
