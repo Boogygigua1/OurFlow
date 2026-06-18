@@ -1148,7 +1148,12 @@ Ready to save?
 
                 (
                     isQuestionWord(noteQuestion) &&
-                    !isAppointmentRecall(noteQuestion)
+                    !isAppointmentRecall(noteQuestion) &&
+                    !isInstructionRecall(noteQuestion) &&
+                    !isDirectoryRecall(noteQuestion) &&
+                    !isNoteRecall(noteQuestion) &&
+                    !isMedicationRecall(noteQuestion) &&
+                    !isQuestionRecall(noteQuestion)
                 )
             )
         ) {
