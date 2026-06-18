@@ -1361,6 +1361,9 @@ Ready to save?
             )
         ) {
 
+            console.log(
+                "ENTERED APPOINTMENT SAVE"
+            );
 
             const appointment = question
                 .replace(/save appointment:/i, "")
