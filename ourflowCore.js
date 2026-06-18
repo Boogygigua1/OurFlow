@@ -1337,6 +1337,7 @@ Ready to save?
 
         if (
             activeJourney &&
+            !isAppointmentRecall(noteQuestion) &&
             (
                 noteQuestion.startsWith("save appointment:") ||
 
@@ -1350,9 +1351,6 @@ Ready to save?
             )
         ) {
 
-            console.log(
-                "ENTERED APPOINTMENT SAVE BLOCK"
-            );
 
             const appointment = question
                 .replace(/save appointment:/i, "")
