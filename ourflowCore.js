@@ -683,18 +683,19 @@ Ready to save?
 
         const isMemoryCommand =
 
-
-            isParkingRecall(lowerQuestion) ||
+            // SAVE PHRASES
 
             isAppointmentPhrase(lowerQuestion) ||
 
+            isInstructionPhrase(lowerQuestion) ||
+
+            isNotePhrase(lowerQuestion) ||
+
+            // EXPLICIT SAVE COMMANDS
+
             lowerQuestion.startsWith("save appointment:") ||
 
-            isAppointmentRecall(lowerQuestion) ||
-
             lowerQuestion.startsWith("save instruction:") ||
-
-            isInstructionRecall(lowerQuestion) ||
 
             lowerQuestion.startsWith("save note:") ||
 
@@ -704,17 +705,27 @@ Ready to save?
 
             lowerQuestion.startsWith("save medication:") ||
 
+            // RECALL COMMANDS
+
+            isAppointmentRecall(lowerQuestion) ||
+
+            isInstructionRecall(lowerQuestion) ||
+
             isNoteRecall(lowerQuestion) ||
 
             isQuestionRecall(lowerQuestion) ||
 
             isMedicationRecall(lowerQuestion) ||
 
-            isAppointmentPhrase(lowerQuestion) ||
+            isDirectoryRecall(lowerQuestion) ||
+
+            isParkingRecall(lowerQuestion) ||
+
+            // PARKING MEMORY
 
             isParkingMemoryCommand(lowerQuestion);
 
-       
+
         // ========================================
         // DIRECTORY ENTRY DETECTION
         // ========================================
@@ -814,6 +825,8 @@ Ready to save?
             noteQuestion.startsWith("i'm meeting") ||
             noteQuestion.startsWith("im meeting") ||
             noteQuestion.startsWith("i am meeting") ||
+
+            isNotePhrase(noteQuestion) ||
 
             isAppointmentPhrase(noteQuestion) ||
 

@@ -626,3 +626,26 @@ function isAppointmentPhrase(question) {
         text.includes("meeting")
     );
 }
+
+function isNotePhrase(question) {
+
+    const text =
+        question.toLowerCase().trim();
+
+    return (
+
+        text.startsWith("note that ") ||
+
+        text.startsWith("note ") ||
+
+        text.startsWith("i wrote down ") ||
+
+        text.startsWith("write down ") ||
+
+        text.startsWith("for my notes ") ||
+
+        text.startsWith("remember this note ") ||
+
+        text.startsWith("note to self ")
+    );
+}
