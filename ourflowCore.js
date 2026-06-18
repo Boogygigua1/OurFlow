@@ -640,21 +640,21 @@ Ready to save?
                 lowerQuestion.includes("gas station") ||
                 lowerQuestion.includes("hotel") ||
 
-                isAppointmentRecall(lowerQuestion) 
+                isAppointmentRecall(lowerQuestion)
 
                 ||
 
-                    (
-                        lowerQuestion.includes("hospital")
-                        &&
-                        !lowerQuestion.startsWith("start journey")
-                        &&
-                        !lowerQuestion.startsWith("start a journey")
-                        &&
-                        !lowerQuestion.startsWith("starting journey")
-                        &&
-                        !lowerQuestion.startsWith("starting a journey")
-                    )
+                (
+                    lowerQuestion.includes("hospital")
+                    &&
+                    !lowerQuestion.startsWith("start journey")
+                    &&
+                    !lowerQuestion.startsWith("start a journey")
+                    &&
+                    !lowerQuestion.startsWith("starting journey")
+                    &&
+                    !lowerQuestion.startsWith("starting a journey")
+                )
             )
 
             &&
@@ -1129,6 +1129,16 @@ Ready to save?
         console.log(
             "appointment recall =",
             isAppointmentRecall(noteQuestion)
+        );
+
+        console.log(
+            "Instruction Recall:",
+            isInstructionRecall(noteQuestion)
+        );
+
+        console.log(
+            "Directory Recall:",
+            isDirectoryRecall(noteQuestion)
         );
 
         if (
