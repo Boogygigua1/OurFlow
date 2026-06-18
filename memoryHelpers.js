@@ -92,6 +92,20 @@ function isAppointmentRecall(question) {
         "where are my appointments",
 
         "show appointments",
+
+        "show me my appointments",
+
+        "give me my appointments",
+
+        "show my appointment",
+
+        "what is my appointment",
+
+        "tell me my appointment",
+
+        "list my appointment",
+
+        "when is my appointment",
         "show my appointments"
     ];
 
@@ -234,7 +248,17 @@ function isNoteRecall(question) {
 
         "list my notes",
 
-        "read my notes",
+        "show me my notes",
+
+        "give me my notes",
+
+        "show my note",
+
+        "what is my note",
+
+        "tell me my note",
+
+        "list my note",
 
         "tell me my notes"
     ];
@@ -264,6 +288,18 @@ function isQuestionRecall(question) {
         "list my questions",
 
         "read my questions",
+
+        "show me my questions",
+
+        "give me my questions",
+
+        "show my question",
+
+        "what is my question",
+
+        "tell me my question",
+
+        "list my question",
 
         "tell me my questions"
     ];
@@ -316,6 +352,24 @@ function isMedicationRecall(question) {
 
         "read my medications",
 
+        "show me my medications",
+
+        "give me my medications",
+
+        "show my medication",
+
+        "what is my medication",
+
+        "what medications am i taking",
+
+        "what medication am i taking",
+
+        "what meds am i taking",
+
+        "show my meds",
+
+        "show me my meds",
+
         "tell me my medications"
     ];
 
@@ -340,6 +394,8 @@ function isDirectoryRecall(question) {
 
         "give me my directory",
 
+        "give me my directories",
+
         "what directories do i have",
 
         "what are my directories",
@@ -351,6 +407,8 @@ function isDirectoryRecall(question) {
         "list my directories",
 
         "read my directories",
+
+        "tell me my directory",
 
         "tell me my directories"
     ];
