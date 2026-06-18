@@ -333,7 +333,12 @@ function isDirectoryRecall(question) {
     const directoryRecallPhrases = [
 
         "show directories",
+
         "show my directories",
+
+        "show me my directories",
+
+        "give me my directory",
 
         "what directories do i have",
 
