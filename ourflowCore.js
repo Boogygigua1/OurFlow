@@ -640,24 +640,19 @@ Ready to save?
                 lowerQuestion.includes("gas station") ||
                 lowerQuestion.includes("hotel") ||
 
-                lowerQuestion === "when are my appointments" ||
-                lowerQuestion === "when is my next appointment" ||
-                lowerQuestion === "what is my next appointment" ||
-                lowerQuestion === "what's my next appointment" ||
-                lowerQuestion === "do i have any appointments" ||
-                lowerQuestion === "what appointments do i have" ||
+                isAppointmentRecall(lowerQuestion)
 
-                (
-                    lowerQuestion.includes("hospital")
-                    &&
-                    !lowerQuestion.startsWith("start journey")
-                    &&
-                    !lowerQuestion.startsWith("start a journey")
-                    &&
-                    !lowerQuestion.startsWith("starting journey")
-                    &&
-                    !lowerQuestion.startsWith("starting a journey")
-                )
+                    (
+                        lowerQuestion.includes("hospital")
+                        &&
+                        !lowerQuestion.startsWith("start journey")
+                        &&
+                        !lowerQuestion.startsWith("start a journey")
+                        &&
+                        !lowerQuestion.startsWith("starting journey")
+                        &&
+                        !lowerQuestion.startsWith("starting a journey")
+                    )
             )
 
             &&
@@ -1126,6 +1121,13 @@ Ready to save?
         // ========================================
         // MANUAL MEDICATION SAVE
         // ========================================
+
+        console.log("noteQuestion =", noteQuestion);
+
+        console.log(
+            "appointment recall =",
+            isAppointmentRecall(noteQuestion)
+        );
 
         if (
             activeJourney &&
