@@ -78,6 +78,9 @@ function isAppointmentRecall(question) {
         "what is my next appointment",
         "what's my next appointment",
 
+        "what time is my appointment",
+        "what time are my appointments",
+
         "what appointments do i have",
         "what are my appointments",
 
