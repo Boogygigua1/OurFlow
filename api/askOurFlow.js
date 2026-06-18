@@ -398,8 +398,6 @@ ${question}
 
         const data = await response.json();
 
-        console.log(JSON.stringify(data, null, 2));
-
         const answer =
             data?.choices?.[0]?.message?.content ||
             "I couldn't determine the location confidently. Can you give me another clue, nearby landmark, street name, or business?";

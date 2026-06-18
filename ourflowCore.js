@@ -1230,9 +1230,6 @@ Ready to save?
             )
         ) {
 
-            console.log(
-                "ENTERED QUESTION SAVE"
-            );
 
             const doctorQuestion = question
                 .replace(/save question:/i, "")
@@ -1373,9 +1370,7 @@ Ready to save?
             )
         ) {
 
-            console.log(
-                "ENTERED APPOINTMENT SAVE"
-            );
+
 
             const appointment = question
                 .replace(/save appointment:/i, "")
@@ -1687,9 +1682,6 @@ Ready to save?
             isInstructionRecall(noteQuestion)
         ) {
 
-            console.log(
-                "ENTERED SHOW INSTRUCTIONS"
-            );
 
             if (activeJourney.staffInstructions.length === 0) {
 
