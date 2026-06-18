@@ -1345,6 +1345,11 @@ Ready to save?
         // Earlier duplicate appointment block removed.
         // This is now the primary appointment handler.
 
+        console.log(
+            "activeJourney before appointment:",
+            activeJourney
+        );
+
         if (
             activeJourney &&
             !isAppointmentRecall(noteQuestion) &&
