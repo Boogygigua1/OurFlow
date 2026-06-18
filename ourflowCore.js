@@ -1284,12 +1284,7 @@ Ready to save?
         // REVIEW:
         // Earlier duplicate appointment block removed.
         // This is now the primary appointment handler.
-
-        console.log(
-            "Appointment Phrase Test:",
-            noteQuestion.startsWith("i'm meeting")
-        );
-
+        
         if (
             activeJourney &&
             (
@@ -1307,7 +1302,7 @@ Ready to save?
         ) {
 
             console.log(
-                "ENTERED APPOINTMENT SAVE"
+                "ENTERED APPOINTMENT SAVE BLOCK"
             );
 
             const appointment = question
