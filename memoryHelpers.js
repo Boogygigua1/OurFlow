@@ -191,6 +191,7 @@ function isInstructionRecall(question) {
 
         "show my instructions",
         "show instructions",
+        "show me my instructions",
 
         "what instructions do i have",
         "what instruction do i have",
@@ -204,7 +205,9 @@ function isInstructionRecall(question) {
 
         "read my instructions",
 
-        "tell me my instructions"
+        "tell me my instructions",
+
+        "give me my instructions"
     ];
 
     return instructionRecallPhrases.includes(text);
