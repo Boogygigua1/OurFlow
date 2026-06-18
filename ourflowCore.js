@@ -1298,42 +1298,6 @@ Ready to save?
                 noteQuestion.startsWith("i have an appointment") ||
                 noteQuestion.startsWith("my appointment") ||
                 noteQuestion.startsWith("appointment at") ||
-                noteQuestion.startsWith("meeting with") ||
-                noteQuestion.startsWith("i'm meeting") ||
-                noteQuestion.startsWith("im meeting") ||
-                noteQuestion.startsWith("i am meeting")
-            )
-        )
-
-
-            console.log(
-                "Starts With I'm Meeting:",
-                noteQuestion.startsWith("i'm meeting")
-            );
-
-        console.log(
-            "noteQuestion raw =",
-            noteQuestion
-        );
-
-        console.log(
-            "Starts With Im Meeting:",
-            noteQuestion.startsWith("im meeting")
-        );
-
-        console.log(
-            "Starts With I Am Meeting:",
-            noteQuestion.startsWith("i am meeting")
-        );
-
-        if (
-            activeJourney &&
-            (
-                noteQuestion.startsWith("save appointment:") ||
-
-                noteQuestion.startsWith("i have an appointment") ||
-                noteQuestion.startsWith("my appointment") ||
-                noteQuestion.startsWith("appointment at") ||
                 noteQuestion.startsWith("meeting with")
 
                 || noteQuestion.startsWith("i'm meeting")
