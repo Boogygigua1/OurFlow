@@ -1133,9 +1133,7 @@ Ready to save?
 
         if (
             activeJourney &&
-            (
-                noteQuestion.startsWith("need to ")
-            )
+            isNotePhrase(noteQuestion)
         ) {
             // ========================================
             // NOTE SAVE HANDLER
