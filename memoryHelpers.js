@@ -182,45 +182,90 @@ function isDirectoryPhrase(question) {
 function isInstructionRecall(question) {
 
     const text =
-        question.toLowerCase().trim();
+        question
+            .toLowerCase()
+            .replace(/[?.!,]/g, "")
+            .trim();
 
-    return (
+    const instructionRecallPhrases = [
 
-        text === "show my instructions" ||
-        text === "show instructions" ||
-        text === "what instructions do i have" ||
-        text === "what are my instructions" ||
-        text === "what is my instruction"
+        "show my instructions",
+        "show instructions",
 
-    );
+        "what instructions do i have",
+        "what instruction do i have",
+
+        "what are my instructions",
+        "what is my instruction",
+
+        "do i have any instructions",
+
+        "list my instructions",
+
+        "read my instructions",
+
+        "tell me my instructions"
+    ];
+
+    return instructionRecallPhrases.includes(text);
 }
 
 function isNoteRecall(question) {
 
     const text =
-        question.toLowerCase().trim();
+        question
+            .toLowerCase()
+            .replace(/[?.!,]/g, "")
+            .trim();
 
-    return (
+    const noteRecallPhrases = [
 
-        text === "show my notes" ||
-        text === "show notes" ||
-        text === "what notes do i have"
+        "show my notes",
+        "show notes",
 
-    );
+        "what notes do i have",
+
+        "what are my notes",
+
+        "do i have any notes",
+
+        "list my notes",
+
+        "read my notes",
+
+        "tell me my notes"
+    ];
+
+    return noteRecallPhrases.includes(text);
 }
 
 function isQuestionRecall(question) {
 
     const text =
-        question.toLowerCase().trim();
+        question
+            .toLowerCase()
+            .replace(/[?.!,]/g, "")
+            .trim();
 
-    return (
+    const questionRecallPhrases = [
 
-        text === "show my questions" ||
-        text === "show questions" ||
-        text === "what questions do i have"
+        "show my questions",
+        "show questions",
 
-    );
+        "what questions do i have",
+
+        "what are my questions",
+
+        "do i have any questions",
+
+        "list my questions",
+
+        "read my questions",
+
+        "tell me my questions"
+    ];
+
+    return questionRecallPhrases.includes(text);
 }
 
 function isParkingRecall(question) {
@@ -248,29 +293,61 @@ function isParkingRecall(question) {
 function isMedicationRecall(question) {
 
     const text =
-        question.toLowerCase().trim();
+        question
+            .toLowerCase()
+            .replace(/[?.!,]/g, "")
+            .trim();
 
-    return (
+    const medicationRecallPhrases = [
 
-        text === "show my medications" ||
-        text === "show medications" ||
-        text === "what medications do i have"
+        "show my medications",
+        "show medications",
 
-    );
+        "what medications do i have",
+
+        "what are my medications",
+
+        "do i have any medications",
+
+        "list my medications",
+
+        "read my medications",
+
+        "tell me my medications"
+    ];
+
+    return medicationRecallPhrases.includes(text);
 }
 
 function isDirectoryRecall(question) {
 
     const text =
-        question.toLowerCase().trim();
+        question
+            .toLowerCase()
+            .replace(/[?.!,]/g, "")
+            .trim();
 
-    return (
+    const directoryRecallPhrases = [
 
-        text === "show directories" ||
-        text === "show my directories" ||
-        text === "what directories do i have"
+        "show directories",
+        "show my directories",
 
-    );
+        "what directories do i have",
+
+        "what are my directories",
+
+        "what is my directory",
+
+        "do i have any directories",
+
+        "list my directories",
+
+        "read my directories",
+
+        "tell me my directories"
+    ];
+
+    return directoryRecallPhrases.includes(text);
 }
 
 function isParkingMemoryCommand(question) {
