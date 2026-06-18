@@ -63,6 +63,87 @@ ${index + 1}. ${item}<br><br>
 </div>
 `;
 }
+
+// ========================================
+// QUESTION TYPE HELPERS
+// ========================================
+
+function isAppointmentRecall(question) {
+
+    const appointmentRecallPhrases = [
+
+        "when is my next appointment",
+        "when are my appointments",
+
+        "what is my next appointment",
+        "what's my next appointment",
+
+        "what appointments do i have",
+        "what are my appointments",
+
+        "do i have any appointments",
+
+        "where is my appointment",
+        "where's my appointment",
+
+        "where are my appointments",
+
+        "show appointments",
+        "show my appointments"
+    ];
+
+    return appointmentRecallPhrases.includes(
+        question.toLowerCase().trim()
+    );
+}
+
+function isQuestionWord(question) {
+
+    const text =
+        question.toLowerCase().trim();
+
+    return (
+
+        text.startsWith("where ") ||
+
+        text.startsWith("what ") ||
+
+        text.startsWith("who ") ||
+
+        text.startsWith("when ") ||
+
+        text.startsWith("why ") ||
+
+        text.startsWith("how ")
+
+    );
+}
+
+function isInstructionPhrase(question) {
+
+    const text =
+        question.toLowerCase().trim();
+
+    return (
+
+        text.startsWith("remember to ") ||
+
+        text.startsWith("don't forget ") ||
+
+        text.startsWith("dont forget ") ||
+
+        text.startsWith("make sure to ") ||
+
+        text.startsWith("be sure to ") ||
+
+        text.startsWith("i should ") ||
+
+        text.startsWith("need to remember ") ||
+
+        text.startsWith("i need to remember ")
+
+    );
+}
 // ========================================
 // ASK OURFLOW ENTRY POINT
 // ========================================
@@ -254,8 +335,6 @@ How should I save this?
 
             mapLink: "",
 
-            questions: [],
-
             answers: [],
 
             timeline: [],
@@ -401,8 +480,6 @@ How should I save this?
                 arrivalTips: "",
 
                 mapLink: "",
-
-                questions: [],
 
                 answers: [],
 
@@ -908,7 +985,7 @@ Ready to save?
                 !lowerQuestion.includes("appointment")
             ) {
 
-                activeJourney.questions.push(question);
+                activeJourney.questionsForDoctor.push(question);
             }
         }
 
@@ -1309,12 +1386,10 @@ Ready to save?
             (
                 noteQuestion.startsWith("save question:") ||
 
-                noteQuestion.startsWith("where ") ||
-                noteQuestion.startsWith("what ") ||
-                noteQuestion.startsWith("who ") ||
-                noteQuestion.startsWith("when ") ||
-                noteQuestion.startsWith("why ") ||
-                noteQuestion.startsWith("how ")
+                (
+                    isQuestionWord(noteQuestion) &&
+                    !isAppointmentRecall(noteQuestion)
+                )
             )
         ) {
 
@@ -1750,18 +1825,7 @@ Ready to save?
 
         if (
             activeJourney &&
-            (
-                noteQuestion === "show my appointments" ||
-                noteQuestion === "what appointments do i have" ||
-                noteQuestion === "when are my appointments" ||
-                noteQuestion === "what are my appointments" ||
-                noteQuestion === "do i have any appointments" ||
-                noteQuestion === "what appointments do i have" ||
-                noteQuestion === "where is my appointment" ||
-                noteQuestion === "where's my appointment" ||
-                noteQuestion === "where are my appointments" ||
-                noteQuestion === "show appointments"
-            )
+            isAppointmentRecall(noteQuestion)
         ) {
 
             if (activeJourney.appointments.length === 0) {
