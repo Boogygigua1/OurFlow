@@ -1295,23 +1295,35 @@ Ready to save?
                 noteQuestion.startsWith("appointment at") ||
                 noteQuestion.startsWith("meeting with")
             )
-        ) {
+        )
 
-            const appointment = question
-                .replace(/save appointment:/i, "")
-                .trim();
-            // ========================================
-            // APPOINTMENT SAVE HANDLER
-            // FUTURE REFACTOR:
-            // Candidate for saveJourneyItem()
-            // ========================================
-            saveJourneyItem(
-                "appointments",
-                appointment,
-                "📅 Appointment Saved: "
-            );
+            if (
+                activeJourney &&
+                (
+                    noteQuestion.startsWith("save appointment:") ||
 
-            result.innerHTML = `
+                    noteQuestion.startsWith("i have an appointment") ||
+                    noteQuestion.startsWith("my appointment") ||
+                    noteQuestion.startsWith("appointment at") ||
+                    noteQuestion.startsWith("meeting with")
+                )
+            ) {
+
+                const appointment = question
+                    .replace(/save appointment:/i, "")
+                    .trim();
+                // ========================================
+                // APPOINTMENT SAVE HANDLER
+                // FUTURE REFACTOR:
+                // Candidate for saveJourneyItem()
+                // ========================================
+                saveJourneyItem(
+                    "appointments",
+                    appointment,
+                    "📅 Appointment Saved: "
+                );
+
+                result.innerHTML = `
 <div class="card">
     <strong>📅 Appointment Saved</strong>
 
@@ -1325,8 +1337,8 @@ Ready to save?
 </div>
 `;
 
-            return;
-        }
+                return;
+            }
 
         // ========================================
         // GENERAL INSTRUCTION SAVE

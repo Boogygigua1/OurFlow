@@ -358,6 +358,8 @@ function isMedicationRecall(question) {
 
         "show my medication",
 
+        "show me my medication",
+
         "what is my medication",
 
         "what medications am i taking",
