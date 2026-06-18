@@ -802,7 +802,7 @@ Ready to save?
 
         const noteQuestion = lowerQuestion;
 
- 
+
         const looksLikeMemoryEntry =
             noteQuestion.startsWith("i'm meeting") ||
             noteQuestion.startsWith("im meeting") ||
@@ -819,6 +819,55 @@ Ready to save?
 
             noteQuestion.startsWith("ask about ") ||
             noteQuestion.startsWith("ask doctor about ");
+
+        if (
+            !activeJourney &&
+            looksLikeMemoryEntry
+        ) {
+
+            activeJourney = {
+
+                destination: "Untitled Journey",
+
+                destinationName: "",
+                destinationAddress: "",
+                destinationDetail: "",
+
+                currentLocation: "",
+                travelMode: "",
+
+                journeyStatus: "traveling",
+
+                notes: [],
+                photos: [],
+                questionsForDoctor: [],
+                staffInstructions: [],
+                medications: [],
+                appointments: [],
+                directories: [],
+
+                startTime:
+                    new Date().toLocaleString(),
+
+                startLocation: "",
+                parkingLocation: "",
+
+                arrivalTips: "",
+                mapLink: "",
+
+                answers: [],
+                timeline: [],
+
+                endLocation: "",
+                endTime: ""
+            };
+
+            activeJourney.timeline.push(
+                "🧭 Journey Started: Auto-Created"
+            );
+
+            showActiveJourneyBox();
+        }
 
         // ========================================
         // DESTINATION DETAIL SAVE
