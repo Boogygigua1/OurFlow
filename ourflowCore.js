@@ -1300,37 +1300,53 @@ Ready to save?
             )
         )
 
-            if (
-                activeJourney &&
-                (
-                    noteQuestion.startsWith("save appointment:") ||
 
-                    noteQuestion.startsWith("i have an appointment") ||
-                    noteQuestion.startsWith("my appointment") ||
-                    noteQuestion.startsWith("appointment at") ||
-                    noteQuestion.startsWith("meeting with")
-                )
-            ) {
+            console.log(
+                "Starts With I'm Meeting:",
+                noteQuestion.startsWith("i'm meeting")
+            );
 
-                console.log(
-                    "ENTERED APPOINTMENT SAVE"
-                );
+        console.log(
+            "Starts With Im Meeting:",
+            noteQuestion.startsWith("im meeting")
+        );
 
-                const appointment = question
-                    .replace(/save appointment:/i, "")
-                    .trim();
-                // ========================================
-                // APPOINTMENT SAVE HANDLER
-                // FUTURE REFACTOR:
-                // Candidate for saveJourneyItem()
-                // ========================================
-                saveJourneyItem(
-                    "appointments",
-                    appointment,
-                    "📅 Appointment Saved: "
-                );
+        console.log(
+            "Starts With I Am Meeting:",
+            noteQuestion.startsWith("i am meeting")
+        );
+        
+        if (
+            activeJourney &&
+            (
+                noteQuestion.startsWith("save appointment:") ||
 
-                result.innerHTML = `
+                noteQuestion.startsWith("i have an appointment") ||
+                noteQuestion.startsWith("my appointment") ||
+                noteQuestion.startsWith("appointment at") ||
+                noteQuestion.startsWith("meeting with")
+            )
+        ) {
+
+            console.log(
+                "ENTERED APPOINTMENT SAVE"
+            );
+
+            const appointment = question
+                .replace(/save appointment:/i, "")
+                .trim();
+            // ========================================
+            // APPOINTMENT SAVE HANDLER
+            // FUTURE REFACTOR:
+            // Candidate for saveJourneyItem()
+            // ========================================
+            saveJourneyItem(
+                "appointments",
+                appointment,
+                "📅 Appointment Saved: "
+            );
+
+            result.innerHTML = `
 <div class="card">
     <strong>📅 Appointment Saved</strong>
 
@@ -1344,8 +1360,8 @@ Ready to save?
 </div>
 `;
 
-                return;
-            }
+            return;
+        }
 
         // ========================================
         // GENERAL INSTRUCTION SAVE
