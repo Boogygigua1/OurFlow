@@ -714,10 +714,7 @@ Ready to save?
 
             isParkingMemoryCommand(lowerQuestion);
 
-        console.log(
-            "isMemoryCommand:",
-            isMemoryCommand
-        );
+       
         // ========================================
         // DIRECTORY ENTRY DETECTION
         // ========================================
@@ -817,6 +814,8 @@ Ready to save?
             noteQuestion.startsWith("i'm meeting") ||
             noteQuestion.startsWith("im meeting") ||
             noteQuestion.startsWith("i am meeting") ||
+
+            isAppointmentPhrase(noteQuestion) ||
 
             isInstructionPhrase(noteQuestion) ||
 
@@ -1344,11 +1343,6 @@ Ready to save?
         // REVIEW:
         // Earlier duplicate appointment block removed.
         // This is now the primary appointment handler.
-
-        console.log(
-            "activeJourney before appointment:",
-            activeJourney
-        );
 
         if (
             activeJourney &&
