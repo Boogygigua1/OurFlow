@@ -683,6 +683,7 @@ Ready to save?
 
         const isMemoryCommand =
 
+
             isParkingRecall(lowerQuestion) ||
 
             isAppointmentPhrase(lowerQuestion) ||
@@ -713,7 +714,10 @@ Ready to save?
 
             isParkingMemoryCommand(lowerQuestion);
 
-
+        console.log(
+            "isMemoryCommand:",
+            isMemoryCommand
+        );
         // ========================================
         // DIRECTORY ENTRY DETECTION
         // ========================================
