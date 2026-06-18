@@ -1285,6 +1285,11 @@ Ready to save?
         // Earlier duplicate appointment block removed.
         // This is now the primary appointment handler.
 
+        console.log(
+            "Appointment Phrase Test:",
+            noteQuestion.startsWith("i'm meeting")
+        );
+
         if (
             activeJourney &&
             (
