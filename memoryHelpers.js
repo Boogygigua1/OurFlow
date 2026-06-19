@@ -720,7 +720,6 @@ function isMedicationPhrase(question) {
         text.startsWith("i am taking ")
     );
 }
-
 function isQuestionPhrase(question) {
 
     const text =
@@ -734,7 +733,15 @@ function isQuestionPhrase(question) {
 
         text.startsWith("ask counselor about ") ||
 
-        text.startsWith("ask if ")
+        text.startsWith("ask if ") ||
+
+        text.startsWith("i need to ask ") ||
+
+        text.startsWith("i need to ask about ") ||
+
+        text.startsWith("i want to ask ") ||
+
+        text.includes(" ask about ")
     );
 }
 
