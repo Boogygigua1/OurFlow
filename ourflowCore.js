@@ -848,6 +848,8 @@ Ready to save?
 
             isDirectoryPhrase(noteQuestion) ||
 
+            isQuestionPhrase(noteQuestion) ||
+
             noteQuestion.startsWith("ask about ") ||
             noteQuestion.startsWith("ask doctor about ");
 
@@ -1005,7 +1007,7 @@ Ready to save?
             isQuestionPhrase(noteQuestion),
             noteQuestion
         );
-        
+
         if (
             activeJourney &&
             (
