@@ -693,6 +693,8 @@ Ready to save?
 
             isMedicationPhrase(lowerQuestion) ||
 
+            isQuestionPhrase(lowerQuestion) ||
+
             // EXPLICIT SAVE COMMANDS
 
             lowerQuestion.startsWith("save appointment:") ||
@@ -748,16 +750,7 @@ Ready to save?
                 !lowerQuestion.includes("appointment")
             ) {
 
-                console.log(
-                    "MEMORY CHECK:",
-                    question,
-                    isMemoryCommand
-                );
-                console.log(
-                    "QUESTION AUTO CAPTURE:",
-                    question
-                );
-
+              
                 activeJourney.questionsForDoctor.push(question);
             }
         }
@@ -1004,10 +997,7 @@ Ready to save?
         if (
             activeJourney &&
             (
-                noteQuestion.startsWith("ask about ") ||
-                noteQuestion.startsWith("ask doctor about ") ||
-                noteQuestion.startsWith("ask counselor about ") ||
-                noteQuestion.startsWith("ask if ")
+                isQuestionPhrase(noteQuestion)
             )
         ) {
 

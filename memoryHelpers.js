@@ -678,3 +678,20 @@ function isMedicationPhrase(question) {
         text.startsWith("i am taking ")
     );
 }
+
+function isQuestionPhrase(question) {
+
+    const text =
+        question.toLowerCase().trim();
+
+    return (
+
+        text.startsWith("ask about ") ||
+
+        text.startsWith("ask doctor about ") ||
+
+        text.startsWith("ask counselor about ") ||
+
+        text.startsWith("ask if ")
+    );
+}
