@@ -185,9 +185,11 @@ function isInstructionPhrase(question) {
 
         text.startsWith("i need to remember ") ||
 
-        text.startsWith("i need to ")
-        &&
-        !text.includes("ask ") ||
+        (
+            text.startsWith("i need to ")
+            &&
+            !text.includes("ask ")
+        ) ||
 
         text.startsWith("i have to ") ||
 
