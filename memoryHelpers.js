@@ -127,8 +127,8 @@ function isAppointmentRecall(question) {
         .replace(/[?.!]/g, "")
         .trim();
 
-    return appointmentRecallPhrases.includes(
-        text
+    return appointmentRecallPhrases.some(
+        phrase => text.includes(phrase)
     );
 }
 
