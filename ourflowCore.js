@@ -746,6 +746,11 @@ Ready to save?
                 !lowerQuestion.includes("appointment")
             ) {
 
+                console.log(
+                    "QUESTION AUTO CAPTURE:",
+                    question
+                );
+
                 activeJourney.questionsForDoctor.push(question);
             }
         }
