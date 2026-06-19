@@ -747,6 +747,11 @@ Ready to save?
             ) {
 
                 console.log(
+                    "MEMORY CHECK:",
+                    question,
+                    isMemoryCommand
+                );
+                console.log(
                     "QUESTION AUTO CAPTURE:",
                     question
                 );
