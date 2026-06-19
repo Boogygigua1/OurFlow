@@ -1728,7 +1728,12 @@ Ready to save?
             isJourneySummaryRecall(noteQuestion)
         ) {
 
-        console.log("ENTERED JOURNEY SUMMARY");
+            console.log("ENTERED JOURNEY SUMMARY");
+
+            console.log(
+                "ACTIVE JOURNEY:",
+                activeJourney
+            );
 
             result.innerHTML = `
 <div class="card">
