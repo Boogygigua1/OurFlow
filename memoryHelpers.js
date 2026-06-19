@@ -217,7 +217,7 @@ function isDirectoryPhrase(question) {
         text.includes("unit") ||
         text.includes("building") ||
 
-           text.includes("hall") ||
+        text.includes("hall") ||
         text.includes("lobby") ||
         text.includes("desk") ||
         text.includes("counter") ||
@@ -228,7 +228,22 @@ function isDirectoryPhrase(question) {
         text.includes("registration") ||
         text.includes("financial aid") ||
         text.includes("admissions") ||
-        text.includes("student services")
+        text.includes("student services") ||
+
+        text.includes("classroom") ||
+        text.includes("lecture hall") ||
+        text.includes("auditorium") ||
+        text.includes("cafeteria") ||
+        text.includes("bookstore") ||
+        text.includes("nursing station") ||
+        text.includes("pharmacy") ||
+        text.includes("radiology") ||
+        text.includes("oncology") ||
+        text.includes("billing") ||
+        text.includes("records") ||
+        text.includes("human resources") ||
+        text.includes("hr") ||
+        text.includes("security")
 
     );
 }
@@ -706,5 +721,23 @@ function isQuestionPhrase(question) {
         text.startsWith("ask counselor about ") ||
 
         text.startsWith("ask if ")
+    );
+}
+
+function isDestinationLocationPhrase(question) {
+
+    const text =
+        question.toLowerCase();
+
+    return (
+
+        text.includes("office") ||
+        text.includes("room") ||
+        text.includes("suite") ||
+        text.includes("floor") ||
+        text.includes("building") ||
+        text.includes("hall") ||
+        text.includes("lobby") ||
+        text.includes("wing")
     );
 }
