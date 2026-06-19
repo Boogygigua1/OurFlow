@@ -723,6 +723,8 @@ Ready to save?
 
             isDirectoryRecall(lowerQuestion) ||
 
+            isJourneySummaryRecall(lowerQuestion) ||
+
             isParkingRecall(lowerQuestion) ||
 
             // PARKING MEMORY
@@ -1714,6 +1716,67 @@ Ready to save?
 
             return;
         }
+
+        if (
+            activeJourney &&
+            isJourneySummaryRecall(noteQuestion)
+        ) {
+
+            result.innerHTML = `
+<div class="card">
+    <strong>🧭 Journey Summary</strong>
+
+    <br><br>
+
+    📅 Appointments:
+    ${activeJourney.appointments?.length || 0}
+
+    <br><br>
+
+    👩‍⚕️ Instructions:
+    ${activeJourney.staffInstructions?.length || 0}
+
+    <br><br>
+
+    📝 Notes:
+    ${activeJourney.notes?.length || 0}
+
+    <br><br>
+
+    💊 Medications:
+    ${activeJourney.medications?.length || 0}
+
+    <br><br>
+
+    ❓ Questions:
+    ${activeJourney.questionsForDoctor?.length || 0}
+
+    <br><br>
+
+    🏢 Directories:
+    ${activeJourney.directories?.length || 0}
+
+    <br><br>
+
+    📷 Photos:
+    ${activeJourney.photos?.length || 0}
+
+    <br><br>
+
+    📌 Timeline Events:
+    ${activeJourney.timeline?.length || 0}
+
+    <br><br>
+
+    📍 Destination:
+    ${activeJourney.destination || "Unknown"}
+
+</div>
+`;
+
+            return;
+        }
+
         // ========================================
         // ARRIVAL RECALL SHORTCUTS
         // ========================================

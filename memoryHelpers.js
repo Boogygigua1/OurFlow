@@ -741,3 +741,26 @@ function isDestinationLocationPhrase(question) {
         text.includes("wing")
     );
 }
+
+function isJourneySummaryRecall(question) {
+
+    const text =
+        question
+            .toLowerCase()
+            .replace(/[?.!,]/g, "")
+            .trim();
+
+    return (
+
+        text === "journey summary" ||
+
+        text === "show journey summary" ||
+
+        text === "show summary" ||
+
+        text === "journey recap" ||
+
+        text === "show journey recap"
+
+    );
+}
