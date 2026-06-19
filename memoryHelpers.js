@@ -162,6 +162,11 @@ function isInstructionPhrase(question) {
     const text =
         question.toLowerCase().trim();
 
+    console.log(
+        "INSTRUCTION PHRASE:",
+        text
+    );
+
     return (
 
         text.startsWith("remember to ") ||
