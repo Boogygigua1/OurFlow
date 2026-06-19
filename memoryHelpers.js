@@ -215,7 +215,20 @@ function isDirectoryPhrase(question) {
         text.includes("suite") ||
         text.includes("floor") ||
         text.includes("unit") ||
-        text.includes("building")
+        text.includes("building") ||
+
+           text.includes("hall") ||
+        text.includes("lobby") ||
+        text.includes("desk") ||
+        text.includes("counter") ||
+        text.includes("clinic") ||
+        text.includes("lab") ||
+        text.includes("laboratory") ||
+        text.includes("wing") ||
+        text.includes("registration") ||
+        text.includes("financial aid") ||
+        text.includes("admissions") ||
+        text.includes("student services")
 
     );
 }
