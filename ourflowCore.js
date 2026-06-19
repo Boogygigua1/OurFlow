@@ -1717,6 +1717,12 @@ Ready to save?
             return;
         }
 
+        console.log(
+            "SUMMARY TEST:",
+            noteQuestion,
+            isJourneySummaryRecall(noteQuestion)
+        );
+
         if (
             activeJourney &&
             isJourneySummaryRecall(noteQuestion)
