@@ -1720,7 +1720,8 @@ Ready to save?
         console.log(
             "SUMMARY TEST:",
             noteQuestion,
-            isJourneySummaryRecall(noteQuestion)
+            isJourneySummaryRecall(noteQuestion),
+            activeJourney
         );
 
         if (
