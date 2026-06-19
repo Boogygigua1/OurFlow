@@ -167,7 +167,15 @@ function isInstructionPhrase(question) {
         text
     );
 
+    console.log(
+        "QUESTION SAVE CHECK:",
+        activeJourney,
+        isQuestionPhrase(noteQuestion),
+        noteQuestion
+    );
+
     return (
+
 
         text.startsWith("remember to ") ||
 
