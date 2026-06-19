@@ -192,7 +192,17 @@ function isInstructionPhrase(question) {
 
         text.startsWith("don't let me forget ") ||
 
-        text.startsWith("dont let me forget ")
+        text.startsWith("dont let me forget ") ||
+
+        text.includes("you need to ") ||
+
+        text.includes("you should ") ||
+
+        text.includes("remember to bring") ||
+
+        text.includes("arrive ") ||
+
+        text.includes("check in ")
 
     );
 }
