@@ -1001,12 +1001,7 @@ Ready to save?
 
 
 
-        console.log(
-            "QUESTION SAVE CHECK:",
-            activeJourney,
-            isQuestionPhrase(noteQuestion),
-            noteQuestion
-        );
+
 
         if (
             activeJourney &&
@@ -1014,8 +1009,6 @@ Ready to save?
                 isQuestionPhrase(noteQuestion)
             )
         ) {
-
-            console.log("ENTERED QUESTION SAVE");
 
             saveJourneyItem(
                 "questionsForDoctor",

@@ -162,10 +162,6 @@ function isInstructionPhrase(question) {
     const text =
         question.toLowerCase().trim();
 
-    console.log(
-        "INSTRUCTION PHRASE:",
-        text
-    );
 
     return (
 
@@ -733,11 +729,6 @@ function isQuestionPhrase(question) {
 
     const text =
         question.toLowerCase().trim();
-
-    console.log(
-        "QUESTION PHRASE:",
-        text
-    );
 
     return (
 
