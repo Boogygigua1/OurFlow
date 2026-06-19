@@ -747,10 +747,11 @@ Ready to save?
                 !isMemoryCommand &&
                 !isUtilityQuestion &&
                 !isDirectoryEntry &&
+                !isQuestionPhrase(lowerQuestion) &&
                 !lowerQuestion.includes("appointment")
             ) {
 
-              
+
                 activeJourney.questionsForDoctor.push(question);
             }
         }
@@ -1630,6 +1631,11 @@ Ready to save?
 
             // CLEANUP:
             // Same pattern as Show Questions.
+
+            console.log(
+                "MEDICATION ARRAY:",
+                activeJourney.medications
+            );
 
             showJourneyList(
                 "💊 Medications",
