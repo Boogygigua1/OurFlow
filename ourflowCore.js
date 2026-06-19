@@ -997,6 +997,15 @@ Ready to save?
         // QUESTION SAVE
         // ========================================        
 
+
+
+        console.log(
+            "QUESTION SAVE CHECK:",
+            activeJourney,
+            isQuestionPhrase(noteQuestion),
+            noteQuestion
+        );
+        
         if (
             activeJourney &&
             (
