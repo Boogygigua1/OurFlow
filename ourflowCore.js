@@ -1709,6 +1709,7 @@ Ready to save?
             }
             // CLEANUP:
             // Same pattern as Appointments.
+            
             showJourneyList(
                 "👩‍⚕️ Instructions",
                 activeJourney.staffInstructions
@@ -1717,24 +1718,10 @@ Ready to save?
             return;
         }
 
-        console.log(
-            "SUMMARY TEST:",
-            noteQuestion,
-            isJourneySummaryRecall(noteQuestion),
-            activeJourney
-        );
-
         if (
             activeJourney &&
             isJourneySummaryRecall(noteQuestion)
         ) {
-
-            console.log("ENTERED JOURNEY SUMMARY");
-
-            console.log(
-                "ACTIVE JOURNEY:",
-                activeJourney
-            );
 
             result.innerHTML = `
 <div class="card">
