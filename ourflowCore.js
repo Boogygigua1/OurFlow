@@ -691,6 +691,8 @@ Ready to save?
 
             isNotePhrase(lowerQuestion) ||
 
+            isMedicationPhrase(lowerQuestion) ||
+
             // EXPLICIT SAVE COMMANDS
 
             lowerQuestion.startsWith("save appointment:") ||
