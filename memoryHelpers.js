@@ -720,10 +720,16 @@ function isMedicationPhrase(question) {
         text.startsWith("i am taking ")
     );
 }
+
 function isQuestionPhrase(question) {
 
     const text =
         question.toLowerCase().trim();
+
+    console.log(
+        "QUESTION PHRASE:",
+        text
+    );
 
     return (
 
@@ -742,6 +748,7 @@ function isQuestionPhrase(question) {
         text.startsWith("i want to ask ") ||
 
         text.includes(" ask about ")
+
     );
 }
 
