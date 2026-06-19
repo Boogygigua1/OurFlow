@@ -1004,6 +1004,8 @@ Ready to save?
             )
         ) {
 
+            console.log("ENTERED QUESTION SAVE");
+
             saveJourneyItem(
                 "questionsForDoctor",
                 question,
@@ -1709,7 +1711,7 @@ Ready to save?
             }
             // CLEANUP:
             // Same pattern as Appointments.
-            
+
             showJourneyList(
                 "👩‍⚕️ Instructions",
                 activeJourney.staffInstructions
