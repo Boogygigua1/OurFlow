@@ -296,7 +296,9 @@ function isInstructionRecall(question) {
         "what reminders do i have"
     ];
 
-    return instructionRecallPhrases.includes(text);
+    return instructionRecallPhrases.some(
+        phrase => text.includes(phrase)
+    );
 }
 
 function isNoteRecall(question) {
