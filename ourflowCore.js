@@ -1728,6 +1728,8 @@ Ready to save?
             isJourneySummaryRecall(noteQuestion)
         ) {
 
+        console.log("ENTERED JOURNEY SUMMARY");
+
             result.innerHTML = `
 <div class="card">
     <strong>🧭 Journey Summary</strong>
