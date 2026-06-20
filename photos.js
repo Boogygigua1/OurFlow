@@ -142,6 +142,8 @@ async function saveJourneyPhoto() {
         line => line.replace(/^\d+\.\s/, "")
     ) || [];
 
+    window.photoSuggestions = suggestions;
+
     pendingPhotoMemory = true;
 
     showActiveJourneyBox();
@@ -162,15 +164,15 @@ async function saveJourneyPhoto() {
 
     <br><br>
 
-    <button onclick="savePhotoMemory('${suggestions[0] || ""}')">
+<button onclick="savePhotoMemory(window.photoSuggestions[0])">
     1
 </button>
 
-<button onclick="savePhotoMemory('${suggestions[1] || ""}')">
+<button onclick="savePhotoMemory(window.photoSuggestions[1])">
     2
 </button>
 
-<button onclick="savePhotoMemory('${suggestions[2] || ""}')">
+<button onclick="savePhotoMemory(window.photoSuggestions[2])">
     3
 </button>
 
