@@ -768,6 +768,14 @@ function isQuestionPhrase(question) {
 
         text.startsWith("i want to ask ") ||
 
+        text.startsWith("ask whether ") ||
+
+        text.startsWith("ask why ") ||
+        text.startsWith("ask when ") ||
+        text.startsWith("ask where ") ||
+        text.startsWith("ask how ") ||
+        text.startsWith("ask what ") ||
+
         text.includes(" ask about ")
 
     );
