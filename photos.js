@@ -170,7 +170,7 @@ async function saveJourneyPhoto() {
 
     <br><br>
 
-    Or add your own memory below and press Ask OurFlow.
+    Choose a suggestion above, or enter your own memory in Ask OurFlow.
 </div>
 `;
 }
