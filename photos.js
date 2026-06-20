@@ -33,11 +33,11 @@ function previewLandmarkImage() {
 
 async function analyzeLandmarkImage() {
 
-    alert("analyzeLandmarkImage fired");
+    console.log("analyzeLandmarkImage fired");
 
     previewLandmarkImage();
 
-    alert("previewLandmarkImage finished");
+    console.log("previewLandmarkImage finished");
 
     const file =
         document.getElementById("landmarkImage")
@@ -85,9 +85,16 @@ async function saveJourneyPhoto() {
         activeJourney.photos = [];
     }
 
+    console.log(
+        "IMAGE SIZE:",
+        landmarkImageData?.length
+    );
+
     activeJourney.photos.push({
         timestamp: new Date().toLocaleString(),
-        note: ""
+        image: landmarkImageData,
+        note: "",
+        analysis: ""
     });
 
     activeJourney.timeline.push("📷 Photo Saved");
@@ -121,6 +128,13 @@ async function saveJourneyPhoto() {
         "PHOTO AI RESPONSE:",
         data.answer
     );
+
+    const lastPhoto =
+        activeJourney.photos[
+        activeJourney.photos.length - 1
+        ];
+
+    lastPhoto.analysis = data.answer;
 
     pendingPhotoMemory = true;
 
@@ -361,7 +375,7 @@ function savePhotoClassification(type) {
 }
 function savePhotoAsLocation(type) {
 
-    alert("Button clicked: " + type);
+    console.log("Button clicked:", type);
 
     if (!activeJourney) {
         return;
