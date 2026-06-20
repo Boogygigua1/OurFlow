@@ -55,15 +55,33 @@ async function analyzeLandmarkImage() {
 
     <br><br>
 
-    <button onclick="saveJourneyPhoto()">
-        📷 Save To Journey
-    </button>
+    <button
+    id="saveJourneyButton"
+    onclick="saveJourneyPhoto()"
+>
+    📷 Save To Journey
+</button>
 </div>
 `;
 }
 
 
 async function saveJourneyPhoto() {
+
+    const button =
+        document.getElementById(
+            "saveJourneyButton"
+        );
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.style.opacity = "0.5";
+
+        button.innerHTML =
+            "⏳ Analyzing Photo...";
+    }
 
     console.log(
         "SAVE PHOTO DEBUG",
