@@ -150,7 +150,21 @@ async function saveJourneyPhoto() {
 
     <br><br>
 
-    Type 1, 2, or 3 to save one of the suggested memories.
+    Choose one of the suggested memories:
+
+    <br><br>
+
+    <button onclick="savePhotoMemory('1')">
+        1
+    </button>
+
+    <button onclick="savePhotoMemory('2')">
+        2
+    </button>
+
+    <button onclick="savePhotoMemory('3')">
+        3
+    </button>
 
     <br><br>
 
