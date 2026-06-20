@@ -139,6 +139,11 @@ How should I save this?
             looksLikeAddress
         )
     ) {
+
+        console.log(
+            "JOURNEY BLOCK REACHED:",
+            question
+        );
         // ========================================
         // BLANK JOURNEY CREATION
         // ========================================
