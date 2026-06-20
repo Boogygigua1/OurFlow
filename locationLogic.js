@@ -215,6 +215,14 @@ function savePendingParking() {
         activeJourney.parkingLocation =
             pendingParkingLocation;
 
+        if (window.savePhotoAsBoth) {
+
+            activeJourney.startLocation =
+                pendingParkingLocation;
+
+            window.savePhotoAsBoth = false;
+        }
+
         localStorage.setItem(
             "activeJourney",
             JSON.stringify(activeJourney)
