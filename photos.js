@@ -150,47 +150,11 @@ async function saveJourneyPhoto() {
 
     <br><br>
 
-    What should I remember about this photo?
+    Type 1, 2, or 3 to save one of the suggested memories.
 
-<br><br>
+    <br><br>
 
-<button onclick="savePhotoMemory('🚪 Entrance')">
-    🚪 Entrance
-</button>
-
-<br><br>
-
-<button onclick="savePhotoMemory('🏢 Building Sign')">
-    🏢 Building Sign
-</button>
-
-<br><br>
-
-<button onclick="savePhotoMemory('📍 Landmark')">
-    📍 Landmark
-</button>
-
-<br><br>
-
-<button onclick="savePhotoMemory('🪧 Directory')">
-    🪧 Directory
-</button>
-
-<br><br>
-
-<button onclick="savePhotoMemory('🚪 Room Number')">
-    🚪 Room Number
-</button>
-
-<br><br>
-
-<button onclick="savePhotoMemory('📝 Other')">
-    📝 Other
-</button>
-
-<br><br>
-
-Or type your own note below and press Ask OurFlow.
+    Or type your own note below and press Ask OurFlow.
 </div>
 `;
 }
