@@ -250,6 +250,23 @@ function savePendingParking() {
     <button onclick="openGoogleMapsToDestinationDetails('driving')">
         🚗 Drive There
     </button>
+
+    <br><br>
+
+<button onclick="
+document.getElementById(
+    'questionInput'
+).focus();
+
+document.getElementById(
+    'questionInput'
+).scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+});
+">
+    ⬅ Continue Journey
+</button>
 </div>
 `;
 }
