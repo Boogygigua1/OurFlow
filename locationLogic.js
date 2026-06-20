@@ -304,7 +304,7 @@ async function verifyParkingLocation() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>🚗 Suggested Parking Location</strong>
+    <strong>📍 Suggested Location</strong>
 
     <br><br>
 
@@ -315,7 +315,7 @@ async function verifyParkingLocation() {
     <button onclick="
 savePendingParking();
 ">
-    🚗 Save This Parking Location
+    ✓ Save This Location
 </button>
     <br><br>
 
@@ -328,7 +328,7 @@ window.parkingLookupAddress
 '_blank'
 );
 ">
-    🔍 Look Up Parking Address
+    🔍 Look Up Address
 </button>
     <br><br>
 
@@ -349,10 +349,10 @@ if(address){
 
     showActiveJourneyBox();
 
-    alert('🚗 Parking address saved.');
+    alert('📍 Location saved.');
 }
 ">
-    ✏ Enter Parking Address Manually
+    ✏ Enter Address Manually
 </button>
 </div>
 `;
