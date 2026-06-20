@@ -129,12 +129,23 @@ async function saveJourneyPhoto() {
         data.answer
     );
 
+    console.log(
+        "PHOTO MEMORY SAVED:",
+        note
+    );
+
     const lastPhoto =
         activeJourney.photos[
         activeJourney.photos.length - 1
         ];
 
     lastPhoto.analysis = data.answer;
+
+    const suggestions = data.answer.match(
+        /^\d+\.\s(.+)$/gm
+    )?.map(
+        line => line.replace(/^\d+\.\s/, "")
+    ) || [];
 
     pendingPhotoMemory = true;
 
@@ -156,17 +167,17 @@ async function saveJourneyPhoto() {
 
     <br><br>
 
-    <button onclick="savePhotoMemory('1')">
-        1
-    </button>
+    <button onclick="savePhotoMemory('${suggestions[0] || ""}')">
+    1
+</button>
 
-    <button onclick="savePhotoMemory('2')">
-        2
-    </button>
+<button onclick="savePhotoMemory('${suggestions[1] || ""}')">
+    2
+</button>
 
-    <button onclick="savePhotoMemory('3')">
-        3
-    </button>
+<button onclick="savePhotoMemory('${suggestions[2] || ""}')">
+    3
+</button>
 
     <br><br>
 
