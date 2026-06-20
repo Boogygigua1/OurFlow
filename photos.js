@@ -126,8 +126,7 @@ async function saveJourneyPhoto() {
         },
         body: JSON.stringify({
             question:
-                "Look at this image and suggest 3 short memory options the user may want to save. Return simple numbered options only.",
-            history: [],
+                "Look at this image and suggest 3 short location or landmark names the user may want to remember. Return only simple numbered names. Do not include descriptions, explanations, dashes, or extra text.",
             destination: activeJourney?.destination || "",
             parkingLocation: activeJourney?.parkingLocation || "",
             startLocation: activeJourney?.startLocation || "",
