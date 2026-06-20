@@ -550,6 +550,71 @@ ${activeJourney.startLocation
 
 <br><br>
 
+<strong>📅 Appointments:</strong><br>
+${activeJourney.appointments?.length
+    ? activeJourney.appointments
+        .slice(-3)
+        .map(
+            (item, index) =>
+                `${index + 1}. ${item}`
+        )
+        .join("<br>")
+    : "No appointments saved yet."}
+
+<br><br>
+
+<strong>👩‍⚕️ Instructions:</strong><br>
+${activeJourney.staffInstructions?.length
+    ? activeJourney.staffInstructions
+        .slice(-3)
+        .map(
+            (item, index) =>
+                `${index + 1}. ${item}`
+        )
+        .join("<br>")
+    : "No instructions saved yet."}
+
+<br><br>
+
+<strong>📝 Notes:</strong><br>
+${activeJourney.notes?.length
+    ? activeJourney.notes
+        .slice(-3)
+        .map(
+            (item, index) =>
+                `${index + 1}. ${item}`
+        )
+        .join("<br>")
+    : "No notes saved yet."}
+
+<br><br>
+
+<strong>💊 Medications:</strong><br>
+${activeJourney.medications?.length
+    ? activeJourney.medications
+        .slice(-3)
+        .map(
+            (item, index) =>
+                `${index + 1}. ${item}`
+        )
+        .join("<br>")
+    : "No medications saved yet."}
+
+<br><br>
+
+<strong>❓ Questions:</strong><br>
+${activeJourney.questionsForDoctor?.length
+    ? activeJourney.questionsForDoctor
+        .slice(-3)
+        .map(
+            (item, index) =>
+                `${index + 1}. ${item}`
+        )
+        .join("<br>")
+    : "No questions saved yet."}
+
+<br><br>
+
 <strong>📷 Photos:</strong><br>
 ${activeJourney.photos?.length || 0}
 
