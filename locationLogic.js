@@ -435,32 +435,30 @@ async function verifySavedLocation() {
         alert("No destination found.");
         return;
     }
-
-    const useSuggested = confirm(
-        "Would you like OurFlow to search for this location?\n\n" +
-        destination +
-        "\n\n" +
-        "Press OK to search.\n" +
-        "Press Cancel to enter an address manually."
-    );
-
-    if (!useSuggested) {
-
-        const manualAddress = prompt(
-            "Paste the verified address:"
-        );
-
-        if (!manualAddress) {
-            return;
-        }
-
-        saveVerifiedDestinationAddress(
-            manualAddress
-        );
-
-        return;
-    }
-
+// const useSuggested = confirm(
+//     "Would you like OurFlow to search for this location?\n\n" +
+//     destination +
+//     "\n\n" +
+//     "Press OK to search.\n" +
+//     "Press Cancel to enter an address manually."
+// );
+//
+// if (!useSuggested) {
+//
+//     const manualAddress = prompt(
+//         "Paste the verified address:"
+//     );
+//
+//     if (!manualAddress) {
+//         return;
+//     }
+//
+//     saveVerifiedDestinationAddress(
+//         manualAddress
+//     );
+//
+//     return;
+// }
     document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Verify Location</strong>
@@ -508,16 +506,11 @@ async function verifySavedLocation() {
     <br><br>
 
 <button onclick="
-const address = prompt(
-'Confirm or edit the address:',
-window.suggestedAddress
+saveVerifiedDestinationAddress(
+    window.suggestedAddress
 );
-
-if(address){
-    saveVerifiedDestinationAddress(address);
-}
 ">
-    📍 Save This Location
+    ✓ Save This Location
 </button>
 
 <br><br>
@@ -539,9 +532,14 @@ activeJourney?.destination
 
 <button onclick="
 const address = prompt(
-'Paste the verified address:'
+'Enter Address:'
 );
 
+if(address){
+    saveVerifiedDestinationAddress(
+        address
+    );
+}
 ">
     ✏ Enter Address Manually
 </button>
