@@ -129,11 +129,6 @@ async function saveJourneyPhoto() {
         data.answer
     );
 
-    console.log(
-        "PHOTO MEMORY SAVED:",
-        note
-    );
-
     const lastPhoto =
         activeJourney.photos[
         activeJourney.photos.length - 1
