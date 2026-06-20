@@ -417,7 +417,29 @@ function isQuestionRecall(question) {
 
         "what questions did i save",
 
-        "show me the questions i saved"
+        "show me the questions i saved",
+
+        "what do i need to ask",
+
+        "what was i supposed to ask them",
+
+        "what did i need to ask them",
+
+        "what did i want to ask them",
+
+        "what was my question",
+
+        "what were my questions",
+
+        "did i save a question",
+
+        "did i save any question",
+
+        "remind me what i wanted to ask",
+
+        "remind me what i needed to ask",
+
+        "show me what i wanted to ask"
     ];
     return questionRecallPhrases.includes(text);
 }
