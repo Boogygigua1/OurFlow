@@ -150,7 +150,9 @@ async function saveJourneyPhoto() {
 
     <br><br>
 
-    Choose one of the suggested memories:
+    <strong>
+    Choose one of the suggested memories above:
+    </strong>
 
     <br><br>
 
@@ -168,7 +170,7 @@ async function saveJourneyPhoto() {
 
     <br><br>
 
-    Or type your own note below and press Ask OurFlow.
+    Or add your own memory below and press Ask OurFlow.
 </div>
 `;
 }
