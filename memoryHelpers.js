@@ -581,7 +581,55 @@ function isDirectoryRecall(question) {
 
         "what locations did i save",
 
-        "what buildings did i save"
+        "what buildings did i save",
+
+        "where do i need to go",
+
+        "where was i supposed to go",
+
+        "where was i going",
+
+        "where am i supposed to go",
+
+        "where should i go",
+
+        "where is my appointment",
+
+        "where is my advisor",
+
+        "where is the office",
+
+        "where is the department",
+
+        "where is the building",
+
+        "what room number do i have",
+
+        "what room was i given",
+
+        "what room do i need",
+
+        "what office do i need",
+
+        "what office was i given",
+
+        "what building do i need",
+
+        "what building was i given",
+
+        "what floor do i need",
+
+        "what floor was i given",
+
+        "what location did i save",
+
+        "what place did i save",
+
+        "remind me where i need to go",
+
+        "remind me where i was supposed to go",
+
+        "show me where i need to go"
     ];
 
     return directoryRecallPhrases.includes(text);
