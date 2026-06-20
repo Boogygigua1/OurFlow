@@ -92,6 +92,8 @@ async function saveJourneyPhoto() {
 
     activeJourney.timeline.push("📷 Photo Saved");
 
+    console.log("STARTING PHOTO AI CALL");
+
     const response = await fetch("/api/askOurFlow", {
         method: "POST",
         headers: {
@@ -109,7 +111,11 @@ async function saveJourneyPhoto() {
         })
     });
 
+    console.log("PHOTO RESPONSE RECEIVED");
+
     const data = await response.json();
+
+    console.log("PHOTO JSON RECEIVED", data);
 
     console.log(
         "PHOTO AI RESPONSE:",
