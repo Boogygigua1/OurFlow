@@ -2042,7 +2042,8 @@ Can I help you get back there?
             !noteQuestion.startsWith("headed to") &&
 
             (
-                isDirectoryPhrase(noteQuestion)
+                isDirectoryPhrase(noteQuestion) &&
+                !isQuestionPhrase(noteQuestion)
             )
         ) {
 
