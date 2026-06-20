@@ -266,7 +266,6 @@ document.getElementById('questionInput').focus();
     ⬅ Continue Journey
 </button>
 
-
 </div>
 `;
 }
@@ -361,6 +360,8 @@ function savePhotoClassification(type) {
 `;
     }
 }
+
+
 function savePhotoAsLocation(type) {
 
     console.log("Button clicked:", type);
@@ -382,13 +383,12 @@ function savePhotoAsLocation(type) {
 
     if (type === "parking") {
 
-        activeJourney.parkingLocation =
+        pendingParkingLocation =
             location;
 
-        activeJourney.timeline.push(
-            "🚗 Parking Saved From Photo: " +
-            location
-        );
+        verifyParkingLocation();
+
+        return;
     }
 
     if (type === "start") {
