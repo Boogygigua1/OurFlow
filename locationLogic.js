@@ -256,6 +256,11 @@ function savePendingParking() {
 
 async function verifyParkingLocation() {
 
+    console.log(
+        "VERIFY PARKING CALLED:",
+        pendingParkingLocation
+    );
+
     const parkingLocation =
         pendingParkingLocation ||
         activeJourney?.parkingLocation;
