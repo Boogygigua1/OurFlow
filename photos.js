@@ -409,16 +409,14 @@ function savePhotoAsLocation(type) {
 
     if (type === "both") {
 
-        activeJourney.parkingLocation =
+        pendingParkingLocation =
             location;
 
-        activeJourney.startLocation =
-            location;
+        window.savePhotoAsBoth = true;
 
-        activeJourney.timeline.push(
-            "🚗🧭 Parking & Start Location Saved From Photo: " +
-            location
-        );
+        verifyParkingLocation();
+
+        return;
     }
 
     localStorage.setItem(
