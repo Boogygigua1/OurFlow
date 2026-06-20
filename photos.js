@@ -383,6 +383,11 @@ function savePhotoAsLocation(type) {
 
     if (type === "parking") {
 
+        console.log(
+            "PHOTO PARKING CLICKED:",
+            location
+        );
+
         pendingParkingLocation =
             location;
 
