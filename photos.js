@@ -369,9 +369,12 @@ function savePhotoAsLocation(type) {
         return;
     }
 
-    const location = prompt(
-        "What location should I save from this photo?"
-    );
+    const lastPhoto =
+        activeJourney.photos[
+        activeJourney.photos.length - 1
+        ];
+
+    const location = lastPhoto.note;
 
     if (!location) {
         return;
