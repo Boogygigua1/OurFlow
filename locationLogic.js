@@ -510,7 +510,7 @@ saveVerifiedDestinationAddress(
     window.suggestedAddress
 );
 ">
-    ✓ Save This Location
+    ✓ Save & Continue
 </button>
 
 <br><br>
@@ -564,7 +564,7 @@ function saveVerifiedDestinationAddress(address) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📬 Verified Address Saved</strong>
+    <strong>📬 Destination Verified</strong>
 
     <br><br>
 
