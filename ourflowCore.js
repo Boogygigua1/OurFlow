@@ -253,6 +253,7 @@ How should I save this?
             question.toLowerCase().startsWith("leaving for ") ||
             question.toLowerCase().startsWith("leave for ") ||
             question.toLowerCase().startsWith("off to ") ||
+            question.toLowerCase().startsWith("on my way to ") ||
             question.toLowerCase().startsWith("traveling to ") ||
             question.toLowerCase().startsWith("travelling to ") ||
             looksLikeAddress
