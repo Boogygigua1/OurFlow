@@ -739,7 +739,8 @@ Ready to save?
         if (activeJourney) {
 
             const isDirectoryEntry =
-                isDirectoryPhrase(lowerQuestion);
+                isDirectoryPhrase(lowerQuestion) &&
+                !isQuestionPhrase(lowerQuestion);
 
             // ========================================
             // AUTOMATIC QUESTION CAPTURE
