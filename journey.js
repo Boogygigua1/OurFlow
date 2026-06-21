@@ -523,12 +523,21 @@ ${activeJourney.destinationDetail ||
 <strong>🧭 Starting Location:</strong><br>
 ${activeJourney.startLocation ||
         "No starting location saved yet."}
-
 <br><br>
+
+<br>
+<small>
+${activeJourney.startLocationAddress || ""}
+</small>
 
 <strong>🚗 Parking Memory:</strong><br>
 ${activeJourney.parkingLocation ||
         "No parking location saved yet."}
+
+<br>
+<small>
+${activeJourney.parkingLocationAddress || ""}
+</small>        
 
 ${activeJourney.parkingLocation
             ? `
@@ -617,18 +626,17 @@ ${activeJourney.questionsForDoctor?.length
 
 <strong>📷 Photos:</strong><br>
 ${activeJourney.photos?.length
-    ? activeJourney.photos
-        .slice(-3)
-        .map(
-            (item, index) =>
-                `${index + 1}. ${
-                    item.note ||
-                    item.title ||
-                    item.name ||
-                    "Unnamed Photo"
-                }`
-        )
-        .join("<br>")
+            ? activeJourney.photos
+                .slice(-3)
+                .map(
+                    (item, index) =>
+                        `${index + 1}. ${item.note ||
+                        item.title ||
+                        item.name ||
+                        "Unnamed Photo"
+                        }`
+                )
+                .join("<br>")
             : "No photos saved yet."}
 
 <br><br>
