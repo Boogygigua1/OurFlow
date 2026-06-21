@@ -519,11 +519,14 @@ ${activeJourney.arrivalTips || "No arrival tips yet."}
 ${activeJourney.destinationDetail ||
         "No destination details saved yet."}
 <br><br>
-
 <strong>🧭 Starting Location:</strong><br>
 ${activeJourney.startLocation ||
-        "No starting location saved yet."}
-<br><br>
+    "No starting location saved yet."}
+
+${activeJourney.startLocationAddress
+    ? `<br>${activeJourney.startLocationAddress}`
+    : ""}
+    <br><br>
 
 <br>
 <small>
@@ -532,8 +535,11 @@ ${activeJourney.startLocationAddress || ""}
 
 <strong>🚗 Parking Memory:</strong><br>
 ${activeJourney.parkingLocation ||
-        "No parking location saved yet."}
+    "No parking location saved yet."}
 
+${activeJourney.parkingLocationAddress
+    ? `<br>${activeJourney.parkingLocationAddress}`
+    : ""}
 <br>
 <small>
 ${activeJourney.parkingLocationAddress || ""}
