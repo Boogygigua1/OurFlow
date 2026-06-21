@@ -126,8 +126,8 @@ async function saveJourneyPhoto() {
 
     activeJourney.photos.push({
         timestamp: new Date().toLocaleString(),
-        title: pendingLocationName || "",
-        analysis: photoAnalysis || ""
+        title: "",
+        analysis: ""
     });
 
     activeJourney.timeline.push("📷 Photo Saved");
