@@ -336,11 +336,27 @@ async function verifyParkingLocation() {
 <div class="card">
     <strong>📍 Suggested Location</strong>
 
-    <br><br>
+<br><br>
 
-    ${data.suggestion || "No suggestion found."}
+${data.suggestion || "No suggestion found."}
 
-    <br><br>
+<br><br>
+
+<strong>
+Please verify this is the correct location.
+</strong>
+
+<br><br>
+
+1. Use 🔍 Look Up Address to confirm the location.
+
+<br><br>
+
+2. If this match is incorrect, use ✏ Enter Address Manually and paste the correct address.
+
+<br><br>
+
+3. Save only after you have verified the location.
 
     <button onclick="
 savePendingParking();
