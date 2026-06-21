@@ -330,10 +330,16 @@ How should I save this?
                     new Date().toLocaleString(),
 
                 startLocation:
-                    "",
+                    activeJourney?.startLocation || "",
+
+                startLocationAddress:
+                    activeJourney?.startLocationAddress || "",
 
                 parkingLocation:
-                    "",
+                    activeJourney?.parkingLocation || "",
+
+                parkingLocationAddress:
+                    activeJourney?.parkingLocationAddress || "",
 
                 arrivalTips: "",
 
