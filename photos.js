@@ -219,8 +219,6 @@ if(memory){
 </button>
 
     <br><br>
-
-    Choose a suggestion above, or enter your own memory in Ask OurFlow.
 </div>
 `;
 }

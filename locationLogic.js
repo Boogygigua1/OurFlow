@@ -356,11 +356,6 @@ Please verify this is the correct location.
 
 3. Save only after you have verified the location.
 
-    <button onclick="
-savePendingParking();
-">
-    ✓ Save This Location
-</button>
     <br><br>
 
     <button onclick="
@@ -397,6 +392,14 @@ if(address){
 }
 ">
     ✏ Enter Address Manually
+</button>
+
+<br><br>
+
+<button onclick="
+savePendingParking();
+">
+    ✓ Save This Location
 </button>
 </div>
 `;
