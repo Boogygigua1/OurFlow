@@ -90,9 +90,25 @@ async function saveJourneyPhoto() {
     );
 
     if (!activeJourney) {
-        alert("No active journey");
-        return;
-    }
+
+    activeJourney = {
+        destination: "Photo Memory",
+        startLocation: "",
+        parkingLocation: "",
+        appointments: [],
+        staffInstructions: [],
+        notes: [],
+        medications: [],
+        questionsForDoctor: [],
+        directories: [],
+        photos: [],
+        timeline: []
+    };
+
+    console.log(
+        "AUTO-CREATED JOURNEY FOR PHOTO"
+    );
+}
 
     if (!landmarkImageData) {
         alert("No image data");
