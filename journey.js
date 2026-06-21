@@ -363,10 +363,14 @@ ${journey.staffInstructions &&
 
         <br><br>
 
-        <strong>🧭 Starting Location:</strong>
-        ${journey.startLocation || "Not recorded"}
+     <strong>🧭 Starting Location:</strong>
+<br>
+${journey.startLocation || "Not recorded"}
 
-        <br><br>
+${journey.startLocationAddress
+    ? `<br>${journey.startLocationAddress}`
+    : ""}
+    <br><br>
 
         <strong>Parking:</strong>
         ${journey.parkingLocation || "Not recorded"}
@@ -385,7 +389,10 @@ openGoogleMapsToParkingLocation();
 ${journey.startLocation
             ? `
 <br><br>
-<button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(journey.startLocation)}', '_blank')">
+<button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    journey.startLocationAddress ||
+    journey.startLocation
+)}', '_blank')">
     🧭 Return To Start
 </button>
 `
@@ -528,11 +535,6 @@ ${activeJourney.startLocationAddress
     : ""}
     <br><br>
 
-<br>
-<small>
-${activeJourney.startLocationAddress || ""}
-</small>
-
 <strong>🚗 Parking Memory:</strong><br>
 ${activeJourney.parkingLocation ||
     "No parking location saved yet."}
@@ -540,11 +542,7 @@ ${activeJourney.parkingLocation ||
 ${activeJourney.parkingLocationAddress
     ? `<br>${activeJourney.parkingLocationAddress}`
     : ""}
-<br>
-<small>
-${activeJourney.parkingLocationAddress || ""}
-</small>        
-
+     
 ${activeJourney.parkingLocation
             ? `
 <br><br>

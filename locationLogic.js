@@ -217,16 +217,14 @@ function savePendingParking() {
 
         if (window.savePhotoAsBoth) {
 
-
             activeJourney.startLocation =
                 pendingParkingLocation;
 
-
+            activeJourney.startLocationAddress =
+                activeJourney.parkingLocationAddress;
 
             window.savePhotoAsBoth = false;
         }
-
-
 
         localStorage.setItem(
             "activeJourney",
