@@ -188,10 +188,23 @@ async function saveJourneyPhoto() {
     <br><br>
 
     <strong>
-    Choose one of the suggested memories above:
-    </strong>
+Choose a suggestion above, or click Enter Your Own Memory below.
+</strong>
+    <br><br>
 
     <br><br>
+
+<button onclick="
+const memory = prompt(
+'Enter the memory you would like to save:'
+);
+
+if(memory){
+    savePhotoMemory(memory);
+}
+">
+    ✏ Enter Your Own Memory
+</button>
 
 <button onclick="savePhotoMemory(window.photoSuggestions[0])">
     1

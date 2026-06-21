@@ -391,7 +391,9 @@ if(address){
         JSON.stringify(activeJourney)
     );
 
-    savePendingParking();
+    alert(
+    '📍 Address saved. Now click Save This Location.'
+);
 }
 ">
     ✏ Enter Address Manually
