@@ -398,7 +398,6 @@ function savePhotoAsLocation(type) {
     console.log("Button clicked:", type);
 
     if (!activeJourney) {
-        console.log("NO ACTIVE JOURNEY");
         return;
     }
 
@@ -407,31 +406,26 @@ function savePhotoAsLocation(type) {
             activeJourney.photos.length - 1
         ];
 
-    console.log("LAST PHOTO:", lastPhoto);
-
     const location = lastPhoto.note;
 
-    console.log("PHOTO LOCATION:", location);
-
     if (!location) {
-        console.log("NO LOCATION FOUND");
+        return;
+    }
+
+    if (type === "parking") {
+
+        pendingParkingLocation =
+            location;
+
+        verifyParkingLocation();
+
         return;
     }
 
     if (type === "start") {
 
-        console.log(
-            "SETTING START LOCATION:",
-            location
-        );
-
         activeJourney.startLocation =
             location;
-
-        console.log(
-            "START LOCATION NOW:",
-            activeJourney.startLocation
-        );
 
         activeJourney.timeline.push(
             "🧭 Starting Location Saved From Photo: " +
@@ -439,18 +433,21 @@ function savePhotoAsLocation(type) {
         );
     }
 
+    if (type === "both") {
+
+        pendingParkingLocation =
+            location;
+
+        window.savePhotoAsBoth = true;
+
+        verifyParkingLocation();
+
+        return;
+    }
+
     localStorage.setItem(
         "activeJourney",
         JSON.stringify(activeJourney)
-    );
-
-    console.log(
-        "AFTER SAVE:",
-        JSON.parse(
-            localStorage.getItem(
-                "activeJourney"
-            )
-        ).startLocation
     );
 
     showActiveJourneyBox();
