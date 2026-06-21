@@ -386,21 +386,12 @@ if(address){
         JSON.stringify(activeJourney)
     );
 
-    alert(
-    '📍 Address saved. Now click Save This Location.'
-);
+    savePendingParking();
 }
 ">
     ✏ Enter Address Manually
 </button>
 
-<br><br>
-
-<button onclick="
-savePendingParking();
-">
-    ✓ Save This Location
-</button>
 </div>
 `;
 }
