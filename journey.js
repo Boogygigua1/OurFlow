@@ -616,14 +616,30 @@ ${activeJourney.questionsForDoctor?.length
 <br><br>
 
 <strong>📷 Photos:</strong><br>
-${activeJourney.photos?.length || 0}
+${activeJourney.photos?.length
+    ? activeJourney.photos
+        .slice(-3)
+        .map(
+            (item, index) =>
+                `${index + 1}. ${
+                    item.name || item.title || item
+                }`
+        )
+        .join("<br>")
+    : "No photos saved yet."}
 
 <br><br>
 
 <strong>🏢 Directory Memory:</strong><br>
 ${activeJourney.directories?.length
-            ? "• " + activeJourney.directories.slice(-3).join("<br>• ")
-            : "No directory information saved yet."}
+    ? activeJourney.directories
+        .slice(-3)
+        .map(
+            (item, index) =>
+                `${index + 1}. ${item}`
+        )
+        .join("<br>")
+    : "No directory information saved yet."}
     <br><br>
 
     <button onclick="saveJourney()">
