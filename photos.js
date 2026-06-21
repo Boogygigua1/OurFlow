@@ -85,7 +85,7 @@ async function saveJourneyPhoto() {
         "ACTIVE JOURNEY BEFORE PHOTO:",
         activeJourney
     );
-    
+
     if (!activeJourney) {
 
         activeJourney = {
@@ -422,6 +422,16 @@ function savePhotoAsLocation(type) {
 
         activeJourney.startLocation =
             location;
+
+        const address = prompt(
+            "Paste the verified starting address:"
+        );
+
+        if (address) {
+
+            activeJourney.startLocationAddress =
+                address;
+        }
 
         activeJourney.timeline.push(
             "🧭 Starting Location Saved From Photo: " +
