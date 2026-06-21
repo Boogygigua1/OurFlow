@@ -188,7 +188,7 @@ async function saveJourneyPhoto() {
     <br><br>
 
     <strong>
-Choose a suggestion above, or click Enter Your Own Memory below.
+Choose a suggestion above, or click Enter Your Own Memory.
 </strong>
     <br><br>
 
