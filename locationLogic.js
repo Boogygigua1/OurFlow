@@ -217,26 +217,16 @@ function savePendingParking() {
 
         if (window.savePhotoAsBoth) {
 
-            console.log(
-                "SAVE AS BOTH DETECTED:",
-                pendingParkingLocation
-            );
 
             activeJourney.startLocation =
                 pendingParkingLocation;
 
-            console.log(
-                "START LOCATION SAVED:",
-                activeJourney.startLocation
-            );
+
 
             window.savePhotoAsBoth = false;
         }
 
-        console.log(
-            "FINAL JOURNEY:",
-            activeJourney
-        );
+
 
         localStorage.setItem(
             "activeJourney",

@@ -33,11 +33,9 @@ function previewLandmarkImage() {
 
 async function analyzeLandmarkImage() {
 
-    console.log("analyzeLandmarkImage fired");
-
+   
     previewLandmarkImage();
 
-    console.log("previewLandmarkImage finished");
 
     const file =
         document.getElementById("landmarkImage")
@@ -83,11 +81,6 @@ async function saveJourneyPhoto() {
             "⏳ Analyzing Photo...";
     }
 
-    console.log(
-        "SAVE PHOTO DEBUG",
-        activeJourney,
-        landmarkImageData
-    );
 
     if (!activeJourney) {
 
@@ -395,7 +388,6 @@ function savePhotoClassification(type) {
 
 function savePhotoAsLocation(type) {
 
-    console.log("Button clicked:", type);
 
     if (!activeJourney) {
         return;

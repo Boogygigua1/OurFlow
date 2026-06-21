@@ -651,12 +651,6 @@ ${activeJourney.directories?.length
 </div>
 `;
 
-    console.log(
-        "JOURNEY DISPLAY:",
-        activeJourney.startLocation,
-        activeJourney.parkingLocation
-    );
-
     localStorage.setItem(
         "activeJourney",
         JSON.stringify(activeJourney)

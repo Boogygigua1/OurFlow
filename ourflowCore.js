@@ -140,10 +140,7 @@ How should I save this?
         )
     ) {
 
-        console.log(
-            "JOURNEY BLOCK REACHED:",
-            question
-        );
+
         // ========================================
         // BLANK JOURNEY CREATION
         // ========================================
@@ -1647,10 +1644,6 @@ Ready to save?
             // CLEANUP:
             // Same pattern as Show Questions.
 
-            console.log(
-                "MEDICATION ARRAY:",
-                activeJourney.medications
-            );
 
             showJourneyList(
                 "💊 Medications",
