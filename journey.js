@@ -552,66 +552,66 @@ ${activeJourney.startLocation
 
 <strong>📅 Appointments:</strong><br>
 ${activeJourney.appointments?.length
-    ? activeJourney.appointments
-        .slice(-3)
-        .map(
-            (item, index) =>
-                `${index + 1}. ${item}`
-        )
-        .join("<br>")
-    : "No appointments saved yet."}
+            ? activeJourney.appointments
+                .slice(-3)
+                .map(
+                    (item, index) =>
+                        `${index + 1}. ${item}`
+                )
+                .join("<br>")
+            : "No appointments saved yet."}
 
 <br><br>
 
 <strong>👩‍⚕️ Instructions:</strong><br>
 ${activeJourney.staffInstructions?.length
-    ? activeJourney.staffInstructions
-        .slice(-3)
-        .map(
-            (item, index) =>
-                `${index + 1}. ${item}`
-        )
-        .join("<br>")
-    : "No instructions saved yet."}
+            ? activeJourney.staffInstructions
+                .slice(-3)
+                .map(
+                    (item, index) =>
+                        `${index + 1}. ${item}`
+                )
+                .join("<br>")
+            : "No instructions saved yet."}
 
 <br><br>
 
 <strong>📝 Notes:</strong><br>
 ${activeJourney.notes?.length
-    ? activeJourney.notes
-        .slice(-3)
-        .map(
-            (item, index) =>
-                `${index + 1}. ${item}`
-        )
-        .join("<br>")
-    : "No notes saved yet."}
+            ? activeJourney.notes
+                .slice(-3)
+                .map(
+                    (item, index) =>
+                        `${index + 1}. ${item}`
+                )
+                .join("<br>")
+            : "No notes saved yet."}
 
 <br><br>
 
 <strong>💊 Medications:</strong><br>
 ${activeJourney.medications?.length
-    ? activeJourney.medications
-        .slice(-3)
-        .map(
-            (item, index) =>
-                `${index + 1}. ${item}`
-        )
-        .join("<br>")
-    : "No medications saved yet."}
+            ? activeJourney.medications
+                .slice(-3)
+                .map(
+                    (item, index) =>
+                        `${index + 1}. ${item}`
+                )
+                .join("<br>")
+            : "No medications saved yet."}
 
 <br><br>
 
 <strong>❓ Questions:</strong><br>
 ${activeJourney.questionsForDoctor?.length
-    ? activeJourney.questionsForDoctor
-        .slice(-3)
-        .map(
-            (item, index) =>
-                `${index + 1}. ${item}`
-        )
-        .join("<br>")
-    : "No questions saved yet."}
+            ? activeJourney.questionsForDoctor
+                .slice(-3)
+                .map(
+                    (item, index) =>
+                        `${index + 1}. ${item}`
+                )
+                .join("<br>")
+            : "No questions saved yet."}
 
 <br><br>
 
@@ -622,24 +622,27 @@ ${activeJourney.photos?.length
         .map(
             (item, index) =>
                 `${index + 1}. ${
-                    item.name || item.title || item
+                    item.note ||
+                    item.title ||
+                    item.name ||
+                    "Unnamed Photo"
                 }`
         )
         .join("<br>")
-    : "No photos saved yet."}
+            : "No photos saved yet."}
 
 <br><br>
 
 <strong>🏢 Directory Memory:</strong><br>
 ${activeJourney.directories?.length
-    ? activeJourney.directories
-        .slice(-3)
-        .map(
-            (item, index) =>
-                `${index + 1}. ${item}`
-        )
-        .join("<br>")
-    : "No directory information saved yet."}
+            ? activeJourney.directories
+                .slice(-3)
+                .map(
+                    (item, index) =>
+                        `${index + 1}. ${item}`
+                )
+                .join("<br>")
+            : "No directory information saved yet."}
     <br><br>
 
     <button onclick="saveJourney()">
@@ -647,6 +650,12 @@ ${activeJourney.directories?.length
     </button>
 </div>
 `;
+
+    console.log(
+        "JOURNEY DISPLAY:",
+        activeJourney.startLocation,
+        activeJourney.parkingLocation
+    );
 
     localStorage.setItem(
         "activeJourney",
