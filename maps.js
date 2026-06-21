@@ -5,17 +5,31 @@ function openGoogleMapsForJourney() {
         return;
     }
 
-    const mapDestination =
-        activeJourney.mapLink ||
+    const destination =
+        activeJourney?.verifiedDestinationAddress ||
+        activeJourney?.destinationAddress ||
+        activeJourney?.destinationDetail ||
+        activeJourney?.destination ||
+        "";
 
-        "https://www.google.com/maps/search/?api=1&query=" +
-        encodeURIComponent(
-            activeJourney.destinationAddress ||
-            activeJourney.destination
-        );
+    const mapUrl =
+        "https://www.google.com/maps/dir/?api=1" +
 
-    window.open(mapDestination, "_blank");
+        (
+            activeJourney?.startLocation
+                ? "&origin=" +
+                encodeURIComponent(
+                    activeJourney.startLocation
+                )
+                : ""
+        ) +
+
+        "&destination=" +
+        encodeURIComponent(destination);
+
+    window.open(mapUrl, "_blank");
 }
+
 function openGoogleMapsToStartLocation() {
 
     if (!activeJourney?.startLocation) {
