@@ -91,24 +91,24 @@ async function saveJourneyPhoto() {
 
     if (!activeJourney) {
 
-    activeJourney = {
-        destination: "Photo Memory",
-        startLocation: "",
-        parkingLocation: "",
-        appointments: [],
-        staffInstructions: [],
-        notes: [],
-        medications: [],
-        questionsForDoctor: [],
-        directories: [],
-        photos: [],
-        timeline: []
-    };
+        activeJourney = {
+            destination: "Photo Memory",
+            startLocation: "",
+            parkingLocation: "",
+            appointments: [],
+            staffInstructions: [],
+            notes: [],
+            medications: [],
+            questionsForDoctor: [],
+            directories: [],
+            photos: [],
+            timeline: []
+        };
 
-    console.log(
-        "AUTO-CREATED JOURNEY FOR PHOTO"
-    );
-}
+        console.log(
+            "AUTO-CREATED JOURNEY FOR PHOTO"
+        );
+    }
 
     if (!landmarkImageData) {
         alert("No image data");
@@ -126,9 +126,8 @@ async function saveJourneyPhoto() {
 
     activeJourney.photos.push({
         timestamp: new Date().toLocaleString(),
-        image: landmarkImageData,
-        note: "",
-        analysis: ""
+        title: pendingLocationName || "",
+        analysis: photoAnalysis || ""
     });
 
     activeJourney.timeline.push("📷 Photo Saved");
