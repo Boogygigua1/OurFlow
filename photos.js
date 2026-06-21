@@ -33,7 +33,7 @@ function previewLandmarkImage() {
 
 async function analyzeLandmarkImage() {
 
-   
+
     previewLandmarkImage();
 
 
@@ -81,7 +81,11 @@ async function saveJourneyPhoto() {
             "⏳ Analyzing Photo...";
     }
 
-
+    console.log(
+        "ACTIVE JOURNEY BEFORE PHOTO:",
+        activeJourney
+    );
+    
     if (!activeJourney) {
 
         activeJourney = {
@@ -395,7 +399,7 @@ function savePhotoAsLocation(type) {
 
     const lastPhoto =
         activeJourney.photos[
-            activeJourney.photos.length - 1
+        activeJourney.photos.length - 1
         ];
 
     const location = lastPhoto.note;
