@@ -210,32 +210,35 @@ function saveLocationType(type) {
 function savePendingParking() {
     if (!pendingParkingLocation) return;
 
-    if (activeJourney) {
+if (activeJourney) {
 
-        activeJourney.parkingLocation =
+    activeJourney.parkingLocation =
+        pendingParkingLocation;
+
+    activeJourney.parkingVerified =
+        true;
+
+    if (window.savePhotoAsBoth) {
+
+        activeJourney.startLocation =
             pendingParkingLocation;
 
-        if (window.savePhotoAsBoth) {
+        activeJourney.startLocationAddress =
+            activeJourney.parkingLocationAddress;
 
-            activeJourney.startLocation =
-                pendingParkingLocation;
+        activeJourney.startVerified =
+            true;
 
-            activeJourney.parkingVerified =
-                true;
-
-            activeJourney.startLocationAddress =
-                activeJourney.parkingLocationAddress;
-
-            window.savePhotoAsBoth = false;
-        }
-
-        localStorage.setItem(
-            "activeJourney",
-            JSON.stringify(activeJourney)
-        );
-
-        showActiveJourneyBox();
+        window.savePhotoAsBoth = false;
     }
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+}
 
     pendingParkingLocation = "";
 

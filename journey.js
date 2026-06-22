@@ -566,6 +566,10 @@ ${activeJourney.startLocationAddress
             : ""}
     <br><br>
 
+${activeJourney.startVerified
+            ? `<br>✓ Verified Address`
+            : ""}
+                
 <strong>🚗 Parking Memory:</strong><br>
 ${activeJourney.parkingLocation ||
         "No parking location saved yet."}
