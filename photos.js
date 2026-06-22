@@ -127,10 +127,11 @@ async function saveJourneyPhoto() {
     );
 
     activeJourney.photos.push({
-        timestamp: new Date().toLocaleString(),
-        title: "",
-        analysis: ""
-    });
+    timestamp: new Date().toLocaleString(),
+    image: landmarkImageData,
+    title: "",
+    analysis: ""
+});
 
     activeJourney.timeline.push("📷 Photo Saved");
 
