@@ -402,11 +402,6 @@ if(address){
 
 </div>
 `;
-
-document.getElementById("result").scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-});
 }
 
 function saveInformationSearchAsDestination() {

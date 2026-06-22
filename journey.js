@@ -697,6 +697,11 @@ ${activeJourney.directories?.length
 </div>
 `;
 
+document.getElementById("result").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+});
+
     localStorage.setItem(
         "activeJourney",
         JSON.stringify(activeJourney)
