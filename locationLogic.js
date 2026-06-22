@@ -354,7 +354,7 @@ savePendingParking();
 
 <br><br>
 
-1. 1. If the location looks correct, click ✓ Save This Location.
+1. If the location looks correct, click ✓ Save This Location.
 
 <br><br>
 

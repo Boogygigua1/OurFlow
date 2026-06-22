@@ -1,3 +1,21 @@
+// ========================================
+// COLLAPSIBLE SECTIONS
+// ========================================
+
+window.showJourneyInfo =
+    window.showJourneyInfo ?? false;
+
+window.collapsedSections =
+    window.collapsedSections || {
+
+        photos: false,
+        directories: false,
+        questions: false,
+        appointments: false,
+        instructions: false,
+        notes: false
+
+    };
 
 function saveJourney() {
 
@@ -368,8 +386,8 @@ ${journey.staffInstructions &&
 ${journey.startLocation || "Not recorded"}
 
 ${journey.startLocationAddress
-    ? `<br>${journey.startLocationAddress}`
-    : ""}
+            ? `<br>${journey.startLocationAddress}`
+            : ""}
     <br><br>
 
         <strong>Parking:</strong>
@@ -390,9 +408,9 @@ ${journey.startLocation
             ? `
 <br><br>
 <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    journey.startLocationAddress ||
-    journey.startLocation
-)}', '_blank')">
+                journey.startLocationAddress ||
+                journey.startLocation
+            )}', '_blank')">
     🧭 Return To Start
 </button>
 `
@@ -513,9 +531,21 @@ Verify the location before navigating.
 
     <br><br>
 
-    <strong>Active Journey Info:</strong>
-    <br><br>
+    <button onclick="
+window.showJourneyInfo =
+    !window.showJourneyInfo;
 
+showActiveJourneyBox();
+">
+    ${window.showJourneyInfo
+        ? "▼"
+        : "▶"}
+    Active Journey Info
+</button>
+
+<br><br>
+
+${window.showJourneyInfo ? `
 
     <strong>Arrival Help:</strong><br>
 ${activeJourney.arrivalTips || "No arrival tips yet."}
@@ -528,20 +558,20 @@ ${activeJourney.destinationDetail ||
 <br><br>
 <strong>🧭 Starting Location:</strong><br>
 ${activeJourney.startLocation ||
-    "No starting location saved yet."}
+        "No starting location saved yet."}
 
 ${activeJourney.startLocationAddress
-    ? `<br>${activeJourney.startLocationAddress}`
-    : ""}
+            ? `<br>${activeJourney.startLocationAddress}`
+            : ""}
     <br><br>
 
 <strong>🚗 Parking Memory:</strong><br>
 ${activeJourney.parkingLocation ||
-    "No parking location saved yet."}
+        "No parking location saved yet."}
 
 ${activeJourney.parkingLocationAddress
-    ? `<br>${activeJourney.parkingLocationAddress}`
-    : ""}
+            ? `<br>${activeJourney.parkingLocationAddress}`
+            : ""}
      
 ${activeJourney.parkingLocation
             ? `
@@ -629,6 +659,7 @@ ${activeJourney.questionsForDoctor?.length
 <br><br>
 
 <strong>📷 Photos:</strong><br>
+
 ${activeJourney.photos?.length
             ? activeJourney.photos
                 .slice(-3)
@@ -644,6 +675,8 @@ ${activeJourney.photos?.length
             : "No photos saved yet."}
 
 <br><br>
+
+` : ""}
 
 <strong>🏢 Directory Memory:</strong><br>
 ${activeJourney.directories?.length
