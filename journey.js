@@ -580,10 +580,6 @@ ${activeJourney.startVerified
 ${activeJourney.parkingLocation ||
 "No parking location saved yet."}
 
-<strong>🚗 Parking Memory:</strong><br>
-${activeJourney.parkingLocation ||
-        "No parking location saved yet."}
-
 ${activeJourney.parkingLocationAddress
             ? `<br>${activeJourney.parkingLocationAddress}`
             : ""}
