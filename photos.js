@@ -165,7 +165,7 @@ async function saveJourneyPhoto() {
     timestamp: new Date().toLocaleString(),
     title: "",
     analysis: "",
-    thumbnail: ""
+    thumbnail: landmarkThumbnailData
 });
 
     activeJourney.timeline.push("📷 Photo Saved");
