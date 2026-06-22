@@ -179,9 +179,32 @@ function showSavedJourneys() {
     let html =
         `<div class="card">
 
-<strong>🧭 Saved Journeys</strong>
+<strong>🗂 Journey Archive</strong>
 
 <br><br>
+
+${savedJourneys.length} / ${JOURNEY_LIMIT} Journeys Used
+
+${savedJourneys.length >= JOURNEY_LIMIT
+? `
+<br><br>
+
+<div class="card">
+    <strong>📦 Archive Full</strong>
+
+    <br><br>
+
+    You've used all
+    ${JOURNEY_LIMIT}
+    available journey slots.
+
+    <br><br>
+
+    Delete older journeys
+    or expand your archive.
+</div>
+`
+: ""}
 
 <input
     type="text"
@@ -233,6 +256,14 @@ ${journey.verifiedDestinationAddress ||
     ${journey.timeline?.length || 0}
 
     <br>
+
+Photos:
+${journey.photos?.length || 0}
+
+<br>
+
+Notes:
+${journey.notes?.length || 0}
 
     <button onclick="event.stopPropagation(); deleteJourney(${index})">
         🗑 Delete Journey
@@ -304,40 +335,40 @@ ${journey.timeline?.length || 0}
 <br><br>
 
 ${journey.notes?.length
-    ? `<strong>📝 Notes:</strong> ${journey.notes.length}<br>`
-    : ""}
+            ? `<strong>📝 Notes:</strong> ${journey.notes.length}<br>`
+            : ""}
 
 ${journey.questionsForDoctor?.length
-    ? `<strong>❓ Questions:</strong> ${journey.questionsForDoctor.length}<br>`
-    : ""}
+            ? `<strong>❓ Questions:</strong> ${journey.questionsForDoctor.length}<br>`
+            : ""}
 
 ${journey.medications?.length
-    ? `<strong>💊 Medications:</strong> ${journey.medications.length}<br>`
-    : ""}
+            ? `<strong>💊 Medications:</strong> ${journey.medications.length}<br>`
+            : ""}
 
 ${journey.appointments?.length
-    ? `<strong>📅 Appointments:</strong> ${journey.appointments.length}<br>`
-    : ""}
+            ? `<strong>📅 Appointments:</strong> ${journey.appointments.length}<br>`
+            : ""}
 
 ${journey.directories?.length
-    ? `<strong>🏢 Directories:</strong> ${journey.directories.length}<br>`
-    : ""}
+            ? `<strong>🏢 Directories:</strong> ${journey.directories.length}<br>`
+            : ""}
 
 ${journey.staffInstructions?.length
-    ? `<strong>👩‍⚕️ Instructions:</strong> ${journey.staffInstructions.length}<br>`
-    : ""}
+            ? `<strong>👩‍⚕️ Instructions:</strong> ${journey.staffInstructions.length}<br>`
+            : ""}
 
 ${journey.photos?.length
-    ? `<strong>📷 Photos:</strong> ${journey.photos.length}<br>`
-    : ""}
+            ? `<strong>📷 Photos:</strong> ${journey.photos.length}<br>`
+            : ""}
 
 ${journey.parkingLocation
-    ? `<strong>🚗 Parking:</strong> ${journey.parkingLocation}<br>`
-    : ""}
+            ? `<strong>🚗 Parking:</strong> ${journey.parkingLocation}<br>`
+            : ""}
 
 ${journey.startLocation
-    ? `<strong>🧭 Start:</strong> ${journey.startLocation}<br>`
-    : ""}
+            ? `<strong>🧭 Start:</strong> ${journey.startLocation}<br>`
+            : ""}
 
 <strong>📍 Destination:</strong>
 ${journey.destination}
@@ -539,8 +570,8 @@ window.showJourneyInfo =
 showActiveJourneyBox();
 ">
     ${window.showJourneyInfo
-        ? "▼"
-        : "▶"}
+            ? "▼"
+            : "▶"}
     Active Journey Info
 </button>
 
@@ -555,7 +586,7 @@ ${activeJourney.arrivalTips || "No arrival tips yet."}
 
 <strong>📍 Destination Details:</strong><br>
 ${activeJourney.destinationDetail ||
-        "No destination details saved yet."}
+            "No destination details saved yet."}
 <br><br>
 <strong>🧭 Starting Location:</strong><br>
 <br><br>
@@ -563,124 +594,124 @@ ${activeJourney.destinationDetail ||
 <strong>🧭 Starting Location:</strong><br>
 
 ${activeJourney.startLocation ||
-"No starting location saved yet."}
+            "No starting location saved yet."}
 
 ${activeJourney.startLocationAddress
-? `<br>${activeJourney.startLocationAddress}`
-: ""}
+                ? `<br>${activeJourney.startLocationAddress}`
+                : ""}
 
 ${activeJourney.startVerified
-? `<br>✓ Verified Address`
-: ""}
+                ? `<br>✓ Verified Address`
+                : ""}
 
 <br><br>
 
 <strong>🚗 Parking Memory:</strong><br>
 
 ${activeJourney.parkingLocation ||
-"No parking location saved yet."}
+            "No parking location saved yet."}
 
 ${activeJourney.parkingLocationAddress
-            ? `<br>${activeJourney.parkingLocationAddress}`
-            : ""}
+                ? `<br>${activeJourney.parkingLocationAddress}`
+                : ""}
 
 ${activeJourney.parkingVerified
-            ? `<br>✓ Verified Address`
-            : ""}
+                ? `<br>✓ Verified Address`
+                : ""}
      
 ${activeJourney.parkingLocation
-            ? `
+                ? `
 <br><br>
 <button onclick="openGoogleMapsToParkingLocation()">
     🚗 Return To Parking
 </button>
 `
-            : ""}
+                : ""}
 
 ${activeJourney.startLocation
-            ? `
+                ? `
 <br><br>
 <button onclick="openGoogleMapsToStartLocation()">
     🧭 Return To Start
 </button>
 `
-            : ""}
+                : ""}
 
 <br><br>
 
 <strong>📅 Appointments:</strong><br>
 ${activeJourney.appointments?.length
-            ? activeJourney.appointments
-                .slice(-3)
-                .map(
-                    (item, index) =>
-                        `${index + 1}. ${item}`
-                )
-                .join("<br>")
-            : "No appointments saved yet."}
+                ? activeJourney.appointments
+                    .slice(-3)
+                    .map(
+                        (item, index) =>
+                            `${index + 1}. ${item}`
+                    )
+                    .join("<br>")
+                : "No appointments saved yet."}
 
 <br><br>
 
 <strong>👩‍⚕️ Instructions:</strong><br>
 ${activeJourney.staffInstructions?.length
-            ? activeJourney.staffInstructions
-                .slice(-3)
-                .map(
-                    (item, index) =>
-                        `${index + 1}. ${item}`
-                )
-                .join("<br>")
-            : "No instructions saved yet."}
+                ? activeJourney.staffInstructions
+                    .slice(-3)
+                    .map(
+                        (item, index) =>
+                            `${index + 1}. ${item}`
+                    )
+                    .join("<br>")
+                : "No instructions saved yet."}
 
 <br><br>
 
 <strong>📝 Notes:</strong><br>
 ${activeJourney.notes?.length
-            ? activeJourney.notes
-                .slice(-3)
-                .map(
-                    (item, index) =>
-                        `${index + 1}. ${item}`
-                )
-                .join("<br>")
-            : "No notes saved yet."}
+                ? activeJourney.notes
+                    .slice(-3)
+                    .map(
+                        (item, index) =>
+                            `${index + 1}. ${item}`
+                    )
+                    .join("<br>")
+                : "No notes saved yet."}
 
 <br><br>
 
 <strong>💊 Medications:</strong><br>
 ${activeJourney.medications?.length
-            ? activeJourney.medications
-                .slice(-3)
-                .map(
-                    (item, index) =>
-                        `${index + 1}. ${item}`
-                )
-                .join("<br>")
-            : "No medications saved yet."}
+                ? activeJourney.medications
+                    .slice(-3)
+                    .map(
+                        (item, index) =>
+                            `${index + 1}. ${item}`
+                    )
+                    .join("<br>")
+                : "No medications saved yet."}
 
 <br><br>
 
 <strong>❓ Questions:</strong><br>
 ${activeJourney.questionsForDoctor?.length
-            ? activeJourney.questionsForDoctor
-                .slice(-3)
-                .map(
-                    (item, index) =>
-                        `${index + 1}. ${item}`
-                )
-                .join("<br>")
-            : "No questions saved yet."}
+                ? activeJourney.questionsForDoctor
+                    .slice(-3)
+                    .map(
+                        (item, index) =>
+                            `${index + 1}. ${item}`
+                    )
+                    .join("<br>")
+                : "No questions saved yet."}
 
 <br><br>
 
 <strong>📷 Photos:</strong><br>
 
 ${activeJourney.photos?.length
-    ? activeJourney.photos
-        .slice(-3)
-        .map(
-            (item, index) =>
-                `
+                ? activeJourney.photos
+                    .slice(-3)
+                    .map(
+                        (item, index) =>
+                            `
 ${item.thumbnail ? `
 <img
     src="${item.thumbnail}"
@@ -696,13 +727,13 @@ ${item.thumbnail ? `
 ` : ""}
 
 ${index + 1}. ${item.note ||
-item.title ||
-item.name ||
-"Unnamed Photo"}
+                            item.title ||
+                            item.name ||
+                            "Unnamed Photo"}
 `
-        )
-        .join("<br>")
-    : "No photos saved yet."}
+                    )
+                    .join("<br>")
+                : "No photos saved yet."}
 
 <br><br>
 
@@ -726,15 +757,15 @@ ${activeJourney.directories?.length
 </div>
 `;
 
-setTimeout(() => {
+    setTimeout(() => {
 
-    document.getElementById("result")
-        ?.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
+        document.getElementById("result")
+            ?.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
 
-}, 150);
+    }, 150);
 
     localStorage.setItem(
         "activeJourney",
