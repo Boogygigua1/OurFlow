@@ -670,12 +670,18 @@ ${activeJourney.photos?.length
 ${item.thumbnail ? `
 <img
     src="${item.thumbnail}"
+    onclick="
+        showPhotoThumbnail(
+            '${item.thumbnail}'
+        )
+    "
     style="
         width:60px;
         height:auto;
         border-radius:8px;
         margin-right:8px;
         vertical-align:middle;
+        cursor:pointer;
     "
 >
 ` : ""}
