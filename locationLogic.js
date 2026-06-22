@@ -379,10 +379,20 @@ window.parkingLookupAddress
 </button>
     <br><br>
 
-    <button onclick="
-const address = prompt(
-'Paste the verified parking address:'
-);
+    <input
+    id="verifiedParkingAddress"
+    type="text"
+    placeholder="Paste verified parking address here"
+    style="width:90%;padding:8px;"
+>
+
+<br><br>
+
+<button onclick="
+const address =
+document.getElementById(
+    'verifiedParkingAddress'
+).value.trim();
 
 if(address){
 
@@ -397,7 +407,7 @@ if(address){
     savePendingParking();
 }
 ">
-    ✏ Enter Address Manually
+    ✓ Save Verified Address
 </button>
 
 </div>
