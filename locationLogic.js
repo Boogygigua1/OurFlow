@@ -220,6 +220,9 @@ function savePendingParking() {
             activeJourney.startLocation =
                 pendingParkingLocation;
 
+            activeJourney.parkingVerified =
+                true;
+
             activeJourney.startLocationAddress =
                 activeJourney.parkingLocationAddress;
 

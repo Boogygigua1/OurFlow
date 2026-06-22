@@ -573,6 +573,10 @@ ${activeJourney.parkingLocation ||
 ${activeJourney.parkingLocationAddress
             ? `<br>${activeJourney.parkingLocationAddress}`
             : ""}
+
+${activeJourney.parkingVerified
+            ? `<br>✓ Verified Address`
+            : ""}
      
 ${activeJourney.parkingLocation
             ? `
@@ -670,11 +674,6 @@ ${activeJourney.photos?.length
 ${item.thumbnail ? `
 <img
     src="${item.thumbnail}"
-    onclick="
-        showPhotoThumbnail(
-            '${item.thumbnail}'
-        )
-    "
     style="
         width:60px;
         height:auto;
