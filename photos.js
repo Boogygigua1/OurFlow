@@ -10,47 +10,47 @@ function previewLandmarkImage() {
 
     reader.onload = function (e) {
 
-    landmarkImageData = e.target.result;
+        landmarkImageData = e.target.result;
 
-    const img = new Image();
+        const img = new Image();
 
-    img.onload = function () {
+        img.onload = function () {
 
-        const canvas =
-            document.createElement("canvas");
+            const canvas =
+                document.createElement("canvas");
 
-        const ctx =
-            canvas.getContext("2d");
+            const ctx =
+                canvas.getContext("2d");
 
-        const width = 100;
+            const width = 100;
 
-        const scale =
-            width / img.width;
+            const scale =
+                width / img.width;
 
-        canvas.width = width;
+            canvas.width = width;
 
-        canvas.height =
-            img.height * scale;
+            canvas.height =
+                img.height * scale;
 
-        ctx.drawImage(
-            img,
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-        landmarkThumbnailData =
-            canvas.toDataURL(
-                "image/jpeg",
-                0.6
+            ctx.drawImage(
+                img,
+                0,
+                0,
+                canvas.width,
+                canvas.height
             );
-    };
 
-    img.src = e.target.result;
+            landmarkThumbnailData =
+                canvas.toDataURL(
+                    "image/jpeg",
+                    0.6
+                );
+        };
 
-    document.getElementById("imagePreview")
-        .innerHTML = `
+        img.src = e.target.result;
+
+        document.getElementById("imagePreview")
+            .innerHTML = `
 <img
     src="${e.target.result}"
     style="
@@ -97,10 +97,10 @@ async function analyzeLandmarkImage() {
 </div>
 `;
 
-document.getElementById("result").scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-});
+    document.getElementById("result").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
 
 
@@ -162,12 +162,17 @@ async function saveJourneyPhoto() {
     );
 
     activeJourney.photos.push({
-    timestamp: new Date().toLocaleString(),
-    title: "",
-    analysis: "",
-    thumbnail: landmarkThumbnailData
-});
+        timestamp: new Date().toLocaleString(),
+        title: "",
+        analysis: "",
+        thumbnail: landmarkThumbnailData
+    });
 
+    console.log(
+        "THUMBNAIL LENGTH:",
+        landmarkThumbnailData.length
+    );
+    
     activeJourney.timeline.push("📷 Photo Saved");
 
     console.log("STARTING PHOTO AI CALL");
