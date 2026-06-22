@@ -303,47 +303,48 @@ ${journey.timeline?.length || 0}
 
 <br><br>
 
-${journey.notes &&
-            journey.notes.length
-            ? `<strong>📝 Notes:</strong><br>${journey.notes.map(n => `• ${n}<br>`).join("")}<br>`
-            : ""}
+${journey.notes?.length
+    ? `<strong>📝 Notes:</strong> ${journey.notes.length}<br>`
+    : ""}
 
-${journey.questionsForDoctor &&
-            journey.questionsForDoctor.length
-            ? `<strong>❓ Questions:</strong><br>${journey.questionsForDoctor.map(q => `• ${q}<br>`).join("")}<br>`
-            : ""}
+${journey.questionsForDoctor?.length
+    ? `<strong>❓ Questions:</strong> ${journey.questionsForDoctor.length}<br>`
+    : ""}
 
-${journey.medications &&
-            journey.medications.length
-            ? `<strong>💊 Medications:</strong><br>${journey.medications.map(m => `• ${m}<br>`).join("")}<br>`
-            : ""}
+${journey.medications?.length
+    ? `<strong>💊 Medications:</strong> ${journey.medications.length}<br>`
+    : ""}
 
-${journey.appointments &&
-            journey.appointments.length
-            ? `<strong>📅 Appointments:</strong><br>${journey.appointments.map(a => `• ${a}<br>`).join("")}<br>`
-            : ""}
+${journey.appointments?.length
+    ? `<strong>📅 Appointments:</strong> ${journey.appointments.length}<br>`
+    : ""}
+
+${journey.directories?.length
+    ? `<strong>🏢 Directories:</strong> ${journey.directories.length}<br>`
+    : ""}
+
+${journey.staffInstructions?.length
+    ? `<strong>👩‍⚕️ Instructions:</strong> ${journey.staffInstructions.length}<br>`
+    : ""}
+
+${journey.photos?.length
+    ? `<strong>📷 Photos:</strong> ${journey.photos.length}<br>`
+    : ""}
 
 ${journey.parkingLocation
-            ? `<strong>🚗 Parking:</strong><br>• ${journey.parkingLocation}<br><br>`
-            : ""}
+    ? `<strong>🚗 Parking:</strong> ${journey.parkingLocation}<br>`
+    : ""}
 
 ${journey.startLocation
-            ? `<strong>🧭 Starting Location:</strong><br>• ${journey.startLocation}<br><br>`
-            : ""}  
+    ? `<strong>🧭 Start:</strong> ${journey.startLocation}<br>`
+    : ""}
 
-${journey.directories &&
-            journey.directories.length
-            ? `<strong>🏢 Directories:</strong><br>${journey.directories.map(d => `• ${d}<br>`).join("")}<br>`
-            : ""}    
-                                      
+<strong>📍 Destination:</strong>
+${journey.destination}
 
-${journey.staffInstructions &&
-            journey.staffInstructions.length
-            ? `<strong>👩‍⚕️ Instructions:</strong><br>${journey.staffInstructions.map(i => `• ${i}<br>`).join("")}<br>`
-            : ""}
+<br><br>
 
 <hr>
-
         <strong>Destination:</strong>
         ${journey.destination}
 
