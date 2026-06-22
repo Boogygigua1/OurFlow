@@ -346,15 +346,23 @@ Please verify this is the correct location.
 
 <br><br>
 
-1. Use 🔍 Look Up Address to confirm the location.
+<button onclick="
+savePendingParking();
+">
+    ✓ Save This Location
+</button>
 
 <br><br>
 
-2. If this match is incorrect, use ✏ Enter Address Manually and paste the correct address.
+1. 1. If the location looks correct, click ✓ Save This Location.
 
 <br><br>
 
-3. Save only after you have verified the location.
+2. If you want to double-check the address, use 🔍 Look Up Address.
+
+<br><br>
+
+3. If the address is incorrect, use ✏ Enter Address Manually and paste the correct address.
 
     <br><br>
 
