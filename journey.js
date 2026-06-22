@@ -662,18 +662,32 @@ ${activeJourney.questionsForDoctor?.length
 <strong>📷 Photos:</strong><br>
 
 ${activeJourney.photos?.length
-            ? activeJourney.photos
-                .slice(-3)
-                .map(
-                    (item, index) =>
-                        `${index + 1}. ${item.note ||
-                        item.title ||
-                        item.name ||
-                        "Unnamed Photo"
-                        }`
-                )
-                .join("<br>")
-            : "No photos saved yet."}
+    ? activeJourney.photos
+        .slice(-3)
+        .map(
+            (item, index) =>
+                `
+${item.thumbnail ? `
+<img
+    src="${item.thumbnail}"
+    style="
+        width:60px;
+        height:auto;
+        border-radius:8px;
+        margin-right:8px;
+        vertical-align:middle;
+    "
+>
+` : ""}
+
+${index + 1}. ${item.note ||
+item.title ||
+item.name ||
+"Unnamed Photo"}
+`
+        )
+        .join("<br>")
+    : "No photos saved yet."}
 
 <br><br>
 
