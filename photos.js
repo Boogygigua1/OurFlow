@@ -10,10 +10,47 @@ function previewLandmarkImage() {
 
     reader.onload = function (e) {
 
-        landmarkImageData = e.target.result;
+    landmarkImageData = e.target.result;
 
-        document.getElementById("imagePreview")
-            .innerHTML = `
+    const img = new Image();
+
+    img.onload = function () {
+
+        const canvas =
+            document.createElement("canvas");
+
+        const ctx =
+            canvas.getContext("2d");
+
+        const width = 100;
+
+        const scale =
+            width / img.width;
+
+        canvas.width = width;
+
+        canvas.height =
+            img.height * scale;
+
+        ctx.drawImage(
+            img,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        landmarkThumbnailData =
+            canvas.toDataURL(
+                "image/jpeg",
+                0.6
+            );
+    };
+
+    img.src = e.target.result;
+
+    document.getElementById("imagePreview")
+        .innerHTML = `
 <img
     src="${e.target.result}"
     style="
@@ -27,8 +64,6 @@ function previewLandmarkImage() {
 
     reader.readAsDataURL(file);
 }
-
-
 
 
 async function analyzeLandmarkImage() {
@@ -130,11 +165,7 @@ async function saveJourneyPhoto() {
     timestamp: new Date().toLocaleString(),
     title: "",
     analysis: "",
-    thumbnail:
-    landmarkImageData.substring(
-        0,
-        5000
-    ),
+    thumbnail: ""
 });
 
     activeJourney.timeline.push("📷 Photo Saved");

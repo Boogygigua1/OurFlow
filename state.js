@@ -4,6 +4,8 @@ let pendingPhotoClassification = "";
 
 let landmarkImageData = "";
 
+let landmarkThumbnailData = "";
+
 let conversationHistory = [];
 
 let activeJourney =
