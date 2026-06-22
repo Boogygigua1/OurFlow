@@ -576,10 +576,20 @@ activeJourney?.destination
 
 <br><br>
 
+<input
+    id="verifiedDestinationAddress"
+    type="text"
+    placeholder="Paste verified address here"
+    style="width:90%;padding:8px;"
+>
+
+<br><br>
+
 <button onclick="
-const address = prompt(
-'Enter Address:'
-);
+const address =
+document.getElementById(
+    'verifiedDestinationAddress'
+).value.trim();
 
 if(address){
     saveVerifiedDestinationAddress(
@@ -587,7 +597,7 @@ if(address){
     );
 }
 ">
-    ✏ Enter Address Manually
+    ✓ Save Verified Address
 </button>
 </div>
 `;
