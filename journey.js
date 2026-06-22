@@ -558,18 +558,28 @@ ${activeJourney.destinationDetail ||
         "No destination details saved yet."}
 <br><br>
 <strong>🧭 Starting Location:</strong><br>
+<br><br>
+
+<strong>🧭 Starting Location:</strong><br>
+
 ${activeJourney.startLocation ||
-        "No starting location saved yet."}
+"No starting location saved yet."}
 
 ${activeJourney.startLocationAddress
-            ? `<br>${activeJourney.startLocationAddress}`
-            : ""}
-    <br><br>
+? `<br>${activeJourney.startLocationAddress}`
+: ""}
 
 ${activeJourney.startVerified
-            ? `<br>✓ Verified Address`
-            : ""}
-                
+? `<br>✓ Verified Address`
+: ""}
+
+<br><br>
+
+<strong>🚗 Parking Memory:</strong><br>
+
+${activeJourney.parkingLocation ||
+"No parking location saved yet."}
+
 <strong>🚗 Parking Memory:</strong><br>
 ${activeJourney.parkingLocation ||
         "No parking location saved yet."}
