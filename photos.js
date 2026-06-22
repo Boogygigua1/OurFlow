@@ -61,6 +61,11 @@ async function analyzeLandmarkImage() {
 </button>
 </div>
 `;
+
+document.getElementById("result").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+});
 }
 
 
