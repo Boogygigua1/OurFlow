@@ -547,6 +547,13 @@ function isDirectoryRecall(question) {
 
         "show me my directories",
 
+        "show directory",
+        "show my directory",
+        "show me directory",
+        "show me my directory",
+        "list my directory",
+        "read my directory",
+
         "give me my directory",
 
         "give me my directories",
