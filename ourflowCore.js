@@ -2615,6 +2615,33 @@ Chico, CA
                 cleanedSearch &&
                 !questionInfo.mentionsParking
             ) {
+                const savedDestinationAddress =
+                    activeJourney.verifiedDestinationAddress ||
+                    activeJourney.destinationAddress;
+
+                if (savedDestinationAddress) {
+                    result.innerHTML = `
+<div class="card">
+    <strong>Navigation Available</strong>
+
+    <br><br>
+
+    <strong>Verified Destination</strong>
+
+    <br><br>
+
+    ${savedDestinationAddress}
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestinationDetails()">
+        Open Google Maps
+    </button>
+</div>
+`;
+                    return;
+                }
+
                 result.innerHTML = `
 <div class="card">
     <strong>📍 Destination Saved</strong>
