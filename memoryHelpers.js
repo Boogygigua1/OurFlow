@@ -162,6 +162,11 @@ function isInstructionPhrase(question) {
     const text =
         question.toLowerCase().trim();
 
+    const isNavigationNeed =
+        text.startsWith("i need to get to ") ||
+        text.startsWith("i need to go to ") ||
+        text.startsWith("i need to find ") ||
+        text.startsWith("i need directions to ");
 
     return (
 
@@ -184,6 +189,8 @@ function isInstructionPhrase(question) {
 
         (
             text.startsWith("i need to ")
+            &&
+            !isNavigationNeed
             &&
             !text.includes("ask ")
         ) ||
