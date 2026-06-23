@@ -2313,6 +2313,20 @@ Can I help you get back there?
         const navigationSearch =
             lowerQuestion;
 
+        const looksLikeDestinationClue =
+            activeJourney &&
+            !questionInfo.mentionsParking &&
+            question.includes(",") &&
+            (
+                navigationSearch.includes(" on ") ||
+                navigationSearch.includes(" in ") ||
+                navigationSearch.includes(" at ")
+            ) &&
+            (
+                navigationSearch.includes("chico") ||
+                navigationSearch.includes(" ca") ||
+                navigationSearch.includes("california")
+            );
 
         if (
             (
@@ -2342,7 +2356,8 @@ Can I help you get back there?
                 navigationSearch.includes("travel to") ||
                 navigationSearch.includes("on my way to") ||
                 navigationSearch.includes("how do i get to") ||
-                navigationSearch.includes("take me to")
+                navigationSearch.includes("take me to") ||
+                looksLikeDestinationClue
             )
 
             &&
@@ -2356,12 +2371,14 @@ Can I help you get back there?
             // ========================================
 
             const cleanedSearch =
-                question
-                    .replace(
-                        /^(search the|search for|search|directory for|i need to get to|i need to go to|i need directions to|how do i get to|help me get to|take me to|go to|find)\s+/i,
-                        ""
-                    )
-                    .trim();
+                looksLikeDestinationClue
+                    ? question.trim()
+                    : question
+                        .replace(
+                            /^(search the|search for|search|directory for|i need to get to|i need to go to|i need directions to|how do i get to|help me get to|take me to|go to|find)\s+/i,
+                            ""
+                        )
+                        .trim();
 
             if (
                 activeJourney &&
@@ -2394,6 +2411,11 @@ Can I help you get back there?
 
                 activeJourney.destinationDetail =
                     cleanedSearch;
+
+                localStorage.setItem(
+                    "activeJourney",
+                    JSON.stringify(activeJourney)
+                );
             }
 
             // ========================================
@@ -2539,6 +2561,53 @@ Chico, CA
                 questionInfo.mentionsParking
             ) {
                 pendingParkingLocation = question;
+            }
+
+            if (
+                activeJourney &&
+                cleanedSearch &&
+                !questionInfo.mentionsParking
+            ) {
+                result.innerHTML = `
+<div class="card">
+    <strong>📍 Destination Saved</strong>
+
+    <br><br>
+
+    ${cleanedSearch}
+
+    <br><br>
+
+    <strong>Address not verified yet</strong>
+
+    <br><br>
+
+    <button onclick="verifySavedLocation()">
+        📍 Verify Address
+    </button>
+
+    <br><br>
+
+    <a href="${placeData.mapUrl}" target="_blank">
+        Open Map Search
+    </a>
+
+    <br><br>
+
+    <button onclick="
+const address = prompt(
+'Paste the verified address:'
+);
+
+if (address) {
+    saveVerifiedDestinationAddress(address);
+}
+">
+        ✏ Enter Address Manually
+    </button>
+</div>
+`;
+                return;
             }
 
             result.innerHTML = `
