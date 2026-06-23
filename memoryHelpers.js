@@ -470,6 +470,20 @@ function isParkingRecall(question) {
         text.includes("where is my car") ||
         text.includes("find my car") ||
 
+        text.includes("where am i parked") ||
+        text.includes("where am i parked again") ||
+        text.includes("where was i parked") ||
+        text.includes("where did i leave my car") ||
+        text.includes("where did i leave my ride") ||
+
+        text.includes("where's my parking") ||
+        text.includes("wheres my parking") ||
+        text.includes("take me to my parking") ||
+        text.includes("navigate to my parking") ||
+        text.includes("get me back to my parking") ||
+        text.includes("help me find my parking") ||
+        text.includes("help me find where i parked") ||
+
         text.includes("how do i get back to my parking") ||
         text.includes("get back to my parking") ||
         text.includes("take me back to my parking") ||
