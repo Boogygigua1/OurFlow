@@ -2678,6 +2678,14 @@ Chico, CA
     <button onclick="savePendingParking()">
         📍 Keep As Entered
     </button>
+    <br><br>
+
+    <button onclick="
+pendingLocationType = 'both';
+savePendingParking();
+">
+        &#128205; Keep As Parking + Starting Location
+    </button>
 </div>
 `;
 
