@@ -14,6 +14,27 @@ function toggleReadMore(button) {
     button.innerText = isHidden ? "Read less" : "Read more";
 }
 
+function toggleNewUserInfo(button) {
+
+    const info =
+        document.getElementById("newUserInfo");
+
+    if (info.style.display === "none") {
+
+        info.style.display = "block";
+
+        button.innerHTML =
+            "▼ New Here? Read Me!";
+
+    } else {
+
+        info.style.display = "none";
+
+        button.innerHTML =
+            "▶ New Here? Read Me!";
+    }
+}
+
 function togglePhilosophy(button) {
 
     const text = document.getElementById("philosophyText");

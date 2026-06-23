@@ -202,6 +202,13 @@ ${savedJourneys.length >= JOURNEY_LIMIT
 
     Delete older journeys
     or expand your archive.
+
+    <br><br>
+
+<button onclick="showJourneyUpgradeBox()">
+    ⭐ Expand Archive
+</button>
+
 </div>
 `
 : ""}
