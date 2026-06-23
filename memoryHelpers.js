@@ -672,37 +672,8 @@ function isParkingMemoryCommand(question) {
         text.includes("i left my ride") ||
         text.includes("my ride is") ||
 
-        text.includes("where is my ride") ||
-        text.includes("find my ride") ||
-
-        text.includes("where's my ride") ||
-        text.includes("wheres my ride") ||
-
-        text.includes("where's my bike") ||
-        text.includes("wheres my bike") ||
-
-        text.includes("where's my car") ||
-        text.includes("wheres my car") ||
-
         text.includes("my car is parked") ||
         text.includes("my vehicle is parked") ||
-
-        text.includes("where did i park") ||
-        text.includes("where am i parked") ||
-
-        text.includes("where did i start") ||
-
-        text.includes("take me back to where i started") ||
-
-        text.includes("take me back") ||
-        text.includes("go back") ||
-        text.includes("return me") ||
-
-        text.includes("get back there") ||
-        text.includes("help me get back") ||
-        text.includes("get me back") ||
-
-        text.includes("return me to my starting location") ||
 
         text === "parking" ||
         text === "start" ||

@@ -745,6 +745,7 @@ Ready to save?
         // ========================================
 
         if (
+            false &&
             activeJourney &&
             isParkingMemoryCommand(lowerQuestion)
         ) {
