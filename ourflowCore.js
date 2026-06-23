@@ -1458,6 +1458,28 @@ Ready to save?
             const instruction = question
                 .replace(/save instruction:/i, "")
                 .trim();
+
+            console.log("INSTRUCTION BLOCK HIT");
+
+            console.log(
+                "INSTRUCTION ORIGINAL QUESTION:",
+                question
+            );
+
+            console.log(
+                "INSTRUCTION NOTE QUESTION:",
+                noteQuestion
+            );
+
+            console.log(
+                "INSTRUCTION isInstructionPhrase:",
+                isInstructionPhrase(noteQuestion)
+            );
+
+            console.log(
+                "INSTRUCTION TEXT SAVED:",
+                instruction
+            );
             // ========================================
             // INSTRUCTION SAVE HANDLER
             // FUTURE REFACTOR:
