@@ -755,14 +755,13 @@ Ready to save?
             // AUTOMATIC QUESTION CAPTURE
             // ========================================
 
-            if (
+                        if (
                 !isMemoryCommand &&
                 !isUtilityQuestion &&
                 !isDirectoryEntry &&
-                !isQuestionPhrase(lowerQuestion) &&
+                isQuestionPhrase(lowerQuestion) &&
                 !lowerQuestion.includes("appointment")
             ) {
-
 
                 activeJourney.questionsForDoctor.push(question);
             }
