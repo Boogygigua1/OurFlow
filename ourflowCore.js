@@ -2199,7 +2199,29 @@ Can I help you get back there?
             // Long replace chain.
             // Candidate for cleanLocationText()
 
-            if (activeJourney) {
+            const hasBusinessLandmark =
+                parkingQuestion.includes("by ") ||
+                parkingQuestion.includes("near ") ||
+                parkingQuestion.includes("next to ") ||
+                parkingQuestion.includes("across from ");
+
+            const hasParkingDescription =
+                parkingQuestion.includes("parking lot") ||
+                parkingQuestion.includes("southwest") ||
+                parkingQuestion.includes("northwest") ||
+                parkingQuestion.includes("southeast") ||
+                parkingQuestion.includes("northeast") ||
+                parkingQuestion.includes("level") ||
+                parkingQuestion.includes("row") ||
+                parkingQuestion.includes("elevator") ||
+                parkingQuestion.includes("stairs") ||
+                parkingQuestion.includes("parking structure");
+
+            if (
+                activeJourney &&
+                hasBusinessLandmark &&
+                !hasParkingDescription
+            ) {
                 pendingLocationClassification = question
                     .replace(/start journey\s*/i, "")
                     .replace(/i'?m parked near\s*/i, "")
@@ -2612,7 +2634,10 @@ Chico, CA
                 lowerQuestion.includes("southeast") ||
                 lowerQuestion.includes("northeast") ||
                 lowerQuestion.includes("level") ||
-                lowerQuestion.includes("row");
+                lowerQuestion.includes("row") ||
+                lowerQuestion.includes("elevator") ||
+                lowerQuestion.includes("stairs") ||
+                lowerQuestion.includes("parking structure");
 
             if (!hasBusinessLandmark || hasParkingDescription) {
                 activeJourney.parkingLocation = question;
