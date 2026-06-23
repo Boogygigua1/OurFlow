@@ -2589,9 +2589,66 @@ Chico, CA
 
             return;
         }
+
+        // ========================================
+        // DESCRIPTIVE PARKING MEMORY STOP
+        // ========================================
+
+        if (
+            activeJourney &&
+            isParkingMemoryCommand(lowerQuestion)
+        ) {
+            const hasBusinessLandmark =
+                lowerQuestion.includes("by ") ||
+                lowerQuestion.includes("near ") ||
+                lowerQuestion.includes("next to ") ||
+                lowerQuestion.includes("across from ");
+
+            const hasParkingDescription =
+                lowerQuestion.includes("parking lot") ||
+                lowerQuestion.includes("southwest") ||
+                lowerQuestion.includes("northwest") ||
+                lowerQuestion.includes("southeast") ||
+                lowerQuestion.includes("northeast") ||
+                lowerQuestion.includes("level") ||
+                lowerQuestion.includes("row");
+
+            if (!hasBusinessLandmark || hasParkingDescription) {
+                activeJourney.parkingLocation = question;
+                activeJourney.parkingVerified = false;
+
+                activeJourney.timeline.push(
+                    "🚗 Parking Memory Saved: " + question
+                );
+
+                showActiveJourneyBox();
+
+                result.innerHTML = `
+<div class="card">
+    <strong>🚗 Parking Memory Saved</strong>
+
+    <br><br>
+
+    I’ll remember:
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    This looks like a parking description, not a street address.
+</div>
+`;
+
+                return;
+            }
+        }
+
         // ========================================
         // AI FALLBACK RESPONSE
         // ========================================
+
         const response = await fetch("/api/askOurFlow", {
             method: "POST",
             headers: {
