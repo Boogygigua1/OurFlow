@@ -958,7 +958,20 @@ Ready to save?
             activeJourney.destinationName =
                 cleanDestination;
 
-            activeJourney.destinationAddress =
+            const cleanDestinationLooksLikeAddress =
+                /^\d+/.test(cleanDestination) &&
+                (
+                    cleanDestination.includes(",") ||
+                    cleanDestination.toLowerCase().includes("ca") ||
+                    cleanDestination.toLowerCase().includes("california")
+                );
+
+            if (cleanDestinationLooksLikeAddress) {
+                activeJourney.destinationAddress =
+                    cleanDestination;
+            }
+
+            activeJourney.destinationDetail =
                 cleanDestination;
 
             activeJourney.timeline.push(
@@ -2345,10 +2358,43 @@ Can I help you get back there?
             const cleanedSearch =
                 question
                     .replace(
-                        /^(search the|search for|search|directory for|go to|find)\s+/i,
+                        /^(search the|search for|search|directory for|i need to get to|i need to go to|i need directions to|how do i get to|help me get to|take me to|go to|find)\s+/i,
                         ""
                     )
                     .trim();
+
+            if (
+                activeJourney &&
+                cleanedSearch
+            ) {
+                const normalizedCleanedSearch =
+                    cleanedSearch.toLowerCase();
+
+                const existingDestination =
+                    (activeJourney.destination || "")
+                        .toLowerCase();
+
+                const existingDestinationDetail =
+                    (activeJourney.destinationDetail || "")
+                        .toLowerCase();
+
+                if (
+                    normalizedCleanedSearch !== existingDestination &&
+                    normalizedCleanedSearch !== existingDestinationDetail
+                ) {
+                    activeJourney.destinationAddress =
+                        "";
+
+                    activeJourney.verifiedDestinationAddress =
+                        "";
+                }
+
+                activeJourney.destination =
+                    cleanedSearch;
+
+                activeJourney.destinationDetail =
+                    cleanedSearch;
+            }
 
             // ========================================
             // INFORMATION SEARCH DETECTION
