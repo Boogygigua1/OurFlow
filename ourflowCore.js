@@ -2380,6 +2380,21 @@ Can I help you get back there?
                         )
                         .trim();
 
+            console.log(
+                "DESTINATION NAV ORIGINAL QUESTION:",
+                question
+            );
+
+            console.log(
+                "DESTINATION NAV LOOKS LIKE CLUE:",
+                looksLikeDestinationClue
+            );
+
+            console.log(
+                "DESTINATION NAV CLEANED SEARCH BEFORE SAVE:",
+                cleanedSearch
+            );
+
             if (
                 activeJourney &&
                 cleanedSearch
@@ -2411,6 +2426,16 @@ Can I help you get back there?
 
                 activeJourney.destinationDetail =
                     cleanedSearch;
+
+                console.log(
+                    "DESTINATION NAV DESTINATION AFTER SAVE:",
+                    activeJourney.destination
+                );
+
+                console.log(
+                    "DESTINATION NAV DETAIL AFTER SAVE:",
+                    activeJourney.destinationDetail
+                );
 
                 localStorage.setItem(
                     "activeJourney",
