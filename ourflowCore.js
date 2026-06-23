@@ -2623,6 +2623,8 @@ Chico, CA
 
                 showActiveJourneyBox();
 
+                pendingParkingLocation = question;
+
                 result.innerHTML = `
 <div class="card">
     <strong>🚗 Parking Memory Saved</strong>
@@ -2638,6 +2640,18 @@ Chico, CA
     <br><br>
 
     This looks like a parking description, not a street address.
+
+    <br><br>
+
+    <button onclick="verifyParkingLocation()">
+        🚗 Add / Verify Parking Address
+    </button>
+
+    <br><br>
+
+    <button onclick="savePendingParking()">
+        📍 Keep As Entered
+    </button>
 </div>
 `;
 
