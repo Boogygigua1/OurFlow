@@ -216,9 +216,12 @@ if (activeJourney) {
         pendingParkingLocation;
 
     activeJourney.parkingVerified =
-        true;
+        Boolean(activeJourney.parkingLocationAddress);
 
-    if (window.savePhotoAsBoth) {
+    if (
+        pendingLocationType === "both" ||
+        window.savePhotoAsBoth
+    ) {
 
         activeJourney.startLocation =
             pendingParkingLocation;
@@ -227,7 +230,7 @@ if (activeJourney) {
             activeJourney.parkingLocationAddress;
 
         activeJourney.startVerified =
-            true;
+            Boolean(activeJourney.startLocationAddress);
 
         window.savePhotoAsBoth = false;
     }
@@ -241,6 +244,7 @@ if (activeJourney) {
 }
 
     pendingParkingLocation = "";
+    pendingLocationType = "";
 
     document.getElementById("result").innerHTML = `
 <div class="card">
