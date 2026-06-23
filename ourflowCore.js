@@ -1293,7 +1293,8 @@ Ready to save?
                     !isDirectoryRecall(noteQuestion) &&
                     !isNoteRecall(noteQuestion) &&
                     !isMedicationRecall(noteQuestion) &&
-                    !isQuestionRecall(noteQuestion)
+                    !isQuestionRecall(noteQuestion) &&
+                    !isParkingRecall(noteQuestion)
                 )
             )
         ) {
@@ -1963,8 +1964,11 @@ Ready to save?
             recallQuestion.includes("get back there") ||
             recallQuestion.includes("help me get back") ||
             recallQuestion.includes("get me back") ||
+            recallQuestion.includes("get back to my parking") ||
+            recallQuestion.includes("return to my parking") ||
 
             recallQuestion.includes("take me back to where i started") ||
+            recallQuestion.includes("take me back to my parking") ||
             recallQuestion.includes("where did i start") ||
             recallQuestion.includes("return me to my starting location") ||
             recallQuestion.includes("take me back to my starting location")
@@ -1972,6 +1976,8 @@ Ready to save?
 
             if (
                 recallQuestion.includes("where did i park") ||
+                recallQuestion.includes("where is my parking") ||
+                recallQuestion.includes("my parking") ||
                 recallQuestion.includes("where is my car") ||
                 recallQuestion.includes("take me to my ride") ||
                 recallQuestion.includes("take me back to my car") ||
