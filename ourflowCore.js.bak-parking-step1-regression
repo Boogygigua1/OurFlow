@@ -2084,7 +2084,6 @@ Can I help you get back there?
             // Candidate for cleanLocationText()
 
             const hasBusinessLandmark =
-                parkingQuestion.includes(" at ") ||
                 parkingQuestion.includes("by ") ||
                 parkingQuestion.includes("near ") ||
                 parkingQuestion.includes("next to ") ||
@@ -2661,7 +2660,6 @@ if (address) {
             isParkingMemoryCommand(lowerQuestion)
         ) {
             const hasBusinessLandmark =
-                lowerQuestion.includes(" at ") ||
                 lowerQuestion.includes("by ") ||
                 lowerQuestion.includes("near ") ||
                 lowerQuestion.includes("next to ") ||

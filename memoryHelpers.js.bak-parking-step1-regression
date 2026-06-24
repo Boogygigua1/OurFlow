@@ -691,10 +691,7 @@ function isDirectoryRecall(question) {
 function isParkingMemoryCommand(question) {
 
     const text =
-        question
-            .toLowerCase()
-            .replace(/[’‘]/g, "'")
-            .trim();
+        question.toLowerCase().trim();
 
     return (
 
@@ -704,7 +701,6 @@ function isParkingMemoryCommand(question) {
 
         text.includes("i'm parked") ||
         text.includes("im parked") ||
-        text.includes("i am parked") ||
         text.includes("i parked") ||
 
         text.includes("parked on") ||
