@@ -491,7 +491,15 @@ ${event}
 
     <br><br>
 
-    ${journey.photos.map(photo => `
+    ${journey.photos.map((photo, index) => `
+        <strong>📷 Photo ${index + 1}</strong>
+
+        <br>
+
+        ${photo.note || photo.title || photo.name || "Unnamed Photo"}
+
+        <br><br>
+
         <img
             src="${photo.thumbnail}"
             style="
