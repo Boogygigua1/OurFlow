@@ -465,33 +465,10 @@ function savePhotoAsLocation(type) {
 
     if (type === "parking") {
 
-        activeJourney.parkingLocation =
+        pendingParkingLocation =
             location;
 
-        activeJourney.parkingVerified =
-            Boolean(activeJourney.parkingLocationAddress);
-
-        activeJourney.timeline.push(
-            "Parking Saved From Photo: " +
-            location
-        );
-
-        localStorage.setItem(
-            "activeJourney",
-            JSON.stringify(activeJourney)
-        );
-
-        showActiveJourneyBox();
-
-        document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>Parking Saved</strong>
-
-    <br><br>
-
-    ${location}
-</div>
-`;
+        verifyParkingLocation();
 
         return;
     }
@@ -501,67 +478,38 @@ function savePhotoAsLocation(type) {
         activeJourney.startLocation =
             location;
 
+        const address = prompt(
+            "Paste the verified starting address:"
+        );
+
+        if (address) {
+
+            activeJourney.startLocationAddress =
+                address;
+        }
+
         activeJourney.timeline.push(
-            "Starting Location Saved From Photo: " +
+            "🧭 Starting Location Saved From Photo: " +
             location
         );
-
-        localStorage.setItem(
-            "activeJourney",
-            JSON.stringify(activeJourney)
-        );
-
-        showActiveJourneyBox();
-
-        document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>Start Location Saved</strong>
-
-    <br><br>
-
-    ${location}
-</div>
-`;
-
-        return;
     }
 
     if (type === "both") {
 
-        activeJourney.parkingLocation =
+        pendingParkingLocation =
             location;
 
-        activeJourney.parkingVerified =
-            Boolean(activeJourney.parkingLocationAddress);
+        window.savePhotoAsBoth = true;
 
-        activeJourney.startLocation =
-            location;
-
-        activeJourney.startVerified =
-            Boolean(activeJourney.startLocationAddress);
-
-        activeJourney.timeline.push(
-            "Parking + Start Location Saved From Photo: " +
-            location
-        );
-
-        localStorage.setItem(
-            "activeJourney",
-            JSON.stringify(activeJourney)
-        );
-
-        showActiveJourneyBox();
-
-        document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>Parking + Start Location Saved</strong>
-
-    <br><br>
-
-    ${location}
-</div>
-`;
+        verifyParkingLocation();
 
         return;
     }
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
 }
