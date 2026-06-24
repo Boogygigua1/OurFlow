@@ -789,59 +789,6 @@ Ready to save?
 
             isParkingMemoryCommand(lowerQuestion);
 
-        const createdParkingJourneyForMemory =
-            !activeJourney &&
-            isParkingMemoryCommand(lowerQuestion);
-
-        if (createdParkingJourneyForMemory) {
-
-            activeJourney = {
-
-                destination: "Untitled Journey",
-
-                destinationName: "",
-                destinationAddress: "",
-                destinationDetail: "",
-
-                currentLocation: "",
-                travelMode: "",
-
-                journeyStatus: "traveling",
-
-                notes: [],
-                photos: [],
-                questionsForDoctor: [],
-                staffInstructions: [],
-                medications: [],
-                appointments: [],
-                directories: [],
-
-                startTime:
-                    new Date().toLocaleString(),
-
-                startLocation: "",
-                startLocationAddress: "",
-                parkingLocation: "",
-                parkingLocationAddress: "",
-                parkingVerified: false,
-
-                arrivalTips: "",
-                mapLink: "",
-
-                answers: [],
-                timeline: [],
-
-                endLocation: "",
-                endTime: ""
-            };
-
-            activeJourney.timeline.push(
-                "Journey Started: Parking Memory"
-            );
-
-            showActiveJourneyBox();
-        }
-
         // ========================================
         // DIRECTORY ENTRY DETECTION
         // ========================================
@@ -2157,7 +2104,6 @@ Can I help you get back there?
 
             if (
                 activeJourney &&
-                !createdParkingJourneyForMemory &&
                 hasBusinessLandmark &&
                 !hasParkingDescription
             ) {
@@ -2733,11 +2679,7 @@ if (address) {
                 lowerQuestion.includes("stairs") ||
                 lowerQuestion.includes("parking structure");
 
-            if (
-                createdParkingJourneyForMemory ||
-                !hasBusinessLandmark ||
-                hasParkingDescription
-            ) {
+            if (!hasBusinessLandmark || hasParkingDescription) {
                 pendingParkingLocation = question;
 
                 result.innerHTML = `
