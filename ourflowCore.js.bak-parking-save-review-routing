@@ -52,49 +52,6 @@ function showParkingRecall() {
 `;
 }
 
-function showParkingMemoryReview(parkingText) {
-
-    pendingParkingLocation = parkingText;
-
-    document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>ðŸš— Parking Memory Saved</strong>
-
-    <br><br>
-
-    Iâ€™ll remember:
-
-    <br><br>
-
-    ${parkingText}
-
-    <br><br>
-
-    This looks like a parking description, not a street address.
-
-    <br><br>
-
-    <button onclick="verifyParkingLocation()">
-        ðŸš— Add / Verify Parking Address
-    </button>
-
-    <br><br>
-
-    <button onclick="savePendingParking()">
-        ðŸ“ Keep As Entered
-    </button>
-    <br><br>
-
-    <button onclick="
-pendingLocationType = 'both';
-savePendingParking();
-">
-        &#128205; Keep As Parking + Starting Location
-    </button>
-</div>
-`;
-}
-
 async function askOurFlow() {
 
     const question =
@@ -2196,11 +2153,6 @@ Can I help you get back there?
                 parkingQuestion.includes("stairs") ||
                 parkingQuestion.includes("parking structure");
 
-            if (activeJourney) {
-                showParkingMemoryReview(question);
-                return;
-            }
-
             if (
                 activeJourney &&
                 !createdParkingJourneyForMemory &&
@@ -2783,7 +2735,45 @@ if (address) {
             if (
                 true
             ) {
-                showParkingMemoryReview(question);
+                pendingParkingLocation = question;
+
+                result.innerHTML = `
+<div class="card">
+    <strong>🚗 Parking Memory Saved</strong>
+
+    <br><br>
+
+    I’ll remember:
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    This looks like a parking description, not a street address.
+
+    <br><br>
+
+    <button onclick="verifyParkingLocation()">
+        🚗 Add / Verify Parking Address
+    </button>
+
+    <br><br>
+
+    <button onclick="savePendingParking()">
+        📍 Keep As Entered
+    </button>
+    <br><br>
+
+    <button onclick="
+pendingLocationType = 'both';
+savePendingParking();
+">
+        &#128205; Keep As Parking + Starting Location
+    </button>
+</div>
+`;
 
                 return;
             }
