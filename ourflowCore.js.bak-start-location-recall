@@ -1360,8 +1360,7 @@ Ready to save?
                     !isNoteRecall(noteQuestion) &&
                     !isMedicationRecall(noteQuestion) &&
                     !isQuestionRecall(noteQuestion) &&
-                    !isParkingRecall(noteQuestion) &&
-                    !isStartLocationRecall(noteQuestion)
+                    !isParkingRecall(noteQuestion)
                 )
             )
         ) {
@@ -1978,7 +1977,10 @@ Ready to save?
             recallQuestion.includes("help me get back") ||
             recallQuestion.includes("get me back") ||
 
-            isStartLocationRecall(recallQuestion)
+            recallQuestion.includes("take me back to where i started") ||
+            recallQuestion.includes("where did i start") ||
+            recallQuestion.includes("return me to my starting location") ||
+            recallQuestion.includes("take me back to my starting location")
         ) {
 
             // ========================================

@@ -512,31 +512,6 @@ function isParkingRecall(question) {
     );
 }
 
-function isStartLocationRecall(question) {
-
-    const text =
-        question
-            .toLowerCase()
-            .replace(/[?.!,]/g, "")
-            .trim();
-
-    const startLocationRecallPhrases = [
-
-        "where did i start",
-        "where did i begin",
-        "where was my starting location",
-        "where is my starting location",
-        "where did this journey start",
-        "take me back to where i started",
-        "return me to my starting location",
-        "take me back to my starting location"
-    ];
-
-    return startLocationRecallPhrases.some(
-        phrase => text.includes(phrase)
-    );
-}
-
 function isMedicationRecall(question) {
 
     const text =
