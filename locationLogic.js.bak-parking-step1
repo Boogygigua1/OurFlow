@@ -4,7 +4,21 @@ function analyzeUserQuestion(question) {
 
     return {
         mentionsParking:
-            isParkingMemoryCommand(text),
+            text.includes("i'm parked") ||
+            text.includes("im parked") ||
+            text.includes("i parked") ||
+            text.includes("parked at") ||
+            text.includes("parked by") ||
+            text.includes("parked near") ||
+            text.includes("parked on") ||
+            text.includes("my car is") ||
+            text.includes("my car is at") ||
+            text.includes("my ride is") ||
+            text.includes("my ride is at") ||
+            text.includes("my vehicle is") ||
+            text.includes("left my car") ||
+            text.includes("i left my car") ||
+            text.includes("parking location:"),
 
         mentionsStartLocation:
             text.includes("i'm at") ||

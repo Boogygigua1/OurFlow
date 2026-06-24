@@ -459,38 +459,20 @@ function isParkingRecall(question) {
     return (
 
         text.includes("where's my ride") ||
-        text.includes("wheres my ride") ||
         text.includes("where is my ride") ||
         text.includes("find my ride") ||
-        text.includes("take me to my ride") ||
-        text.includes("take me back to my ride") ||
-        text.includes("return me to my ride") ||
-        text.includes("help me find my ride") ||
 
         text.includes("where's my bike") ||
-        text.includes("wheres my bike") ||
         text.includes("where is my bike") ||
         text.includes("find my bike") ||
-        text.includes("take me back to my bike") ||
-        text.includes("return me to my bike") ||
-        text.includes("help me find my bike") ||
 
         text.includes("where's my car") ||
-        text.includes("wheres my car") ||
         text.includes("where is my car") ||
         text.includes("find my car") ||
-        text.includes("take me back to my car") ||
-        text.includes("return me to my car") ||
-        text.includes("get me back to my car") ||
-        text.includes("help me find my car") ||
-        text.includes("return me to my vehicle") ||
-        text.includes("take me to my vehicle") ||
 
         text.includes("where am i parked") ||
         text.includes("where am i parked again") ||
         text.includes("where was i parked") ||
-        text.includes("were did i park") ||
-        text.includes("i forgot where i parked") ||
         text.includes("where did i leave my car") ||
         text.includes("where did i leave my ride") ||
 
@@ -691,13 +673,9 @@ function isDirectoryRecall(question) {
 function isParkingMemoryCommand(question) {
 
     const text =
-        question.toLowerCase().trim();
+        question.toLowerCase();
 
     return (
-
-        text.startsWith("parking location:") ||
-        text.startsWith("save parking:") ||
-        text.startsWith("my parking is:") ||
 
         text.includes("i'm parked") ||
         text.includes("im parked") ||
@@ -705,14 +683,7 @@ function isParkingMemoryCommand(question) {
 
         text.includes("parked on") ||
         text.includes("parked near") ||
-        text.includes("parked by") ||
         text.includes("parked at") ||
-
-        text.includes("my car is") ||
-        text.includes("my car is at") ||
-        text.includes("my car is parked") ||
-        text.includes("my vehicle is") ||
-        text.includes("my vehicle is parked") ||
 
         text.includes("left my car") ||
         text.includes("i left my car") ||
@@ -723,23 +694,30 @@ function isParkingMemoryCommand(question) {
         text.includes("left my bide") ||
         text.includes("my bide is") ||
         text.includes("bike is") ||
-        text.includes("bike is parked") ||
-        text.includes("my bike is") ||
-        text.includes("my bicycle is") ||
         text.includes("bicycle") ||
 
         text.includes("left my ride") ||
         text.includes("i left my ride") ||
         text.includes("my ride is") ||
-        text.includes("my ride is at") ||
-        text.includes("my ride's at") ||
 
-        text.includes("near the elevator") ||
-        text.includes("near elevator") ||
-        text.includes("near the stairs") ||
-        text.includes("by the stairs") ||
-        text.includes("parking lot") ||
-        text.includes("parking structure")
+        text.includes("my car is parked") ||
+        text.includes("my vehicle is parked") ||
+
+        text === "parking" ||
+        text === "start" ||
+        text === "both" ||
+
+        text === "yes" ||
+        text === "y" ||
+        text === "yeah" ||
+        text === "yep" ||
+        text === "sure" ||
+        text === "ok" ||
+        text === "okay" ||
+        text === "no" ||
+        text === "nope" ||
+
+        text.includes("bike is parked")
 
     );
 }

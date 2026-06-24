@@ -1961,7 +1961,14 @@ Ready to save?
         ) {
 
             if (
-                isParkingRecall(recallQuestion)
+                recallQuestion.includes("where did i park") ||
+                recallQuestion.includes("where is my parking") ||
+                recallQuestion.includes("my parking") ||
+                recallQuestion.includes("where is my car") ||
+                recallQuestion.includes("take me to my ride") ||
+                recallQuestion.includes("take me back to my car") ||
+                recallQuestion.includes("return me to my vehicle") ||
+                recallQuestion.includes("take me to my vehicle")
             ) {
 
                 if (activeJourney?.parkingLocation) {
@@ -2144,7 +2151,37 @@ Can I help you get back there?
         const parkingQuestion = lowerQuestion;
 
         if (
-            isParkingMemoryCommand(parkingQuestion)
+            parkingQuestion.startsWith("parking location:") ||
+            parkingQuestion.startsWith("save parking:") ||
+            parkingQuestion.startsWith("my parking is:") ||
+            parkingQuestion.includes("my car is") ||
+            parkingQuestion.includes("i left my car") ||
+            parkingQuestion.includes("i parked") ||
+            parkingQuestion.includes("parked on") ||
+            parkingQuestion.includes("parked near") ||
+            parkingQuestion.includes("parked by") ||
+            parkingQuestion.includes("parked at") ||
+            parkingQuestion.includes("my car is parked") ||
+            parkingQuestion.includes("my vehicle is parked") ||
+            parkingQuestion.includes("i parked") ||
+            parkingQuestion.includes("my car is parked") ||
+            parkingQuestion.includes("my vehicle is parked") ||
+            parkingQuestion.includes("left my bike") ||
+            parkingQuestion.includes("i left my bike") ||
+            parkingQuestion.includes("left my ride") ||
+            parkingQuestion.includes("my ride is ") ||
+            recallQuestion.includes("take me back to my ride") ||
+            recallQuestion.includes("return me to my ride") ||
+            parkingQuestion.includes("i left my ride") ||
+            parkingQuestion.includes("my ride's at") ||
+            parkingQuestion.includes("my bike is") ||
+            parkingQuestion.includes("my bicycle is") ||
+            parkingQuestion.includes("my car is at") ||
+            parkingQuestion.includes("near the elevator") ||
+            parkingQuestion.includes("near elevator") ||
+            parkingQuestion.includes("near the stairs") ||
+            parkingQuestion.includes("by the stairs") ||
+            parkingQuestion.includes("parking structure")
         ) {
             // ========================================
             // LOCATION CLASSIFICATION
