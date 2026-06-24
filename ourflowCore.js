@@ -58,11 +58,11 @@ function showParkingMemoryReview(parkingText) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>ðŸš— Parking Memory Saved</strong>
+    <strong>&#128663; Parking Memory Saved</strong>
 
     <br><br>
 
-    Iâ€™ll remember:
+    I'll remember this parking location:
 
     <br><br>
 
@@ -75,13 +75,13 @@ function showParkingMemoryReview(parkingText) {
     <br><br>
 
     <button onclick="verifyParkingLocation()">
-        ðŸš— Add / Verify Parking Address
+        &#128663; Add / Verify Parking Address
     </button>
 
     <br><br>
 
     <button onclick="savePendingParking()">
-        ðŸ“ Keep As Entered
+        &#128205; Keep As Entered
     </button>
     <br><br>
 
