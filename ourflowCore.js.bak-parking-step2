@@ -3,55 +3,6 @@
 // ASK OURFLOW ENTRY POINT
 // ========================================
 
-function showParkingRecall() {
-
-    const result =
-        document.getElementById("result");
-
-    if (activeJourney?.parkingLocation) {
-
-        result.innerHTML = `
-<div class="card">
-    <strong>Parking Location</strong>
-
-    <br><br>
-
-    Your vehicle is parked at:
-
-    <br><br>
-
-    ${activeJourney.parkingLocation}
-
-    ${activeJourney.parkingLocationAddress
-                ? `<br><br>${activeJourney.parkingLocationAddress}`
-                : ""}
-
-    ${activeJourney.parkingVerified
-                ? `<br><br>Verified Address`
-                : ""}
-
-    <br><br>
-
-    <button onclick="openGoogleMapsToParkingLocation()">
-        Open Google Maps
-    </button>
-</div>
-`;
-
-        return;
-    }
-
-    result.innerHTML = `
-<div class="card">
-    <strong>Parking Reminder</strong>
-
-    <br><br>
-
-    I don't have a parking location recorded for this journey.
-</div>
-`;
-}
-
 async function askOurFlow() {
 
     const question =
@@ -1901,10 +1852,86 @@ Ready to save?
         // Candidate for parkingRecallTerms[]
 
         if (
-            isParkingRecall(recallQuestion)
+            recallQuestion.includes("where did i park") ||
+            recallQuestion.includes("take me to my ride") ||
+            recallQuestion.includes("where am i parked") ||
+            recallQuestion.includes("were did i park") ||
+            recallQuestion.includes("where's my car") ||
+            recallQuestion.includes("where is my car") ||
+            recallQuestion.includes("find my car") ||
+            recallQuestion.includes("where is my bike") ||
+            recallQuestion.includes("find my bike") ||
+            recallQuestion.includes("take me back to my bike") ||
+
+
+            recallQuestion.includes("where is my ride") ||
+            recallQuestion.includes("find my ride") ||
+
+            recallQuestion.includes("where's my ride") ||
+            recallQuestion.includes("wheres my ride") ||
+
+            recallQuestion.includes("where's my bike") ||
+            recallQuestion.includes("wheres my bike") ||
+
+            recallQuestion.includes("where's my car") ||
+            recallQuestion.includes("wheres my car") ||
+
+            recallQuestion.includes("take me back to my ride") ||
+            recallQuestion.includes("return me to my ride") ||
+            recallQuestion.includes("help me find my ride") ||
+
+            recallQuestion.includes("take me back to my car") ||
+            recallQuestion.includes("return me to my car") ||
+            recallQuestion.includes("get me back to my car") ||
+            recallQuestion.includes("help me find my car") ||
+
+            recallQuestion.includes("return me to my bike") ||
+            recallQuestion.includes("help me find my bike") ||
+
+            recallQuestion.includes("i forgot where i parked")
         ) {
 
-            showParkingRecall();
+            if (activeJourney?.parkingLocation) {
+
+
+                result.innerHTML = `
+<div class="card">
+    <strong>🚗 Vehicle Location</strong>
+
+    <br><br>
+
+    Your vehicle is located at:
+
+    <br><br>
+
+    ${activeJourney.parkingLocation}
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToParkingLocation()">
+        🚗 Navigate To My Ride
+    </button>
+
+    <br><br>
+
+    Can I help you further? 🧭
+</div>
+`;
+
+                return;
+            }
+
+
+
+            result.innerHTML = `
+<div class="card">
+    <strong>📍 Parking Reminder</strong>
+
+    <br><br>
+
+    I don't have a vehicle location recorded for this journey.
+</div>
+`;
 
             return;
         }
@@ -1923,13 +1950,57 @@ Ready to save?
             recallQuestion.includes("get back there") ||
             recallQuestion.includes("help me get back") ||
             recallQuestion.includes("get me back") ||
+            recallQuestion.includes("get back to my parking") ||
+            recallQuestion.includes("return to my parking") ||
 
             recallQuestion.includes("take me back to where i started") ||
+            recallQuestion.includes("take me back to my parking") ||
             recallQuestion.includes("where did i start") ||
             recallQuestion.includes("return me to my starting location") ||
             recallQuestion.includes("take me back to my starting location")
         ) {
 
+            if (
+                isParkingRecall(recallQuestion)
+            ) {
+
+                if (activeJourney?.parkingLocation) {
+
+                    result.innerHTML = `
+<div class="card">
+    <strong>🚗 Parking Location</strong>
+
+    <br><br>
+
+    Your vehicle is parked at:
+
+    <br><br>
+
+    ${activeJourney.parkingLocation}
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToParkingLocation()">
+        🚗 Navigate To My Ride
+    </button>
+</div>
+`;
+
+                    return;
+                }
+
+                result.innerHTML = `
+<div class="card">
+    <strong>🚗 Parking Reminder</strong>
+
+    <br><br>
+
+    I don't have a parking location recorded for this journey.
+</div>
+`;
+
+                return;
+            }
             // ========================================
             // RETURN TO START LOCATION
             // ========================================
