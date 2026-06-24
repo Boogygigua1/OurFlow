@@ -493,7 +493,7 @@ ${event}
 
     ${journey.photos.map(photo => `
         <img
-            src="${photo.image}"
+            src="${photo.thumbnail}"
             style="
                 max-width:200px;
                 border-radius:8px;
