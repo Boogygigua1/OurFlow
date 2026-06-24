@@ -331,12 +331,6 @@ How should I use this location?
 
 <br><br>
 
-<button onclick="savePhotoAsLocation('destination')">
-    &#128205; Save As Destination
-</button>
-
-<br><br>
-
 <button onclick="savePhotoClassification('verified')">
     📬 Save As Verified Location
 </button>
@@ -561,39 +555,6 @@ function savePhotoAsLocation(type) {
         document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>Parking + Start Location Saved</strong>
-
-    <br><br>
-
-    ${location}
-</div>
-`;
-
-        return;
-    }
-
-    if (type === "destination") {
-
-        activeJourney.destination =
-            location;
-
-        activeJourney.destinationDetail =
-            location;
-
-        activeJourney.timeline.push(
-            "Destination Saved From Photo: " +
-            location
-        );
-
-        localStorage.setItem(
-            "activeJourney",
-            JSON.stringify(activeJourney)
-        );
-
-        showActiveJourneyBox();
-
-        document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>Destination Saved</strong>
 
     <br><br>
 
