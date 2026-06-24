@@ -201,11 +201,6 @@ if (activeJourney) {
     activeJourney.parkingLocation =
         pendingParkingLocation;
 
-    if (pendingParkingLocationAddress) {
-        activeJourney.parkingLocationAddress =
-            pendingParkingLocationAddress;
-    }
-
     activeJourney.parkingVerified =
         Boolean(activeJourney.parkingLocationAddress);
 
@@ -235,7 +230,6 @@ if (activeJourney) {
 }
 
     pendingParkingLocation = "";
-    pendingParkingLocationAddress = "";
     pendingLocationType = "";
 
     document.getElementById("result").innerHTML = `
@@ -398,8 +392,13 @@ document.getElementById(
 
 if(address){
 
-    pendingParkingLocationAddress =
+    activeJourney.parkingLocationAddress =
         address;
+
+    localStorage.setItem(
+        'activeJourney',
+        JSON.stringify(activeJourney)
+    );
 
     savePendingParking();
 }

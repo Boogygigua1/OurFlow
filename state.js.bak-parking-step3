@@ -15,8 +15,6 @@ let activeJourney =
 
 let pendingParkingLocation = "";
 
-let pendingParkingLocationAddress = "";
-
 let pendingLocationClassification = "";
 
 let pendingLocationType = "";

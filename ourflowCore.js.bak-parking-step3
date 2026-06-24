@@ -2678,6 +2678,15 @@ if (address) {
                 lowerQuestion.includes("parking structure");
 
             if (!hasBusinessLandmark || hasParkingDescription) {
+                activeJourney.parkingLocation = question;
+                activeJourney.parkingVerified = false;
+
+                activeJourney.timeline.push(
+                    "🚗 Parking Memory Saved: " + question
+                );
+
+                showActiveJourneyBox();
+
                 pendingParkingLocation = question;
 
                 result.innerHTML = `
