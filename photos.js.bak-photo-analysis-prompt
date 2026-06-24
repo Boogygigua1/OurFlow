@@ -184,7 +184,7 @@ async function saveJourneyPhoto() {
         },
         body: JSON.stringify({
             question:
-                "Look at this image and suggest 3 short practical location memories the user may want to remember. Read all visible signs, names, numbers, suite numbers, building names, landmarks, and notices. Group related visible clues into one useful memory, such as building or place name + number + distinguishing landmark or notice. Do not return a standalone number unless no other useful text is visible. Do not split related clues into unrelated choices. Return only a simple numbered list of memory names, with no explanations.",
+                "Look at this image and suggest 3 short location or landmark names the user may want to remember. Return only simple numbered names. Do not include descriptions, explanations, dashes, or extra text.",
             destination: activeJourney?.destination || "",
             parkingLocation: activeJourney?.parkingLocation || "",
             startLocation: activeJourney?.startLocation || "",
