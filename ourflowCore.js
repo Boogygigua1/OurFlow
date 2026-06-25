@@ -87,7 +87,7 @@ function showParkingMemoryReview(parkingText) {
 
     <button onclick="
 pendingLocationType = 'both';
-savePendingParking();
+verifyParkingLocation();
 ">
         &#128205; Keep As Parking + Starting Location
     </button>
