@@ -1990,6 +1990,20 @@ Ready to save?
             return;
         }
         // ========================================
+        // DIRECT RETURN NAVIGATION COMMANDS
+        // ========================================
+
+        if (recallQuestion === "return to parking") {
+            openGoogleMapsToParkingLocation();
+            return;
+        }
+
+        if (recallQuestion === "return to start") {
+            openGoogleMapsToStartLocation();
+            return;
+        }
+
+        // ========================================
         // PARKING & VEHICLE RECALL
         // ========================================
 
