@@ -1,3 +1,134 @@
+function getBestDestinationForMaps() {
+
+    return (
+        activeJourney?.verifiedDestinationAddress ||
+        activeJourney?.destinationAddress ||
+        activeJourney?.destinationDetail ||
+        activeJourney?.destination ||
+        ""
+    );
+}
+
+function getBestParkingForMaps() {
+
+    return (
+        activeJourney?.parkingLocationAddress ||
+        activeJourney?.parkingLocation ||
+        ""
+    );
+}
+
+function getBestStartForMaps() {
+
+    return (
+        activeJourney?.startLocationAddress ||
+        activeJourney?.startLocation ||
+        ""
+    );
+}
+
+function buildGoogleMapsDirectionsUrl({
+    origin,
+    destination,
+    mode
+}) {
+
+    let mapUrl =
+        "https://www.google.com/maps/dir/?api=1";
+
+    if (origin) {
+        mapUrl +=
+            "&origin=" +
+            encodeURIComponent(origin);
+    }
+
+    mapUrl +=
+        "&destination=" +
+        encodeURIComponent(destination || "");
+
+    if (mode) {
+        mapUrl +=
+            "&travelmode=" +
+            encodeURIComponent(mode);
+    }
+
+    return mapUrl;
+}
+
+function openGoogleMapsToDestination(mode = "driving") {
+
+    const destination =
+        getBestDestinationForMaps();
+
+    if (!destination) {
+        alert("No destination details recorded.");
+        return;
+    }
+
+    const origin =
+        getBestStartForMaps();
+
+    const mapUrl =
+        buildGoogleMapsDirectionsUrl({
+            origin,
+            destination,
+            mode
+        });
+
+    window.open(mapUrl, "_blank");
+}
+
+function openGoogleMapsFromParkingToDestination(mode = "walking") {
+
+    const origin =
+        getBestParkingForMaps();
+
+    if (!origin) {
+        alert("No parking location recorded.");
+        return;
+    }
+
+    const destination =
+        getBestDestinationForMaps();
+
+    if (!destination) {
+        alert("No destination details recorded.");
+        return;
+    }
+
+    const mapUrl =
+        buildGoogleMapsDirectionsUrl({
+            origin,
+            destination,
+            mode
+        });
+
+    window.open(mapUrl, "_blank");
+}
+
+function openGoogleMapsBackToParking(mode = "walking") {
+
+    const destination =
+        getBestParkingForMaps();
+
+    if (!destination) {
+        alert("No parking location recorded.");
+        return;
+    }
+
+    const origin =
+        getBestDestinationForMaps();
+
+    const mapUrl =
+        buildGoogleMapsDirectionsUrl({
+            origin,
+            destination,
+            mode
+        });
+
+    window.open(mapUrl, "_blank");
+}
+
 function openGoogleMapsForJourney() {
 
     if (!activeJourney) {
@@ -6,83 +137,57 @@ function openGoogleMapsForJourney() {
     }
 
     const destination =
-        activeJourney?.verifiedDestinationAddress ||
-        activeJourney?.destinationAddress ||
-        activeJourney?.destinationDetail ||
-        activeJourney?.destination ||
-        "";
+        getBestDestinationForMaps();
 
     const mapUrl =
-        "https://www.google.com/maps/dir/?api=1" +
-
-        (
-            activeJourney?.startLocation
-                ? "&origin=" +
-                encodeURIComponent(
-                    activeJourney.startLocation
-                )
-                : ""
-        ) +
-
-        "&destination=" +
-        encodeURIComponent(destination);
+        buildGoogleMapsDirectionsUrl({
+            origin: getBestStartForMaps(),
+            destination
+        });
 
     window.open(mapUrl, "_blank");
 }
 
 function openGoogleMapsToStartLocation() {
 
-    if (!activeJourney?.startLocation) {
+    const destination =
+        getBestStartForMaps();
+
+    if (!destination) {
         alert("No starting location recorded.");
         return;
     }
 
     const origin =
-        activeJourney?.verifiedDestinationAddress ||
-        activeJourney?.destinationAddress ||
-        activeJourney?.destinationDetail ||
-        activeJourney?.destination ||
-        "";
+        getBestDestinationForMaps();
 
     const mapUrl =
-        "https://www.google.com/maps/dir/?api=1" +
-        (origin
-            ? "&origin=" +
-            encodeURIComponent(origin)
-            : "") +
-        "&destination=" +
-        encodeURIComponent(
-            activeJourney.startLocation
-        );
+        buildGoogleMapsDirectionsUrl({
+            origin,
+            destination
+        });
 
     window.open(mapUrl, "_blank");
 }
 
 function openGoogleMapsToParkingLocation() {
 
-    if (!activeJourney?.parkingLocation) {
+    const destination =
+        getBestParkingForMaps();
+
+    if (!destination) {
         alert("No parking location recorded.");
         return;
     }
 
     const origin =
-        activeJourney?.verifiedDestinationAddress ||
-        activeJourney?.destinationAddress ||
-        activeJourney?.destinationDetail ||
-        activeJourney?.destination ||
-        "";
+        getBestDestinationForMaps();
 
     const mapUrl =
-        "https://www.google.com/maps/dir/?api=1" +
-        (origin
-            ? "&origin=" +
-            encodeURIComponent(origin)
-            : "") +
-        "&destination=" +
-        encodeURIComponent(
-            activeJourney.parkingLocationAddress ||
-            activeJourney.parkingLocation
-        );
+        buildGoogleMapsDirectionsUrl({
+            origin,
+            destination
+        });
 
     window.open(mapUrl, "_blank");
 }
@@ -90,35 +195,23 @@ function openGoogleMapsToParkingLocation() {
 function openGoogleMapsToDestinationDetails(mode = "driving") {
 
     const destination =
-        activeJourney?.verifiedDestinationAddress ||
-        activeJourney?.destinationAddress ||
-        activeJourney?.destinationDetail ||
-        activeJourney?.destination;
+        getBestDestinationForMaps();
 
     if (!destination) {
         alert("No destination details recorded.");
         return;
     }
 
-const origin =
-    activeJourney?.parkingLocationAddress ||
-    activeJourney?.parkingLocation ||
-    activeJourney?.startLocationAddress ||
-    activeJourney?.startLocation ||
-    "";
+    const origin =
+        getBestParkingForMaps() ||
+        getBestStartForMaps();
 
     const mapUrl =
-        "https://www.google.com/maps/dir/?api=1" +
-        (origin
-            ? "&origin=" +
-            encodeURIComponent(origin)
-            : "") +
-        "&destination=" +
-        encodeURIComponent(
-            destination
-        ) +
-        "&travelmode=" +
-        mode;
+        buildGoogleMapsDirectionsUrl({
+            origin,
+            destination,
+            mode
+        });
 
 
     window.open(mapUrl, "_blank");
