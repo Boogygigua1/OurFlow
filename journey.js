@@ -796,6 +796,230 @@ function endJourneyFromArrival() {
     askOurFlow();
 }
 
+function showQuickJourneySummaryFromArrival() {
+
+    showQuickJourneySummary();
+}
+
+function getQuickSummaryEntranceNotes(journey) {
+
+    const entranceTerms =
+        /(entrance|lobby|front desk|rear|side door|door|elevator|stairs|floor|suite|office|check in|check-in)/i;
+
+    return (journey?.notes || [])
+        .filter(note => entranceTerms.test(note));
+}
+
+function getQuickSummaryAccessibilityNotes(journey) {
+
+    const accessibilityTerms =
+        /(accessible|accessibility|wheelchair|ramp|elevator|stairs|mobility|walker|cane|handicap|disabled)/i;
+
+    const savedAccessibilityNotes =
+        Array.isArray(journey?.accessibilityNotes)
+            ? journey.accessibilityNotes
+            : journey?.accessibilityNotes
+                ? [journey.accessibilityNotes]
+                : [];
+
+    return [
+        ...savedAccessibilityNotes,
+        ...(journey?.notes || [])
+            .filter(note => accessibilityTerms.test(note))
+    ];
+}
+
+function addJourneyNoteFromQuickSummary() {
+
+    const input =
+        document.getElementById("questionInput");
+
+    input.value = "save note: ";
+
+    input.focus();
+
+    input.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+
+function showQuickSummaryPhotos() {
+
+    const photos =
+        activeJourney?.photos || [];
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>&#128247; Saved Photos</strong>
+
+    <br><br>
+
+    ${photos.length
+                ? photos
+                    .map((photo, index) => `
+<div style="margin-bottom:12px;">
+    <strong>&#128247; Photo ${index + 1}</strong>
+
+    <br>
+
+    ${photo.note || photo.title || photo.name || "Unnamed Photo"}
+
+    ${photo.thumbnail
+                        ? `
+    <br><br>
+    <img
+        src="${photo.thumbnail}"
+        style="
+            max-width:120px;
+            border-radius:8px;
+            display:block;
+        "
+    >
+    `
+                        : ""}
+</div>
+`)
+                    .join("")
+                : "No saved photos for this journey yet."}
+
+    <br><br>
+
+    <button onclick="showQuickJourneySummary()">
+        &larr; Back
+    </button>
+</div>
+`;
+}
+
+function showQuickJourneySummary() {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    const destinationAddress =
+        activeJourney.verifiedDestinationAddress ||
+        activeJourney.destinationAddress ||
+        "";
+
+    const entranceNotes =
+        getQuickSummaryEntranceNotes(activeJourney);
+
+    const accessibilityNotes =
+        getQuickSummaryAccessibilityNotes(activeJourney);
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>&#129517; Quick Summary</strong>
+
+    <br><br>
+
+    <strong>&#128205; ${activeJourney.destination || "Destination"}</strong>
+
+    ${destinationAddress
+                ? `<br>${destinationAddress}`
+                : ""}
+
+    <br><br>
+
+    <strong>Journey Memory</strong>
+
+    <br><br>
+
+    &#128247; Photos:
+    ${activeJourney.photos?.length || 0}
+
+    <br>
+
+    &#128221; Notes:
+    ${activeJourney.notes?.length || 0}
+
+    <br>
+
+    &#128682; Entrance Notes:
+    ${entranceNotes.length}
+
+    <br>
+
+    &#9855; Accessibility Notes:
+    ${accessibilityNotes.length}
+
+    <br><br>
+
+    <strong>Actions</strong>
+
+    <br><br>
+
+    <button onclick="openGoogleMapsToDestination()">
+        &#128205; Open in Google Maps
+    </button>
+
+    <br><br>
+
+    <button onclick="showQuickSummaryPhotos()">
+        &#128247; View Photos
+    </button>
+
+    <br><br>
+
+    <button onclick="addJourneyNoteFromQuickSummary()">
+        &#10133; Add Note
+    </button>
+
+    <br><br>
+
+    <button onclick="showArrivalMode()">
+        &larr; Back
+    </button>
+</div>
+`;
+}
+
+function getArrivalReturnButton() {
+
+    const hasParking =
+        Boolean(activeJourney?.parkingLocation);
+
+    const hasStart =
+        Boolean(activeJourney?.startLocation);
+
+    if (hasParking && hasStart) {
+
+        return `
+<button onclick="openGoogleMapsToParkingLocation()">
+    &#128260; Return To Start / Parking
+</button>
+
+<br><br>
+`;
+    }
+
+    if (hasParking) {
+
+        return `
+<button onclick="openGoogleMapsToParkingLocation()">
+    &#128663; Return To Parking
+</button>
+
+<br><br>
+`;
+    }
+
+    if (hasStart) {
+
+        return `
+<button onclick="openGoogleMapsToStartLocation()">
+    &#129517; Return To Start
+</button>
+
+<br><br>
+`;
+    }
+
+    return "";
+}
+
 function showArrivalMode() {
 
     if (!activeJourney) {
@@ -805,64 +1029,33 @@ function showArrivalMode() {
     document.getElementById("result").innerHTML = `
 <div class="card">
 
-    <strong>🏁 Arrival Mode</strong>
+    <strong>&#129517; Destination Reached</strong>
 
     <br><br>
 
-    Welcome to:
+    Glad you made it to:
 
     <br><br>
 
-    <strong>
-        ${activeJourney.destination}
-    </strong>
+    <strong>${activeJourney.destination || "your destination"}</strong>
 
     <br><br>
 
-    <strong>📍 Destination Details:</strong>
+    <button onclick="showQuickJourneySummaryFromArrival()">
+        &#129517; View Quick Summary
+    </button>
 
     <br><br>
 
-    ${activeJourney.destinationDetail ||
-        "No destination details recorded."}
-
-    <br><br>
-
-    <strong>📬 Verified Destination:</strong>
-
-    <br><br>
-
-    ${activeJourney.verifiedDestinationAddress ||
-        "Not verified"}
-
-<br><br>
-
-<button onclick="startArrivalPhoto()">
-    📷 Save Arrival Photo
-</button>
-
-<br><br>
-
-<button onclick="showOrientationHub()">
-    &#129517; Orientation Hub
-</button>
-
-<br><br>
-
-<button onclick="openGoogleMapsToParkingLocation()">
-    🚗 Return To Parking
-</button>
-
-    <br><br>
+    ${getArrivalReturnButton()}
 
     <button onclick="endJourneyFromArrival()">
-        🏁 End Journey
+        &#127937; End Journey
     </button>
 
 </div>
 `;
 }
-
 function startArrivalPhoto() {
 
     pendingPhotoMemory = true;
@@ -870,32 +1063,38 @@ function startArrivalPhoto() {
     document.getElementById("result").innerHTML = `
 <div class="card">
 
-    <strong>📷 Arrival Photo</strong>
+    <strong>&#128247; Arrival Photo</strong>
 
     <br><br>
 
-    Take a photo of:
+    Add a photo for this journey.
 
     <br><br>
 
-    • Building Entrance
+    <label for="landmarkImage" role="button" tabindex="0" style="
+        display:inline-block;
+        padding:12px 16px;
+        margin-top:10px;
+        margin-right:8px;
+        background:rgba(96, 165, 250, 0.75);
+        color:white;
+        border-radius:6px;
+        cursor:pointer;
+    ">
+        &#128247; Take Photo
+    </label>
 
-    <br>
-
-    • Room Number
-
-    <br>
-
-    • Directory Sign
-
-    <br>
-
-    • Landmark
-
-    <br><br>
-
-    After uploading the photo, I'll help save it.
-
+    <label for="landmarkImageLibrary" role="button" tabindex="0" style="
+        display:inline-block;
+        padding:12px 16px;
+        margin-top:10px;
+        background:rgba(96, 165, 250, 0.75);
+        color:white;
+        border-radius:6px;
+        cursor:pointer;
+    ">
+        &#128444;&#65039; Choose From Library
+    </label>
 </div>
 `;
 }

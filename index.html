@@ -289,16 +289,54 @@ color:#555;
     </button>
 -->
 
-    <button onclick="
-document.getElementById('landmarkImage').click();
+    <label for="landmarkImage" role="button" tabindex="0" style="
+    display:inline-block;
+    padding:12px 16px;
+    margin-top:10px;
+    margin-right:8px;
+    background:rgba(96, 165, 250, 0.75);
+    backdrop-filter:blur(4px);
+    color:white;
+    border:1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor:pointer;
+    border-radius:6px;
+" onkeydown="
+if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    document.getElementById('landmarkImage').click();
+}
 ">
-        📷 Upload / Take Photo
-    </button>
+        &#128247; Take Photo
+    </label>
+
+    <label for="landmarkImageLibrary" role="button" tabindex="0" style="
+    display:inline-block;
+    padding:12px 16px;
+    margin-top:10px;
+    background:rgba(96, 165, 250, 0.75);
+    backdrop-filter:blur(4px);
+    color:white;
+    border:1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor:pointer;
+    border-radius:6px;
+" onkeydown="
+if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    document.getElementById('landmarkImageLibrary').click();
+}
+">
+        &#128444;&#65039; Choose From Library
+    </label>
 
 
 
-    <input type="file" id="landmarkImage" accept="image/*" capture="environment" onchange="analyzeLandmarkImage()"
-        style="display:none;">
+    <input type="file" id="landmarkImage" accept="image/*" capture="environment" onchange="analyzeLandmarkImage(this)"
+        style="position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%);">
+
+    <input type="file" id="landmarkImageLibrary" accept="image/*" onchange="analyzeLandmarkImage(this)"
+        style="position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%);">
 
     <p style="font-size:12px; color:#888; margin-top:6px;">
         🧭 To begin, type:

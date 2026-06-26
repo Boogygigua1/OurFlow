@@ -508,80 +508,7 @@ How should I save this?
 
             activeJourney.journeyStatus = "arrived";
 
-            // ========================================
-            // ARRIVAL MEMORY CAPTURE
-            // ========================================
-
-            result.innerHTML = `
-<div class="card">
-    <strong>🧭 Destination Reached</strong>
-
-    <br><br>
-
-    Glad you made it to:
-
-    <br><br>
-
-    <strong>${activeJourney.destination}</strong>
-
-    <br><br>
-
-    What would you like me to remember?
-
-    <br><br>
-
-    <button onclick="showOrientationHub()">
-        &#129517; Orientation Hub
-    </button>
-
-    <br><br>
-
-    ❓ Questions for staff
-
-    <br>
-
-    📝 Notes
-
-    <br>
-
-    📅 Appointments
-
-    <br>
-
-    👩‍⚕️ Instructions
-
-    <br>
-
-    🏢 Directory information
-
-    <br><br>
-
-    Just tell me naturally and I'll save it for this journey.
-
-<br><br>
-
-<button onclick="endJourneyFromArrival()">
-    🏁 End Journey
-</button>
-
-<br><br>
-<button onclick="
-showActiveJourneyBox();
-
-document.getElementById('questionInput').focus();
-
-document.getElementById('questionInput').scrollIntoView({
-    behavior:'smooth',
-    block:'center'
-});
-
-document.getElementById('questionInput').placeholder =
-    'What would you like me to remember?';
-">
-    ⬅ Continue Journey
-</button>
-    </div>
-`;
+            showArrivalMode();
 
             return;
         }
@@ -1923,57 +1850,7 @@ Ready to save?
             isJourneySummaryRecall(noteQuestion)
         ) {
 
-            result.innerHTML = `
-<div class="card">
-    <strong>🧭 Journey Summary</strong>
-
-    <br><br>
-
-    📅 Appointments:
-    ${activeJourney.appointments?.length || 0}
-
-    <br><br>
-
-    👩‍⚕️ Instructions:
-    ${activeJourney.staffInstructions?.length || 0}
-
-    <br><br>
-
-    📝 Notes:
-    ${activeJourney.notes?.length || 0}
-
-    <br><br>
-
-    💊 Medications:
-    ${activeJourney.medications?.length || 0}
-
-    <br><br>
-
-    ❓ Questions:
-    ${activeJourney.questionsForDoctor?.length || 0}
-
-    <br><br>
-
-    🏢 Directories:
-    ${activeJourney.directories?.length || 0}
-
-    <br><br>
-
-    📷 Photos:
-    ${activeJourney.photos?.length || 0}
-
-    <br><br>
-
-    📌 Timeline Events:
-    ${activeJourney.timeline?.length || 0}
-
-    <br><br>
-
-    📍 Destination:
-    ${activeJourney.destination || "Unknown"}
-
-</div>
-`;
+            showQuickJourneySummary();
 
             return;
         }
@@ -2914,4 +2791,3 @@ if (address) {
 `;
     }
 }
-

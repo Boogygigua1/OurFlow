@@ -1,8 +1,21 @@
-function previewLandmarkImage() {
+function getSelectedLandmarkFile(input) {
+
+    if (input?.files?.[0]) {
+        return input.files[0];
+    }
+
+    return (
+        document.getElementById("landmarkImage")
+            ?.files?.[0] ||
+        document.getElementById("landmarkImageLibrary")
+            ?.files?.[0]
+    );
+}
+
+function previewLandmarkImage(input) {
 
     const file =
-        document.getElementById("landmarkImage")
-            .files[0];
+        getSelectedLandmarkFile(input);
 
     if (!file) return;
 
@@ -66,15 +79,14 @@ function previewLandmarkImage() {
 }
 
 
-async function analyzeLandmarkImage() {
+async function analyzeLandmarkImage(input) {
 
 
-    previewLandmarkImage();
+    previewLandmarkImage(input);
 
 
     const file =
-        document.getElementById("landmarkImage")
-            .files[0];
+        getSelectedLandmarkFile(input);
 
     if (!file) return;
 
