@@ -828,9 +828,19 @@ function isMedicationPhrase(question) {
     const text =
         question.toLowerCase().trim();
 
+    const isTakeMedicationPhrase =
+        text.startsWith("take ") &&
+        !text.startsWith("take me ") &&
+        !text.startsWith("take a photo") &&
+        !text.startsWith("take photo") &&
+        !text.startsWith("take picture") &&
+        !text.startsWith("take a picture");
+
     return (
 
         text.startsWith("taking ") ||
+
+        isTakeMedicationPhrase ||
 
         text.startsWith("started ") ||
 
@@ -869,7 +879,11 @@ function isQuestionPhrase(question) {
 
         text.startsWith("i need to ask ") ||
 
+        text.startsWith("need to ask ") ||
+
         text.startsWith("i need to ask about ") ||
+
+        text.startsWith("need to ask about ") ||
 
         text.startsWith("i want to ask ") ||
 

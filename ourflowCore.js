@@ -726,7 +726,9 @@ Ready to save?
         // ========================================
 
         const lowerQuestion =
-            question.toLowerCase();
+            question
+                .toLowerCase()
+                .replace(/[’‘]/g, "'");
 
         // CLEANUP:
         // Preferred lowercase variable.
@@ -985,6 +987,7 @@ Ready to save?
         const recallQuestion =
             question
                 .toLowerCase()
+                .replace(/[’‘]/g, "'")
                 .replace(/[?.!,]/g, "")
                 .trim();
 
@@ -1223,17 +1226,7 @@ Ready to save?
         if (
             activeJourney &&
             (
-                noteQuestion.startsWith("taking ") ||
-                noteQuestion.startsWith("started ") ||
-                noteQuestion.startsWith("using ") ||
-                noteQuestion.startsWith("prescribed ") ||
-
-                noteQuestion.startsWith("i need to take ") ||
-                noteQuestion.startsWith("need to take ") ||
-                noteQuestion.startsWith("i take ") ||
-                noteQuestion.startsWith("i am taking ") ||
-                noteQuestion.startsWith("i'm taking ") ||
-                noteQuestion.startsWith("im taking ")
+                isMedicationPhrase(noteQuestion)
             )
         ) {
 

@@ -104,6 +104,67 @@ async function analyzeLandmarkImage() {
 }
 
 
+function showPhotoSavedCard() {
+
+    const lastPhoto =
+        activeJourney?.photos?.[
+        activeJourney.photos.length - 1
+        ];
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📷 Photo Saved</strong>
+
+    <br><br>
+
+    ${lastPhoto?.thumbnail
+                ? `
+    <img
+        src="${lastPhoto.thumbnail}"
+        style="
+            max-width:160px;
+            border-radius:8px;
+            display:block;
+            margin-bottom:12px;
+        "
+    >
+    `
+                : ""}
+
+    Saved to this journey.
+
+    <br><br>
+
+    <button onclick="analyzeSavedJourneyPhoto()">
+        🔍 Analyze Photo
+    </button>
+
+    <br><br>
+
+    <button onclick="
+const memory = prompt(
+'Enter the memory you would like to save:'
+);
+
+if(memory){
+    savePhotoMemory(memory);
+}
+">
+        📝 Add Memory
+    </button>
+
+    <br><br>
+
+    <button onclick="
+showActiveJourneyBox();
+document.getElementById('questionInput').focus();
+">
+        ➡ Continue Journey
+    </button>
+</div>
+`;
+}
+
 async function saveJourneyPhoto() {
 
     const button =
@@ -118,7 +179,7 @@ async function saveJourneyPhoto() {
         button.style.opacity = "0.5";
 
         button.innerHTML =
-            "⏳ Analyzing Photo...";
+            "Saving Photo...";
     }
 
     console.log(
@@ -175,6 +236,38 @@ async function saveJourneyPhoto() {
     
     activeJourney.timeline.push("📷 Photo Saved");
 
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+
+    showPhotoSavedCard();
+
+}
+
+async function analyzeSavedJourneyPhoto() {
+
+    if (
+        !activeJourney ||
+        !activeJourney.photos ||
+        activeJourney.photos.length === 0
+    ) {
+        alert("No saved photo to analyze.");
+        return;
+    }
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>Analyzing Photo...</strong>
+
+    <br><br>
+
+    Looking for useful location clues.
+</div>
+`;
+
     console.log("STARTING PHOTO AI CALL");
 
     const response = await fetch("/api/askOurFlow", {
@@ -211,6 +304,11 @@ async function saveJourneyPhoto() {
 
     lastPhoto.analysis = data.answer;
 
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
     const suggestions = data.answer.match(
         /^\d+\.\s(.+)$/gm
     )?.map(
@@ -238,7 +336,6 @@ Choose a suggestion above, or click Enter Your Own Memory.
 </strong>
     <br><br>
 
-  
 <button onclick="savePhotoMemory(window.photoSuggestions[0])">
     1
 </button>

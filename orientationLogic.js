@@ -311,17 +311,16 @@ function showOrientationHub() {
 
     <br><br>
 
-    <strong>Verified Address:</strong><br>
     ${destination.verifiedAddress
-                ? escapeOrientationHtml(destination.verifiedAddress)
-                : "Not verified yet."}
+                ? `
+    <strong>Verified Address:</strong><br>
+    ${escapeOrientationHtml(destination.verifiedAddress)}
+    `
+                : ""}
 
     ${hasOrientationContext
                 ? sections
-                : `
-<br><br>
-I don't have extra orientation details for this place yet.
-`}
+                : ""}
 
     ${renderOrientationActions(photos)}
 
