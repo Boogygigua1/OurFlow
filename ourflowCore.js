@@ -828,6 +828,8 @@ Ready to save?
 
             isParkingRecall(lowerQuestion) ||
 
+            isRecoveryIntent(lowerQuestion) ||
+
             // PARKING MEMORY
 
             isParkingMemoryCommand(lowerQuestion);
@@ -1971,6 +1973,19 @@ Ready to save?
         }
 
         // ========================================
+        // JOURNEY RECOVERY
+        // ========================================
+
+        if (
+            isRecoveryIntent(recallQuestion)
+        ) {
+
+            showRecoveryChoices();
+
+            return;
+        }
+
+        // ========================================
         // ARRIVAL RECALL SHORTCUTS
         // ========================================
         if (
@@ -2801,6 +2816,18 @@ if (address) {
 
                 return;
             }
+        }
+
+        // ========================================
+        // JOURNEY LOCATION INTAKE
+        // ========================================
+
+        const locationIntakeCandidate =
+            detectLocationIntake(question);
+
+        if (locationIntakeCandidate) {
+            showLocationIntakeCard(locationIntakeCandidate);
+            return;
         }
 
         // ========================================
