@@ -796,6 +796,65 @@ function endJourneyFromArrival() {
     askOurFlow();
 }
 
+function getArrivalJourneyContextSummary() {
+
+    if (!activeJourney) {
+        return "";
+    }
+
+    const contextItems = [];
+
+    if (activeJourney.photos?.length) {
+        contextItems.push(
+            `📷 Saved Photos: ${activeJourney.photos.length}`
+        );
+    }
+
+    if (activeJourney.directories?.length) {
+        contextItems.push(
+            `🏢 Directory Information: ${activeJourney.directories.length}`
+        );
+    }
+
+    if (activeJourney.notes?.length) {
+        contextItems.push(
+            `📝 Notes: ${activeJourney.notes.length}`
+        );
+    }
+
+    if (activeJourney.parkingLocation) {
+        contextItems.push(
+            `🚗 Parking: ${activeJourney.parkingLocation}`
+        );
+    }
+
+    if (activeJourney.startLocation) {
+        contextItems.push(
+            `🧭 Starting Location: ${activeJourney.startLocation}`
+        );
+    }
+
+    if (activeJourney.accessibilityNotes?.length) {
+        contextItems.push(
+            `♿ Accessibility Notes: ${activeJourney.accessibilityNotes.length}`
+        );
+    }
+
+    if (contextItems.length === 0) {
+        return "";
+    }
+
+    return `
+<strong>Already remembered for this journey:</strong>
+
+<br><br>
+
+${contextItems.join("<br><br>")}
+
+<br><br>
+`;
+}
+
 function showArrivalMode() {
 
     if (!activeJourney) {
@@ -836,6 +895,8 @@ function showArrivalMode() {
         "Not verified"}
 
 <br><br>
+
+${getArrivalJourneyContextSummary()}
 
 <button onclick="startArrivalPhoto()">
     📷 Save Arrival Photo

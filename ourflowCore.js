@@ -510,6 +510,8 @@ How should I save this?
 
     <br><br>
 
+    ${getArrivalJourneyContextSummary()}
+
     What would you like me to remember?
 
     <br><br>
