@@ -843,6 +843,12 @@ function showArrivalMode() {
 
 <br><br>
 
+<button onclick="showOrientationHub()">
+    &#129517; Orientation Hub
+</button>
+
+<br><br>
+
 <button onclick="openGoogleMapsToParkingLocation()">
     🚗 Return To Parking
 </button>

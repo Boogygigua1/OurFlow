@@ -514,6 +514,12 @@ How should I save this?
 
     <br><br>
 
+    <button onclick="showOrientationHub()">
+        &#129517; Orientation Hub
+    </button>
+
+    <br><br>
+
     ❓ Questions for staff
 
     <br>
