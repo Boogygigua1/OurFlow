@@ -914,6 +914,10 @@ function isJourneySummaryRecall(question) {
 
     return (
 
+        text.includes("journey summary") ||
+
+        text.includes("journey recap") ||
+
         text === "journey summary" ||
 
         text === "show journey summary" ||
@@ -922,7 +926,21 @@ function isJourneySummaryRecall(question) {
 
         text === "journey recap" ||
 
-        text === "show journey recap"
+        text === "show journey recap" ||
+
+        text === "give me a journey summary" ||
+
+        text === "show me my journey summary" ||
+
+        text === "what is my journey summary" ||
+
+        text === "summarize my journey" ||
+
+        text === "summarise my journey" ||
+
+        text === "give me a summary" ||
+
+        text === "show me a summary"
 
     );
 }

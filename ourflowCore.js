@@ -95,6 +95,32 @@ verifyParkingLocation();
 `;
 }
 
+function isArrivalIntent(question) {
+
+    const text =
+        question
+            .toLowerCase()
+            .replace(/[’‘]/g, "'")
+            .replace(/[?.!,]/g, "")
+            .trim();
+
+    return (
+        text.includes("i'm here") ||
+        text.includes("im here") ||
+        text.includes("i am here") ||
+        text.includes("i made it") ||
+        text.includes("made it") ||
+        text.includes("i got here") ||
+        text.includes("i found it") ||
+        text.includes("found it") ||
+        text.includes("i've arrived") ||
+        text.includes("ive arrived") ||
+        text.includes("i have arrived") ||
+        text.includes("i arrived") ||
+        text.includes("arrived at destination")
+    );
+}
+
 async function askOurFlow() {
 
     const question =
@@ -477,17 +503,7 @@ How should I save this?
 
         if (
             activeJourney &&
-            (
-                endQuestion.includes("i made it") ||
-                endQuestion.includes("i've arrived") ||
-                endQuestion.includes("ive arrived") ||
-                endQuestion.includes("i got here") ||
-                endQuestion.includes("i'm here") ||
-                endQuestion.includes("i found it") ||
-                endQuestion.includes("found it") ||
-                endQuestion.includes("got it") ||
-                endQuestion.includes("im here")
-            )
+            isArrivalIntent(endQuestion)
         ) {
 
             activeJourney.journeyStatus = "arrived";
@@ -584,16 +600,7 @@ document.getElementById('questionInput').placeholder =
             endQuestion.includes("finished") ||
             endQuestion.includes("that's all") ||
             endQuestion.includes("thats all") ||
-            endQuestion.includes("no thanks") ||
-            endQuestion.includes("i made it") ||
-            endQuestion.includes("made it") ||
-            endQuestion.includes("i'm here") ||
-            endQuestion.includes("im here") ||
-            endQuestion.includes("i am here") ||
-            endQuestion.includes("i've arrived") ||
-            endQuestion.includes("ive arrived") ||
-            endQuestion.includes("i have arrived") ||
-            endQuestion.includes("arrived")
+            endQuestion.includes("no thanks")
         ) {
 
             /* END JOURNEY BLOCK HERE */
@@ -1996,13 +2003,7 @@ Ready to save?
         // ========================================
         if (
 
-            recallQuestion.includes("i arrived") ||
-
-            recallQuestion.includes("ive arrived") ||
-
-            recallQuestion.includes("i am here") ||
-
-            recallQuestion.includes("arrived at destination")
+            isArrivalIntent(recallQuestion)
 
         ) {
 
