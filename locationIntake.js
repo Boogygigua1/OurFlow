@@ -175,14 +175,8 @@ function showLocationIntakeCard(candidate) {
 
     <br><br>
 
-    <button onclick="saveLocationIntakeAsDestination()">
-        &#128205; Save as Destination
-    </button>
-
-    <br><br>
-
-    <button onclick="saveLocationIntakeAsStart()">
-        &#128681; Save as Starting Location
+    <button onclick="saveLocationIntakeAsParkingAndStart()">
+        &#128663; Save as Parking + Starting Location
     </button>
 
     <br><br>
@@ -193,8 +187,20 @@ function showLocationIntakeCard(candidate) {
 
     <br><br>
 
+    <button onclick="saveLocationIntakeAsStart()">
+        &#128681; Save as Starting Location
+    </button>
+
+    <br><br>
+
+    <button onclick="saveLocationIntakeAsDestination()">
+        &#128205; Save as Destination
+    </button>
+
+    <br><br>
+
     <button onclick="continueLocationIntakeWithAI()">
-        Continue with AI
+        Continue with Ask OurFlow
     </button>
 </div>
 `;
@@ -387,6 +393,31 @@ function saveLocationIntakeAsParking() {
     Address not verified yet.
 </div>
 `;
+}
+
+function saveLocationIntakeAsParkingAndStart() {
+
+    const candidate =
+        getPendingLocationIntake();
+
+    if (!candidate) return;
+
+    ensureLocationIntakeJourney();
+
+    pendingParkingLocation =
+        candidate.locationText;
+
+    pendingParkingLocationAddress =
+        candidate.confidence === "address"
+            ? candidate.locationText
+            : "";
+
+    pendingLocationType =
+        "both";
+
+    window.pendingLocationIntakeCandidate = null;
+
+    savePendingParking();
 }
 
 async function continueLocationIntakeWithAI() {
