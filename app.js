@@ -65,64 +65,33 @@ function toggleLegal(button) {
 
 function clearNewList() {
 
-    const hasActiveJourney =
-        Boolean(activeJourney);
-
-    const hasVisibleOutput =
-        Boolean(
-            document.getElementById("result")
-                ?.innerHTML
-                ?.trim()
-        );
-
-    if (!hasActiveJourney && !hasVisibleOutput) {
-        document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>Nothing to clear</strong>
-
-    <br><br>
-
-    There is no active journey list to clear right now.
-</div>
-`;
-        return;
-    }
-
     const shouldClear =
         confirm(
-            "Clear the current active journey list? Saved journeys will stay in your archive."
+            "This will permanently delete all saved journeys. This cannot be undone."
         );
 
     if (!shouldClear) {
         return;
     }
 
-    activeJourney = null;
-    pendingPhotoMemory = false;
-    pendingPhotoClassification = "";
-    landmarkImageData = "";
-    landmarkThumbnailData = "";
-    pendingParkingLocation = "";
-    pendingParkingLocationAddress = "";
-    pendingLocationClassification = "";
-    pendingLocationType = "";
-    pendingDestinationSearch = "";
+    savedJourneys = [];
 
-    localStorage.removeItem("activeJourney");
+    localStorage.setItem(
+        "savedJourneys",
+        JSON.stringify(savedJourneys)
+    );
 
-    document.getElementById("questionInput").value = "";
-    document.getElementById("imagePreview").innerHTML = "";
-    document.getElementById("activeJourneyBox").innerHTML = "";
+    showSavedJourneys();
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>List Cleared</strong>
+    <strong>Journey list cleared.</strong>
 
     <br><br>
 
-    The current journey list has been cleared. Saved journeys were not changed.
+    All saved journeys have been deleted.
 </div>
-`;
+` + document.getElementById("result").innerHTML;
 }
 
 function trackOurFlow(eventName, details = {}) {
