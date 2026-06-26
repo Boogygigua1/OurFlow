@@ -2358,9 +2358,24 @@ Can I help you get back there?
         const navigationSearch =
             lowerQuestion;
 
+        const normalizedNavigationSearch =
+            navigationSearch.replace(/[’‘]/g, "'");
+
+        const isCurrentLocationStatement =
+            normalizedNavigationSearch.startsWith("i'm at ") ||
+            normalizedNavigationSearch.startsWith("im at ") ||
+            normalizedNavigationSearch.startsWith("i am at ") ||
+            normalizedNavigationSearch.startsWith("i'm near ") ||
+            normalizedNavigationSearch.startsWith("im near ") ||
+            normalizedNavigationSearch.startsWith("i am near ") ||
+            normalizedNavigationSearch.startsWith("i'm by ") ||
+            normalizedNavigationSearch.startsWith("im by ") ||
+            normalizedNavigationSearch.startsWith("i am by ");
+
         const looksLikeDestinationClue =
             activeJourney &&
             !questionInfo.mentionsParking &&
+            !isCurrentLocationStatement &&
             question.includes(",") &&
             (
                 navigationSearch.includes(" on ") ||
