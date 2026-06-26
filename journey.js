@@ -801,6 +801,21 @@ function showQuickJourneySummaryFromArrival() {
     showQuickJourneySummary();
 }
 
+function continueJourneyFromArrival() {
+
+    const input =
+        document.getElementById("questionInput");
+
+    input.value = "";
+
+    input.focus();
+
+    input.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+
 function getQuickSummaryEntranceNotes(journey) {
 
     const entranceTerms =
@@ -1041,6 +1056,10 @@ function showArrivalMode() {
 
     <br><br>
 
+    What would you like to do now?
+
+    <br><br>
+
     <button onclick="showQuickJourneySummaryFromArrival()">
         &#129517; View Quick Summary
     </button>
@@ -1048,6 +1067,12 @@ function showArrivalMode() {
     <br><br>
 
     ${getArrivalReturnButton()}
+
+    <button onclick="continueJourneyFromArrival()">
+        &#8617;&#65039; Continue Journey
+    </button>
+
+    <br><br>
 
     <button onclick="endJourneyFromArrival()">
         &#127937; End Journey
