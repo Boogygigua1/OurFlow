@@ -3,6 +3,8 @@
 // ASK OURFLOW ENTRY POINT
 // ========================================
 
+const DEBUG_MODE = false;
+
 function showParkingRecall() {
 
     const result =
@@ -132,6 +134,10 @@ function escapeRouteDebugValue(value) {
 }
 
 function getRouteDebugHtml(routeDebug) {
+
+    if (!DEBUG_MODE) {
+        return "";
+    }
 
     return `
 <br><br>
