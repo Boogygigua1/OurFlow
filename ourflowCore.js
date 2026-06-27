@@ -381,6 +381,10 @@ How should I save this?
 
         ) {
 
+            resetJourneySessionContext();
+
+            conversationHistory.push(question);
+
             let destination = question;
 
             destination = destination
@@ -448,16 +452,16 @@ How should I save this?
                     new Date().toLocaleString(),
 
                 startLocation:
-                    activeJourney?.startLocation || "",
+                    "",
 
                 startLocationAddress:
-                    activeJourney?.startLocationAddress || "",
+                    "",
 
                 parkingLocation:
-                    activeJourney?.parkingLocation || "",
+                    "",
 
                 parkingLocationAddress:
-                    activeJourney?.parkingLocationAddress || "",
+                    "",
 
                 arrivalTips: "",
 
@@ -938,11 +942,7 @@ Ready to save?
 
             isInstructionPhrase(noteQuestion) ||
 
-            noteQuestion.startsWith("taking ") ||
-            noteQuestion.startsWith("i take ") ||
-            noteQuestion.startsWith("i'm taking") ||
-            noteQuestion.startsWith("im taking") ||
-            noteQuestion.startsWith("i am taking") ||
+            isMedicationPhrase(noteQuestion) ||
 
             isDirectoryPhrase(noteQuestion) ||
 

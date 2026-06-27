@@ -28,3 +28,30 @@ let savedJourneys =
 
 let JOURNEY_LIMIT =
     parseInt(localStorage.getItem("journeyLimit")) || 5;
+
+function resetJourneySessionContext() {
+
+    conversationHistory = [];
+
+    pendingPhotoMemory = false;
+
+    pendingPhotoClassification = "";
+
+    landmarkImageData = "";
+
+    landmarkThumbnailData = "";
+
+    pendingParkingLocation = "";
+
+    pendingParkingLocationAddress = "";
+
+    pendingLocationClassification = "";
+
+    pendingLocationType = "";
+
+    pendingDestinationSearch = "";
+
+    if (typeof window !== "undefined") {
+        window.pendingLocationIntakeCandidate = null;
+    }
+}

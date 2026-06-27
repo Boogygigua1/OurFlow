@@ -213,6 +213,8 @@ function startJourneyFromLocationIntake() {
 
     if (!candidate) return;
 
+    resetJourneySessionContext();
+
     activeJourney =
         getBlankLocationIntakeJourney(candidate.locationText);
 

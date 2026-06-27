@@ -828,8 +828,52 @@ function isMedicationPhrase(question) {
     const text =
         question.toLowerCase().trim();
 
+    const isCarePhrase =
+        /^(take|taking|i need to take|need to take|i take|i'm taking|im taking|i am taking)\s+care\b/.test(text);
+
+    const hasMedicationCue =
+        /\b\d+(?:\.\d+)?\s*(mg|mcg|g|ml|units?)\b/.test(text) ||
+        [
+            "medication",
+            "medications",
+            "medicine",
+            "medicines",
+            "med ",
+            "meds",
+            "pill",
+            "pills",
+            "tablet",
+            "tablets",
+            "capsule",
+            "capsules",
+            "dose",
+            "dosage",
+            "prescription",
+            "rx",
+            "antibiotic",
+            "insulin",
+            "inhaler",
+            "aspirin",
+            "ibuprofen",
+            "tylenol",
+            "advil",
+            "aleve",
+            "benadryl"
+        ].some(term => text.includes(term));
+
     const isTakeMedicationPhrase =
-        text.startsWith("take ") &&
+        !isCarePhrase &&
+        hasMedicationCue &&
+        (
+            text.startsWith("take ") ||
+            text.startsWith("taking ") ||
+            text.startsWith("i need to take ") ||
+            text.startsWith("need to take ") ||
+            text.startsWith("i take ") ||
+            text.startsWith("i'm taking ") ||
+            text.startsWith("im taking ") ||
+            text.startsWith("i am taking ")
+        ) &&
         !text.startsWith("take me ") &&
         !text.startsWith("take a photo") &&
         !text.startsWith("take photo") &&
@@ -838,27 +882,19 @@ function isMedicationPhrase(question) {
 
     return (
 
-        text.startsWith("taking ") ||
-
         isTakeMedicationPhrase ||
 
-        text.startsWith("started ") ||
+        (
+            text.startsWith("started ") &&
+            hasMedicationCue
+        ) ||
 
-        text.startsWith("using ") ||
+        (
+            text.startsWith("using ") &&
+            hasMedicationCue
+        ) ||
 
-        text.startsWith("prescribed ") ||
-
-        text.startsWith("i need to take ") ||
-
-        text.startsWith("need to take ") ||
-
-        text.startsWith("i take ") ||
-
-        text.startsWith("i'm taking ") ||
-
-        text.startsWith("im taking ") ||
-
-        text.startsWith("i am taking ")
+        text.startsWith("prescribed ")
     );
 }
 

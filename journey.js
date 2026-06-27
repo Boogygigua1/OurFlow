@@ -71,6 +71,8 @@ function saveJourney() {
 
     activeJourney = null;
 
+    resetJourneySessionContext();
+
     localStorage.removeItem(
         "activeJourney"
     );
@@ -272,6 +274,14 @@ ${journey.photos?.length || 0}
 Notes:
 ${journey.notes?.length || 0}
 
+<br>
+
+    <button onclick="event.stopPropagation(); restoreJourney(${index})">
+        Restore Journey
+    </button>
+
+<br>
+
     <button onclick="event.stopPropagation(); deleteJourney(${index})">
         🗑 Delete Journey
     </button>
@@ -300,8 +310,6 @@ function toggleJourney(index) {
 
     const journey =
         savedJourneys[index];
-
-    activeJourney = journey;
 
     if (details.style.display === "block") {
 
@@ -519,6 +527,40 @@ ${event}
 
     }
 
+}
+
+function restoreJourney(index) {
+
+    const journey =
+        savedJourneys[index];
+
+    if (!journey) return;
+
+    resetJourneySessionContext();
+
+    activeJourney =
+        JSON.parse(JSON.stringify(journey));
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>Journey Restored</strong>
+
+    <br><br>
+
+    ${activeJourney.destination || "Untitled Journey"}
+
+    <br><br>
+
+    This saved journey is active again.
+</div>
+`;
 }
 
 
