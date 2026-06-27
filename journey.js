@@ -1138,28 +1138,11 @@ function startArrivalPhoto() {
 
     <br><br>
 
-    <label for="landmarkImage" role="button" tabindex="0" style="
-        display:inline-block;
-        padding:12px 16px;
-        margin-top:10px;
-        margin-right:8px;
-        background:rgba(96, 165, 250, 0.75);
-        color:white;
-        border-radius:6px;
-        cursor:pointer;
-    ">
+    <label for="landmarkImage" class="photo-picker-button" role="button" tabindex="0">
         &#128247; Take Photo
     </label>
 
-    <label for="landmarkImageLibrary" role="button" tabindex="0" style="
-        display:inline-block;
-        padding:12px 16px;
-        margin-top:10px;
-        background:rgba(96, 165, 250, 0.75);
-        color:white;
-        border-radius:6px;
-        cursor:pointer;
-    ">
+    <label for="landmarkImageLibrary" class="photo-picker-button" role="button" tabindex="0">
         &#128444;&#65039; Choose From Library
     </label>
 </div>

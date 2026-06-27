@@ -28,7 +28,8 @@ select {
 }
 
 
-button {
+button,
+.photo-picker-button {
     padding: 12px 16px;
     margin-top: 10px;
 
@@ -43,6 +44,15 @@ button {
 
     cursor: pointer;
     border-radius: 6px;
+}
+
+.photo-picker-button {
+    display: inline-block;
+    font-size: 13.3333px;
+    line-height: normal;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
 }
 
 #result {
