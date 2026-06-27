@@ -121,6 +121,30 @@ function isArrivalIntent(question) {
     );
 }
 
+function escapeRouteDebugValue(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function getRouteDebugHtml(routeDebug) {
+
+    return `
+<br><br>
+<div style="font-size:11px; color:#666; line-height:1.5; border-top:1px solid #ddd; padding-top:8px;">
+    <strong>Route Debug</strong><br>
+    Raw input: ${escapeRouteDebugValue(routeDebug.rawInput)}<br>
+    Normalized input: ${escapeRouteDebugValue(routeDebug.normalizedInput)}<br>
+    isInstructionPhrase: ${escapeRouteDebugValue(routeDebug.isInstructionPhrase)}<br>
+    AI fallback reached: ${escapeRouteDebugValue(routeDebug.aiFallbackReached)}
+</div>
+`;
+}
+
 async function askOurFlow() {
 
     const question =
@@ -660,6 +684,21 @@ Ready to save?
             question
                 .toLowerCase()
                 .replace(/[’‘]/g, "'");
+
+        const routeDebug = {
+            rawInput: question,
+            normalizedInput: lowerQuestion,
+            isInstructionPhrase:
+                typeof isInstructionPhrase === "function"
+                    ? isInstructionPhrase(lowerQuestion)
+                    : "missing",
+            aiFallbackReached: false
+        };
+
+        console.log(
+            "OURFLOW ROUTE DEBUG",
+            routeDebug
+        );
 
         // CLEANUP:
         // Preferred lowercase variable.
@@ -1583,6 +1622,8 @@ Ready to save?
     <br><br>
 
     I'll remember that for this journey.
+
+    ${getRouteDebugHtml(routeDebug)}
 </div>
 `;
 
@@ -2726,6 +2767,13 @@ if (address) {
         // AI FALLBACK RESPONSE
         // ========================================
 
+        routeDebug.aiFallbackReached = true;
+
+        console.log(
+            "OURFLOW ROUTE DEBUG",
+            routeDebug
+        );
+
         const response = await fetch("/api/askOurFlow", {
             method: "POST",
             headers: {
@@ -2774,6 +2822,8 @@ if (address) {
 <div class="card">
     <strong>🧭 OurFlow</strong><br><br>
     ${data.answer}
+
+    ${getRouteDebugHtml(routeDebug)}
 </div>
 `;
         // ========================================

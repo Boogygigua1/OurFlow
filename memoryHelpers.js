@@ -239,6 +239,10 @@ function isInstructionPhrase(question) {
     );
 }
 
+if (typeof window !== "undefined") {
+    window.isInstructionPhrase = isInstructionPhrase;
+}
+
 function isDirectoryPhrase(question) {
 
     const text =
