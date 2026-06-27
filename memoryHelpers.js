@@ -164,8 +164,13 @@ function isInstructionPhrase(question) {
 
     const isNavigationNeed =
         text.startsWith("i need to get to ") ||
+        text.startsWith("need to get to ") ||
         text.startsWith("i need to go to ") ||
+        text.startsWith("need to go to ") ||
         text.startsWith("i need to find ") ||
+        text.startsWith("need to find ") ||
+        text.startsWith("i need to search ") ||
+        text.startsWith("need to search ") ||
         text.startsWith("i need directions to ");
 
     return (
@@ -194,6 +199,20 @@ function isInstructionPhrase(question) {
             &&
             !text.includes("ask ")
         ) ||
+
+        (
+            text.startsWith("need to ")
+            &&
+            !isNavigationNeed
+            &&
+            !text.includes("ask ")
+        ) ||
+
+        text.startsWith("take care of ") ||
+
+        text.startsWith("take care of the ") ||
+
+        text.startsWith("take care of my ") ||
 
         text.startsWith("i have to ") ||
 
