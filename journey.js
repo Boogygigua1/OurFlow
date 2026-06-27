@@ -1138,11 +1138,21 @@ function startArrivalPhoto() {
 
     <br><br>
 
-    <label for="landmarkImage" class="photo-picker-button" role="button" tabindex="0">
+    <label for="landmarkImage" class="photo-picker-button" role="button" tabindex="0" onkeydown="
+if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    document.getElementById('landmarkImage').click();
+}
+">
         &#128247; Take Photo
     </label>
 
-    <label for="landmarkImageLibrary" class="photo-picker-button" role="button" tabindex="0">
+    <label for="landmarkImageLibrary" class="photo-picker-button" role="button" tabindex="0" onkeydown="
+if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    document.getElementById('landmarkImageLibrary').click();
+}
+">
         &#128444;&#65039; Choose From Library
     </label>
 </div>
