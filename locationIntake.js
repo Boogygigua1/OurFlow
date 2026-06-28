@@ -556,10 +556,13 @@ function saveLocationIntakeAsStart() {
     if (isVerifiedAddress) {
         activeJourney.startLocationAddress =
             verifiedAddress;
+        activeJourney.startAddress =
+            verifiedAddress;
         activeJourney.verifiedStartAddress =
             verifiedAddress;
     } else {
         activeJourney.startLocationAddress = "";
+        activeJourney.startAddress = "";
         activeJourney.verifiedStartAddress = "";
     }
 

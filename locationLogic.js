@@ -263,20 +263,30 @@ if (activeJourney) {
             pendingParkingLocation
         );
 
+    const verifiedParkingAddress =
+        String(pendingParkingLocationAddress || "").trim();
+
     const hasVerifiedParkingAddress =
-        Boolean(pendingParkingLocationAddress);
+        Boolean(verifiedParkingAddress);
+
+    const savedParkingText =
+        hasVerifiedParkingAddress
+            ? verifiedParkingAddress
+            : parkingDescription;
 
     activeJourney.parkingDescription =
-        parkingDescription;
+        savedParkingText;
 
     activeJourney.parkingLocation =
-        parkingDescription;
+        savedParkingText;
 
     if (hasVerifiedParkingAddress) {
         activeJourney.parkingLocationAddress =
-            pendingParkingLocationAddress;
+            verifiedParkingAddress;
+        activeJourney.parkingAddress =
+            verifiedParkingAddress;
         activeJourney.verifiedParkingAddress =
-            pendingParkingLocationAddress;
+            verifiedParkingAddress;
     } else {
         activeJourney.parkingLocationAddress = "";
         activeJourney.parkingAddress = "";
@@ -292,12 +302,14 @@ if (activeJourney) {
     ) {
 
         activeJourney.startLocation =
-            parkingDescription;
+            savedParkingText;
 
         activeJourney.startLocationAddress =
             hasVerifiedParkingAddress
                 ? activeJourney.parkingLocationAddress
                 : "";
+        activeJourney.startAddress =
+            activeJourney.startLocationAddress;
         activeJourney.verifiedStartAddress =
             activeJourney.startLocationAddress;
 

@@ -30,7 +30,10 @@ function getJourneyPlaces(journey) {
             : null;
 
     const parkingAddress =
-        journey.parkingLocationAddress || "";
+        journey.verifiedParkingAddress ||
+        journey.parkingLocationAddress ||
+        journey.parkingAddress ||
+        "";
 
     const parkingTitle =
         journey.parkingLocation ||
@@ -47,6 +50,7 @@ function getJourneyPlaces(journey) {
                 address: parkingAddress,
                 verified: Boolean(
                     journey.parkingVerified ||
+                    journey.verifiedParkingAddress ||
                     journey.parkingLocationAddress
                 ),
                 navigationAction: "parking",
@@ -55,7 +59,10 @@ function getJourneyPlaces(journey) {
             : null;
 
     const startAddress =
-        journey.startLocationAddress || "";
+        journey.verifiedStartAddress ||
+        journey.startLocationAddress ||
+        journey.startAddress ||
+        "";
 
     const startTitle =
         journey.startLocation ||
@@ -72,6 +79,7 @@ function getJourneyPlaces(journey) {
                 address: startAddress,
                 verified: Boolean(
                     journey.startVerified ||
+                    journey.verifiedStartAddress ||
                     journey.startLocationAddress
                 ),
                 navigationAction: "start",
