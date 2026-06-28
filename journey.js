@@ -48,7 +48,12 @@ function hasMeaningfulJourneyData(journey) {
         journey.startLocation ||
         journey.startLocationAddress ||
         journey.notes?.length ||
-        journey.photos?.length
+        journey.photos?.length ||
+        journey.medications?.length ||
+        journey.appointments?.length ||
+        journey.questionsForDoctor?.length ||
+        journey.staffInstructions?.length ||
+        journey.directories?.length
     );
 }
 
@@ -232,6 +237,99 @@ function endJourneyWithoutSaving() {
 </div>
 `;
 }
+
+function isJourneyEndSwipeSurface(target) {
+
+    const result =
+        document.getElementById("result");
+
+    if (!result || !target || !result.contains(target)) {
+        return false;
+    }
+
+    const text =
+        result.textContent || "";
+
+    return (
+        text.includes("Destination Reached") ||
+        text.includes("End Journey") ||
+        text.includes("Quick Summary")
+    );
+}
+
+function handleJourneySwipeEnd(deltaX, deltaY, startTarget) {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    if (!isJourneyEndSwipeSurface(startTarget)) {
+        return;
+    }
+
+    const isSwipeUp =
+        deltaY < -80 &&
+        Math.abs(deltaX) < 70;
+
+    if (!isSwipeUp) {
+        return;
+    }
+
+    requestEndJourney();
+}
+
+function setupJourneySwipeEndHandler() {
+
+    if (window.journeySwipeEndHandlerReady) {
+        return;
+    }
+
+    window.journeySwipeEndHandlerReady = true;
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTarget = null;
+
+    document.addEventListener(
+        "touchstart",
+        event => {
+            const touch =
+                event.touches?.[0];
+
+            if (!touch) {
+                return;
+            }
+
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            touchStartTarget = event.target;
+        },
+        { passive: true }
+    );
+
+    document.addEventListener(
+        "touchend",
+        event => {
+            const touch =
+                event.changedTouches?.[0];
+
+            if (!touch) {
+                return;
+            }
+
+            handleJourneySwipeEnd(
+                touch.clientX - touchStartX,
+                touch.clientY - touchStartY,
+                touchStartTarget
+            );
+
+            touchStartTarget = null;
+        },
+        { passive: true }
+    );
+}
+
+setupJourneySwipeEndHandler();
 
 function deleteJourney(index) {
 
@@ -981,10 +1079,7 @@ ${activeJourney.directories?.length
 
 function endJourneyFromArrival() {
 
-    document.getElementById("questionInput").value =
-        "end journey";
-
-    askOurFlow();
+    requestEndJourney();
 }
 
 function showQuickJourneySummaryFromArrival() {
