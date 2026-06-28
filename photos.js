@@ -830,61 +830,25 @@ async function analyzeSavedJourneyPhoto() {
     }
 
     window.photoAnalysisInProgress = true;
-    window.photoAnalysisDismissed = false;
-
-    const analysisId = Date.now();
-    window.activePhotoAnalysisId = analysisId;
-
     showPhotoAnalysisInProgressCard(
         "Analyzing photo..."
     );
 
-    const timeoutMs =
-        Number(window.photoAnalysisTimeoutMs) ||
-        30000;
-
-    const controller =
-        typeof AbortController !== "undefined"
-            ? new AbortController()
-            : null;
-
-    let timeoutId;
-
-    const timeoutPromise =
-        new Promise(function (_resolve, reject) {
-            timeoutId = setTimeout(
-                function () {
-                    if (controller) {
-                        controller.abort();
-                    }
-
-                    reject(
-                        new Error("Photo analysis timed out.")
-                    );
-                },
-                timeoutMs
-            );
-        });
-
     try {
-        const response = await Promise.race([
-            fetch("/api/askOurFlow", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                signal: controller?.signal,
-                body: JSON.stringify(
-                    buildOurFlowPayload(
-                        "Look at this image and suggest 3 short practical location memories the user may want to remember. Read all visible signs, names, numbers, suite numbers, building names, landmarks, and notices. Group related visible clues into one useful memory, such as building or place name + number + distinguishing landmark or notice. Do not return a standalone number unless no other useful text is visible. Do not split related clues into unrelated choices. Return only a simple numbered list of memory names, with no explanations.",
-                        {
-                            injectJourneyContext: true
-                        }
-                    )
+        const response = await fetch("/api/askOurFlow", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(
+                buildOurFlowPayload(
+                    "Look at this image and suggest 3 short practical location memories the user may want to remember. Read all visible signs, names, numbers, suite numbers, building names, landmarks, and notices. Group related visible clues into one useful memory, such as building or place name + number + distinguishing landmark or notice. Do not return a standalone number unless no other useful text is visible. Do not split related clues into unrelated choices. Return only a simple numbered list of memory names, with no explanations.",
+                    {
+                        injectJourneyContext: true
+                    }
                 )
-            }),
-            timeoutPromise
-        ]);
+            )
+        });
 
         const data =
             await response.json();
@@ -913,13 +877,6 @@ async function analyzeSavedJourneyPhoto() {
         pendingPhotoMemory = true;
 
         showActiveJourneyBox();
-
-        if (
-            window.photoAnalysisDismissed ||
-            window.activePhotoAnalysisId !== analysisId
-        ) {
-            return;
-        }
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -963,18 +920,9 @@ if(memory){
 </div>
 `;
     } catch (error) {
-        if (
-            !window.photoAnalysisDismissed &&
-            window.activePhotoAnalysisId === analysisId
-        ) {
-            showPhotoAnalysisFallbackCard();
-        }
+        showPhotoAnalysisFailedCard();
     } finally {
-        clearTimeout(timeoutId);
-
-        if (window.activePhotoAnalysisId === analysisId) {
-            window.photoAnalysisInProgress = false;
-        }
+        window.photoAnalysisInProgress = false;
     }
 }
 
@@ -997,21 +945,17 @@ function showPhotoAnalysisInProgressCard(title) {
 `;
 }
 
-function showPhotoAnalysisFallbackCard() {
+function showPhotoAnalysisFailedCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Photo Analysis Taking Too Long</strong>
+    <strong>Photo Analysis Did Not Finish</strong>
 
     <br><br>
 
-    You can continue your journey and try photo analysis again later.
+    You can continue your journey and try again later.
 
     <br><br>
-
-    <button onclick="analyzeSavedJourneyPhoto()">
-        Try Again
-    </button>
 
     <button onclick="continueJourneyDuringPhotoAnalysis()">
         Continue Journey
@@ -1023,7 +967,7 @@ function showPhotoAnalysisFallbackCard() {
 
 function continueJourneyDuringPhotoAnalysis() {
 
-    window.photoAnalysisDismissed = true;
+    window.photoAnalysisInProgress = false;
     showActiveJourneyBox();
 }
 
