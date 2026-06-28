@@ -118,9 +118,28 @@ function detectLocationIntake(question) {
         originalText;
 
     if (matchedPrefix) {
+        const relationPrefix =
+            (
+                matchedPrefix.includes("near ") ||
+                matchedPrefix.includes("behind ") ||
+                matchedPrefix.includes("by ") ||
+                matchedPrefix === "on the street"
+            )
+                ? matchedPrefix
+                    .replace(/^i'?m\s+/i, "")
+                    .replace(/^im\s+/i, "")
+                    .replace(/^i am\s+/i, "")
+                    .trim()
+                : "";
+
         locationText =
-            matchedPrefix === "on the street"
-                ? originalText
+            relationPrefix
+                ? (
+                    relationPrefix === "on the street"
+                        ? originalText
+                        : relationPrefix + " " +
+                        originalText.slice(matchedPrefix.length).trim()
+                )
                 : originalText.slice(matchedPrefix.length).trim();
     }
 
