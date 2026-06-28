@@ -47,6 +47,66 @@ function analyzeUserQuestion(question) {
     };
 }
 
+function normalizeParkingDescription(parkingText) {
+
+    return parkingText
+        .replace(/[.?!]+$/g, "")
+        .replace(/^\s*parking location:\s*/i, "")
+        .replace(/^\s*save parking:\s*/i, "")
+        .replace(/^\s*my parking is:\s*/i, "")
+        .replace(/^\s*i'?m parked\s*/i, "")
+        .replace(/^\s*im parked\s*/i, "")
+        .replace(/^\s*i am parked\s*/i, "")
+        .replace(/^\s*i parked\s*/i, "")
+        .replace(/^\s*you'?re parked\s*/i, "")
+        .replace(/^\s*you are parked\s*/i, "")
+        .replace(/^\s*my car is parked\s*/i, "")
+        .replace(/^\s*my car is\s*/i, "")
+        .replace(/^\s*my vehicle is parked\s*/i, "")
+        .replace(/^\s*my vehicle is\s*/i, "")
+        .trim();
+}
+
+function getParkingDescriptionForDisplay(parkingText) {
+
+    const description =
+        normalizeParkingDescription(parkingText);
+
+    if (!description) {
+        return parkingText;
+    }
+
+    return "You're parked " +
+        description.replace(/^parked\s+/i, "") +
+        ".";
+}
+
+function isVagueParkingDescription(parkingText) {
+
+    const text =
+        parkingText
+            .toLowerCase()
+            .replace(/[’‘]/g, "'")
+            .trim();
+
+    return (
+        text.includes("on the street") ||
+        text.includes("street parking") ||
+        text.includes("parked on ") ||
+        text.includes("near ") ||
+        text.includes("behind ") ||
+        text.includes("by ") ||
+        text.includes("next to ") ||
+        text.includes("across from ") ||
+        text.includes("parking lot") ||
+        text.includes("parking structure") ||
+        text.includes("level ") ||
+        text.includes("row ") ||
+        text.includes("elevator") ||
+        text.includes("stairs")
+    );
+}
+
 function saveLocationType(type) {
 
     if (!activeJourney ||
@@ -198,16 +258,30 @@ function savePendingParking() {
 
 if (activeJourney) {
 
-    activeJourney.parkingLocation =
-        pendingParkingLocation;
+    const parkingDescription =
+        getParkingDescriptionForDisplay(
+            pendingParkingLocation
+        );
 
-    if (pendingParkingLocationAddress) {
+    const hasVerifiedParkingAddress =
+        Boolean(pendingParkingLocationAddress);
+
+    activeJourney.parkingDescription =
+        parkingDescription;
+
+    activeJourney.parkingLocation =
+        parkingDescription;
+
+    if (hasVerifiedParkingAddress) {
         activeJourney.parkingLocationAddress =
             pendingParkingLocationAddress;
+    } else {
+        activeJourney.parkingLocationAddress = "";
+        activeJourney.parkingAddress = "";
     }
 
     activeJourney.parkingVerified =
-        Boolean(activeJourney.parkingLocationAddress);
+        hasVerifiedParkingAddress;
 
     if (
         pendingLocationType === "both" ||
@@ -215,10 +289,12 @@ if (activeJourney) {
     ) {
 
         activeJourney.startLocation =
-            pendingParkingLocation;
+            parkingDescription;
 
         activeJourney.startLocationAddress =
-            activeJourney.parkingLocationAddress;
+            hasVerifiedParkingAddress
+                ? activeJourney.parkingLocationAddress
+                : "";
 
         activeJourney.startVerified =
             Boolean(activeJourney.startLocationAddress);
@@ -244,9 +320,21 @@ if (activeJourney) {
 
     <br><br>
 
-    Your parking location has been recorded.
+    ${activeJourney?.parkingDescription ||
+        activeJourney?.parkingLocation ||
+        "Your parking location has been recorded."}
 
     <br><br>
+
+    ${activeJourney?.parkingVerified
+            ? "Verified address saved."
+            : `
+    <button onclick="verifyParkingLocation()">
+        Add / Verify Parking Address
+    </button>
+
+    <br><br>
+    `}
 
     <button onclick="openGoogleMapsToDestinationDetails('walking')">
         🚶 Walk There
@@ -293,10 +381,80 @@ async function verifyParkingLocation() {
 
     const parkingLocation =
         pendingParkingLocation ||
+        activeJourney?.parkingDescription ||
         activeJourney?.parkingLocation;
 
     if (!parkingLocation) {
         alert("No parking location found.");
+        return;
+    }
+
+    if (!pendingParkingLocation) {
+        pendingParkingLocation = parkingLocation;
+    }
+
+    if (isVagueParkingDescription(parkingLocation)) {
+
+        window.parkingLookupAddress =
+            parkingLocation;
+
+        document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>Parking Address Optional</strong>
+
+    <br><br>
+
+    ${parkingLocation}
+
+    <br><br>
+
+    This sounds like a parking note, not a verified street address.
+
+    <br><br>
+
+    <button onclick="savePendingParking()">
+        Save Parking Note
+    </button>
+
+    <br><br>
+
+    <button onclick="
+window.open(
+'https://www.google.com/search?q=' +
+encodeURIComponent(window.parkingLookupAddress),
+'_blank'
+);
+">
+        Look Up Address
+    </button>
+
+    <br><br>
+
+    <input
+        id="verifiedParkingAddress"
+        type="text"
+        placeholder="Paste verified parking address here"
+        style="width:90%;padding:8px;"
+    >
+
+    <br><br>
+
+    <button onclick="
+const address =
+document.getElementById(
+    'verifiedParkingAddress'
+).value.trim();
+
+if(address){
+    pendingParkingLocationAddress = address;
+    savePendingParking();
+}
+">
+        Save Verified Address
+    </button>
+</div>
+`;
+
         return;
     }
 

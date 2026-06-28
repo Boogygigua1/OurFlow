@@ -14,6 +14,53 @@ export default async function handler(req, res) {
         });
     }
 
+    const normalizedDestination =
+        destination
+            .toLowerCase()
+            .replace(/[’‘]/g, "'")
+            .trim();
+
+    const isVagueParkingDescription =
+        normalizedDestination.includes("on the street") ||
+        normalizedDestination.includes("street parking") ||
+        normalizedDestination.includes("parked on ") ||
+        normalizedDestination.includes("parked near ") ||
+        normalizedDestination.includes("parked behind ") ||
+        normalizedDestination.includes("parked by ") ||
+        normalizedDestination.includes("near ") ||
+        normalizedDestination.includes("behind ") ||
+        normalizedDestination.includes("next to ") ||
+        normalizedDestination.includes("across from ") ||
+        normalizedDestination.includes("parking lot") ||
+        normalizedDestination.includes("parking structure") ||
+        normalizedDestination.includes("level ") ||
+        normalizedDestination.includes("row ") ||
+        normalizedDestination.includes("elevator") ||
+        normalizedDestination.includes("stairs");
+
+    if (isVagueParkingDescription) {
+        return res.status(200).json({
+            destination,
+            suggestion: ""
+        });
+    }
+
+    const shouldUseChicoContext =
+        normalizedDestination.includes("chico") ||
+        normalizedDestination.includes("csu") ||
+        normalizedDestination.includes("cal state") ||
+        normalizedDestination.includes("butte hall") ||
+        normalizedDestination.includes("anthropology");
+
+    const possibleContext =
+        shouldUseChicoContext
+            ? `
+Possible context:
+This may be located at California State University, Chico
+in Chico, California.
+`
+            : "";
+
     try {
 
         const response = await fetch(
@@ -49,10 +96,7 @@ Keep the response under 50 words.
                             content: `
 Destination:
 ${destination}
-
-Possible context:
-This may be located at California State University, Chico
-in Chico, California.
+${possibleContext}
 
 Try to identify the most likely building and address.
 `

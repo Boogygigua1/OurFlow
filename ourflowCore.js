@@ -56,42 +56,54 @@ function showParkingRecall() {
 
 function showParkingMemoryReview(parkingText) {
 
-    pendingParkingLocation = parkingText;
+    pendingParkingLocation =
+        typeof getParkingDescriptionForDisplay === "function"
+            ? getParkingDescriptionForDisplay(parkingText)
+            : parkingText;
+
+    pendingParkingLocationAddress = "";
+
+    const parkingReviewTitle =
+        typeof isVagueParkingDescription === "function" &&
+            isVagueParkingDescription(parkingText)
+            ? "Parking Note Detected"
+            : "Parking Found";
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>&#128663; Parking Memory Saved</strong>
+    <strong>&#128663; ${parkingReviewTitle}</strong>
 
     <br><br>
 
-    I'll remember this parking location:
+    Do you want me to save that as your parking location?
 
     <br><br>
 
-    ${parkingText}
-
-    <br><br>
-
-    This looks like a parking description, not a street address.
-
-    <br><br>
-
-    <button onclick="verifyParkingLocation()">
-        &#128663; Add / Verify Parking Address
-    </button>
+    ${pendingParkingLocation}
 
     <br><br>
 
     <button onclick="savePendingParking()">
-        &#128205; Keep As Entered
+        Yes, Save Parking
     </button>
+
     <br><br>
 
     <button onclick="
-pendingLocationType = 'both';
+pendingParkingLocation = '';
+pendingParkingLocationAddress = '';
+pendingLocationType = '';
+document.getElementById('result').innerHTML = '<div class=&quot;card&quot;><strong>Parking Not Saved</strong><br><br>No parking note was saved.</div>';
+">
+        No
+    </button>
+
+    <br><br>
+
+    <button onclick="
 verifyParkingLocation();
 ">
-        &#128205; Keep As Parking + Starting Location
+        Add / Verify Address First
     </button>
 </div>
 `;
