@@ -43,19 +43,6 @@ function showParkingRecall() {
             ? savedParkingAddress
             : "";
 
-    console.log(
-        "PARKING RECALL FIELDS",
-        {
-            parkingDescription,
-            parkingLocation,
-            parkingLocationAddress,
-            parkingAddress,
-            verifiedParkingAddress,
-            savedParkingLocation,
-            displayParkingAddress
-        }
-    );
-
     if (savedParkingLocation) {
 
         result.innerHTML = `
@@ -236,38 +223,6 @@ function getRouteNormalizedQuestion(question) {
         .trim();
 }
 
-function logReturnRouteDetector(name, value) {
-
-    if (value) {
-        console.log(
-            "EARLIER INTENT DETECTOR TRUE:",
-            name,
-            value
-        );
-    }
-}
-
-function isDirectoryInfo(question) {
-
-    return (
-        typeof isDirectoryPhrase === "function" &&
-        isDirectoryPhrase(
-            String(question || "")
-                .toLowerCase()
-        )
-    );
-}
-
-function isPlaceIdentification(question) {
-
-    return (
-        typeof detectLocationIntake === "function" &&
-        Boolean(
-            detectLocationIntake(question)
-        )
-    );
-}
-
 async function askOurFlow() {
 
     const question =
@@ -275,30 +230,6 @@ async function askOurFlow() {
 
     const normalizedQuestion =
         getRouteNormalizedQuestion(question);
-
-    console.log("RAW:", question);
-    console.log("QUESTION:", question);
-    console.log("NORMALIZED:", normalizedQuestion);
-    console.log(
-        "isReturnIntent:",
-        typeof isReturnIntent === "function"
-            ? isReturnIntent(question)
-            : "missing"
-    );
-    console.log(
-        "isGeneralNoteObservation:",
-        typeof isGeneralNoteObservation === "function"
-            ? isGeneralNoteObservation(question)
-            : "missing"
-    );
-    console.log(
-        "isDirectoryInfo:",
-        isDirectoryInfo(question)
-    );
-    console.log(
-        "isPlaceIdentification:",
-        isPlaceIdentification(question)
-    );
 
     const looksLikeAddress =
 
@@ -319,58 +250,11 @@ async function askOurFlow() {
         Boolean(journeyDestination) ||
         looksLikeAddress;
 
-    logReturnRouteDetector(
-        "looksLikeAddress",
-        looksLikeAddress
-    );
-
-    logReturnRouteDetector(
-        "journeyDestination",
-        journeyDestination
-    );
-
-    logReturnRouteDetector(
-        "questionInfo.travelMode",
-        questionInfo.travelMode !== "unknown"
-            ? questionInfo.travelMode
-            : false
-    );
-
-    logReturnRouteDetector(
-        "questionInfo.mentionsParking",
-        questionInfo.mentionsParking
-    );
-
-    logReturnRouteDetector(
-        "questionInfo.mentionsStartLocation",
-        questionInfo.mentionsStartLocation
-    );
-
-    logReturnRouteDetector(
-        "questionInfo.asksRoute",
-        questionInfo.asksRoute
-    );
-
     if (
         activeJourney &&
         typeof isReturnIntent === "function" &&
         isReturnIntent(question)
     ) {
-
-        window.lastReturnIntentDebug = {
-            raw:
-                question,
-            normalized:
-                normalizedQuestion,
-            isReturnIntent:
-                isReturnIntent(question),
-            hasActiveJourney:
-                Boolean(activeJourney),
-            build:
-                typeof OURFLOW_BUILD !== "undefined"
-                    ? OURFLOW_BUILD
-                    : ""
-        };
 
         showActiveJourneyRecoveryCard();
 
@@ -881,11 +765,6 @@ Ready to save?
                     : "missing",
             aiFallbackReached: false
         };
-
-        console.log(
-            "OURFLOW ROUTE DEBUG",
-            routeDebug
-        );
 
         // CLEANUP:
         // Preferred lowercase variable.
@@ -1503,7 +1382,6 @@ Ready to save?
                 isGeneralNoteEntry
             )
         ) {
-            console.log("ROUTE -> NOTES");
             // ========================================
             // NOTE SAVE HANDLER
             // FUTURE REFACTOR:
@@ -1540,7 +1418,6 @@ Ready to save?
             activeJourney &&
             noteQuestion.startsWith("save note:")
         ) {
-            console.log("ROUTE -> NOTES");
 
             const note = question
                 .replace(/save note:/i, "")
@@ -1796,27 +1673,6 @@ Ready to save?
                 .replace(/save instruction:/i, "")
                 .trim();
 
-            console.log("INSTRUCTION BLOCK HIT");
-
-            console.log(
-                "INSTRUCTION ORIGINAL QUESTION:",
-                question
-            );
-
-            console.log(
-                "INSTRUCTION NOTE QUESTION:",
-                noteQuestion
-            );
-
-            console.log(
-                "INSTRUCTION isInstructionPhrase:",
-                isInstructionPhrase(noteQuestion)
-            );
-
-            console.log(
-                "INSTRUCTION TEXT SAVED:",
-                instruction
-            );
             // ========================================
             // INSTRUCTION SAVE HANDLER
             // FUTURE REFACTOR:
@@ -2270,7 +2126,6 @@ Can I help you get back there?
                 !isQuestionPhrase(noteQuestion)
             )
         ) {
-            console.log("ROUTE -> DIRECTORY");
 
             if (
                 activeJourney.directories.includes(question)
@@ -2576,21 +2431,6 @@ Can I help you get back there?
                         )
                         .trim();
 
-            console.log(
-                "DESTINATION NAV ORIGINAL QUESTION:",
-                question
-            );
-
-            console.log(
-                "DESTINATION NAV LOOKS LIKE CLUE:",
-                looksLikeDestinationClue
-            );
-
-            console.log(
-                "DESTINATION NAV CLEANED SEARCH BEFORE SAVE:",
-                cleanedSearch
-            );
-
             if (
                 activeJourney &&
                 cleanedSearch
@@ -2622,16 +2462,6 @@ Can I help you get back there?
 
                 activeJourney.destinationDetail =
                     cleanedSearch;
-
-                console.log(
-                    "DESTINATION NAV DESTINATION AFTER SAVE:",
-                    activeJourney.destination
-                );
-
-                console.log(
-                    "DESTINATION NAV DETAIL AFTER SAVE:",
-                    activeJourney.destinationDetail
-                );
 
                 localStorage.setItem(
                     "activeJourney",
@@ -2977,7 +2807,6 @@ if (address) {
             detectLocationIntake(question);
 
         if (locationIntakeCandidate) {
-            console.log("ROUTE -> PLACE");
             showLocationIntakeCard(locationIntakeCandidate);
             return;
         }
@@ -2987,13 +2816,6 @@ if (address) {
         // ========================================
 
         routeDebug.aiFallbackReached = true;
-
-        console.log("ROUTE -> AI");
-
-        console.log(
-            "OURFLOW ROUTE DEBUG",
-            routeDebug
-        );
 
         const response = await fetch("/api/askOurFlow", {
             method: "POST",

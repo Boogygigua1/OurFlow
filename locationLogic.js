@@ -254,21 +254,6 @@ function saveLocationType(type) {
 }
 
 function savePendingParking() {
-    console.log(
-        "SAVE PARKING CLICKED",
-        {
-            pendingValue:
-                pendingParkingLocation,
-            verifiedAddress:
-                pendingParkingLocationAddress,
-            pendingLocationType,
-            pendingLocationIntake:
-                window.pendingLocationIntakeCandidate || null,
-            activeJourneyBeforeSave:
-                activeJourney || null
-        }
-    );
-
     if (
         !pendingParkingLocation &&
         window.pendingLocationIntakeCandidate
@@ -291,9 +276,6 @@ function savePendingParking() {
         !pendingParkingLocation &&
         !pendingParkingLocationAddress
     ) {
-        console.log(
-            "SAVE PARKING SKIPPED: no pending parking value or verified address"
-        );
         return;
     }
 
@@ -399,16 +381,6 @@ if (activeJourney) {
         JSON.stringify(activeJourney)
     );
 
-    console.log(
-        "activeJourney after save",
-        activeJourney
-    );
-
-    console.log(
-        "localStorage.activeJourney after save",
-        localStorage.getItem("activeJourney")
-    );
-
     showActiveJourneyBox();
 }
 
@@ -475,11 +447,6 @@ document.getElementById(
 }
 
 async function verifyParkingLocation() {
-
-    console.log(
-        "VERIFY PARKING CALLED:",
-        pendingParkingLocation
-    );
 
     const parkingLocation =
         pendingParkingLocation ||
@@ -702,21 +669,6 @@ function saveInformationSearchAsDestination() {
     if (!activeJourney) {
         return;
     }
-
-    console.log(
-        "PENDING DESTINATION:",
-        pendingDestinationSearch
-    );
-
-    console.log(
-        "SAVE DESTINATION:",
-        pendingDestinationSearch
-    );
-
-    console.log(
-        "SAVING DESTINATION DETAIL:",
-        pendingDestinationSearch
-    );
 
     activeJourney.destinationDetail =
         pendingDestinationSearch;

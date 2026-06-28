@@ -206,33 +206,6 @@ function showActiveJourneyRecoveryCard() {
         return;
     }
 
-    const returnDebug =
-        window.lastReturnIntentDebug;
-
-    const escapeDebugValue = value =>
-        String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#39;");
-
-    const returnDebugHtml =
-        returnDebug
-            ? `
-    <br><br>
-
-    <div style="font-size:11px; color:#666; line-height:1.4; border-top:1px solid #eee; padding-top:8px;">
-        Return debug<br>
-        RAW: ${escapeDebugValue(returnDebug.raw)}<br>
-        NORMALIZED: ${escapeDebugValue(returnDebug.normalized)}<br>
-        isReturnIntent: ${escapeDebugValue(returnDebug.isReturnIntent)}<br>
-        activeJourney: ${escapeDebugValue(returnDebug.hasActiveJourney)}<br>
-        build: ${escapeDebugValue(returnDebug.build)}
-    </div>
-`
-            : "";
-
     result.innerHTML = `
 <div class="card">
     <strong>&#129517; Journey in Progress</strong>
@@ -263,7 +236,6 @@ function showActiveJourneyRecoveryCard() {
     <button onclick="saveJourney()">
         &#128190; Save Journey
     </button>
-${returnDebugHtml}
 </div>
 `;
 }

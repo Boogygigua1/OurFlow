@@ -89,59 +89,6 @@ function getBestStartForMaps() {
     return getStartMapSelection().value;
 }
 
-function logMapOpen(actionType, selections) {
-
-    const debugPayload = {
-        actionType,
-        selectedAddress:
-            selections.destination?.value ||
-            selections.origin?.value ||
-            "",
-        selectedDestinationAddress:
-            selections.destination?.value || "",
-        selectedDestinationSource:
-            selections.destination?.source || "",
-        selectedOriginAddress:
-            selections.origin?.value || "",
-        selectedOriginSource:
-            selections.origin?.source || "",
-        activeJourneyFields: {
-            verifiedParkingAddress:
-                activeJourney?.verifiedParkingAddress || "",
-            parkingLocationAddress:
-                activeJourney?.parkingLocationAddress || "",
-            parkingAddress:
-                activeJourney?.parkingAddress || "",
-            parkingLocation:
-                activeJourney?.parkingLocation || "",
-            verifiedStartAddress:
-                activeJourney?.verifiedStartAddress || "",
-            startLocationAddress:
-                activeJourney?.startLocationAddress || "",
-            startAddress:
-                activeJourney?.startAddress || "",
-            startLocation:
-                activeJourney?.startLocation || "",
-            verifiedDestinationAddress:
-                activeJourney?.verifiedDestinationAddress || "",
-            destinationAddress:
-                activeJourney?.destinationAddress || "",
-            destinationDetail:
-                activeJourney?.destinationDetail || "",
-            destination:
-                activeJourney?.destination || ""
-        }
-    };
-
-    window.lastOurFlowMapDebug =
-        debugPayload;
-
-    console.log(
-        "OURFLOW MAP DEBUG",
-        debugPayload
-    );
-}
-
 function buildGoogleMapsDirectionsUrl({
     origin,
     destination,
@@ -189,14 +136,6 @@ function openGoogleMapsToDestination(mode = "driving") {
     const origin =
         startSelection.value;
 
-    logMapOpen(
-        "destination",
-        {
-            destination: destinationSelection,
-            origin: startSelection
-        }
-    );
-
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
             origin,
@@ -231,14 +170,6 @@ function openGoogleMapsFromParkingToDestination(mode = "walking") {
         return;
     }
 
-    logMapOpen(
-        "parking-to-destination",
-        {
-            destination: destinationSelection,
-            origin: parkingSelection
-        }
-    );
-
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
             origin,
@@ -267,14 +198,6 @@ function openGoogleMapsBackToParking(mode = "walking") {
 
     const origin =
         destinationSelection.value;
-
-    logMapOpen(
-        "back-to-parking",
-        {
-            destination: parkingSelection,
-            origin: destinationSelection
-        }
-    );
 
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
@@ -307,14 +230,6 @@ function openGoogleMapsForJourney() {
         return;
     }
 
-    logMapOpen(
-        "journey",
-        {
-            destination: destinationSelection,
-            origin: startSelection
-        }
-    );
-
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
             origin: startSelection.value,
@@ -343,14 +258,6 @@ function openGoogleMapsToStartLocation() {
     const origin =
         destinationSelection.value;
 
-    logMapOpen(
-        "start",
-        {
-            destination: startSelection,
-            origin: destinationSelection
-        }
-    );
-
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
             origin,
@@ -378,14 +285,6 @@ function openGoogleMapsToParkingLocation() {
 
     const origin =
         destinationSelection.value;
-
-    logMapOpen(
-        "parking",
-        {
-            destination: parkingSelection,
-            origin: destinationSelection
-        }
-    );
 
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
@@ -418,16 +317,6 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
     const origin =
         parkingSelection.value ||
         startSelection.value;
-
-    logMapOpen(
-        "destination-details",
-        {
-            destination: destinationSelection,
-            origin: parkingSelection.value
-                ? parkingSelection
-                : startSelection
-        }
-    );
 
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
