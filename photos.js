@@ -521,9 +521,24 @@ function savePhotoClassification(type) {
 
     if (type === "directory") {
 
-        const directoryInfo = prompt(
-            "What directory information should I save from this photo?"
-        );
+        const lastPhoto =
+            activeJourney.photos?.[
+            activeJourney.photos.length - 1
+            ];
+
+        const savedPhotoText =
+            (
+                lastPhoto?.note ||
+                lastPhoto?.title ||
+                lastPhoto?.name ||
+                ""
+            ).trim();
+
+        const directoryInfo =
+            savedPhotoText ||
+            prompt(
+                "What directory information should I save from this photo?"
+            );
 
         if (!directoryInfo) {
             return;
@@ -551,7 +566,7 @@ function savePhotoClassification(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>🏢 Directory Saved</strong>
+    <strong>🏢 Directory Info Saved</strong>
 
     <br><br>
 

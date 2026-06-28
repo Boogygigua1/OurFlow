@@ -909,6 +909,19 @@ function restoreJourney(index) {
 `;
 }
 
+function normalizeJourneyDisplayValue(value) {
+
+    return String(value || "")
+        .toLowerCase()
+        .replace(/\./g, "")
+        .replace(/,/g, "")
+        .replace(/\bstreet\b/g, "st")
+        .replace(/\bavenue\b/g, "ave")
+        .replace(/\broad\b/g, "rd")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
 
 function showActiveJourneyBox() {
 
@@ -1018,9 +1031,20 @@ ${activeJourney.startVerified
 <strong>🚗 Parking Memory:</strong><br>
 
 ${activeJourney.parkingLocation ||
+            activeJourney.parkingDescription ||
+            activeJourney.verifiedParkingAddress ||
+            activeJourney.parkingLocationAddress ||
+            activeJourney.parkingAddress ||
             "No parking location saved yet."}
 
-${activeJourney.parkingLocationAddress
+${activeJourney.parkingLocationAddress &&
+            normalizeJourneyDisplayValue(activeJourney.parkingLocationAddress) !==
+            normalizeJourneyDisplayValue(
+                activeJourney.parkingLocation ||
+                activeJourney.parkingDescription ||
+                activeJourney.verifiedParkingAddress ||
+                activeJourney.parkingAddress
+            )
                 ? `<br>${activeJourney.parkingLocationAddress}`
                 : ""}
 
@@ -1028,7 +1052,11 @@ ${activeJourney.parkingVerified
                 ? `<br>✓ Verified Address`
                 : ""}
      
-${activeJourney.parkingLocation
+${activeJourney.parkingLocation ||
+            activeJourney.parkingDescription ||
+            activeJourney.verifiedParkingAddress ||
+            activeJourney.parkingLocationAddress ||
+            activeJourney.parkingAddress
                 ? `
 <br><br>
 <button onclick="openGoogleMapsToParkingLocation()">
