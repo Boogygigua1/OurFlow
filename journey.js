@@ -17,19 +17,91 @@ window.collapsedSections =
 
     };
 
+window.journeySaveInProgress =
+    window.journeySaveInProgress || false;
+
+window.journeyEndActionInProgress =
+    window.journeyEndActionInProgress || false;
+
+function hasMeaningfulJourneyData(journey) {
+
+    if (!journey) {
+        return false;
+    }
+
+    const destination =
+        (journey.destination || "").trim();
+
+    const hasDestination =
+        destination &&
+        destination !== "Untitled Journey" &&
+        destination !== "Photo Memory";
+
+    return Boolean(
+        hasDestination ||
+        journey.destinationDetail ||
+        journey.destinationAddress ||
+        journey.verifiedDestinationAddress ||
+        journey.parkingDescription ||
+        journey.parkingLocation ||
+        journey.parkingLocationAddress ||
+        journey.startLocation ||
+        journey.startLocationAddress ||
+        journey.notes?.length ||
+        journey.photos?.length
+    );
+}
+
+function clearActiveJourneySession() {
+
+    activeJourney = null;
+
+    resetJourneySessionContext();
+
+    localStorage.removeItem(
+        "activeJourney"
+    );
+
+    const activeJourneyBox =
+        document.getElementById(
+            "activeJourneyBox"
+        );
+
+    if (activeJourneyBox) {
+        activeJourneyBox.innerHTML = "";
+    }
+
+    const questionInput =
+        document.getElementById(
+            "questionInput"
+        );
+
+    if (questionInput) {
+        questionInput.value = "";
+    }
+}
+
 function saveJourney() {
 
 
     const result =
         document.getElementById("result");
 
-    if (!activeJourney) return;
+    if (!activeJourney) return false;
+
+    if (window.journeySaveInProgress) {
+        return false;
+    }
+
+    window.journeySaveInProgress = true;
 
     if (savedJourneys.length >= JOURNEY_LIMIT) {
 
+        window.journeySaveInProgress = false;
+
         showJourneyUpgradeBox();
 
-        return;
+        return false;
     }
 
     const journeyToSave = { ...activeJourney };
@@ -69,21 +141,96 @@ function saveJourney() {
 </div>
 `;
 
-    activeJourney = null;
+    clearActiveJourneySession();
 
-    resetJourneySessionContext();
+    window.journeySaveInProgress = false;
+    window.journeyEndActionInProgress = false;
 
-    localStorage.removeItem(
-        "activeJourney"
-    );
+    return true;
+}
 
-    document.getElementById(
-        "activeJourneyBox"
-    ).innerHTML = "";
+function requestEndJourney() {
 
-    document.getElementById(
-        "questionInput"
-    ).value = "";
+    const result =
+        document.getElementById("result");
+
+    if (!activeJourney) {
+        result.innerHTML = `
+<div class="card">
+    <strong>OurFlow</strong><br><br>
+    No active journey to end.
+</div>
+`;
+        return;
+    }
+
+    if (!hasMeaningfulJourneyData(activeJourney)) {
+        endJourneyWithoutSaving();
+        return;
+    }
+
+    window.journeyEndActionInProgress = false;
+
+    result.innerHTML = `
+<div class="card">
+    <strong>&#127937; End Journey?</strong>
+
+    <br><br>
+
+    Would you like to save this journey before ending it?
+
+    <br><br>
+
+    <button onclick="saveAndEndJourney()">
+        &#128190; Save &amp; End Journey
+    </button>
+
+    <br><br>
+
+    <button onclick="endJourneyWithoutSaving()">
+        &#127937; End Without Saving
+    </button>
+</div>
+`;
+}
+
+function saveAndEndJourney() {
+
+    if (window.journeyEndActionInProgress) {
+        return;
+    }
+
+    window.journeyEndActionInProgress = true;
+
+    const didSave =
+        saveJourney();
+
+    if (!didSave) {
+        window.journeyEndActionInProgress = false;
+    }
+}
+
+function endJourneyWithoutSaving() {
+
+    if (window.journeyEndActionInProgress) {
+        return;
+    }
+
+    window.journeyEndActionInProgress = true;
+
+    clearActiveJourneySession();
+
+    window.journeyEndActionInProgress = false;
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>&#127937; Journey Ended</strong>
+
+    <br><br>
+
+    This journey was ended without saving.
+</div>
+`;
 }
 
 function deleteJourney(index) {

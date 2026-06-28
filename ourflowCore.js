@@ -130,6 +130,53 @@ function getRouteDebugHtml(routeDebug) {
 `;
 }
 
+function getJourneyDestinationFromInput(question) {
+
+    const originalText =
+        String(question || "").trim();
+
+    if (!originalText) {
+        return "";
+    }
+
+    const normalizedText =
+        originalText
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/[â€™â€˜]/g, "'")
+            .trim();
+
+    const destinationPatterns = [
+        /^(?:begin|start)\s+(?:a\s+)?journey\s+to\s+(.+)$/i,
+        /^start\s+(?:a\s+)?journey\s+(.+)$/i,
+        /^starting\s+(?:a\s+)?(?:my\s+)?journey\s+to\s+(.+)$/i,
+        /^starting\s+(?:a\s+)?journey\s+(.+)$/i,
+        /^(?:i'm|im|i am)\s+off\s+to\s+(.+)$/i,
+        /^(?:i'm|im|i am)\s+headed\s+to\s+(.+)$/i,
+        /^(?:i'm|im|i am)\s+heading\s+to\s+(.+)$/i,
+        /^(?:i'm|im|i am)\s+going\s+to\s+(.+)$/i,
+        /^on\s+my\s+way\s+to\s+(.+)$/i,
+        /^off\s+to\s+(.+)$/i,
+        /^headed\s+to\s+(.+)$/i,
+        /^heading\s+to\s+(.+)$/i,
+        /^going\s+to\s+(.+)$/i,
+        /^(?:leaving|leave)\s+for\s+(.+)$/i,
+        /^travell?ing\s+to\s+(.+)$/i
+    ];
+
+    for (const pattern of destinationPatterns) {
+        const match =
+            normalizedText.match(pattern);
+
+        if (match?.[1]) {
+            return match[1]
+                .replace(/[.?!]+$/g, "")
+                .trim();
+        }
+    }
+
+    return "";
+}
+
 async function askOurFlow() {
 
     const question =
@@ -146,6 +193,13 @@ async function askOurFlow() {
         );
 
     const questionInfo = analyzeUserQuestion(question);
+
+    const journeyDestination =
+        getJourneyDestinationFromInput(question);
+
+    const isJourneyDestinationInput =
+        Boolean(journeyDestination) ||
+        looksLikeAddress;
 
     if (activeJourney && questionInfo.travelMode !== "unknown") {
         activeJourney.travelMode = questionInfo.travelMode;
@@ -243,28 +297,7 @@ How should I save this?
 
     if (
         !activeJourney &&
-        (
-            question.toLowerCase().startsWith("begin journey to ") ||
-            question.toLowerCase().startsWith("start journey to ") ||
-            question.toLowerCase().startsWith("start a journey ") ||
-            question.toLowerCase().startsWith("start a journey to ") ||
-            question.toLowerCase().startsWith("start journey ") ||
-            question.toLowerCase().startsWith("starting journey ") ||
-            question.toLowerCase().startsWith("starting a journey ") ||
-            question.toLowerCase().startsWith("starting my journey to ") ||
-            question.toLowerCase().startsWith("i'm going to ") ||
-            question.toLowerCase().startsWith("im going to ") ||
-            question.toLowerCase().startsWith("going to ") ||
-            question.toLowerCase().startsWith("headed to ") ||
-            question.toLowerCase().startsWith("heading to ") ||
-            question.toLowerCase().startsWith("on my way to ") ||
-            question.toLowerCase().startsWith("leaving for ") ||
-            question.toLowerCase().startsWith("leave for ") ||
-            question.toLowerCase().startsWith("off to ") ||
-            question.toLowerCase().startsWith("traveling to ") ||
-            question.toLowerCase().startsWith("travelling to ") ||
-            looksLikeAddress
-        )
+        isJourneyDestinationInput
     ) {
 
 
@@ -364,35 +397,13 @@ How should I save this?
         // Compare with earlier !activeJourney block.
 
         if (
-            question.toLowerCase().startsWith("begin journey to ") ||
-            question.toLowerCase().startsWith("start journey to ") ||
-            question.toLowerCase().startsWith("start a journey ") ||
-            question.toLowerCase().startsWith("start a journey to ") ||
-            question.toLowerCase().startsWith("start journey ") ||
-            question.toLowerCase().startsWith("starting a journey ") ||
-            question.toLowerCase().startsWith("starting journey ") ||
-            question.toLowerCase().startsWith("starting journey to ") ||
-            question.toLowerCase().startsWith("starting my journey to ") ||
-            question.toLowerCase().startsWith("i'm going to ") ||
-            question.toLowerCase().startsWith("im going to ") ||
-            question.toLowerCase().startsWith("going to ") ||
-            question.toLowerCase().startsWith("headed to ") ||
-            question.toLowerCase().startsWith("heading to ") ||
-            question.toLowerCase().startsWith("on my way to ") ||
-            question.toLowerCase().startsWith("leaving for ") ||
-            question.toLowerCase().startsWith("leave for ") ||
-            question.toLowerCase().startsWith("off to ") ||
-            question.toLowerCase().startsWith("on my way to ") ||
-            question.toLowerCase().startsWith("traveling to ") ||
-            question.toLowerCase().startsWith("travelling to ") ||
-            looksLikeAddress
-
-
+            isJourneyDestinationInput
         ) {
 
             resetJourneySessionContext();
 
-            let destination = question;
+            let destination =
+                journeyDestination || question;
 
             destination = destination
                 .replace(/start a journey to /i, "")
@@ -400,6 +411,16 @@ How should I save this?
                 .replace(/starting my journey to /i, "")
                 .replace(/starting journey to /i, "")
                 .replace(/begin journey to /i, "")
+                .replace(/i'm off to /i, "")
+                .replace(/im off to /i, "")
+                .replace(/i am off to /i, "")
+                .replace(/i'm headed to /i, "")
+                .replace(/im headed to /i, "")
+                .replace(/i am headed to /i, "")
+                .replace(/i'm heading to /i, "")
+                .replace(/im heading to /i, "")
+                .replace(/i am heading to /i, "")
+                .replace(/i am going to /i, "")
 
                 .replace(/start a journey /i, "")
                 .replace(/start journey /i, "")
@@ -561,6 +582,10 @@ How should I save this?
 
                 return;
             }
+
+            requestEndJourney();
+
+            return;
 
             activeJourney.endTime =
                 new Date().toLocaleString();
