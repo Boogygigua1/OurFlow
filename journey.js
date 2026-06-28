@@ -428,115 +428,6 @@ function returnToJourney() {
 `;
 }
 
-function isJourneyEndSwipeSurface(target) {
-
-    const result =
-        document.getElementById("result");
-
-    if (!target) {
-        return false;
-    }
-
-    const deliberateEndSurface =
-        typeof target.closest === "function"
-            ? target.closest("[data-journey-end-surface='true']")
-            : null;
-
-    if (deliberateEndSurface) {
-        return true;
-    }
-
-    const startedInResult =
-        Boolean(result && result.contains(target));
-
-    if (!startedInResult) {
-        return false;
-    }
-
-    const text =
-        result?.textContent || "";
-
-    return (
-        text.includes("Destination Reached") ||
-        text.includes("End Journey") ||
-        text.includes("Quick Summary")
-    );
-}
-
-function handleJourneySwipeEnd(deltaX, deltaY, startTarget) {
-
-    if (!activeJourney) {
-        return;
-    }
-
-    if (!isJourneyEndSwipeSurface(startTarget)) {
-        return;
-    }
-
-    const isSwipeUp =
-        deltaY < -80 &&
-        Math.abs(deltaX) < 70;
-
-    if (!isSwipeUp) {
-        return;
-    }
-
-    requestEndJourney();
-}
-
-function setupJourneySwipeEndHandler() {
-
-    if (window.journeySwipeEndHandlerReady) {
-        return;
-    }
-
-    window.journeySwipeEndHandlerReady = true;
-
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartTarget = null;
-
-    document.addEventListener(
-        "touchstart",
-        event => {
-            const touch =
-                event.touches?.[0];
-
-            if (!touch) {
-                return;
-            }
-
-            touchStartX = touch.clientX;
-            touchStartY = touch.clientY;
-            touchStartTarget = event.target;
-        },
-        { passive: true }
-    );
-
-    document.addEventListener(
-        "touchend",
-        event => {
-            const touch =
-                event.changedTouches?.[0];
-
-            if (!touch) {
-                return;
-            }
-
-            handleJourneySwipeEnd(
-                touch.clientX - touchStartX,
-                touch.clientY - touchStartY,
-                touchStartTarget
-            );
-
-            touchStartTarget = null;
-        },
-        { passive: true }
-    );
-}
-
-setupJourneySwipeEndHandler();
-
 showActiveJourneyRecoveryCard();
 
 function deleteJourney(index) {
@@ -1075,9 +966,7 @@ Verify the location before navigating.
 
     <br><br>
 
-<button
-    data-journey-end-surface="true"
-    onclick="
+<button onclick="
 window.showJourneyInfo =
     !window.showJourneyInfo;
 
@@ -1087,6 +976,12 @@ showActiveJourneyBox();
             ? "▼"
             : "▶"}
     Active Journey Info
+</button>
+
+<br><br>
+
+<button onclick="requestEndJourney()">
+    &#127937; End Journey
 </button>
 
 <br><br>
@@ -1570,10 +1465,7 @@ function showArrivalMode() {
 
     <br><br>
 
-    <button
-        data-journey-end-surface="true"
-        onclick="endJourneyFromArrival()"
-    >
+    <button onclick="endJourneyFromArrival()">
         &#127937; End Journey
     </button>
 
