@@ -538,6 +538,17 @@ How should I save this?
 
         if (
             activeJourney &&
+            typeof isReturnIntent === "function" &&
+            isReturnIntent(endQuestion)
+        ) {
+
+            showActiveJourneyRecoveryCard();
+
+            return;
+        }
+
+        if (
+            activeJourney &&
             isArrivalIntent(endQuestion)
         ) {
 

@@ -1,9 +1,12 @@
 function isRecoveryIntent(question) {
 
     const text =
-        question
+        String(question || "")
             .toLowerCase()
-            .replace(/[?.!,]/g, "")
+            .replace(/[\u2018\u2019]/g, "'")
+            .trim()
+            .replace(/[?.!,]+$/g, "")
+            .replace(/\s+/g, " ")
             .trim();
 
     return (
@@ -18,6 +21,31 @@ function isRecoveryIntent(question) {
         text === "help me get back" ||
         text === "what was i doing" ||
         text === "where was i going"
+    );
+}
+
+function isReturnIntent(question) {
+
+    const text =
+        String(question || "")
+            .toLowerCase()
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/[’‘]/g, "'")
+            .trim()
+            .replace(/[?.!,]+$/g, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    return (
+        text === "i'm back" ||
+        text === "im back" ||
+        text === "i am back" ||
+        text === "i've returned" ||
+        text === "ive returned" ||
+        text === "i have returned" ||
+        text === "i'm here" ||
+        text === "im here" ||
+        text === "i am here"
     );
 }
 
