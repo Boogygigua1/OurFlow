@@ -154,6 +154,92 @@ function saveJourney() {
     return true;
 }
 
+function getJourneyRecoveryDestination() {
+
+    const destination =
+        activeJourney?.destinationDetail ||
+        activeJourney?.destinationAddress ||
+        activeJourney?.verifiedDestinationAddress ||
+        activeJourney?.destination ||
+        "";
+
+    if (
+        !destination ||
+        destination === "Untitled Journey" ||
+        destination === "Photo Memory"
+    ) {
+        return "Not set yet";
+    }
+
+    return destination;
+}
+
+function continueActiveJourneyFromRecovery() {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    showActiveJourneyBox();
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>&#129517; Journey Active</strong>
+
+    <br><br>
+
+    Your current journey is still active.
+</div>
+`;
+}
+
+function showActiveJourneyRecoveryCard() {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    const result =
+        document.getElementById("result");
+
+    if (!result) {
+        return;
+    }
+
+    result.innerHTML = `
+<div class="card">
+    <strong>&#129517; Journey in Progress</strong>
+
+    <br><br>
+
+    You have an unfinished journey.
+
+    <br><br>
+
+    Destination:
+    ${getJourneyRecoveryDestination()}
+
+    <br><br>
+
+    <button onclick="continueActiveJourneyFromRecovery()">
+        &#9654;&#65039; Continue Journey
+    </button>
+
+    <br><br>
+
+    <button onclick="requestEndJourney()">
+        &#127937; End Journey
+    </button>
+
+    <br><br>
+
+    <button onclick="saveJourney()">
+        &#128190; Save Journey
+    </button>
+</div>
+`;
+}
+
 function requestEndJourney() {
 
     const result =
@@ -450,6 +536,8 @@ function setupJourneySwipeEndHandler() {
 }
 
 setupJourneySwipeEndHandler();
+
+showActiveJourneyRecoveryCard();
 
 function deleteJourney(index) {
 
