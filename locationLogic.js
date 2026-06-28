@@ -275,9 +275,12 @@ if (activeJourney) {
     if (hasVerifiedParkingAddress) {
         activeJourney.parkingLocationAddress =
             pendingParkingLocationAddress;
+        activeJourney.verifiedParkingAddress =
+            pendingParkingLocationAddress;
     } else {
         activeJourney.parkingLocationAddress = "";
         activeJourney.parkingAddress = "";
+        activeJourney.verifiedParkingAddress = "";
     }
 
     activeJourney.parkingVerified =
@@ -295,6 +298,8 @@ if (activeJourney) {
             hasVerifiedParkingAddress
                 ? activeJourney.parkingLocationAddress
                 : "";
+        activeJourney.verifiedStartAddress =
+            activeJourney.startLocationAddress;
 
         activeJourney.startVerified =
             Boolean(activeJourney.startLocationAddress);

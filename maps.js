@@ -1,27 +1,144 @@
+function selectMapAddress(candidates) {
+
+    const match =
+        candidates.find(candidate =>
+            candidate.value &&
+            String(candidate.value).trim()
+        );
+
+    return match || {
+        value: "",
+        source: ""
+    };
+}
+
+function getDestinationMapSelection() {
+
+    return selectMapAddress([
+        {
+            value: activeJourney?.verifiedDestinationAddress,
+            source: "verifiedDestinationAddress"
+        },
+        {
+            value: activeJourney?.destinationAddress,
+            source: "destinationAddress"
+        },
+        {
+            value: activeJourney?.destinationDetail,
+            source: "destinationDetail"
+        },
+        {
+            value: activeJourney?.destination,
+            source: "destination"
+        }
+    ]);
+}
+
+function getParkingMapSelection() {
+
+    return selectMapAddress([
+        {
+            value: activeJourney?.verifiedParkingAddress,
+            source: "verifiedParkingAddress"
+        },
+        {
+            value: activeJourney?.parkingLocationAddress,
+            source: "parkingLocationAddress"
+        },
+        {
+            value: activeJourney?.parkingAddress,
+            source: "parkingAddress"
+        }
+    ]);
+}
+
+function getStartMapSelection() {
+
+    return selectMapAddress([
+        {
+            value: activeJourney?.verifiedStartAddress,
+            source: "verifiedStartAddress"
+        },
+        {
+            value: activeJourney?.startLocationAddress,
+            source: "startLocationAddress"
+        },
+        {
+            value: activeJourney?.startAddress,
+            source: "startAddress"
+        },
+        {
+            value: activeJourney?.startLocation,
+            source: "startLocation"
+        }
+    ]);
+}
+
 function getBestDestinationForMaps() {
 
-    return (
-        activeJourney?.verifiedDestinationAddress ||
-        activeJourney?.destinationAddress ||
-        activeJourney?.destinationDetail ||
-        activeJourney?.destination ||
-        ""
-    );
+    return getDestinationMapSelection().value;
 }
 
 function getBestParkingForMaps() {
 
-    return (
-        activeJourney?.parkingLocationAddress ||
-        ""
-    );
+    return getParkingMapSelection().value;
 }
 
 function getBestStartForMaps() {
 
-    return (
-        activeJourney?.startLocationAddress ||
-        ""
+    return getStartMapSelection().value;
+}
+
+function logMapOpen(actionType, selections) {
+
+    const debugPayload = {
+        actionType,
+        selectedAddress:
+            selections.destination?.value ||
+            selections.origin?.value ||
+            "",
+        selectedDestinationAddress:
+            selections.destination?.value || "",
+        selectedDestinationSource:
+            selections.destination?.source || "",
+        selectedOriginAddress:
+            selections.origin?.value || "",
+        selectedOriginSource:
+            selections.origin?.source || "",
+        activeJourneyFields: {
+            verifiedParkingAddress:
+                activeJourney?.verifiedParkingAddress || "",
+            parkingLocationAddress:
+                activeJourney?.parkingLocationAddress || "",
+            parkingAddress:
+                activeJourney?.parkingAddress || "",
+            parkingLocation:
+                activeJourney?.parkingLocation || "",
+            verifiedStartAddress:
+                activeJourney?.verifiedStartAddress || "",
+            startLocationAddress:
+                activeJourney?.startLocationAddress || "",
+            startAddress:
+                activeJourney?.startAddress || "",
+            startLocation:
+                activeJourney?.startLocation || "",
+            verifiedDestinationAddress:
+                activeJourney?.verifiedDestinationAddress || "",
+            destinationAddress:
+                activeJourney?.destinationAddress || "",
+            destinationDetail:
+                activeJourney?.destinationDetail || "",
+            destination:
+                activeJourney?.destination || ""
+        }
+    };
+
+    window.lastOurFlowMapDebug =
+        debugPayload;
+
+    console.log(
+        "OURFLOW MAP DEBUG",
+        debugPayload
     );
 }
 
@@ -55,8 +172,14 @@ function buildGoogleMapsDirectionsUrl({
 
 function openGoogleMapsToDestination(mode = "driving") {
 
+    const destinationSelection =
+        getDestinationMapSelection();
+
+    const startSelection =
+        getStartMapSelection();
+
     const destination =
-        getBestDestinationForMaps();
+        destinationSelection.value;
 
     if (!destination) {
         alert("No destination details recorded.");
@@ -64,7 +187,15 @@ function openGoogleMapsToDestination(mode = "driving") {
     }
 
     const origin =
-        getBestStartForMaps();
+        startSelection.value;
+
+    logMapOpen(
+        "destination",
+        {
+            destination: destinationSelection,
+            origin: startSelection
+        }
+    );
 
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
@@ -78,8 +209,14 @@ function openGoogleMapsToDestination(mode = "driving") {
 
 function openGoogleMapsFromParkingToDestination(mode = "walking") {
 
+    const parkingSelection =
+        getParkingMapSelection();
+
+    const destinationSelection =
+        getDestinationMapSelection();
+
     const origin =
-        getBestParkingForMaps();
+        parkingSelection.value;
 
     if (!origin) {
         alert("No verified parking address yet. Add or verify an address first.");
@@ -87,12 +224,20 @@ function openGoogleMapsFromParkingToDestination(mode = "walking") {
     }
 
     const destination =
-        getBestDestinationForMaps();
+        destinationSelection.value;
 
     if (!destination) {
         alert("No destination details recorded.");
         return;
     }
+
+    logMapOpen(
+        "parking-to-destination",
+        {
+            destination: destinationSelection,
+            origin: parkingSelection
+        }
+    );
 
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
@@ -106,8 +251,14 @@ function openGoogleMapsFromParkingToDestination(mode = "walking") {
 
 function openGoogleMapsBackToParking(mode = "walking") {
 
+    const parkingSelection =
+        getParkingMapSelection();
+
+    const destinationSelection =
+        getDestinationMapSelection();
+
     const destination =
-        getBestParkingForMaps();
+        parkingSelection.value;
 
     if (!destination) {
         alert("No verified parking address yet. Add or verify an address first.");
@@ -115,7 +266,15 @@ function openGoogleMapsBackToParking(mode = "walking") {
     }
 
     const origin =
-        getBestDestinationForMaps();
+        destinationSelection.value;
+
+    logMapOpen(
+        "back-to-parking",
+        {
+            destination: parkingSelection,
+            origin: destinationSelection
+        }
+    );
 
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
@@ -134,12 +293,31 @@ function openGoogleMapsForJourney() {
         return;
     }
 
+    const destinationSelection =
+        getDestinationMapSelection();
+
+    const startSelection =
+        getStartMapSelection();
+
     const destination =
-        getBestDestinationForMaps();
+        destinationSelection.value;
+
+    if (!destination) {
+        alert("No destination details recorded.");
+        return;
+    }
+
+    logMapOpen(
+        "journey",
+        {
+            destination: destinationSelection,
+            origin: startSelection
+        }
+    );
 
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
-            origin: getBestStartForMaps(),
+            origin: startSelection.value,
             destination
         });
 
@@ -148,8 +326,14 @@ function openGoogleMapsForJourney() {
 
 function openGoogleMapsToStartLocation() {
 
+    const startSelection =
+        getStartMapSelection();
+
+    const destinationSelection =
+        getDestinationMapSelection();
+
     const destination =
-        getBestStartForMaps();
+        startSelection.value;
 
     if (!destination) {
         alert("No verified starting address yet. Add or verify an address first.");
@@ -157,7 +341,15 @@ function openGoogleMapsToStartLocation() {
     }
 
     const origin =
-        getBestDestinationForMaps();
+        destinationSelection.value;
+
+    logMapOpen(
+        "start",
+        {
+            destination: startSelection,
+            origin: destinationSelection
+        }
+    );
 
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
@@ -170,8 +362,14 @@ function openGoogleMapsToStartLocation() {
 
 function openGoogleMapsToParkingLocation() {
 
+    const parkingSelection =
+        getParkingMapSelection();
+
+    const destinationSelection =
+        getDestinationMapSelection();
+
     const destination =
-        getBestParkingForMaps();
+        parkingSelection.value;
 
     if (!destination) {
         alert("No verified parking address yet. Add or verify an address first.");
@@ -179,7 +377,15 @@ function openGoogleMapsToParkingLocation() {
     }
 
     const origin =
-        getBestDestinationForMaps();
+        destinationSelection.value;
+
+    logMapOpen(
+        "parking",
+        {
+            destination: parkingSelection,
+            origin: destinationSelection
+        }
+    );
 
     const mapUrl =
         buildGoogleMapsDirectionsUrl({
@@ -192,8 +398,17 @@ function openGoogleMapsToParkingLocation() {
 
 function openGoogleMapsToDestinationDetails(mode = "driving") {
 
+    const destinationSelection =
+        getDestinationMapSelection();
+
+    const parkingSelection =
+        getParkingMapSelection();
+
+    const startSelection =
+        getStartMapSelection();
+
     const destination =
-        getBestDestinationForMaps();
+        destinationSelection.value;
 
     if (!destination) {
         alert("No destination details recorded.");
@@ -201,8 +416,18 @@ function openGoogleMapsToDestinationDetails(mode = "driving") {
     }
 
     const origin =
-        getBestParkingForMaps() ||
-        getBestStartForMaps();
+        parkingSelection.value ||
+        startSelection.value;
+
+    logMapOpen(
+        "destination-details",
+        {
+            destination: destinationSelection,
+            origin: parkingSelection.value
+                ? parkingSelection
+                : startSelection
+        }
+    );
 
     const mapUrl =
         buildGoogleMapsDirectionsUrl({

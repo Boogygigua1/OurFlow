@@ -4,6 +4,7 @@ function isRecoveryIntent(question) {
         String(question || "")
             .toLowerCase()
             .replace(/[\u2018\u2019]/g, "'")
+            .replace(/[\u201B\u2032\u02BC\uFF07\u0060\u00B4]/g, "'")
             .trim()
             .replace(/[?.!,]+$/g, "")
             .replace(/\s+/g, " ")
@@ -36,16 +37,19 @@ function isReturnIntent(question) {
             .replace(/\s+/g, " ")
             .trim();
 
+    const normalizedText =
+        text.replace(/[\u201B\u2032\u02BC\uFF07\u0060\u00B4]/g, "'");
+
     return (
-        text === "i'm back" ||
-        text === "im back" ||
-        text === "i am back" ||
-        text === "i've returned" ||
-        text === "ive returned" ||
-        text === "i have returned" ||
-        text === "i'm here" ||
-        text === "im here" ||
-        text === "i am here"
+        normalizedText === "i'm back" ||
+        normalizedText === "im back" ||
+        normalizedText === "i am back" ||
+        normalizedText === "i've returned" ||
+        normalizedText === "ive returned" ||
+        normalizedText === "i have returned" ||
+        normalizedText === "i'm here" ||
+        normalizedText === "im here" ||
+        normalizedText === "i am here"
     );
 }
 

@@ -182,6 +182,7 @@ function getRouteNormalizedQuestion(question) {
     return String(question || "")
         .toLowerCase()
         .replace(/[\u2018\u2019]/g, "'")
+        .replace(/[\u201B\u2032\u02BC\uFF07\u0060\u00B4]/g, "'")
         .replace(/[â€™â€˜]/g, "'")
         .trim()
         .replace(/[?.!,]+$/g, "")
@@ -273,6 +274,21 @@ async function askOurFlow() {
         typeof isReturnIntent === "function" &&
         isReturnIntent(question)
     ) {
+
+        window.lastReturnIntentDebug = {
+            raw:
+                question,
+            normalized:
+                normalizedQuestion,
+            isReturnIntent:
+                isReturnIntent(question),
+            hasActiveJourney:
+                Boolean(activeJourney),
+            build:
+                typeof OURFLOW_BUILD !== "undefined"
+                    ? OURFLOW_BUILD
+                    : ""
+        };
 
         showActiveJourneyRecoveryCard();
 
