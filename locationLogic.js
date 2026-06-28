@@ -390,7 +390,7 @@ if (activeJourney) {
             activeJourney?.parkingAddress
             ? `
     <button onclick="openGoogleMapsToParkingLocation()">
-        Return To Parking
+        🚗 Return To Parking
     </button>
 
     <br><br>
@@ -439,24 +439,6 @@ if (activeJourney) {
     ${savedParkingNavigationHtml}
 
     ${savedStartNavigationHtml}
-
-    <button onclick="openGoogleMapsToDestinationDetails('walking')">
-        🚶 Walk There
-    </button>
-
-    <br><br>
-
-    <button onclick="openGoogleMapsToDestinationDetails('bicycling')">
-        🚴 Bike There
-    </button>
-
-    <br><br>
-
-    <button onclick="openGoogleMapsToDestinationDetails('driving')">
-        🚗 Drive There
-    </button>
-
-    <br><br>
 
 <button onclick="
 document.getElementById(
