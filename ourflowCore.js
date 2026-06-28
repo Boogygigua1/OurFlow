@@ -177,10 +177,45 @@ function getJourneyDestinationFromInput(question) {
     return "";
 }
 
+function getRouteNormalizedQuestion(question) {
+
+    return String(question || "")
+        .toLowerCase()
+        .replace(/[\u2018\u2019]/g, "'")
+        .replace(/[â€™â€˜]/g, "'")
+        .trim()
+        .replace(/[?.!,]+$/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function logReturnRouteDetector(name, value) {
+
+    if (value) {
+        console.log(
+            "EARLIER INTENT DETECTOR TRUE:",
+            name,
+            value
+        );
+    }
+}
+
 async function askOurFlow() {
 
     const question =
         document.getElementById("questionInput").value.trim();
+
+    const normalizedQuestion =
+        getRouteNormalizedQuestion(question);
+
+    console.log("RAW:", question);
+    console.log("NORMALIZED:", normalizedQuestion);
+    console.log(
+        "isReturnIntent:",
+        typeof isReturnIntent === "function"
+            ? isReturnIntent(question)
+            : "missing"
+    );
 
     const looksLikeAddress =
 
@@ -200,6 +235,49 @@ async function askOurFlow() {
     const isJourneyDestinationInput =
         Boolean(journeyDestination) ||
         looksLikeAddress;
+
+    logReturnRouteDetector(
+        "looksLikeAddress",
+        looksLikeAddress
+    );
+
+    logReturnRouteDetector(
+        "journeyDestination",
+        journeyDestination
+    );
+
+    logReturnRouteDetector(
+        "questionInfo.travelMode",
+        questionInfo.travelMode !== "unknown"
+            ? questionInfo.travelMode
+            : false
+    );
+
+    logReturnRouteDetector(
+        "questionInfo.mentionsParking",
+        questionInfo.mentionsParking
+    );
+
+    logReturnRouteDetector(
+        "questionInfo.mentionsStartLocation",
+        questionInfo.mentionsStartLocation
+    );
+
+    logReturnRouteDetector(
+        "questionInfo.asksRoute",
+        questionInfo.asksRoute
+    );
+
+    if (
+        activeJourney &&
+        typeof isReturnIntent === "function" &&
+        isReturnIntent(question)
+    ) {
+
+        showActiveJourneyRecoveryCard();
+
+        return;
+    }
 
     if (activeJourney && questionInfo.travelMode !== "unknown") {
         activeJourney.travelMode = questionInfo.travelMode;
@@ -535,17 +613,6 @@ How should I save this?
 
         const endQuestion =
             question.toLowerCase().trim();
-
-        if (
-            activeJourney &&
-            typeof isReturnIntent === "function" &&
-            isReturnIntent(endQuestion)
-        ) {
-
-            showActiveJourneyRecoveryCard();
-
-            return;
-        }
 
         if (
             activeJourney &&
