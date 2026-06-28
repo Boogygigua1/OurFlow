@@ -170,7 +170,7 @@ function requestEndJourney() {
     }
 
     if (!hasMeaningfulJourneyData(activeJourney)) {
-        endJourneyWithoutSaving();
+        returnToJourney();
         return;
     }
 
@@ -192,8 +192,8 @@ function requestEndJourney() {
 
     <br><br>
 
-    <button onclick="endJourneyWithoutSaving()">
-        &#127937; End Without Saving
+    <button onclick="returnToJourney()">
+        &#8617;&#65039; Return to Journey
     </button>
 </div>
 `;
@@ -234,6 +234,32 @@ function endJourneyWithoutSaving() {
     <br><br>
 
     This journey was ended without saving.
+</div>
+`;
+}
+
+function returnToJourney() {
+
+    window.journeyEndActionInProgress = false;
+
+    if (!activeJourney) {
+        return;
+    }
+
+    if (activeJourney.journeyStatus === "arrived") {
+        showArrivalMode();
+        return;
+    }
+
+    showActiveJourneyBox();
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>&#129517; Journey Active</strong>
+
+    <br><br>
+
+    Your current journey is still active.
 </div>
 `;
 }
