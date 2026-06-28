@@ -222,7 +222,7 @@ function showActiveJourneyRecoveryCard() {
     <br><br>
 
     <button onclick="continueActiveJourneyFromRecovery()">
-        &#9654;&#65039; Continue Journey
+        &#129517; Continue Journey
     </button>
 
     <br><br>
