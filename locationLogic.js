@@ -447,6 +447,12 @@ document.getElementById(
 
 if(address){
     pendingParkingLocationAddress = address;
+    if (
+        typeof confirmVerifiedLocationIntakeAddress === 'function' &&
+        confirmVerifiedLocationIntakeAddress(address)
+    ) {
+        return;
+    }
     savePendingParking();
 }
 ">
@@ -491,6 +497,9 @@ if(address){
     window.parkingLookupAddress =
         parkingLocation;
 
+    window.suggestedParkingAddress =
+        data.suggestion || "";
+
     document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Suggested Location</strong>
@@ -508,6 +517,15 @@ Please verify this is the correct location.
 <br><br>
 
 <button onclick="
+if (
+    typeof confirmVerifiedLocationIntakeAddress === 'function' &&
+    confirmVerifiedLocationIntakeAddress(
+        window.suggestedParkingAddress ||
+        window.parkingLookupAddress
+    )
+) {
+    return;
+}
 savePendingParking();
 ">
     ✓ Save This Location
@@ -559,6 +577,13 @@ if(address){
 
     pendingParkingLocationAddress =
         address;
+
+    if (
+        typeof confirmVerifiedLocationIntakeAddress === 'function' &&
+        confirmVerifiedLocationIntakeAddress(address)
+    ) {
+        return;
+    }
 
     savePendingParking();
 }

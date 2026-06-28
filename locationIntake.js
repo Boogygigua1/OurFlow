@@ -131,6 +131,99 @@ function verifyLocationConfirmationAddress() {
     verifyParkingLocation();
 }
 
+function showVerifiedLocationSaveTargetCard(candidate) {
+
+    window.pendingLocationIntakeCandidate =
+        candidate;
+
+    const detectedNote =
+        escapeLocationIntakeHtml(
+            candidate.originalText ||
+            candidate.locationText
+        );
+
+    const verifiedAddress =
+        escapeLocationIntakeHtml(
+            getLocationIntakeVerifiedAddress(candidate)
+        ).replace(/,\s*/g, "<br>");
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>&#128205; Address Verified</strong>
+
+    <br><br>
+
+    Detected note:
+
+    <br><br>
+
+    "${detectedNote}"
+
+    <br><br>
+
+    Verified address:
+
+    <br><br>
+
+    ${verifiedAddress}
+
+    <br><br>
+
+    What would you like to save this as?
+
+    <br><br>
+
+    <button onclick="saveLocationIntakeAsParking()">
+        &#128663; Save as Parking
+    </button>
+
+    <br><br>
+
+    <button onclick="saveLocationIntakeAsStart()">
+        &#129517; Save as Starting Location
+    </button>
+
+    <br><br>
+
+    <button onclick="saveLocationIntakeAsParkingAndStart()">
+        &#128260; Save as Both
+    </button>
+
+    <br><br>
+
+    <button onclick="dismissLocationIntakeCandidate()">
+        &#10060; Cancel
+    </button>
+</div>
+`;
+}
+
+function confirmVerifiedLocationIntakeAddress(address) {
+
+    const candidate =
+        getPendingLocationIntake();
+
+    if (!candidate || !address) {
+        return false;
+    }
+
+    candidate.verifiedAddress =
+        address;
+
+    window.pendingLocationIntakeCandidate =
+        candidate;
+
+    pendingParkingLocation =
+        getLocationIntakeText(candidate);
+
+    pendingParkingLocationAddress =
+        address;
+
+    showVerifiedLocationSaveTargetCard(candidate);
+
+    return true;
+}
+
 function showLocationConfirmationCard(candidate) {
 
     window.pendingLocationIntakeCandidate =
@@ -451,15 +544,18 @@ function saveLocationIntakeAsStart() {
 
     ensureLocationIntakeJourney();
 
+    const verifiedAddress =
+        getLocationIntakeVerifiedAddress(candidate);
+
     const isVerifiedAddress =
-        candidate.confidence === "address";
+        Boolean(verifiedAddress);
 
     activeJourney.startLocation =
         candidate.locationText;
 
     if (isVerifiedAddress) {
         activeJourney.startLocationAddress =
-            candidate.locationText;
+            verifiedAddress;
     } else {
         activeJourney.startLocationAddress = "";
     }
@@ -511,9 +607,7 @@ function saveLocationIntakeAsParking() {
         candidate.locationText;
 
     pendingParkingLocationAddress =
-        candidate.confidence === "address"
-            ? candidate.locationText
-            : "";
+        getLocationIntakeVerifiedAddress(candidate);
 
     pendingLocationType = "";
 
@@ -535,9 +629,7 @@ function saveLocationIntakeAsParkingAndStart() {
         candidate.locationText;
 
     pendingParkingLocationAddress =
-        candidate.confidence === "address"
-            ? candidate.locationText
-            : "";
+        getLocationIntakeVerifiedAddress(candidate);
 
     pendingLocationType =
         "both";
