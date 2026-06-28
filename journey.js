@@ -182,7 +182,7 @@ function requestEndJourney() {
 
     <br><br>
 
-    Would you like to save this journey before ending it?
+    Choose how to close this journey:
 
     <br><br>
 
@@ -192,11 +192,22 @@ function requestEndJourney() {
 
     <br><br>
 
+    <button onclick="saveAndKeepJourneyActive()">
+        &#128221; Save / Keep Journey Active
+    </button>
+
+    <br><br>
+
     <button onclick="returnToJourney()">
         &#8617;&#65039; Return to Journey
     </button>
 </div>
 `;
+
+    result.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
 }
 
 function saveAndEndJourney() {
@@ -213,6 +224,73 @@ function saveAndEndJourney() {
     if (!didSave) {
         window.journeyEndActionInProgress = false;
     }
+}
+
+function saveAndKeepJourneyActive() {
+
+    const result =
+        document.getElementById("result");
+
+    if (!activeJourney) {
+        return false;
+    }
+
+    if (window.journeySaveInProgress) {
+        return false;
+    }
+
+    window.journeySaveInProgress = true;
+
+    if (savedJourneys.length >= JOURNEY_LIMIT) {
+
+        window.journeySaveInProgress = false;
+
+        showJourneyUpgradeBox();
+
+        return false;
+    }
+
+    const journeyToSave = { ...activeJourney };
+
+    savedJourneys.push(journeyToSave);
+
+    localStorage.setItem(
+        "savedJourneys",
+        JSON.stringify(savedJourneys)
+    );
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    window.journeySaveInProgress = false;
+    window.journeyEndActionInProgress = false;
+
+    showActiveJourneyBox();
+
+    result.innerHTML = `
+<div class="card">
+    <strong>&#128190; Journey Saved</strong>
+
+    <br><br>
+
+    This journey was saved and is still active.
+
+    <br><br>
+
+    <button onclick="returnToJourney()">
+        &#8617;&#65039; Return to Journey
+    </button>
+</div>
+`;
+
+    result.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+    return true;
 }
 
 function endJourneyWithoutSaving() {
@@ -269,16 +347,33 @@ function isJourneyEndSwipeSurface(target) {
     const result =
         document.getElementById("result");
 
-    if (!result || !target || !result.contains(target)) {
+    const activeJourneyBox =
+        document.getElementById("activeJourneyBox");
+
+    if (!target) {
         return false;
     }
 
-    const text =
-        result.textContent || "";
+    const startedInResult =
+        Boolean(result && result.contains(target));
+
+    const startedInActiveJourney =
+        Boolean(activeJourneyBox && activeJourneyBox.contains(target));
+
+    if (!startedInResult && !startedInActiveJourney) {
+        return false;
+    }
+
+    const text = [
+        result?.textContent || "",
+        activeJourneyBox?.textContent || ""
+    ].join(" ");
 
     return (
+        startedInActiveJourney ||
         text.includes("Destination Reached") ||
         text.includes("End Journey") ||
+        text.includes("Journey Started") ||
         text.includes("Quick Summary")
     );
 }
