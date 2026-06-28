@@ -857,6 +857,61 @@ function isNotePhrase(question) {
     );
 }
 
+function isGeneralNoteObservation(question) {
+
+    const text =
+        String(question || "")
+            .toLowerCase()
+            .replace(/[â€™â€˜]/g, "'")
+            .replace(/[?.!,]+$/g, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    if (!text) {
+        return false;
+    }
+
+    const startsLikeCommand =
+        /^(where|what|when|why|how|can|could|would|should|do|does|did|is|are|find|search|take me|navigate|directions|go to|head to|headed to|start journey|start a journey|save |show |list |open )\b/.test(text);
+
+    if (startsLikeCommand) {
+        return false;
+    }
+
+    const hasStreetAddress =
+        /\b\d{1,6}\s+[a-z0-9.'-]+(?:\s+[a-z0-9.'-]+){0,5}\s+(street|st|road|rd|avenue|ave|way|drive|dr|lane|ln|court|ct|boulevard|blvd|place|pl|circle|cir|terrace|ter|highway|hwy)\b/i.test(text);
+
+    if (hasStreetAddress) {
+        return false;
+    }
+
+    const looksLikeWayfinding =
+        /\b(room|suite|floor|department|office|elevator|check-in|registration|directory)\b/.test(text);
+
+    if (looksLikeWayfinding) {
+        return false;
+    }
+
+    const looksLikeReceptionDirectoryInfo =
+        /\breception(?:ist)?s?\b.*\bname is\b/.test(text) ||
+        /\bname is\b.*\breception(?:ist)?s?\b/.test(text);
+
+    if (looksLikeReceptionDirectoryInfo) {
+        return false;
+    }
+
+    const observationPatterns = [
+        /^(the|this|that)\s+.+\s+(is|are|was|were|has|have|lights|opens|closes|gets|becomes|feels|looks|sounds)\b/,
+        /\b(is|are|was|were)\s+(quieter|quiet|louder|busy|busier|easier|harder|better|worse|open|closed|lit|bright|dark)\b/,
+        /\b(name is|names? are|called)\b/,
+        /\b(after|before|at night|in the morning|in the afternoon|in the evening)\b/
+    ];
+
+    return observationPatterns.some(pattern =>
+        pattern.test(text)
+    );
+}
+
 function isMedicationPhrase(question) {
 
     const text =

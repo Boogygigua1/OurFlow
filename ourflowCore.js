@@ -247,6 +247,27 @@ function logReturnRouteDetector(name, value) {
     }
 }
 
+function isDirectoryInfo(question) {
+
+    return (
+        typeof isDirectoryPhrase === "function" &&
+        isDirectoryPhrase(
+            String(question || "")
+                .toLowerCase()
+        )
+    );
+}
+
+function isPlaceIdentification(question) {
+
+    return (
+        typeof detectLocationIntake === "function" &&
+        Boolean(
+            detectLocationIntake(question)
+        )
+    );
+}
+
 async function askOurFlow() {
 
     const question =
@@ -256,12 +277,27 @@ async function askOurFlow() {
         getRouteNormalizedQuestion(question);
 
     console.log("RAW:", question);
+    console.log("QUESTION:", question);
     console.log("NORMALIZED:", normalizedQuestion);
     console.log(
         "isReturnIntent:",
         typeof isReturnIntent === "function"
             ? isReturnIntent(question)
             : "missing"
+    );
+    console.log(
+        "isGeneralNoteObservation:",
+        typeof isGeneralNoteObservation === "function"
+            ? isGeneralNoteObservation(question)
+            : "missing"
+    );
+    console.log(
+        "isDirectoryInfo:",
+        isDirectoryInfo(question)
+    );
+    console.log(
+        "isPlaceIdentification:",
+        isPlaceIdentification(question)
     );
 
     const looksLikeAddress =
@@ -1122,6 +1158,25 @@ Ready to save?
 
         const noteQuestion = lowerQuestion;
 
+        const isGeneralNoteEntry =
+            typeof isGeneralNoteObservation === "function" &&
+            isGeneralNoteObservation(noteQuestion) &&
+            !questionInfo.mentionsParking &&
+            !isParkingMemoryCommand(noteQuestion) &&
+            !isAppointmentPhrase(noteQuestion) &&
+            !isInstructionPhrase(noteQuestion) &&
+            !isMedicationPhrase(noteQuestion) &&
+            !isQuestionPhrase(noteQuestion) &&
+            !isRecoveryIntent(noteQuestion) &&
+            !isAppointmentRecall(noteQuestion) &&
+            !isInstructionRecall(noteQuestion) &&
+            !isNoteRecall(noteQuestion) &&
+            !isQuestionRecall(noteQuestion) &&
+            !isMedicationRecall(noteQuestion) &&
+            !isDirectoryRecall(noteQuestion) &&
+            !isJourneySummaryRecall(noteQuestion) &&
+            !isParkingRecall(noteQuestion) &&
+            !isStartLocationRecall(noteQuestion);
 
         const looksLikeMemoryEntry =
             noteQuestion.startsWith("i'm meeting") ||
@@ -1129,6 +1184,8 @@ Ready to save?
             noteQuestion.startsWith("i am meeting") ||
 
             isNotePhrase(noteQuestion) ||
+
+            isGeneralNoteEntry ||
 
             isAppointmentPhrase(noteQuestion) ||
 
@@ -1441,8 +1498,12 @@ Ready to save?
 
         if (
             activeJourney &&
-            isNotePhrase(noteQuestion)
+            (
+                isNotePhrase(noteQuestion) ||
+                isGeneralNoteEntry
+            )
         ) {
+            console.log("ROUTE -> NOTES");
             // ========================================
             // NOTE SAVE HANDLER
             // FUTURE REFACTOR:
@@ -1479,6 +1540,7 @@ Ready to save?
             activeJourney &&
             noteQuestion.startsWith("save note:")
         ) {
+            console.log("ROUTE -> NOTES");
 
             const note = question
                 .replace(/save note:/i, "")
@@ -2208,6 +2270,7 @@ Can I help you get back there?
                 !isQuestionPhrase(noteQuestion)
             )
         ) {
+            console.log("ROUTE -> DIRECTORY");
 
             if (
                 activeJourney.directories.includes(question)
@@ -2914,6 +2977,7 @@ if (address) {
             detectLocationIntake(question);
 
         if (locationIntakeCandidate) {
+            console.log("ROUTE -> PLACE");
             showLocationIntakeCard(locationIntakeCandidate);
             return;
         }
@@ -2923,6 +2987,8 @@ if (address) {
         // ========================================
 
         routeDebug.aiFallbackReached = true;
+
+        console.log("ROUTE -> AI");
 
         console.log(
             "OURFLOW ROUTE DEBUG",
