@@ -776,7 +776,11 @@ ${journey.destination}
 <br>
 ${journey.startLocation || "Not recorded"}
 
-${journey.startLocationAddress
+${journey.startLocationAddress &&
+            !journeyDisplayAlreadyIncludesAddress(
+                journey.startLocation,
+                journey.startLocationAddress
+            )
             ? `<br>${journey.startLocationAddress}`
             : ""}
     <br><br>
@@ -918,8 +922,27 @@ function normalizeJourneyDisplayValue(value) {
         .replace(/\bstreet\b/g, "st")
         .replace(/\bavenue\b/g, "ave")
         .replace(/\broad\b/g, "rd")
+        .replace(/\bwest\b/g, "w")
+        .replace(/\beast\b/g, "e")
+        .replace(/\bnorth\b/g, "n")
+        .replace(/\bsouth\b/g, "s")
         .replace(/\s+/g, " ")
         .trim();
+}
+
+function journeyDisplayAlreadyIncludesAddress(displayValue, addressValue) {
+
+    const display =
+        normalizeJourneyDisplayValue(displayValue);
+
+    const address =
+        normalizeJourneyDisplayValue(addressValue);
+
+    return Boolean(
+        display &&
+        address &&
+        display.includes(address)
+    );
 }
 
 
@@ -1011,14 +1034,15 @@ ${activeJourney.destinationDetail ||
             "No destination details saved yet."}
 <br><br>
 <strong>🧭 Starting Location:</strong><br>
-<br><br>
-
-<strong>🧭 Starting Location:</strong><br>
 
 ${activeJourney.startLocation ||
             "No starting location saved yet."}
 
-${activeJourney.startLocationAddress
+${activeJourney.startLocationAddress &&
+            !journeyDisplayAlreadyIncludesAddress(
+                activeJourney.startLocation,
+                activeJourney.startLocationAddress
+            )
                 ? `<br>${activeJourney.startLocationAddress}`
                 : ""}
 
@@ -1038,12 +1062,12 @@ ${activeJourney.parkingLocation ||
             "No parking location saved yet."}
 
 ${activeJourney.parkingLocationAddress &&
-            normalizeJourneyDisplayValue(activeJourney.parkingLocationAddress) !==
-            normalizeJourneyDisplayValue(
+            !journeyDisplayAlreadyIncludesAddress(
                 activeJourney.parkingLocation ||
                 activeJourney.parkingDescription ||
                 activeJourney.verifiedParkingAddress ||
-                activeJourney.parkingAddress
+                activeJourney.parkingAddress,
+                activeJourney.parkingLocationAddress
             )
                 ? `<br>${activeJourney.parkingLocationAddress}`
                 : ""}

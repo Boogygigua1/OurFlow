@@ -502,77 +502,132 @@ How should I save this?
             // ========================================
             // DESTINATION JOURNEY CREATION
             // ========================================
-            activeJourney = {
+            if (!activeJourney) {
+                activeJourney = {
 
-                destination:
-                    destination,
+                    destination:
+                        destination,
 
-                destinationAddress:
-                    looksLikeAddress ? destination : "",
+                    destinationAddress:
+                        looksLikeAddress ? destination : "",
 
-                verifiedDestinationAddress:
-                    looksLikeAddress ? destination : "",
+                    verifiedDestinationAddress:
+                        looksLikeAddress ? destination : "",
 
-                destinationDetail:
-                    destination,
+                    destinationDetail:
+                        destination,
 
-                currentLocation: "",
+                    currentLocation: "",
 
-                travelMode: "",
+                    travelMode: "",
 
-                journeyStatus: "traveling",
+                    journeyStatus: "traveling",
 
-                notes: [],
+                    notes: [],
 
-                photos: [],
+                    photos: [],
 
-                questionsForDoctor: [],
+                    questionsForDoctor: [],
 
-                staffInstructions: [],
+                    staffInstructions: [],
 
-                medications: [],
+                    medications: [],
 
-                appointments: [],
+                    appointments: [],
 
-                directories: [],
+                    directories: [],
 
-                startTime:
-                    new Date().toLocaleString(),
+                    startTime:
+                        new Date().toLocaleString(),
 
-                startLocation:
-                    "",
+                    startLocation:
+                        "",
 
-                startLocationAddress:
-                    "",
+                    startLocationAddress:
+                        "",
 
-                parkingLocation:
-                    "",
+                    parkingLocation:
+                        "",
 
-                parkingLocationAddress:
-                    "",
+                    parkingLocationAddress:
+                        "",
 
-                arrivalTips: "",
+                    arrivalTips: "",
 
-                mapLink: "",
+                    mapLink: "",
 
-                answers: [],
+                    answers: [],
 
-                timeline: [],
+                    timeline: [],
 
-                endLocation:
-                    "",
+                    endLocation:
+                        "",
 
-                endTime:
-                    ""
-            };
+                    endTime:
+                        ""
+                };
 
-            markActiveJourneyContext("new");
+                markActiveJourneyContext("new");
+            } else {
+                activeJourney.destination =
+                    destination;
+
+                activeJourney.destinationDetail =
+                    destination;
+
+                if (looksLikeAddress) {
+                    activeJourney.destinationAddress =
+                        destination;
+
+                    activeJourney.verifiedDestinationAddress =
+                        destination;
+                }
+
+                activeJourney.journeyStatus =
+                    "traveling";
+
+                activeJourney.notes =
+                    activeJourney.notes || [];
+
+                activeJourney.photos =
+                    activeJourney.photos || [];
+
+                activeJourney.questionsForDoctor =
+                    activeJourney.questionsForDoctor || [];
+
+                activeJourney.staffInstructions =
+                    activeJourney.staffInstructions || [];
+
+                activeJourney.medications =
+                    activeJourney.medications || [];
+
+                activeJourney.appointments =
+                    activeJourney.appointments || [];
+
+                activeJourney.directories =
+                    activeJourney.directories || [];
+
+                activeJourney.answers =
+                    activeJourney.answers || [];
+
+                activeJourney.timeline =
+                    activeJourney.timeline || [];
+
+                activeJourney.startTime =
+                    activeJourney.startTime ||
+                    new Date().toLocaleString();
+            }
 
             addConversationHistoryEntry(question);
 
             activeJourney.timeline.push(
                 "🧭 Journey Started: " +
                 destination
+            );
+
+            localStorage.setItem(
+                "activeJourney",
+                JSON.stringify(activeJourney)
             );
 
             showActiveJourneyBox();
