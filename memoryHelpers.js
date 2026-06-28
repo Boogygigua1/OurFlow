@@ -902,8 +902,11 @@ function isGeneralNoteObservation(question) {
 
     const observationPatterns = [
         /^(the|this|that)\s+.+\s+(is|are|was|were|has|have|lights|opens|closes|gets|becomes|feels|looks|sounds)\b/,
+        /^(the|this|that)\s+.+\s+(turns?|starts?|stops?|opens?|closes?)\b/,
+        /\b(turns? on|turns? off|starts?|stops?|opens?|closes?)\s+(at|around|after|before|by|near)\b/,
         /\b(is|are|was|were)\s+(quieter|quiet|louder|busy|busier|easier|harder|better|worse|open|closed|lit|bright|dark)\b/,
         /\b(name is|names? are|called)\b/,
+        /\bat\s+(\d{1,2}(?::\d{2})?\s*(am|pm)?|\d{1,2}\s*o'?clock|sunset|sunrise|noon|midnight)\b/,
         /\b(after|before|at night|in the morning|in the afternoon|in the evening)\b/
     ];
 
