@@ -384,6 +384,32 @@ if (activeJourney) {
     showActiveJourneyBox();
 }
 
+    const savedParkingNavigationHtml =
+        activeJourney?.verifiedParkingAddress ||
+            activeJourney?.parkingLocationAddress ||
+            activeJourney?.parkingAddress
+            ? `
+    <button onclick="openGoogleMapsToParkingLocation()">
+        Return To Parking
+    </button>
+
+    <br><br>
+    `
+            : "";
+
+    const savedStartNavigationHtml =
+        activeJourney?.verifiedStartAddress ||
+            activeJourney?.startLocationAddress ||
+            activeJourney?.startAddress
+            ? `
+    <button onclick="openGoogleMapsToStartLocation()">
+        Return To Start
+    </button>
+
+    <br><br>
+    `
+            : "";
+
     pendingParkingLocation = "";
     pendingParkingLocationAddress = "";
     pendingLocationType = "";
@@ -409,6 +435,10 @@ if (activeJourney) {
 
     <br><br>
     `}
+
+    ${savedParkingNavigationHtml}
+
+    ${savedStartNavigationHtml}
 
     <button onclick="openGoogleMapsToDestinationDetails('walking')">
         🚶 Walk There
@@ -586,12 +616,17 @@ Please verify this is the correct location.
 <br><br>
 
 <button onclick="
+const address =
+    window.suggestedParkingAddress || '';
+
+if (address) {
+    pendingParkingLocationAddress = address;
+}
+
 if (
+    address &&
     typeof confirmVerifiedLocationIntakeAddress === 'function' &&
-    confirmVerifiedLocationIntakeAddress(
-        window.suggestedParkingAddress ||
-        window.parkingLookupAddress
-    )
+    confirmVerifiedLocationIntakeAddress(address)
 ) {
     return;
 }

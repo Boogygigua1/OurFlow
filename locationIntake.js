@@ -583,6 +583,17 @@ function saveLocationIntakeAsStart() {
 
     showActiveJourneyBox();
 
+    const startNavigationHtml =
+        isVerifiedAddress
+            ? `
+    <br><br>
+
+    <button onclick="openGoogleMapsToStartLocation()">
+        Return To Start
+    </button>
+`
+            : "";
+
     document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>Starting Location Saved</strong>
@@ -596,6 +607,7 @@ function saveLocationIntakeAsStart() {
     ${isVerifiedAddress
             ? "Verified address saved."
             : "Saved as a description. Address verification is optional."}
+${startNavigationHtml}
 </div>
 `;
 }
