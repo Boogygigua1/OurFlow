@@ -215,6 +215,8 @@ async function saveJourneyPhoto() {
             timeline: []
         };
 
+        markActiveJourneyContext("new");
+
         console.log(
             "AUTO-CREATED JOURNEY FOR PHOTO"
         );
@@ -287,15 +289,14 @@ async function analyzeSavedJourneyPhoto() {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-            question:
+        body: JSON.stringify(
+            buildOurFlowPayload(
                 "Look at this image and suggest 3 short practical location memories the user may want to remember. Read all visible signs, names, numbers, suite numbers, building names, landmarks, and notices. Group related visible clues into one useful memory, such as building or place name + number + distinguishing landmark or notice. Do not return a standalone number unless no other useful text is visible. Do not split related clues into unrelated choices. Return only a simple numbered list of memory names, with no explanations.",
-            destination: activeJourney?.destination || "",
-            parkingLocation: activeJourney?.parkingLocation || "",
-            startLocation: activeJourney?.startLocation || "",
-            journeyStatus: activeJourney?.journeyStatus || "",
-            landmarkImageData
-        })
+                {
+                    injectJourneyContext: true
+                }
+            )
+        )
     });
 
     console.log("PHOTO RESPONSE RECEIVED");

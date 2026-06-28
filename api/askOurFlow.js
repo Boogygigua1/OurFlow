@@ -1,57 +1,27 @@
-export default async function handler(req, res) {
+function buildPrompt({
+    question,
+    history,
+    notes,
+    destination,
+    destinationAddress,
+    parkingLocation,
+    arrivalTips,
+    startLocation,
+    journeyStatus,
+    landmarkImageData
+}) {
 
-    if (req.method !== "POST") {
-        return res.status(405).json({
-            error: "Method not allowed"
-        });
-    }
+    const previousClues =
+        Array.isArray(history)
+            ? history.join("\n")
+            : "";
 
-    try {
+    const injectedNotes =
+        Array.isArray(notes)
+            ? notes.join("\n")
+            : "";
 
-        const {
-            question,
-            history = [],
-            destination = "",
-            destinationAddress = "",
-            parkingLocation = "",
-            arrivalTips = "",
-            startLocation = "",
-            journeyStatus = "",
-            landmarkImageData = ""
-        } = req.body;
-
-        console.log(
-            "IMAGE RECEIVED:",
-            landmarkImageData
-                ? landmarkImageData.substring(0, 50)
-                : "NO IMAGE"
-        );
-
-        if (!question) {
-            return res.status(400).json({
-                error: "Question required"
-            });
-        }
-
-        console.log(
-            "USING IMAGE:",
-            landmarkImageData.length
-        );
-
-        const response = await fetch(
-            "https://api.openai.com/v1/chat/completions",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + process.env.OPENAI_API_KEY
-                },
-                body: JSON.stringify({
-                    model: "gpt-4o-mini",
-                    messages: [
-                        {
-                            role: "system",
-                            content: `You are OurFlow.
+    const systemContent = `You are OurFlow.
 
                           Current Journey Context:
 
@@ -73,6 +43,9 @@ ${parkingLocation || "Not recorded"}
 
 Journey Status:
 ${journeyStatus || "unknown"}
+
+Journey Notes:
+${injectedNotes || "No journey notes provided."}
 
 Important:
 When answering questions about parking, entrances, arrival, navigation, returning to a location, or destination access, use the Current Journey Context first before saying information is unavailable.  
@@ -333,23 +306,37 @@ When confidence is low, explain what additional clue would help identify the pla
   - Use the image, destination, parking location, start location, and previous clues together.
   - If the image contains identifiable landmarks, explain how they may relate to the destination.
   - If confidence is moderate, provide the most likely interpretation and clearly label it as a possibility.
-  - Do not ignore the destination when an image is available.`
-                        },
-                        {
-                            role: "user",
-                            content: landmarkImageData
-                                ? [
-                                    {
-                                        type: "text",
-                                        text: `
+  - Do not ignore the destination when an image is available.`;
+
+    const textContent = `
 Previous clues:
-${history.join("\n")}
+${previousClues}
+
+Current destination:
+${destination || "Unknown"}
+
+Current notes:
+${injectedNotes || "None"}
+
+Current parking location:
+${parkingLocation || "Unknown"}
+
+Current question:
+${question}
+`;
+
+    const imageTextContent = `
+Previous clues:
+${previousClues}
 
 Current destination:
 ${destination || "Unknown"}
 
 Current arrival tips:
 ${arrivalTips || "None"}
+
+Current notes:
+${injectedNotes || "None"}
 
 Current parking location:
 ${parkingLocation || "Unknown"}
@@ -369,29 +356,144 @@ If an image is attached:
 - Then explain how it may help identify the location.
 - If the exact location cannot be determined, identify visible landmarks, buildings, signs, architecture, vehicles, vegetation, or other clues.
 - Never ignore the image.
-`                                    },
-                                    {
-                                        type: "image_url",
-                                        image_url: {
-                                            url: landmarkImageData
-                                        }
-                                    }
-                                ]
-                                : `
-Previous clues:
-${history.join("\n")}
+`;
 
-Current destination:
-${destination || "Unknown"}
+    const userContent = landmarkImageData
+        ? [
+            {
+                type: "text",
+                text: imageTextContent
+            },
+            {
+                type: "image_url",
+                image_url: {
+                    url: landmarkImageData
+                }
+            }
+        ]
+        : textContent;
 
-Current parking location:
-${parkingLocation || "Unknown"}
+    return [
+        {
+            role: "system",
+            content: systemContent
+        },
+        {
+            role: "user",
+            content: userContent
+        }
+    ];
+}
 
-Current question:
-${question}
-`
+function logPromptTrace(reqBody, messages) {
+
+    const finalPromptPayload = {
+        model: "gpt-4o-mini",
+        messages: messages.map(message => {
+
+            if (!Array.isArray(message.content)) {
+                return message;
+            }
+
+            return {
+                ...message,
+                content: message.content.map(part => {
+
+                    if (part.type !== "image_url") {
+                        return part;
+                    }
+
+                    return {
+                        type: "image_url",
+                        image_url: {
+                            url: "[image data length " +
+                                (part.image_url?.url?.length || 0) +
+                                "]"
                         }
-                    ]
+                    };
+                })
+            };
+        })
+    };
+
+    console.log("OURFLOW OPENAI PROMPT TRACE", {
+        "Current activeJourney": reqBody.activeJourney || null,
+        "Conversation history": reqBody.history || [],
+        "Injected notes": reqBody.notes || [],
+        "Injected destination": reqBody.destination || "",
+        "Injected parking": reqBody.parkingLocation || "",
+        "Injected start location": reqBody.startLocation || "",
+        "Final prompt payload": finalPromptPayload
+    });
+}
+
+export default async function handler(req, res) {
+
+    if (req.method !== "POST") {
+        return res.status(405).json({
+            error: "Method not allowed"
+        });
+    }
+
+    try {
+
+        const {
+            question,
+            history = [],
+            notes = [],
+            destination = "",
+            destinationAddress = "",
+            parkingLocation = "",
+            arrivalTips = "",
+            startLocation = "",
+            journeyStatus = "",
+            landmarkImageData = ""
+        } = req.body;
+
+        console.log(
+            "IMAGE RECEIVED:",
+            landmarkImageData
+                ? landmarkImageData.substring(0, 50)
+                : "NO IMAGE"
+        );
+
+        if (!question) {
+            return res.status(400).json({
+                error: "Question required"
+            });
+        }
+
+        console.log(
+            "USING IMAGE:",
+            landmarkImageData.length
+        );
+
+        const messages = buildPrompt({
+            question,
+            history,
+            notes,
+            destination,
+            destinationAddress,
+            parkingLocation,
+            arrivalTips,
+            startLocation,
+            journeyStatus,
+            landmarkImageData
+        });
+
+        logPromptTrace(req.body, messages);
+
+        const response = await fetch(
+            "https://api.openai.com/v1/chat/completions",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + process.env.OPENAI_API_KEY
+                },
+                body: JSON.stringify({
+                    model: "gpt-4o-mini",
+                    messages
                 })
             }
         );

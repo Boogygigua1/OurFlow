@@ -541,6 +541,8 @@ function restoreJourney(index) {
     activeJourney =
         JSON.parse(JSON.stringify(journey));
 
+    markActiveJourneyContext("new");
+
     localStorage.setItem(
         "activeJourney",
         JSON.stringify(activeJourney)

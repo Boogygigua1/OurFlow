@@ -37,6 +37,8 @@ function ensureLocationIntakeJourney(destination) {
     if (!activeJourney) {
         activeJourney =
             getBlankLocationIntakeJourney(destination);
+
+        markActiveJourneyContext("new");
     }
 
     if (!activeJourney.timeline) {
@@ -217,6 +219,8 @@ function startJourneyFromLocationIntake() {
 
     activeJourney =
         getBlankLocationIntakeJourney(candidate.locationText);
+
+    markActiveJourneyContext("new");
 
     if (candidate.confidence === "address") {
         activeJourney.destinationAddress =
@@ -446,17 +450,14 @@ async function continueLocationIntakeWithAI() {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-            question: candidate.originalText,
-            history: conversationHistory.slice(-20),
-            destination: activeJourney?.destination || "",
-            destinationAddress: activeJourney?.destinationAddress || "",
-            parkingLocation: activeJourney?.parkingLocation || "",
-            arrivalTips: activeJourney?.arrivalTips || "",
-            startLocation: activeJourney?.startLocation || "",
-            journeyStatus: activeJourney?.journeyStatus || "",
-            landmarkImageData
-        })
+        body: JSON.stringify(
+            buildOurFlowPayload(
+                candidate.originalText,
+                {
+                    injectJourneyContext: true
+                }
+            )
+        )
     });
 
     const data =

@@ -374,7 +374,7 @@ How should I save this?
 
     try {
 
-        conversationHistory.push(question);
+        addConversationHistoryEntry(question);
 
         // ========================================
         // MAIN PROCESSING
@@ -412,8 +412,6 @@ How should I save this?
         ) {
 
             resetJourneySessionContext();
-
-            conversationHistory.push(question);
 
             let destination = question;
 
@@ -508,6 +506,9 @@ How should I save this?
                     ""
             };
 
+            markActiveJourneyContext("new");
+
+            addConversationHistoryEntry(question);
 
             activeJourney.timeline.push(
                 "🧭 Journey Started: " +
@@ -871,6 +872,8 @@ Ready to save?
                 endTime: ""
             };
 
+            markActiveJourneyContext("new");
+
             activeJourney.timeline.push(
                 "Journey Started: Parking Memory"
             );
@@ -1037,6 +1040,8 @@ Ready to save?
                 endLocation: "",
                 endTime: ""
             };
+
+            markActiveJourneyContext("new");
 
             activeJourney.timeline.push(
                 "🧭 Journey Started: Auto-Created"
@@ -2785,30 +2790,9 @@ if (address) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                question,
-                history: conversationHistory.slice(-20),
-
-                destination:
-                    activeJourney?.destination || "",
-
-                destinationAddress:
-                    activeJourney?.destinationAddress || "",
-
-                parkingLocation:
-                    activeJourney?.parkingLocation || "",
-
-                arrivalTips:
-                    activeJourney?.arrivalTips || "",
-
-                startLocation:
-                    activeJourney?.startLocation || "",
-
-                journeyStatus:
-                    activeJourney?.journeyStatus || "",
-
-                landmarkImageData
-            })
+            body: JSON.stringify(
+                buildOurFlowPayload(question)
+            )
         });
 
         const data = await response.json();

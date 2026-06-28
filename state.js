@@ -8,6 +8,8 @@ let landmarkThumbnailData = "";
 
 let conversationHistory = [];
 
+let currentJourneyContextId = "";
+
 const LOCAL_STORAGE_LIMITS = {
     activeJourney: 2 * 1024 * 1024,
     savedJourneys: 5 * 1024 * 1024,
@@ -120,6 +122,13 @@ let activeJourney =
         )
     );
 
+if (activeJourney) {
+    currentJourneyContextId =
+        activeJourney.contextSessionId ||
+        activeJourney.startTime ||
+        "";
+}
+
 let pendingParkingLocation = "";
 
 let pendingParkingLocationAddress = "";
@@ -148,6 +157,11 @@ function resetJourneySessionContext() {
 
     conversationHistory = [];
 
+    currentJourneyContextId =
+        activeJourney?.contextSessionId ||
+        activeJourney?.startTime ||
+        "";
+
     pendingPhotoMemory = false;
 
     pendingPhotoClassification = "";
@@ -169,4 +183,164 @@ function resetJourneySessionContext() {
     if (typeof window !== "undefined") {
         window.pendingLocationIntakeCandidate = null;
     }
+}
+
+function createJourneyContextId() {
+
+    return "journey-" +
+        Date.now().toString(36) +
+        "-" +
+        Math.random().toString(36).slice(2, 8);
+}
+
+function markActiveJourneyContext(reason) {
+
+    if (!activeJourney) {
+        currentJourneyContextId = "";
+        return "";
+    }
+
+    if (
+        !activeJourney.contextSessionId ||
+        reason === "new"
+    ) {
+        activeJourney.contextSessionId =
+            createJourneyContextId();
+    }
+
+    currentJourneyContextId =
+        activeJourney.contextSessionId;
+
+    return currentJourneyContextId;
+}
+
+function addConversationHistoryEntry(text) {
+
+    conversationHistory.push({
+        text,
+        contextSessionId:
+            currentJourneyContextId ||
+            activeJourney?.contextSessionId ||
+            ""
+    });
+}
+
+function getScopedConversationHistory() {
+
+    const contextSessionId =
+        activeJourney?.contextSessionId ||
+        currentJourneyContextId ||
+        "";
+
+    return conversationHistory
+        .filter(entry => {
+
+            if (typeof entry === "string") {
+                return false;
+            }
+
+            return entry.contextSessionId === contextSessionId;
+        })
+        .map(entry => entry.text)
+        .slice(-20);
+}
+
+function shouldInjectActiveJourneyContext(question) {
+
+    if (!activeJourney) {
+        return false;
+    }
+
+    const text =
+        question
+            .toLowerCase()
+            .replace(/[’‘]/g, "'")
+            .trim();
+
+    const isGenericReminder =
+        text.startsWith("pick up ") ||
+        text.startsWith("pickup ") ||
+        text.startsWith("remember to ") ||
+        text.startsWith("don't forget ") ||
+        text.startsWith("dont forget ") ||
+        text.startsWith("remind me to ") ||
+        text.startsWith("make sure to ");
+
+    if (isGenericReminder) {
+        return false;
+    }
+
+    return (
+        Boolean(landmarkImageData) ||
+        text.includes("journey") ||
+        text.includes("destination") ||
+        text.includes("arrive") ||
+        text.includes("arrival") ||
+        text.includes("parking") ||
+        text.includes("parked") ||
+        text.includes("start location") ||
+        text.includes("directions") ||
+        text.includes("navigate") ||
+        text.includes("route") ||
+        text.includes("map") ||
+        text.includes("entrance") ||
+        text.includes("where am i") ||
+        text.includes("how do i get") ||
+        text.includes("take me") ||
+        text.includes("get there") ||
+        text.includes("return to")
+    );
+}
+
+function buildOurFlowPayload(question, overrides = {}) {
+
+    const injectJourneyContext =
+        overrides.injectJourneyContext ??
+        shouldInjectActiveJourneyContext(question);
+
+    const journey =
+        injectJourneyContext
+            ? activeJourney
+            : null;
+
+    const payload = {
+        question,
+        activeJourney: journey,
+        history: injectJourneyContext
+            ? getScopedConversationHistory()
+            : [],
+        notes: journey?.notes?.slice(-5) || [],
+        destination: journey?.destination || "",
+        destinationAddress: journey?.destinationAddress || "",
+        parkingLocation: journey?.parkingLocation || "",
+        arrivalTips: journey?.arrivalTips || "",
+        startLocation: journey?.startLocation || "",
+        journeyStatus: journey?.journeyStatus || "",
+        landmarkImageData
+    };
+
+    logOurFlowPromptDiagnostics(payload, injectJourneyContext);
+
+    return payload;
+}
+
+function logOurFlowPromptDiagnostics(payload, injectJourneyContext) {
+
+    const finalPromptPayload = {
+        ...payload,
+        landmarkImageData: payload.landmarkImageData
+            ? "[image data length " + payload.landmarkImageData.length + "]"
+            : ""
+    };
+
+    console.log("OURFLOW PROMPT TRACE", {
+        "Current activeJourney": activeJourney,
+        "Conversation history": payload.history,
+        "Injected notes": payload.notes,
+        "Injected destination": payload.destination,
+        "Injected parking": payload.parkingLocation,
+        "Injected start location": payload.startLocation,
+        "Journey context injected": injectJourneyContext,
+        "Final prompt payload": finalPromptPayload
+    });
 }

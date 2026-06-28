@@ -220,6 +220,10 @@ function isInstructionPhrase(question) {
 
         text.startsWith("remind me to ") ||
 
+        text.startsWith("pick up ") ||
+
+        text.startsWith("pickup ") ||
+
         text.startsWith("remember that ") ||
 
         text.startsWith("don't let me forget ") ||
