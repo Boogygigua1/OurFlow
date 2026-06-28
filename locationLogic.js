@@ -254,7 +254,82 @@ function saveLocationType(type) {
 }
 
 function savePendingParking() {
-    if (!pendingParkingLocation) return;
+    console.log(
+        "SAVE PARKING CLICKED",
+        {
+            pendingValue:
+                pendingParkingLocation,
+            verifiedAddress:
+                pendingParkingLocationAddress,
+            pendingLocationType,
+            pendingLocationIntake:
+                window.pendingLocationIntakeCandidate || null,
+            activeJourneyBeforeSave:
+                activeJourney || null
+        }
+    );
+
+    if (
+        !pendingParkingLocation &&
+        window.pendingLocationIntakeCandidate
+    ) {
+        pendingParkingLocation =
+            getLocationIntakeText(
+                window.pendingLocationIntakeCandidate
+            );
+    }
+
+    if (
+        !pendingParkingLocation &&
+        pendingParkingLocationAddress
+    ) {
+        pendingParkingLocation =
+            pendingParkingLocationAddress;
+    }
+
+    if (
+        !pendingParkingLocation &&
+        !pendingParkingLocationAddress
+    ) {
+        console.log(
+            "SAVE PARKING SKIPPED: no pending parking value or verified address"
+        );
+        return;
+    }
+
+if (!activeJourney) {
+    if (typeof ensureLocationIntakeJourney === "function") {
+        ensureLocationIntakeJourney("Untitled Journey");
+    } else {
+        activeJourney = {
+            destination: "Untitled Journey",
+            destinationName: "",
+            destinationAddress: "",
+            destinationDetail: "",
+            notes: [],
+            photos: [],
+            questionsForDoctor: [],
+            staffInstructions: [],
+            medications: [],
+            appointments: [],
+            directories: [],
+            startTime: new Date().toLocaleString(),
+            startLocation: "",
+            startLocationAddress: "",
+            startAddress: "",
+            verifiedStartAddress: "",
+            verifiedDestinationAddress: "",
+            parkingDescription: "",
+            parkingLocation: "",
+            parkingLocationAddress: "",
+            parkingAddress: "",
+            verifiedParkingAddress: "",
+            parkingVerified: false,
+            startVerified: false,
+            timeline: []
+        };
+    }
+}
 
 if (activeJourney) {
 
@@ -322,6 +397,16 @@ if (activeJourney) {
     localStorage.setItem(
         "activeJourney",
         JSON.stringify(activeJourney)
+    );
+
+    console.log(
+        "activeJourney after save",
+        activeJourney
+    );
+
+    console.log(
+        "localStorage.activeJourney after save",
+        localStorage.getItem("activeJourney")
     );
 
     showActiveJourneyBox();

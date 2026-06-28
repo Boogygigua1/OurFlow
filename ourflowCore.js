@@ -10,7 +10,53 @@ function showParkingRecall() {
     const result =
         document.getElementById("result");
 
-    if (activeJourney?.parkingLocation) {
+    const parkingDescription =
+        activeJourney?.parkingDescription || "";
+
+    const parkingLocation =
+        activeJourney?.parkingLocation || "";
+
+    const parkingLocationAddress =
+        activeJourney?.parkingLocationAddress || "";
+
+    const parkingAddress =
+        activeJourney?.parkingAddress || "";
+
+    const verifiedParkingAddress =
+        activeJourney?.verifiedParkingAddress || "";
+
+    const savedParkingLocation =
+        parkingDescription ||
+        parkingLocation ||
+        verifiedParkingAddress ||
+        parkingLocationAddress ||
+        parkingAddress;
+
+    const savedParkingAddress =
+        verifiedParkingAddress ||
+        parkingLocationAddress ||
+        parkingAddress;
+
+    const displayParkingAddress =
+        savedParkingAddress &&
+        savedParkingAddress !== savedParkingLocation
+            ? savedParkingAddress
+            : "";
+
+    console.log(
+        "PARKING RECALL FIELDS",
+        {
+            parkingDescription,
+            parkingLocation,
+            parkingLocationAddress,
+            parkingAddress,
+            verifiedParkingAddress,
+            savedParkingLocation,
+            displayParkingAddress
+        }
+    );
+
+    if (savedParkingLocation) {
 
         result.innerHTML = `
 <div class="card">
@@ -22,10 +68,10 @@ function showParkingRecall() {
 
     <br><br>
 
-    ${activeJourney.parkingLocation}
+    ${savedParkingLocation}
 
-    ${activeJourney.parkingLocationAddress
-                ? `<br><br>${activeJourney.parkingLocationAddress}`
+    ${displayParkingAddress
+                ? `<br><br>${displayParkingAddress}`
                 : ""}
 
     ${activeJourney.parkingVerified
