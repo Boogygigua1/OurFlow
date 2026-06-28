@@ -13,7 +13,6 @@ function getBestParkingForMaps() {
 
     return (
         activeJourney?.parkingLocationAddress ||
-        activeJourney?.parkingLocation ||
         ""
     );
 }
@@ -22,7 +21,6 @@ function getBestStartForMaps() {
 
     return (
         activeJourney?.startLocationAddress ||
-        activeJourney?.startLocation ||
         ""
     );
 }
@@ -84,7 +82,7 @@ function openGoogleMapsFromParkingToDestination(mode = "walking") {
         getBestParkingForMaps();
 
     if (!origin) {
-        alert("No parking location recorded.");
+        alert("No verified parking address yet. Add or verify an address first.");
         return;
     }
 
@@ -112,7 +110,7 @@ function openGoogleMapsBackToParking(mode = "walking") {
         getBestParkingForMaps();
 
     if (!destination) {
-        alert("No parking location recorded.");
+        alert("No verified parking address yet. Add or verify an address first.");
         return;
     }
 
@@ -154,7 +152,7 @@ function openGoogleMapsToStartLocation() {
         getBestStartForMaps();
 
     if (!destination) {
-        alert("No starting location recorded.");
+        alert("No verified starting address yet. Add or verify an address first.");
         return;
     }
 
@@ -176,7 +174,7 @@ function openGoogleMapsToParkingLocation() {
         getBestParkingForMaps();
 
     if (!destination) {
-        alert("No parking location recorded.");
+        alert("No verified parking address yet. Add or verify an address first.");
         return;
     }
 

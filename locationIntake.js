@@ -61,6 +61,156 @@ function escapeLocationIntakeHtml(value) {
         .replace(/'/g, "&#39;");
 }
 
+function getLocationIntakeVerifiedAddress(candidate) {
+
+    if (!candidate) {
+        return "";
+    }
+
+    return candidate.verifiedAddress ||
+        (
+            candidate.confidence === "address"
+                ? candidate.locationText
+                : ""
+        );
+}
+
+function getLocationIntakeText(candidate) {
+
+    return candidate?.locationText ||
+        pendingParkingLocation ||
+        "";
+}
+
+function showNoVerifiedAddressMessage() {
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>No verified address yet.</strong>
+
+    <br><br>
+
+    Add or verify an address first.
+</div>
+`;
+}
+
+function openLocationConfirmationMap() {
+
+    const candidate =
+        getPendingLocationIntake();
+
+    const address =
+        getLocationIntakeVerifiedAddress(candidate) ||
+        pendingParkingLocationAddress ||
+        "";
+
+    if (!address) {
+        showNoVerifiedAddressMessage();
+        return;
+    }
+
+    window.open(
+        "https://www.google.com/maps/search/?api=1&query=" +
+        encodeURIComponent(address),
+        "_blank"
+    );
+}
+
+function verifyLocationConfirmationAddress() {
+
+    const candidate =
+        getPendingLocationIntake();
+
+    pendingParkingLocation =
+        getLocationIntakeText(candidate);
+
+    pendingParkingLocationAddress =
+        getLocationIntakeVerifiedAddress(candidate);
+
+    verifyParkingLocation();
+}
+
+function showLocationConfirmationCard(candidate) {
+
+    window.pendingLocationIntakeCandidate =
+        candidate;
+
+    const result =
+        document.getElementById("result");
+
+    const displayLocation =
+        escapeLocationIntakeHtml(candidate.locationText)
+            .replace(/,\s*/g, "<br>");
+
+    const parkingLabel =
+        activeJourney?.parkingLocation ||
+            activeJourney?.parkingDescription ||
+            activeJourney?.parkingLocationAddress
+            ? "Replace Parking?"
+            : "Yes, Save Parking";
+
+    const startLabel =
+        activeJourney?.startLocation ||
+            activeJourney?.startLocationAddress
+            ? "Replace Starting Location?"
+            : "Yes, Save Starting Location";
+
+    result.innerHTML = `
+<div class="card">
+    <strong>&#128205; Location Found</strong>
+
+    <br><br>
+
+    You said:
+
+    <br><br>
+
+    "${displayLocation}"
+
+    <br><br>
+
+    What would you like me to do?
+
+    <br><br>
+
+    <button onclick="openLocationConfirmationMap()">
+        &#128506;&#65039; Open Map
+    </button>
+
+    <br><br>
+
+    <button onclick="verifyLocationConfirmationAddress()">
+        &#10133; Add / Verify Address
+    </button>
+
+    <br><br>
+
+    <button onclick="saveLocationIntakeAsParking()">
+        &#128663; ${parkingLabel}
+    </button>
+
+    <br><br>
+
+    <button onclick="saveLocationIntakeAsStart()">
+        &#129517; ${startLabel}
+    </button>
+
+    <br><br>
+
+    <button onclick="saveLocationIntakeAsParkingAndStart()">
+        &#128260; Yes, Save Both
+    </button>
+
+    <br><br>
+
+    <button onclick="dismissLocationIntakeCandidate()">
+        &#10060; Not a Location
+    </button>
+</div>
+`;
+}
+
 function detectLocationIntake(question) {
 
     const originalText =
@@ -174,81 +324,15 @@ function detectLocationIntake(question) {
 
 function showLocationIntakeCard(candidate) {
 
-    window.pendingLocationIntakeCandidate =
-        candidate;
-
-    const result =
-        document.getElementById("result");
-
-    const displayLocation =
-        escapeLocationIntakeHtml(candidate.locationText)
-            .replace(/,\s*/g, "<br>");
-
-    const parkingLabel =
-        activeJourney?.parkingLocation ||
-            activeJourney?.parkingDescription ||
-            activeJourney?.parkingLocationAddress
-            ? "Replace Parking?"
-            : "Yes, Save Parking";
-
-    const startLabel =
-        activeJourney?.startLocation ||
-            activeJourney?.startLocationAddress
-            ? "Replace Starting Location?"
-            : "Yes, Save Starting Location";
-
-    result.innerHTML = `
-<div class="card">
-    <strong>&#128205; Location Found</strong>
-
-    <br><br>
-
-    You said:
-
-    <br><br>
-
-    "${displayLocation}"
-
-    <br><br>
-
-    What would you like me to save?
-
-    <br><br>
-
-    <button onclick="saveLocationIntakeAsParking()">
-        &#128663; ${parkingLabel}
-    </button>
-
-    <br><br>
-
-    <button onclick="saveLocationIntakeAsStart()">
-        &#129517; ${startLabel}
-    </button>
-
-    <br><br>
-
-    <button onclick="saveLocationIntakeAsParkingAndStart()">
-        &#128260; Yes, Save Both
-    </button>
-
-    <br><br>
-
-    <button onclick="dismissLocationIntakeCandidate()">
-        &#10060; Not a Location
-    </button>
-
-    <br><br>
-
-    <button onclick="continueLocationIntakeWithAI()">
-        Continue with Ask OurFlow
-    </button>
-</div>
-`;
+    showLocationConfirmationCard(candidate);
 }
 
 function dismissLocationIntakeCandidate() {
 
     window.pendingLocationIntakeCandidate = null;
+    pendingParkingLocation = "";
+    pendingParkingLocationAddress = "";
+    pendingLocationType = "";
 
     document.getElementById("result").innerHTML = `
 <div class="card">

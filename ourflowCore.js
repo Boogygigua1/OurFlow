@@ -63,55 +63,17 @@ function showParkingMemoryReview(parkingText) {
 
     pendingParkingLocationAddress = "";
 
-    const parkingReviewTitle =
-        typeof isVagueParkingDescription === "function" &&
-            isVagueParkingDescription(parkingText)
-            ? "Parking Note Detected"
-            : "Parking Found";
+    if (typeof showLocationConfirmationCard === "function") {
+        showLocationConfirmationCard({
+            originalText: parkingText,
+            locationText: pendingParkingLocation,
+            confidence: "place",
+            reason: "parking_statement"
+        });
+        return;
+    }
 
-    const parkingSaveButtonLabel =
-        parkingReviewTitle === "Parking Note Detected"
-            ? "Yes, Save Parking Note"
-            : "Yes, Save Parking";
-
-    document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>&#128663; ${parkingReviewTitle}</strong>
-
-    <br><br>
-
-    Do you want me to save that as your parking location?
-
-    <br><br>
-
-    ${pendingParkingLocation}
-
-    <br><br>
-
-    <button onclick="savePendingParking()">
-        ${parkingSaveButtonLabel}
-    </button>
-
-    <br><br>
-
-    <button onclick="
-pendingParkingLocation = '';
-pendingParkingLocationAddress = '';
-pendingLocationType = '';
-document.getElementById('result').innerHTML = '<div class=&quot;card&quot;><strong>Parking Not Saved</strong><br><br>No parking note was saved.</div>';
-">
-        No
-    </button>
-
-    <br><br>
-
-    <button onclick="
-verifyParkingLocation();
-">
-        Add / Verify Address First
-    </button>
-</div>
-`;
+    savePendingParking();
 }
 
 function isArrivalIntent(question) {
