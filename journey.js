@@ -347,33 +347,32 @@ function isJourneyEndSwipeSurface(target) {
     const result =
         document.getElementById("result");
 
-    const activeJourneyBox =
-        document.getElementById("activeJourneyBox");
-
     if (!target) {
         return false;
+    }
+
+    const deliberateEndSurface =
+        typeof target.closest === "function"
+            ? target.closest("[data-journey-end-surface='true']")
+            : null;
+
+    if (deliberateEndSurface) {
+        return true;
     }
 
     const startedInResult =
         Boolean(result && result.contains(target));
 
-    const startedInActiveJourney =
-        Boolean(activeJourneyBox && activeJourneyBox.contains(target));
-
-    if (!startedInResult && !startedInActiveJourney) {
+    if (!startedInResult) {
         return false;
     }
 
-    const text = [
-        result?.textContent || "",
-        activeJourneyBox?.textContent || ""
-    ].join(" ");
+    const text =
+        result?.textContent || "";
 
     return (
-        startedInActiveJourney ||
         text.includes("Destination Reached") ||
         text.includes("End Journey") ||
-        text.includes("Journey Started") ||
         text.includes("Quick Summary")
     );
 }
@@ -988,7 +987,9 @@ Verify the location before navigating.
 
     <br><br>
 
-    <button onclick="
+<button
+    data-journey-end-surface="true"
+    onclick="
 window.showJourneyInfo =
     !window.showJourneyInfo;
 
@@ -1481,7 +1482,10 @@ function showArrivalMode() {
 
     <br><br>
 
-    <button onclick="endJourneyFromArrival()">
+    <button
+        data-journey-end-surface="true"
+        onclick="endJourneyFromArrival()"
+    >
         &#127937; End Journey
     </button>
 
