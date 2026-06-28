@@ -69,6 +69,11 @@ function showParkingMemoryReview(parkingText) {
             ? "Parking Note Detected"
             : "Parking Found";
 
+    const parkingSaveButtonLabel =
+        parkingReviewTitle === "Parking Note Detected"
+            ? "Yes, Save Parking Note"
+            : "Yes, Save Parking";
+
     document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>&#128663; ${parkingReviewTitle}</strong>
@@ -84,7 +89,7 @@ function showParkingMemoryReview(parkingText) {
     <br><br>
 
     <button onclick="savePendingParking()">
-        Yes, Save Parking
+        ${parkingSaveButtonLabel}
     </button>
 
     <br><br>

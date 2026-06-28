@@ -99,6 +99,12 @@ function detectLocationIntake(question) {
         "i'm by ",
         "im by ",
         "i am by ",
+        "i'm behind ",
+        "im behind ",
+        "i am behind ",
+        "near ",
+        "behind ",
+        "on the street",
         "i found ",
         "this is "
     ];
@@ -113,7 +119,9 @@ function detectLocationIntake(question) {
 
     if (matchedPrefix) {
         locationText =
-            originalText.slice(matchedPrefix.length).trim();
+            matchedPrefix === "on the street"
+                ? originalText
+                : originalText.slice(matchedPrefix.length).trim();
     }
 
     locationText =
@@ -157,46 +165,57 @@ function showLocationIntakeCard(candidate) {
         escapeLocationIntakeHtml(candidate.locationText)
             .replace(/,\s*/g, "<br>");
 
+    const parkingLabel =
+        activeJourney?.parkingLocation ||
+            activeJourney?.parkingDescription ||
+            activeJourney?.parkingLocationAddress
+            ? "Replace Parking?"
+            : "Yes, Save Parking";
+
+    const startLabel =
+        activeJourney?.startLocation ||
+            activeJourney?.startLocationAddress
+            ? "Replace Starting Location?"
+            : "Yes, Save Starting Location";
+
     result.innerHTML = `
 <div class="card">
-    <strong>I found a location:</strong>
+    <strong>&#128205; Location Found</strong>
 
     <br><br>
 
-    ${displayLocation}
+    You said:
 
     <br><br>
 
-    What would you like to do?
+    "${displayLocation}"
 
     <br><br>
 
-    <button onclick="startJourneyFromLocationIntake()">
-        &#129517; Start Journey
-    </button>
-
-    <br><br>
-
-    <button onclick="saveLocationIntakeAsParkingAndStart()">
-        &#128663; Save as Parking + Starting Location
-    </button>
+    What would you like me to save?
 
     <br><br>
 
     <button onclick="saveLocationIntakeAsParking()">
-        &#128663; Save as Parking
+        &#128663; ${parkingLabel}
     </button>
 
     <br><br>
 
     <button onclick="saveLocationIntakeAsStart()">
-        &#128681; Save as Starting Location
+        &#129517; ${startLabel}
     </button>
 
     <br><br>
 
-    <button onclick="saveLocationIntakeAsDestination()">
-        &#128205; Save as Destination
+    <button onclick="saveLocationIntakeAsParkingAndStart()">
+        &#128260; Yes, Save Both
+    </button>
+
+    <br><br>
+
+    <button onclick="dismissLocationIntakeCandidate()">
+        &#10060; Not a Location
     </button>
 
     <br><br>
@@ -204,6 +223,21 @@ function showLocationIntakeCard(candidate) {
     <button onclick="continueLocationIntakeWithAI()">
         Continue with Ask OurFlow
     </button>
+</div>
+`;
+}
+
+function dismissLocationIntakeCandidate() {
+
+    window.pendingLocationIntakeCandidate = null;
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>Location Not Saved</strong>
+
+    <br><br>
+
+    Nothing was saved as a location.
 </div>
 `;
 }
@@ -314,15 +348,21 @@ function saveLocationIntakeAsStart() {
 
     ensureLocationIntakeJourney();
 
+    const isVerifiedAddress =
+        candidate.confidence === "address";
+
     activeJourney.startLocation =
         candidate.locationText;
 
-    if (candidate.confidence === "address") {
+    if (isVerifiedAddress) {
         activeJourney.startLocationAddress =
             candidate.locationText;
+    } else {
+        activeJourney.startLocationAddress = "";
     }
 
-    activeJourney.startVerified = false;
+    activeJourney.startVerified =
+        isVerifiedAddress;
 
     activeJourney.timeline.push(
         "Starting Location Saved From Location: " +
@@ -348,7 +388,9 @@ function saveLocationIntakeAsStart() {
 
     <br><br>
 
-    Address not verified yet.
+    ${isVerifiedAddress
+            ? "Verified address saved."
+            : "Saved as a description. Address verification is optional."}
 </div>
 `;
 }
@@ -362,43 +404,19 @@ function saveLocationIntakeAsParking() {
 
     ensureLocationIntakeJourney();
 
-    activeJourney.parkingLocation =
+    pendingParkingLocation =
         candidate.locationText;
 
-    if (candidate.confidence === "address") {
-        activeJourney.parkingLocationAddress =
-            candidate.locationText;
-    }
+    pendingParkingLocationAddress =
+        candidate.confidence === "address"
+            ? candidate.locationText
+            : "";
 
-    activeJourney.parkingVerified = false;
-
-    activeJourney.timeline.push(
-        "Parking Saved From Location: " +
-        candidate.locationText
-    );
-
-    localStorage.setItem(
-        "activeJourney",
-        JSON.stringify(activeJourney)
-    );
+    pendingLocationType = "";
 
     window.pendingLocationIntakeCandidate = null;
 
-    showActiveJourneyBox();
-
-    document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>Parking Saved</strong>
-
-    <br><br>
-
-    ${escapeLocationIntakeHtml(candidate.locationText)}
-
-    <br><br>
-
-    Address not verified yet.
-</div>
-`;
+    savePendingParking();
 }
 
 function saveLocationIntakeAsParkingAndStart() {

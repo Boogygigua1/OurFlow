@@ -6,7 +6,10 @@ export default async function handler(req, res) {
         });
     }
 
-    const { destination } = req.body;
+    const {
+        destination,
+        lookupType = ""
+    } = req.body;
 
     if (!destination) {
         return res.status(400).json({
@@ -20,10 +23,19 @@ export default async function handler(req, res) {
             .replace(/[’‘]/g, "'")
             .trim();
 
-    const isVagueParkingDescription =
+    const isParkingLookup =
+        lookupType === "parking";
+
+    const isStreetParkingDescription =
         normalizedDestination.includes("on the street") ||
         normalizedDestination.includes("street parking") ||
-        normalizedDestination.includes("parked on ") ||
+        normalizedDestination.includes("parked on ");
+
+    const isVagueParkingDescription =
+        isStreetParkingDescription ||
+        (
+            isParkingLookup &&
+            (
         normalizedDestination.includes("parked near ") ||
         normalizedDestination.includes("parked behind ") ||
         normalizedDestination.includes("parked by ") ||
@@ -36,7 +48,9 @@ export default async function handler(req, res) {
         normalizedDestination.includes("level ") ||
         normalizedDestination.includes("row ") ||
         normalizedDestination.includes("elevator") ||
-        normalizedDestination.includes("stairs");
+                normalizedDestination.includes("stairs")
+            )
+        );
 
     if (isVagueParkingDescription) {
         return res.status(200).json({
