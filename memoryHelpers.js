@@ -758,11 +758,18 @@ function isParkingMemoryCommand(question) {
         text.includes("im parked") ||
         text.includes("i am parked") ||
         text.includes("i parked") ||
+        text.includes("had to park") ||
+        text.includes("had to use street parking") ||
 
         text.includes("parked on") ||
         text.includes("parked near") ||
         text.includes("parked by") ||
         text.includes("parked at") ||
+        text.includes("parked across from") ||
+        text.includes("parked behind") ||
+        text.includes("parked far away") ||
+        text.includes("parked on the street") ||
+        text.includes("street parking") ||
 
         text.includes("my car is") ||
         text.includes("my car is at") ||
