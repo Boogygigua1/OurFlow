@@ -225,22 +225,13 @@ function getRouteNormalizedQuestion(question) {
 
 async function askOurFlow() {
 
+    const question =
+        document.getElementById("questionInput").value.trim();
 
-      // ========================================
-    // WEATHER HANDLING
-    // ========================================
-
-    const inputBox = document.getElementById("questionInput");
-    const input = inputBox.value.trim();
-
-    if (isWeatherQuestion(input)) {
+    if (isWeatherQuestion(question)) {
         showWeatherCard();
         return;
     }
-
-    
-    const question =
-        document.getElementById("questionInput").value.trim();
 
     const normalizedQuestion =
         getRouteNormalizedQuestion(question);
