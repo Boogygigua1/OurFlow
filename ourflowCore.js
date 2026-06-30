@@ -2922,7 +2922,8 @@ if (address) {
     // WEATHER HANDLING
     // ========================================
 
-    const input = userInput.value.trim();
+    const inputBox = document.getElementById("userInput");
+    const input = inputBox.value.trim();
 
     console.log("Weather check input:", input, isWeatherQuestion(input));
 
