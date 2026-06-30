@@ -1086,3 +1086,58 @@ function isJourneySummaryRecall(question) {
 
     );
 }
+
+function isWeatherQuestion(text) {
+  const input = text.toLowerCase();
+
+  return (
+    input.includes("weather") ||
+    input.includes("rain") ||
+    input.includes("forecast") ||
+    input.includes("temperature") ||
+    input.includes("hot today") ||
+    input.includes("cold today")
+  );
+}
+
+function searchWeather() {
+  const place =
+    activeJourney?.destinationAddress ||
+    activeJourney?.destination ||
+    "";
+
+  const query = place
+    ? `weather ${place}`
+    : "weather today";
+
+  window.open(
+    `https://www.google.com/search?q=${encodeURIComponent(query)}`,
+    "_blank"
+  );
+}
+
+function showWeatherCard() {
+  const hasDestination =
+    activeJourney?.destination ||
+    activeJourney?.destinationAddress;
+
+  const message = hasDestination
+    ? `
+      🌤️ Check weather near your destination?<br><br>
+      <strong>${activeJourney.destination}</strong>
+    `
+    : `
+      🌤️ This looks like a live question.<br><br>
+      I can help you find today's weather.
+    `;
+
+  response.innerHTML = `
+    <div class="memory-card">
+      ${message}
+      <br><br>
+      <button onclick="searchWeather()">🔎 Search Weather</button>
+      <button onclick="saveQuestion()">💾 Save Question</button>
+      <button onclick="closeCard()">↩️ Continue Journey</button>
+    </div>
+  `;
+}

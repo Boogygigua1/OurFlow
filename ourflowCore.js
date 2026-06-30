@@ -2918,3 +2918,12 @@ if (address) {
 `;
     }
 }
+
+// ========================================
+// WEATHER HANDLING
+// ========================================
+
+if (isWeatherQuestion(input)) {
+    showWeatherCard();
+    return;
+}
