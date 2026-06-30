@@ -2917,13 +2917,13 @@ if (address) {
 </div>
 `;
     }
-}
 
-// ========================================
-// WEATHER HANDLING
-// ========================================
+    // ========================================
+    // WEATHER HANDLING
+    // ========================================
 
-if (isWeatherQuestion(input)) {
-    showWeatherCard();
-    return;
+    if (isWeatherQuestion(input)) {
+        showWeatherCard();
+        return;
+    }
 }
