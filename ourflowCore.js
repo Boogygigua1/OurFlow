@@ -225,6 +225,20 @@ function getRouteNormalizedQuestion(question) {
 
 async function askOurFlow() {
 
+
+      // ========================================
+    // WEATHER HANDLING
+    // ========================================
+
+    const inputBox = document.getElementById("questionInput");
+    const input = inputBox.value.trim();
+
+    if (isWeatherQuestion(input)) {
+        showWeatherCard();
+        return;
+    }
+
+    
     const question =
         document.getElementById("questionInput").value.trim();
 
@@ -2916,17 +2930,5 @@ if (address) {
     Error contacting OurFlow.
 </div>
 `;
-    }
-
-    // ========================================
-    // WEATHER HANDLING
-    // ========================================
-
-    const inputBox = document.getElementById("questionInput");
-    const input = inputBox.value.trim();
-
-    if (isWeatherQuestion(input)) {
-        showWeatherCard();
-        return;
     }
 }
