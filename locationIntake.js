@@ -352,7 +352,7 @@ function detectLocationIntake(question) {
         streetAddressPattern.test(originalText);
 
     const spatialRelationshipPattern =
-        /\b(is|are|was|were)\s+(off of|near|behind|next to|across from|to the left of|to the right of|left of|right of|by)\b/i;
+        /\b[a-z0-9.'-]+(?:\s+[a-z0-9.'-]+){0,5}\s+(is|are|was|were)\s+(off of|near|behind|next to|across from|to the left of|to the right of|left of|right of|by)\b/i;
 
     const hasSpatialRelationship =
         spatialRelationshipPattern.test(originalText);
