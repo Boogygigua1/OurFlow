@@ -2861,11 +2861,6 @@ if (address) {
         const locationIntakeCandidate =
             detectLocationIntake(question);
 
-        alert(
-            "Location intake result: " +
-            JSON.stringify(locationIntakeCandidate)
-        );
-
         if (locationIntakeCandidate) {
             showLocationIntakeCard(locationIntakeCandidate);
             return;
