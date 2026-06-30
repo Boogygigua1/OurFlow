@@ -326,11 +326,36 @@ function detectLocationIntake(question) {
         return null;
     }
 
+    const explicitNavigationPattern =
+        /\b(take me to|directions to|navigate to|start journey to|how do i get to|route to|go to|get to|head to|travel to|on my way to)\b/i;
+
+    if (explicitNavigationPattern.test(originalText)) {
+        return null;
+    }
+
+    const movementRoutePattern =
+        /\b(turn|turned|take|took|go|walk|walked|head|headed)\s+(left|right|straight)\b/i;
+
+    if (movementRoutePattern.test(originalText)) {
+        return {
+            originalText,
+            locationText: originalText.replace(/[.?!]+$/g, "").trim(),
+            confidence: "route_clue",
+            reason: "movement_route_clue"
+        };
+    }
+
     const streetAddressPattern =
         /\b\d{1,6}\s+[a-z0-9.'-]+(?:\s+[a-z0-9.'-]+){0,5}\s+(street|st|road|rd|avenue|ave|way|drive|dr|lane|ln|court|ct|boulevard|blvd|place|pl|circle|cir|terrace|ter|highway|hwy)\b/i;
 
     const hasStreetAddress =
         streetAddressPattern.test(originalText);
+
+    const spatialRelationshipPattern =
+        /\b(is|are|was|were)\s+(off of|near|behind|next to|across from|to the left of|to the right of|left of|right of|by)\b/i;
+
+    const hasSpatialRelationship =
+        spatialRelationshipPattern.test(originalText);
 
     const locationPrefixes = [
         "i'm at ",
@@ -347,6 +372,14 @@ function detectLocationIntake(question) {
         "i am behind ",
         "near ",
         "behind ",
+        "by ",
+        "off of ",
+        "next to ",
+        "across from ",
+        "left of ",
+        "right of ",
+        "to the left of ",
+        "to the right of ",
         "on the street",
         "i found ",
         "this is "
@@ -366,6 +399,13 @@ function detectLocationIntake(question) {
                 matchedPrefix.includes("near ") ||
                 matchedPrefix.includes("behind ") ||
                 matchedPrefix.includes("by ") ||
+                matchedPrefix.includes("off of ") ||
+                matchedPrefix.includes("next to ") ||
+                matchedPrefix.includes("across from ") ||
+                matchedPrefix.includes("left of ") ||
+                matchedPrefix.includes("right of ") ||
+                matchedPrefix.includes("to the left of ") ||
+                matchedPrefix.includes("to the right of ") ||
                 matchedPrefix === "on the street"
             )
                 ? matchedPrefix
@@ -392,13 +432,14 @@ function detectLocationIntake(question) {
     const hasLocationContext =
         locationText.includes(",") ||
         /\b(chico|california|ca)\b/i.test(locationText) ||
-        /\b(hotel|clinic|hospital|office|building|restaurant|store|entrance|address)\b/i.test(locationText);
+        /\b(hotel|clinic|hospital|office|building|restaurant|store|entrance|address|park|school|campus|mansion|museum|playground|trail|path|gate|landmark)\b/i.test(locationText);
 
     const hasEnoughPlaceWords =
         locationText.split(/\s+/).filter(Boolean).length >= 2;
 
     if (
         !hasStreetAddress &&
+        !hasSpatialRelationship &&
         !(
             matchedPrefix &&
             (hasLocationContext || hasEnoughPlaceWords)
@@ -411,7 +452,11 @@ function detectLocationIntake(question) {
         originalText,
         locationText,
         confidence: hasStreetAddress ? "address" : "place",
-        reason: hasStreetAddress ? "street_address" : "location_statement"
+        reason: hasStreetAddress
+            ? "street_address"
+            : hasSpatialRelationship
+                ? "spatial_relationship"
+                : "location_statement"
     };
 }
 
