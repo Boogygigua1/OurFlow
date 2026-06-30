@@ -39,7 +39,7 @@ function showParkingRecall() {
 
     const displayParkingAddress =
         savedParkingAddress &&
-        savedParkingAddress !== savedParkingLocation
+            savedParkingAddress !== savedParkingLocation
             ? savedParkingAddress
             : "";
 
@@ -2860,6 +2860,11 @@ if (address) {
 
         const locationIntakeCandidate =
             detectLocationIntake(question);
+
+        alert(
+            "Location intake result: " +
+            JSON.stringify(locationIntakeCandidate)
+        );
 
         if (locationIntakeCandidate) {
             showLocationIntakeCard(locationIntakeCandidate);
