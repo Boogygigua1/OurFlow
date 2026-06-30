@@ -2922,8 +2922,12 @@ if (address) {
     // WEATHER HANDLING
     // ========================================
 
+    const input = userInput.value.trim();
+
+    console.log("Weather check input:", input, isWeatherQuestion(input));
+
     if (isWeatherQuestion(input)) {
-        showWeatherCard();
+        showWeatherCard(input);
         return;
     }
 }
