@@ -821,7 +821,7 @@ async function verifySavedLocation() {
 `;
 
     const response = await fetch(
-        "/api/findDestinationAddress",
+        "/api/searchDestinationPlace",
         {
             method: "POST",
             headers: {
@@ -835,30 +835,76 @@ async function verifySavedLocation() {
 
     const data = await response.json();
 
-    window.suggestedAddress =
-        data.suggestion || "No suggestion found.";
+    const candidates =
+        data.candidates || [];
+
+    window.destinationPlaceCandidates =
+        candidates;
+
+    if (!candidates.length) {
+        showDestinationManualVerificationCard(
+            destination,
+            data.error
+        );
+        return;
+    }
+
+    const candidateButtons =
+        candidates.map(
+            (place, index) => `
+<div class="card">
+    <strong>${escapeDestinationPlaceHtml(
+                place.destinationName ||
+                "Destination"
+            )}</strong>
+
+    <br><br>
+
+    ${escapeDestinationPlaceHtml(
+                place.destinationAddress ||
+                "Address not provided"
+            )}
+
+    <br><br>
+
+    <button onclick="saveVerifiedDestinationPlace(window.destinationPlaceCandidates[${index}])">
+        ✓ Save This Destination
+    </button>
+
+    ${place.googleMapsUri
+                    ? `
+    <br><br>
+
+    <button onclick="window.open(window.destinationPlaceCandidates[${index}].googleMapsUri, '_blank')">
+        🗺️ Open Map
+    </button>
+    `
+                    : ""}
+</div>
+`
+        ).join("");
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📍 Suggested Location</strong>
+    <strong>📍 Destination Found</strong>
 
     <br><br>
 
-    ${data.suggestion || "No suggestion found."}
+    You said:
 
     <br><br>
 
-<button onclick="
-saveVerifiedDestinationAddress(
-    window.suggestedAddress
-);
-">
-    ✓ Save & Continue
-</button>
+    <strong>${escapeDestinationPlaceHtml(destination)}</strong>
 
 <br><br>
 
-<button onclick="
+    Choose the destination to save:
+</div>
+
+${candidateButtons}
+
+<div class="card">
+    <button onclick="
 window.open(
 'https://www.google.com/search?q=' +
 encodeURIComponent(
@@ -898,6 +944,140 @@ if(address){
 </button>
 </div>
 `;
+}
+
+function escapeDestinationPlaceHtml(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function showDestinationManualVerificationCard(destination, errorMessage) {
+
+    window.destinationVerificationSearchQuery =
+        destination;
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>📍 Destination Not Found</strong>
+
+    <br><br>
+
+    ${errorMessage
+            ? escapeDestinationPlaceHtml(errorMessage)
+            : "No Google Places match was found."}
+
+    <br><br>
+
+    You can look it up or paste a verified address manually.
+
+    <br><br>
+
+    <button onclick="
+window.open(
+'https://www.google.com/search?q=' +
+encodeURIComponent(
+activeJourney?.destinationDetail ||
+activeJourney?.destination ||
+window.destinationVerificationSearchQuery
+),
+'_blank'
+);
+">
+        🔍 Look Up Address
+    </button>
+
+    <br><br>
+
+    <input
+        id="verifiedDestinationAddress"
+        type="text"
+        placeholder="Paste verified address here"
+        style="width:90%;padding:8px;"
+    >
+
+    <br><br>
+
+    <button onclick="
+const address =
+document.getElementById(
+    'verifiedDestinationAddress'
+).value.trim();
+
+if(address){
+    saveVerifiedDestinationAddress(
+        address
+    );
+}
+">
+        ✓ Save Verified Address
+    </button>
+</div>
+`;
+}
+
+function saveVerifiedDestinationPlace(place) {
+
+    if (!place) {
+        return;
+    }
+
+    const destinationName =
+        place.destinationName || "";
+
+    const destinationAddress =
+        place.destinationAddress || "";
+
+    activeJourney.destinationName =
+        destinationName;
+
+    if (destinationName) {
+        activeJourney.destination =
+            destinationName;
+    }
+
+    if (destinationName || destinationAddress) {
+        activeJourney.destinationDetail =
+            [
+                destinationName,
+                destinationAddress
+            ].filter(Boolean).join(", ");
+    }
+
+    activeJourney.destinationAddress =
+        destinationAddress;
+
+    activeJourney.verifiedDestinationAddress =
+        destinationAddress;
+
+    activeJourney.destinationPlaceId =
+        place.destinationPlaceId || "";
+
+    activeJourney.destinationGps =
+        place.destinationGps || null;
+
+    activeJourney.destinationGoogleMapsUri =
+        place.googleMapsUri || "";
+
+    activeJourney.destinationVerificationSource =
+        "google_places";
+
+    activeJourney.destinationVerifiedAt =
+        new Date().toISOString();
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    saveVerifiedDestinationAddress(
+        destinationAddress ||
+        destinationName
+    );
 }
 
 function saveVerifiedDestinationAddress(address) {
