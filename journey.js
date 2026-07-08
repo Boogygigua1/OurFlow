@@ -1025,10 +1025,54 @@ showActiveJourneyBox();
 ${window.showJourneyInfo ? `
 
 <strong>Destination:</strong><br>
-${activeJourney.destination || "No destination saved yet."}
+${activeJourney.destinationName ||
+            activeJourney.destination ||
+            "No destination saved yet."}
 
 ${activeJourney.verifiedDestinationAddress
-                ? `<br>✓ Verified: ${activeJourney.verifiedDestinationAddress}`
+                ? `<br>✓ Verified map destination: ${activeJourney.verifiedDestinationAddress}`
+                : ""}
+
+${activeJourney.destinationInternalLocation ||
+            activeJourney.destinationBuilding
+                ? `
+<br><br>
+<strong>Inside destination:</strong><br>
+${[
+                    activeJourney.destinationInternalLocation,
+                    activeJourney.destinationBuilding
+                ].filter(Boolean).join("<br>")}
+`
+                : ""}
+
+${activeJourney.destinationDirectoryNote ||
+            activeJourney.destinationSourceUrl ||
+            activeJourney.destinationCampusZip ||
+            activeJourney.destinationPhone ||
+            activeJourney.destinationEmail
+                ? `
+<br><br>
+<strong>Directory note:</strong><br>
+${[
+                    activeJourney.destinationDirectoryNote,
+                    activeJourney.destinationCampusZip
+                        ? "Campus ZIP: " +
+                        activeJourney.destinationCampusZip
+                        : "",
+                    activeJourney.destinationPhone
+                        ? "Phone: " +
+                        activeJourney.destinationPhone
+                        : "",
+                    activeJourney.destinationEmail
+                        ? "Email: " +
+                        activeJourney.destinationEmail
+                        : "",
+                    activeJourney.destinationSourceUrl
+                        ? "Source: " +
+                        activeJourney.destinationSourceUrl
+                        : ""
+                ].filter(Boolean).join("<br>")}
+`
                 : ""}
 
 <br><br>

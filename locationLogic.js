@@ -1080,6 +1080,90 @@ function saveVerifiedDestinationPlace(place) {
     );
 }
 
+function saveDestinationInternalDetails(details) {
+
+    if (!activeJourney || !details) {
+        return false;
+    }
+
+    activeJourney.destinationInternalLocation =
+        details.destinationInternalLocation || "";
+
+    activeJourney.destinationBuilding =
+        details.destinationBuilding || "";
+
+    activeJourney.destinationCampusZip =
+        details.destinationCampusZip || "";
+
+    activeJourney.destinationPhone =
+        details.destinationPhone || "";
+
+    activeJourney.destinationEmail =
+        details.destinationEmail || "";
+
+    activeJourney.destinationSourceUrl =
+        details.destinationSourceUrl || "";
+
+    activeJourney.destinationDirectoryNote =
+        details.destinationDirectoryNote || "";
+
+    activeJourney.directories =
+        activeJourney.directories || [];
+
+    const readableDirectoryCopy =
+        [
+            activeJourney.destinationName ||
+            activeJourney.destination ||
+            "Destination",
+            activeJourney.destinationInternalLocation
+                ? "Inside destination: " +
+                activeJourney.destinationInternalLocation
+                : "",
+            activeJourney.destinationBuilding
+                ? "Building: " +
+                activeJourney.destinationBuilding
+                : "",
+            activeJourney.destinationCampusZip
+                ? "Campus ZIP: " +
+                activeJourney.destinationCampusZip
+                : "",
+            activeJourney.destinationPhone
+                ? "Phone: " +
+                activeJourney.destinationPhone
+                : "",
+            activeJourney.destinationEmail
+                ? "Email: " +
+                activeJourney.destinationEmail
+                : "",
+            activeJourney.destinationSourceUrl
+                ? "Source: " +
+                activeJourney.destinationSourceUrl
+                : "",
+            activeJourney.destinationDirectoryNote
+                ? "Note: " +
+                activeJourney.destinationDirectoryNote
+                : ""
+        ]
+            .filter(Boolean)
+            .join(" | ");
+
+    if (
+        readableDirectoryCopy &&
+        !activeJourney.directories.includes(readableDirectoryCopy)
+    ) {
+        activeJourney.directories.push(readableDirectoryCopy);
+    }
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+
+    return true;
+}
+
 function saveVerifiedDestinationAddress(address) {
 
     activeJourney.destinationAddress =
