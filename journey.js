@@ -1024,6 +1024,15 @@ showActiveJourneyBox();
 
 ${window.showJourneyInfo ? `
 
+<strong>Destination:</strong><br>
+${activeJourney.destination || "No destination saved yet."}
+
+${activeJourney.verifiedDestinationAddress
+                ? `<br>✓ Verified: ${activeJourney.verifiedDestinationAddress}`
+                : ""}
+
+<br><br>
+
     <strong>Arrival Help:</strong><br>
 ${activeJourney.arrivalTips || "No arrival tips yet."}
 

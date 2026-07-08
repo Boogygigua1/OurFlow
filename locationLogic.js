@@ -459,6 +459,12 @@ if (activeJourney) {
     ${savedStartNavigationHtml}
 
 <button onclick="
+showActiveJourneyBox();
+
+document.getElementById(
+    'result'
+).innerHTML = '';
+
 document.getElementById(
     'questionInput'
 ).focus();
