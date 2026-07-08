@@ -260,6 +260,17 @@ function saveLocationType(type) {
 `;
 }
 
+function continueFromDestinationVerified() {
+
+    showActiveJourneyBox();
+
+    document.getElementById("result").innerHTML = "";
+
+    document.getElementById(
+        "questionInput"
+    ).focus();
+}
+
 function savePendingParking() {
     if (
         !pendingParkingLocation &&
@@ -936,18 +947,7 @@ function saveVerifiedDestinationAddress(address) {
 
     <br><br>
 
-<button onclick="
-document.getElementById(
-    'questionInput'
-).focus();
-
-document.getElementById(
-    'questionInput'
-).scrollIntoView({
-    behavior: 'smooth',
-    block: 'center'
-});
-">
+<button onclick="continueFromDestinationVerified()">
     ⬅ Continue Journey
 </button>
 </div>
