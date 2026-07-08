@@ -133,6 +133,8 @@ let pendingParkingLocation = "";
 
 let pendingParkingLocationAddress = "";
 
+let pendingParkingGps = null;
+
 let pendingLocationClassification = "";
 
 let pendingLocationType = "";
@@ -173,6 +175,8 @@ function resetJourneySessionContext() {
     pendingParkingLocation = "";
 
     pendingParkingLocationAddress = "";
+
+    pendingParkingGps = null;
 
     pendingLocationClassification = "";
 

@@ -18,9 +18,11 @@ function getBlankLocationIntakeJourney(destination) {
         startTime: new Date().toLocaleString(),
         startLocation: "",
         startLocationAddress: "",
+        startGps: null,
         verifiedDestinationAddress: "",
         parkingLocation: "",
         parkingLocationAddress: "",
+        parkingGps: null,
         parkingVerified: false,
         startVerified: false,
         arrivalTips: "",
@@ -82,6 +84,24 @@ function getLocationIntakeText(candidate) {
         "";
 }
 
+function getLocationIntakeGps(candidate) {
+
+    return candidate?.gps || null;
+}
+
+function getGpsMapValue(gps) {
+
+    if (
+        !gps ||
+        typeof gps.latitude !== "number" ||
+        typeof gps.longitude !== "number"
+    ) {
+        return "";
+    }
+
+    return gps.latitude + "," + gps.longitude;
+}
+
 function showNoVerifiedAddressMessage() {
 
     document.getElementById("result").innerHTML = `
@@ -105,14 +125,20 @@ function openLocationConfirmationMap() {
         pendingParkingLocationAddress ||
         "";
 
-    if (!address) {
+    const gpsValue =
+        getGpsMapValue(
+            getLocationIntakeGps(candidate) ||
+            pendingParkingGps
+        );
+
+    if (!address && !gpsValue) {
         showNoVerifiedAddressMessage();
         return;
     }
 
     window.open(
         "https://www.google.com/maps/search/?api=1&query=" +
-        encodeURIComponent(address),
+        encodeURIComponent(address || gpsValue),
         "_blank"
     );
 }
@@ -128,7 +154,66 @@ function verifyLocationConfirmationAddress() {
     pendingParkingLocationAddress =
         getLocationIntakeVerifiedAddress(candidate);
 
+    pendingParkingGps =
+        getLocationIntakeGps(candidate);
+
     verifyParkingLocation();
+}
+
+function buildCurrentLocationGps(position) {
+
+    return {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+        capturedAt: new Date().toISOString()
+    };
+}
+
+function requestCurrentLocationIntake() {
+
+    if (!navigator.geolocation) {
+        alert("Current location is not available in this browser.");
+        return;
+    }
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>Current Location</strong>
+
+    <br><br>
+
+    Requesting your current location...
+</div>
+`;
+
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            showLocationConfirmationCard({
+                originalText: "Use Current Location",
+                locationText: "Current location",
+                confidence: "gps",
+                reason: "browser_geolocation",
+                gps: buildCurrentLocationGps(position)
+            });
+        },
+        function () {
+            document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>Current Location Unavailable</strong>
+
+    <br><br>
+
+    Location access was not completed. You can still save a parking or starting location manually.
+</div>
+`;
+        },
+        {
+            enableHighAccuracy: false,
+            timeout: 15000,
+            maximumAge: 0
+        }
+    );
 }
 
 function showVerifiedLocationSaveTargetCard(candidate) {
@@ -249,6 +334,17 @@ function showLocationConfirmationCard(candidate) {
             ? "Replace Starting Location?"
             : "Yes, Save Starting Location";
 
+    const verifyAddressHtml =
+        candidate.confidence === "gps"
+            ? ""
+            : `
+    <br><br>
+
+    <button onclick="verifyLocationConfirmationAddress()">
+        &#10133; Add / Verify Address
+    </button>
+`;
+
     result.innerHTML = `
 <div class="card">
     <strong>&#128205; Location Found</strong>
@@ -271,11 +367,7 @@ function showLocationConfirmationCard(candidate) {
         &#128506;&#65039; Open Map
     </button>
 
-    <br><br>
-
-    <button onclick="verifyLocationConfirmationAddress()">
-        &#10133; Add / Verify Address
-    </button>
+    ${verifyAddressHtml}
 
     <br><br>
 
@@ -470,6 +562,7 @@ function dismissLocationIntakeCandidate() {
     window.pendingLocationIntakeCandidate = null;
     pendingParkingLocation = "";
     pendingParkingLocationAddress = "";
+    pendingParkingGps = null;
     pendingLocationType = "";
 
     document.getElementById("result").innerHTML = `
@@ -595,6 +688,9 @@ function saveLocationIntakeAsStart() {
     const isVerifiedAddress =
         Boolean(verifiedAddress);
 
+    const gps =
+        getLocationIntakeGps(candidate);
+
     activeJourney.startLocation =
         candidate.locationText;
 
@@ -610,6 +706,9 @@ function saveLocationIntakeAsStart() {
         activeJourney.startAddress = "";
         activeJourney.verifiedStartAddress = "";
     }
+
+    activeJourney.startGps =
+        gps || null;
 
     activeJourney.startVerified =
         isVerifiedAddress;
@@ -629,7 +728,8 @@ function saveLocationIntakeAsStart() {
     showActiveJourneyBox();
 
     const startNavigationHtml =
-        isVerifiedAddress
+        isVerifiedAddress ||
+        activeJourney.startGps
             ? `
     <br><br>
 
@@ -672,6 +772,9 @@ function saveLocationIntakeAsParking() {
     pendingParkingLocationAddress =
         getLocationIntakeVerifiedAddress(candidate);
 
+    pendingParkingGps =
+        getLocationIntakeGps(candidate);
+
     pendingLocationType = "";
 
     window.pendingLocationIntakeCandidate = null;
@@ -693,6 +796,9 @@ function saveLocationIntakeAsParkingAndStart() {
 
     pendingParkingLocationAddress =
         getLocationIntakeVerifiedAddress(candidate);
+
+    pendingParkingGps =
+        getLocationIntakeGps(candidate);
 
     pendingLocationType =
         "both";

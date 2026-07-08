@@ -69,6 +69,13 @@ function normalizeParkingDescription(parkingText) {
 
 function getParkingDescriptionForDisplay(parkingText) {
 
+    if (
+        String(parkingText || "").trim().toLowerCase() ===
+        "current location"
+    ) {
+        return "Current location";
+    }
+
     const description =
         normalizeParkingDescription(parkingText);
 
@@ -299,12 +306,14 @@ if (!activeJourney) {
             startLocation: "",
             startLocationAddress: "",
             startAddress: "",
+            startGps: null,
             verifiedStartAddress: "",
             verifiedDestinationAddress: "",
             parkingDescription: "",
             parkingLocation: "",
             parkingLocationAddress: "",
             parkingAddress: "",
+            parkingGps: null,
             verifiedParkingAddress: "",
             parkingVerified: false,
             startVerified: false,
@@ -336,6 +345,9 @@ if (activeJourney) {
 
     activeJourney.parkingLocation =
         savedParkingText;
+
+    activeJourney.parkingGps =
+        pendingParkingGps || null;
 
     if (hasVerifiedParkingAddress) {
         activeJourney.parkingLocationAddress =
@@ -370,6 +382,9 @@ if (activeJourney) {
         activeJourney.verifiedStartAddress =
             activeJourney.startLocationAddress;
 
+        activeJourney.startGps =
+            pendingParkingGps || null;
+
         activeJourney.startVerified =
             Boolean(activeJourney.startLocationAddress);
 
@@ -387,7 +402,8 @@ if (activeJourney) {
     const savedParkingNavigationHtml =
         activeJourney?.verifiedParkingAddress ||
             activeJourney?.parkingLocationAddress ||
-            activeJourney?.parkingAddress
+            activeJourney?.parkingAddress ||
+            activeJourney?.parkingGps
             ? `
     <button onclick="openGoogleMapsToParkingLocation()">
         🚗 Return To Parking
@@ -400,7 +416,8 @@ if (activeJourney) {
     const savedStartNavigationHtml =
         activeJourney?.verifiedStartAddress ||
             activeJourney?.startLocationAddress ||
-            activeJourney?.startAddress
+            activeJourney?.startAddress ||
+            activeJourney?.startGps
             ? `
     <button onclick="openGoogleMapsToStartLocation()">
         Return To Start
@@ -412,6 +429,7 @@ if (activeJourney) {
 
     pendingParkingLocation = "";
     pendingParkingLocationAddress = "";
+    pendingParkingGps = null;
     pendingLocationType = "";
 
     document.getElementById("result").innerHTML = `

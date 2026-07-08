@@ -12,6 +12,19 @@ function selectMapAddress(candidates) {
     };
 }
 
+function formatGpsForMaps(gps) {
+
+    if (
+        !gps ||
+        typeof gps.latitude !== "number" ||
+        typeof gps.longitude !== "number"
+    ) {
+        return "";
+    }
+
+    return gps.latitude + "," + gps.longitude;
+}
+
 function getDestinationMapSelection() {
 
     return selectMapAddress([
@@ -48,6 +61,10 @@ function getParkingMapSelection() {
         {
             value: activeJourney?.parkingAddress,
             source: "parkingAddress"
+        },
+        {
+            value: formatGpsForMaps(activeJourney?.parkingGps),
+            source: "parkingGps"
         }
     ]);
 }
@@ -66,6 +83,10 @@ function getStartMapSelection() {
         {
             value: activeJourney?.startAddress,
             source: "startAddress"
+        },
+        {
+            value: formatGpsForMaps(activeJourney?.startGps),
+            source: "startGps"
         },
         {
             value: activeJourney?.startLocation,
@@ -251,7 +272,7 @@ function openGoogleMapsToStartLocation() {
         startSelection.value;
 
     if (!destination) {
-        alert("No verified starting address yet. Add or verify an address first.");
+        alert("No starting address or GPS location saved yet.");
         return;
     }
 
@@ -279,7 +300,7 @@ function openGoogleMapsToParkingLocation() {
         parkingSelection.value;
 
     if (!destination) {
-        alert("No verified parking address yet. Add or verify an address first.");
+        alert("No parking address or GPS location saved yet.");
         return;
     }
 
