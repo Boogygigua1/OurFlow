@@ -835,6 +835,9 @@ async function verifySavedLocation() {
 
     const data = await response.json();
 
+    window.destinationVerificationSearchQuery =
+        destination;
+
     const rankedCandidates =
         rankDestinationPlaceCandidates(
             data.candidates || [],
@@ -897,6 +900,12 @@ async function verifySavedLocation() {
         ✅ Use This Destination
     </button>
 
+    <br><br>
+
+    <button onclick="openDestinationGooglePlacesSearch()">
+        Search Google Places
+    </button>
+
     ${bestMatch.googleMapsUri
         ? `
     <br><br>
@@ -928,6 +937,25 @@ function escapeDestinationPlaceHtml(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#39;");
+}
+
+function openDestinationGooglePlacesSearch() {
+
+    const query =
+        window.destinationVerificationSearchQuery ||
+        activeJourney?.destinationDetail ||
+        activeJourney?.destination ||
+        "";
+
+    if (!query) {
+        return;
+    }
+
+    window.open(
+        "https://www.google.com/maps/search/?api=1&query=" +
+            encodeURIComponent(query),
+        "_blank"
+    );
 }
 
 function normalizeDestinationMatchText(value) {
