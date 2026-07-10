@@ -802,6 +802,19 @@ async function verifySavedLocation() {
     //
     //     return;
     // }
+
+    const destinationLookup =
+        buildDestinationVerificationLookup(destination);
+
+    window.destinationVerificationSearchQuery =
+        destination;
+
+    if (activeJourney) {
+        activeJourney.originalDestinationRequest =
+            activeJourney.originalDestinationRequest ||
+            destination;
+    }
+
     document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Verify Location</strong>
@@ -828,20 +841,23 @@ async function verifySavedLocation() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                destination
+                destination:
+                    destinationLookup.query,
+                originalDestination:
+                    destination,
+                locationBias:
+                    destinationLookup.locationBias
             })
         }
     );
 
     const data = await response.json();
 
-    window.destinationVerificationSearchQuery =
-        destination;
-
     const rankedCandidates =
         rankDestinationPlaceCandidates(
             data.candidates || [],
-            destination
+            destination,
+            destinationLookup
         );
 
     window.destinationPlaceCandidates =
@@ -857,6 +873,11 @@ async function verifySavedLocation() {
 
     const bestMatch =
         rankedCandidates[0];
+
+    const destinationFoundMessage =
+        bestMatch.destinationConfidence === "low"
+            ? "I couldn't confidently identify your destination."
+            : bestMatch.reason;
 
     document.getElementById("result").innerHTML = `
 <div class="card">
@@ -886,10 +907,7 @@ async function verifySavedLocation() {
 
     <br><br>
 
-    ${escapeDestinationPlaceHtml(
-        bestMatch.reason ||
-        "Closest match to your request"
-    )}
+    ${escapeDestinationPlaceHtml(destinationFoundMessage)}
 
 <br><br>
 
@@ -900,7 +918,7 @@ async function verifySavedLocation() {
     <br><br>
 
     <button onclick="openDestinationGooglePlacesSearch()">
-        📍 Search Google Places
+        🔍 Search Google Places
     </button>
 
     ${bestMatch.googleMapsUri
@@ -912,6 +930,12 @@ async function verifySavedLocation() {
     </button>
     `
         : ""}
+
+    <br><br>
+
+    <button onclick="showDestinationManualAddressEntryCard()">
+        &#9999;&#65039; Enter Correct Address
+    </button>
 </div>
 `;
 }
@@ -945,6 +969,498 @@ function openDestinationGooglePlacesSearch() {
     );
 }
 
+function getDestinationVerificationTextValues() {
+
+    const activeValues =
+        activeJourney
+            ? [
+                activeJourney.verifiedDestinationAddress,
+                activeJourney.destinationAddress,
+                activeJourney.verifiedStartAddress,
+                activeJourney.startAddress,
+                activeJourney.startLocationAddress,
+                activeJourney.startLocation,
+                activeJourney.verifiedParkingAddress,
+                activeJourney.parkingAddress,
+                activeJourney.parkingLocationAddress,
+                activeJourney.parkingLocation
+            ]
+            : [];
+
+    const savedValues =
+        Array.isArray(savedJourneys)
+            ? savedJourneys
+                .slice(-3)
+                .flatMap(journey => [
+                    journey?.verifiedDestinationAddress,
+                    journey?.destinationAddress,
+                    journey?.verifiedStartAddress,
+                    journey?.startAddress,
+                    journey?.verifiedParkingAddress,
+                    journey?.parkingAddress
+                ])
+            : [];
+
+    return [
+        ...activeValues,
+        ...savedValues
+    ].filter(value =>
+        value &&
+        String(value).trim()
+    );
+}
+
+function getDestinationVerificationGpsValues() {
+
+    const activeValues =
+        activeJourney
+            ? [
+                activeJourney.currentGps,
+                activeJourney.startGps,
+                activeJourney.parkingGps,
+                activeJourney.destinationGps
+            ]
+            : [];
+
+    const savedValues =
+        Array.isArray(savedJourneys)
+            ? savedJourneys
+                .slice()
+                .reverse()
+                .flatMap(journey => [
+                    journey?.destinationGps,
+                    journey?.startGps,
+                    journey?.parkingGps
+                ])
+            : [];
+
+    return [
+        ...activeValues,
+        ...savedValues
+    ];
+}
+
+function normalizeDestinationGps(gps) {
+
+    if (!gps) {
+        return null;
+    }
+
+    const latitude =
+        typeof gps.latitude === "number"
+            ? gps.latitude
+            : gps.lat;
+
+    const longitude =
+        typeof gps.longitude === "number"
+            ? gps.longitude
+            : gps.lng;
+
+    if (
+        typeof latitude !== "number" ||
+        typeof longitude !== "number"
+    ) {
+        return null;
+    }
+
+    return {
+        latitude,
+        longitude
+    };
+}
+
+function extractDestinationCityStateContext(value) {
+
+    const text =
+        String(value || "");
+
+    const statePattern =
+        "(?:A[LKSZR]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEHINOST]|N[CDEHJMVY]|O[HKR]|P[AWR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]|Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West Virginia|Wisconsin|Wyoming)";
+
+    const matches = [];
+
+    const commaParts =
+        text.split(",")
+            .map(part => part.trim())
+            .filter(Boolean);
+
+    commaParts.forEach((part, index) => {
+        if (index === 0) {
+            return;
+        }
+
+        const stateMatch =
+            part.match(
+                new RegExp(
+                    "^(" + statePattern + ")\\b",
+                    "i"
+                )
+            );
+
+        if (!stateMatch) {
+            return;
+        }
+
+        const city =
+            String(commaParts[index - 1] || "")
+                .replace(/^\d+\s+/, "")
+                .trim();
+
+        const state =
+            String(stateMatch[1] || "").trim();
+
+        if (city && state) {
+            matches.push(
+                [
+                    city,
+                    state
+                ].join(" ")
+            );
+        }
+    });
+
+    const simpleCityStatePattern =
+        new RegExp(
+            "\\b([A-Za-z][A-Za-z.' -]{1,40})\\s+(" +
+                statePattern +
+                ")\\b(?:\\s+\\d{5}(?:-\\d{4})?)?",
+            "gi"
+        );
+
+    let match;
+
+    while ((match = simpleCityStatePattern.exec(text))) {
+        const city =
+            String(match[1] || "")
+                .trim();
+
+        const state =
+            String(match[2] || "").trim();
+
+        if (
+            city &&
+            state &&
+            !/\b(?:street|st|avenue|ave|road|rd|drive|dr|boulevard|blvd)\b/i.test(city)
+        ) {
+            matches.push(
+                [
+                    city,
+                    state
+                ].join(" ")
+            );
+        }
+    }
+
+    return matches;
+}
+
+function uniqueDestinationContextParts(values) {
+
+    const seen = new Set();
+
+    return values
+        .map(value =>
+            String(value || "")
+                .replace(/\s+/g, " ")
+                .trim()
+        )
+        .filter(value => {
+            const key =
+                normalizeDestinationMatchText(value);
+
+            if (!key || seen.has(key)) {
+                return false;
+            }
+
+            seen.add(key);
+            return true;
+        });
+}
+
+function getKnownDestinationInstitution(value) {
+
+    const text =
+        normalizeDestinationMatchText(value);
+
+    const institutions = [
+        {
+            name: "California State University, Chico",
+            type: "university",
+            patterns: [
+                "chico state",
+                "csu chico",
+                "cal state chico",
+                "california state university chico"
+            ]
+        },
+        {
+            name: "Enloe Medical Center",
+            type: "hospital",
+            patterns: [
+                "enloe",
+                "enloe hospital",
+                "enloe medical"
+            ]
+        },
+        {
+            name: "Department of Motor Vehicles",
+            type: "government agency",
+            patterns: [
+                "dmv",
+                "department of motor vehicles"
+            ]
+        }
+    ];
+
+    return institutions.find(institution =>
+        institution.patterns.some(pattern =>
+            text.includes(pattern)
+        )
+    ) || null;
+}
+
+function removeDestinationInstitutionPhrase(value, institution) {
+
+    let cleaned =
+        String(value || "");
+
+    if (!institution) {
+        return cleaned.trim();
+    }
+
+    institution.patterns.forEach(pattern => {
+        const escapedPattern =
+            pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        cleaned =
+            cleaned.replace(
+                new RegExp("\\b" + escapedPattern + "\\b", "ig"),
+                " "
+            );
+    });
+
+    return cleaned
+        .replace(/\b(?:at|in|inside|within|the|my|destination|to)\b/ig, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function getActiveJourneyInstitutionContext() {
+
+    if (!activeJourney) {
+        return null;
+    }
+
+    const contextValues = [
+        activeJourney.destinationName,
+        activeJourney.destination,
+        activeJourney.destinationDetail,
+        activeJourney.verifiedDestinationAddress,
+        activeJourney.destinationAddress,
+        activeJourney.destinationDirectoryNote
+    ];
+
+    const knownInstitution =
+        contextValues
+            .map(getKnownDestinationInstitution)
+            .find(Boolean);
+
+    if (knownInstitution) {
+        return knownInstitution;
+    }
+
+    const destinationText =
+        contextValues
+            .filter(Boolean)
+            .join(" ");
+
+    if (
+        /\bcourthouse\b/i.test(destinationText) ||
+        /\bsuperior court\b/i.test(destinationText)
+    ) {
+        return {
+            name:
+                activeJourney.destinationName ||
+                activeJourney.destination ||
+                activeJourney.destinationDetail ||
+                "Courthouse",
+            type: "courthouse",
+            patterns: []
+        };
+    }
+
+    if (
+        /\bhospital\b/i.test(destinationText) ||
+        /\bmedical center\b/i.test(destinationText)
+    ) {
+        return {
+            name:
+                activeJourney.destinationName ||
+                activeJourney.destination ||
+                activeJourney.destinationDetail,
+            type: "hospital",
+            patterns: []
+        };
+    }
+
+    return null;
+}
+
+function inferDestinationSubDestination(value, institution) {
+
+    const withoutInstitution =
+        removeDestinationInstitutionPhrase(
+            value,
+            institution
+        );
+
+    const text =
+        withoutInstitution
+            .replace(/\b(?:department|dept|office|clinic|center)\b$/ig, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    if (!text) {
+        return "";
+    }
+
+    if (/^radiology$/i.test(text)) {
+        return "Radiology";
+    }
+
+    if (/^anthropology$/i.test(text)) {
+        return "Anthropology Department";
+    }
+
+    if (/^department\s+/i.test(text)) {
+        return text.replace(/^department\s+/i, "Department ");
+    }
+
+    if (/\bdepartment\b/i.test(text)) {
+        return text;
+    }
+
+    if (
+        institution &&
+        (
+            /\bradiology\b/i.test(text) ||
+            /\bdepartment\b/i.test(value) ||
+            /\boffice\b/i.test(value) ||
+            /\broom\b/i.test(value) ||
+            /\bsuite\b/i.test(value)
+        )
+    ) {
+        return text;
+    }
+
+    return "";
+}
+
+function interpretDestinationRequest(destination) {
+
+    const originalDestination =
+        String(destination || "").trim();
+
+    const directInstitution =
+        getKnownDestinationInstitution(originalDestination);
+
+    const contextInstitution =
+        getActiveJourneyInstitutionContext();
+
+    const institution =
+        directInstitution ||
+        (
+            /^(?:department|dept|room|suite|office)\b/i.test(originalDestination)
+                ? contextInstitution
+                : null
+        );
+
+    const subDestination =
+        inferDestinationSubDestination(
+            originalDestination,
+            institution
+        );
+
+    const queryParts =
+        institution
+            ? [
+                institution.name,
+                subDestination
+            ]
+            : [
+                originalDestination
+            ];
+
+    return {
+        originalDestination,
+        institutionName:
+            institution?.name || "",
+        institutionType:
+            institution?.type || "",
+        subDestination,
+        query:
+            uniqueDestinationContextParts(queryParts).join(" ") ||
+            originalDestination
+    };
+}
+
+function buildDestinationVerificationLookup(destination) {
+
+    const originalDestination =
+        String(destination || "").trim();
+
+    const interpretation =
+        interpretDestinationRequest(originalDestination);
+
+    const textContext =
+        uniqueDestinationContextParts([
+            ...extractDestinationCityStateContext(originalDestination),
+            ...getDestinationVerificationTextValues()
+                .flatMap(extractDestinationCityStateContext)
+        ]).filter(contextPart =>
+            !normalizeDestinationMatchText(originalDestination)
+                .includes(normalizeDestinationMatchText(contextPart))
+        );
+
+    const locationBias =
+        getDestinationVerificationGpsValues()
+            .map(normalizeDestinationGps)
+            .find(Boolean) || null;
+
+    const query =
+        uniqueDestinationContextParts([
+            interpretation.query,
+            ...textContext
+        ]).join(" ");
+
+    return {
+        query:
+            query || interpretation.query || originalDestination,
+        interpretation,
+        contextText:
+            textContext.join(" "),
+        contextLabel:
+            uniqueDestinationContextParts([
+                interpretation.institutionName
+                    ? "Institution: " +
+                    interpretation.institutionName
+                    : "",
+                interpretation.subDestination
+                    ? "Sub-destination: " +
+                    interpretation.subDestination
+                    : "",
+                ...textContext.slice(0, 2)
+            ]).join("; "),
+        locationBias:
+            locationBias
+                ? {
+                    ...locationBias,
+                    radius: 50000
+                }
+                : null
+    };
+}
+
 function normalizeDestinationMatchText(value) {
 
     return String(value || "")
@@ -964,82 +1480,189 @@ function getDestinationCandidateText(place) {
     );
 }
 
-function scoreDestinationPlaceCandidate(place, destination) {
+function getDestinationCandidateGps(place) {
+
+    return normalizeDestinationGps(place?.destinationGps);
+}
+
+function getDestinationDistanceMiles(firstGps, secondGps) {
+
+    if (!firstGps || !secondGps) {
+        return null;
+    }
+
+    const toRadians =
+        degrees => degrees * Math.PI / 180;
+
+    const earthRadiusMiles =
+        3958.8;
+
+    const latitudeDelta =
+        toRadians(secondGps.latitude - firstGps.latitude);
+
+    const longitudeDelta =
+        toRadians(secondGps.longitude - firstGps.longitude);
+
+    const firstLatitude =
+        toRadians(firstGps.latitude);
+
+    const secondLatitude =
+        toRadians(secondGps.latitude);
+
+    const haversine =
+        Math.sin(latitudeDelta / 2) ** 2 +
+        Math.cos(firstLatitude) *
+        Math.cos(secondLatitude) *
+        Math.sin(longitudeDelta / 2) ** 2;
+
+    return earthRadiusMiles *
+        2 *
+        Math.atan2(
+            Math.sqrt(haversine),
+            Math.sqrt(1 - haversine)
+        );
+}
+
+function getDestinationMatchWords(value) {
+
+    const stopWords =
+        new Set([
+            "the",
+            "and",
+            "for",
+            "with",
+            "from",
+            "near",
+            "off",
+            "going",
+            "headed",
+            "heading",
+            "department",
+            "destination"
+        ]);
 
     const queryText =
-        normalizeDestinationMatchText(destination);
+        normalizeDestinationMatchText(value);
+
+    return queryText
+        .split(" ")
+        .filter(word =>
+            word.length > 2 &&
+            !stopWords.has(word)
+        );
+}
+
+function scoreDestinationPlaceCandidate(
+    place,
+    destination,
+    lookupContext = {}
+) {
+
+    const destinationWords =
+        getDestinationMatchWords(destination);
+
+    const contextWords =
+        getDestinationMatchWords(lookupContext.contextText);
 
     const candidateText =
         getDestinationCandidateText(place);
 
     let score = 0;
 
-    const queryWords =
-        queryText
-            .split(" ")
-            .filter(word => word.length > 2);
+    let destinationMatches = 0;
 
-    queryWords.forEach(word => {
+    destinationWords.forEach(word => {
         if (candidateText.includes(word)) {
+            destinationMatches += 1;
             score += 10;
         }
     });
 
-    const wantsChicoState =
-        queryText.includes("chico state") ||
-        queryText.includes("csu chico") ||
-        queryText.includes("california state university chico") ||
-        (
-            queryText.includes("chico") &&
-            (
-                queryText.includes("state") ||
-                queryText.includes("department") ||
-                queryText.includes("campus")
-            )
-        );
-
-    if (wantsChicoState) {
-        if (
-            candidateText.includes("chico") ||
-            candidateText.includes("csu chico") ||
-            candidateText.includes("california state university")
-        ) {
-            score += 100;
-        } else {
-            score -= 100;
+    contextWords.forEach(word => {
+        if (candidateText.includes(word)) {
+            score += 15;
         }
+    });
 
-        if (
-            candidateText.includes("arcata") ||
-            candidateText.includes("humboldt")
-        ) {
-            score -= 200;
-        }
+    if (
+        destinationWords.length &&
+        destinationMatches === 0
+    ) {
+        score -= 50;
     }
 
     if (
-        queryText.includes("anthropology") &&
-        candidateText.includes("anthropology")
+        destinationWords.length &&
+        destinationMatches >= Math.min(2, destinationWords.length)
     ) {
-        score += 60;
+        score += 20;
+    }
+
+    const contextGps =
+        normalizeDestinationGps(lookupContext.locationBias);
+
+    const candidateGps =
+        getDestinationCandidateGps(place);
+
+    const distanceMiles =
+        getDestinationDistanceMiles(
+            contextGps,
+            candidateGps
+        );
+
+    if (distanceMiles !== null) {
+        if (distanceMiles <= 25) {
+            score += 40;
+        } else if (distanceMiles > 100) {
+            score -= 80;
+        } else if (distanceMiles > 50) {
+            score -= 30;
+        }
     }
 
     return score;
 }
 
-function rankDestinationPlaceCandidates(candidates, destination) {
+function getDestinationCandidateConfidence(place) {
+
+    if (place.matchScore < 20) {
+        return "low";
+    }
+
+    return "high";
+}
+
+function rankDestinationPlaceCandidates(
+    candidates,
+    destination,
+    lookupContext = {}
+) {
 
     return [...candidates]
-        .map(place => ({
-            ...place,
-            matchScore:
+        .map(place => {
+            const matchScore =
                 scoreDestinationPlaceCandidate(
                     place,
-                    destination
-                ),
-            reason:
-                "Closest match to your request"
-        }))
+                    destination,
+                    lookupContext
+                );
+
+            const destinationConfidence =
+                getDestinationCandidateConfidence({
+                    ...place,
+                    matchScore
+                });
+
+            return {
+                ...place,
+                matchScore,
+                destinationConfidence,
+                reason:
+                    destinationConfidence === "low"
+                        ? "I couldn't confidently identify your destination."
+                        : "Closest match to your request"
+            };
+        })
         .sort(
             (first, second) =>
                 second.matchScore - first.matchScore
@@ -1155,6 +1778,204 @@ if(address){
     </button>
 </div>
 `;
+}
+
+function showDestinationManualAddressEntryCard() {
+
+    const originalDestination =
+        window.destinationVerificationSearchQuery ||
+        activeJourney?.originalDestinationRequest ||
+        activeJourney?.destinationDetail ||
+        activeJourney?.destination ||
+        "";
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>&#9999;&#65039; Enter Correct Address</strong>
+
+    <br><br>
+
+    Original request:
+
+    <br><br>
+
+    <strong>${escapeDestinationPlaceHtml(originalDestination)}</strong>
+
+    <br><br>
+
+    <input
+        id="manualDestinationName"
+        type="text"
+        placeholder="Destination name (optional)"
+        style="width:90%;padding:8px;"
+    >
+
+    <br><br>
+
+    <input
+        id="manualDestinationStreet"
+        type="text"
+        placeholder="Street address or paste complete address"
+        style="width:90%;padding:8px;"
+    >
+
+    <br><br>
+
+    <input
+        id="manualDestinationCity"
+        type="text"
+        placeholder="City"
+        style="width:90%;padding:8px;"
+    >
+
+    <br><br>
+
+    <input
+        id="manualDestinationState"
+        type="text"
+        placeholder="State"
+        style="width:90%;padding:8px;"
+    >
+
+    <br><br>
+
+    <input
+        id="manualDestinationZip"
+        type="text"
+        placeholder="ZIP (optional)"
+        style="width:90%;padding:8px;"
+    >
+
+    <br><br>
+
+    <button onclick="saveManualVerifiedDestinationAddressFromCard()">
+        &#10003; Save Verified Address
+    </button>
+</div>
+`;
+}
+
+function getManualDestinationInputValue(id) {
+
+    const input =
+        document.getElementById(id);
+
+    return input
+        ? input.value.trim()
+        : "";
+}
+
+function buildManualDestinationAddress({
+    street,
+    city,
+    state,
+    zip
+}) {
+
+    if (
+        street &&
+        street.includes(",") &&
+        !city &&
+        !state &&
+        !zip
+    ) {
+        return street;
+    }
+
+    const cityStateZip =
+        [
+            city,
+            state,
+            zip
+        ].filter(Boolean).join(" ");
+
+    return [
+        street,
+        cityStateZip
+    ].filter(Boolean).join(", ");
+}
+
+function saveManualVerifiedDestinationAddressFromCard() {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    const destinationName =
+        getManualDestinationInputValue("manualDestinationName");
+
+    const destinationAddress =
+        buildManualDestinationAddress({
+            street:
+                getManualDestinationInputValue("manualDestinationStreet"),
+            city:
+                getManualDestinationInputValue("manualDestinationCity"),
+            state:
+                getManualDestinationInputValue("manualDestinationState"),
+            zip:
+                getManualDestinationInputValue("manualDestinationZip")
+        });
+
+    if (!destinationAddress) {
+        alert("Enter a destination address first.");
+        return;
+    }
+
+    const originalDestination =
+        window.destinationVerificationSearchQuery ||
+        activeJourney.originalDestinationRequest ||
+        activeJourney.destinationDetail ||
+        activeJourney.destination ||
+        "";
+
+    activeJourney.originalDestinationRequest =
+        activeJourney.originalDestinationRequest ||
+        originalDestination;
+
+    if (destinationName) {
+        activeJourney.destinationName =
+            destinationName;
+
+        activeJourney.destination =
+            destinationName;
+    }
+
+    activeJourney.destinationAddress =
+        destinationAddress;
+
+    activeJourney.verifiedDestinationAddress =
+        destinationAddress;
+
+    activeJourney.destinationPlaceId =
+        "";
+
+    activeJourney.destinationGps =
+        null;
+
+    activeJourney.destinationGoogleMapsUri =
+        "";
+
+    activeJourney.destinationVerificationSource =
+        "manual";
+
+    activeJourney.destinationVerifiedAt =
+        new Date().toISOString();
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+
+    document.getElementById("result").innerHTML = "";
+
+    const questionInput =
+        document.getElementById("questionInput");
+
+    if (questionInput) {
+        questionInput.focus();
+    }
 }
 
 function saveVerifiedDestinationPlace(place) {

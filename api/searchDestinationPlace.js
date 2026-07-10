@@ -7,7 +7,9 @@ export default async function handler(req, res) {
     }
 
     const {
-        destination
+        destination,
+        originalDestination,
+        locationBias
     } = req.body || {};
 
     if (!destination || !String(destination).trim()) {
@@ -28,6 +30,30 @@ export default async function handler(req, res) {
     }
 
     try {
+        const requestBody = {
+            textQuery: String(destination).trim(),
+            maxResultCount: 3
+        };
+
+        if (
+            locationBias &&
+            typeof locationBias.latitude === "number" &&
+            typeof locationBias.longitude === "number"
+        ) {
+            requestBody.locationBias = {
+                circle: {
+                    center: {
+                        latitude: locationBias.latitude,
+                        longitude: locationBias.longitude
+                    },
+                    radius:
+                        typeof locationBias.radius === "number"
+                            ? locationBias.radius
+                            : 50000
+                }
+            };
+        }
+
         const response = await fetch(
             "https://places.googleapis.com/v1/places:searchText",
             {
@@ -38,10 +64,7 @@ export default async function handler(req, res) {
                     "X-Goog-FieldMask":
                         "places.id,places.displayName,places.formattedAddress,places.location,places.googleMapsUri"
                 },
-                body: JSON.stringify({
-                    textQuery: String(destination).trim(),
-                    maxResultCount: 3
-                })
+                body: JSON.stringify(requestBody)
             }
         );
 
@@ -79,6 +102,8 @@ export default async function handler(req, res) {
 
         return res.status(200).json({
             destination,
+            originalDestination:
+                originalDestination || destination,
             candidates
         });
 
