@@ -1804,45 +1804,9 @@ function showDestinationManualAddressEntryCard() {
     <br><br>
 
     <input
-        id="manualDestinationName"
+        id="manualDestinationAddress"
         type="text"
-        placeholder="Destination name (optional)"
-        style="width:90%;padding:8px;"
-    >
-
-    <br><br>
-
-    <input
-        id="manualDestinationStreet"
-        type="text"
-        placeholder="Street address or paste complete address"
-        style="width:90%;padding:8px;"
-    >
-
-    <br><br>
-
-    <input
-        id="manualDestinationCity"
-        type="text"
-        placeholder="City"
-        style="width:90%;padding:8px;"
-    >
-
-    <br><br>
-
-    <input
-        id="manualDestinationState"
-        type="text"
-        placeholder="State"
-        style="width:90%;padding:8px;"
-    >
-
-    <br><br>
-
-    <input
-        id="manualDestinationZip"
-        type="text"
-        placeholder="ZIP (optional)"
+        placeholder="Paste or enter the full destination address"
         style="width:90%;padding:8px;"
     >
 
@@ -1851,48 +1815,14 @@ function showDestinationManualAddressEntryCard() {
     <button onclick="saveManualVerifiedDestinationAddressFromCard()">
         &#10003; Save Verified Address
     </button>
+
+    <br><br>
+
+    <button onclick="continueFromDestinationVerified()">
+        Return
+    </button>
 </div>
 `;
-}
-
-function getManualDestinationInputValue(id) {
-
-    const input =
-        document.getElementById(id);
-
-    return input
-        ? input.value.trim()
-        : "";
-}
-
-function buildManualDestinationAddress({
-    street,
-    city,
-    state,
-    zip
-}) {
-
-    if (
-        street &&
-        street.includes(",") &&
-        !city &&
-        !state &&
-        !zip
-    ) {
-        return street;
-    }
-
-    const cityStateZip =
-        [
-            city,
-            state,
-            zip
-        ].filter(Boolean).join(" ");
-
-    return [
-        street,
-        cityStateZip
-    ].filter(Boolean).join(", ");
 }
 
 function saveManualVerifiedDestinationAddressFromCard() {
@@ -1901,20 +1831,13 @@ function saveManualVerifiedDestinationAddressFromCard() {
         return;
     }
 
-    const destinationName =
-        getManualDestinationInputValue("manualDestinationName");
+    const addressInput =
+        document.getElementById("manualDestinationAddress");
 
     const destinationAddress =
-        buildManualDestinationAddress({
-            street:
-                getManualDestinationInputValue("manualDestinationStreet"),
-            city:
-                getManualDestinationInputValue("manualDestinationCity"),
-            state:
-                getManualDestinationInputValue("manualDestinationState"),
-            zip:
-                getManualDestinationInputValue("manualDestinationZip")
-        });
+        addressInput
+            ? addressInput.value.trim()
+            : "";
 
     if (!destinationAddress) {
         alert("Enter a destination address first.");
@@ -1932,19 +1855,13 @@ function saveManualVerifiedDestinationAddressFromCard() {
         activeJourney.originalDestinationRequest ||
         originalDestination;
 
-    if (destinationName) {
-        activeJourney.destinationName =
-            destinationName;
-
-        activeJourney.destination =
-            destinationName;
-    }
-
     activeJourney.destinationAddress =
         destinationAddress;
 
     activeJourney.verifiedDestinationAddress =
         destinationAddress;
+
+    window.destinationPlaceCandidates = [];
 
     activeJourney.destinationPlaceId =
         "";
