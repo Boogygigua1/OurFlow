@@ -186,6 +186,11 @@ function resetJourneySessionContext() {
 
     if (typeof window !== "undefined") {
         window.pendingLocationIntakeCandidate = null;
+        window.destinationPlaceCandidates = [];
+        window.destinationVerificationSearchQuery = "";
+        window.suggestedAddress = "";
+        window.parkingLookupAddress = "";
+        window.suggestedParkingAddress = "";
     }
 }
 

@@ -287,6 +287,12 @@ function requestEndJourney() {
     <button onclick="returnToJourney()">
         &#8617;&#65039; Return to Journey
     </button>
+
+    <br><br>
+
+    <button onclick="endJourneyWithoutSaving()">
+        &#128465; End Journey Without Saving
+    </button>
 </div>
 `;
 
@@ -393,13 +399,20 @@ function endJourneyWithoutSaving() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>&#127937; Journey Ended</strong>
+    <strong>&#127937; Journey Discarded</strong>
 
     <br><br>
 
     This journey was ended without saving.
 </div>
 `;
+
+    const questionInput =
+        document.getElementById("questionInput");
+
+    if (questionInput) {
+        questionInput.focus();
+    }
 }
 
 function returnToJourney() {
@@ -410,22 +423,16 @@ function returnToJourney() {
         return;
     }
 
-    if (activeJourney.journeyStatus === "arrived") {
-        showArrivalMode();
-        return;
-    }
-
     showActiveJourneyBox();
 
-    document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>&#129517; Journey Active</strong>
+    document.getElementById("result").innerHTML = "";
 
-    <br><br>
+    const questionInput =
+        document.getElementById("questionInput");
 
-    Your current journey is still active.
-</div>
-`;
+    if (questionInput) {
+        questionInput.focus();
+    }
 }
 
 showActiveJourneyRecoveryCard();
@@ -1034,30 +1041,42 @@ ${activeJourney.verifiedDestinationAddress
                 : ""}
 
 ${activeJourney.destinationInternalLocation ||
-            activeJourney.destinationBuilding
-                ? `
-<br><br>
-<strong>Inside destination:</strong><br>
-${[
-                    activeJourney.destinationInternalLocation,
-                    activeJourney.destinationBuilding
-                ].filter(Boolean).join("<br>")}
-`
-                : ""}
-
-${activeJourney.destinationDirectoryNote ||
-            activeJourney.destinationSourceUrl ||
-            activeJourney.destinationCampusZip ||
+            activeJourney.destinationBuilding ||
+            activeJourney.destinationDepartmentOffice ||
+            activeJourney.destinationRoomSuite ||
+            activeJourney.destinationEntrance ||
+            activeJourney.destinationFloor ||
+            activeJourney.destinationContactPerson ||
             activeJourney.destinationPhone ||
-            activeJourney.destinationEmail
+            activeJourney.destinationEmail ||
+            activeJourney.destinationInsideNotes
                 ? `
 <br><br>
-<strong>Directory note:</strong><br>
+<strong>Inside Destination Details:</strong><br>
 ${[
-                    activeJourney.destinationDirectoryNote,
-                    activeJourney.destinationCampusZip
-                        ? "Campus ZIP: " +
-                        activeJourney.destinationCampusZip
+                    activeJourney.destinationBuilding
+                        ? "Building: " +
+                        activeJourney.destinationBuilding
+                        : "",
+                    activeJourney.destinationDepartmentOffice
+                        ? "Department / Office: " +
+                        activeJourney.destinationDepartmentOffice
+                        : "",
+                    activeJourney.destinationRoomSuite
+                        ? "Room / Suite: " +
+                        activeJourney.destinationRoomSuite
+                        : "",
+                    activeJourney.destinationEntrance
+                        ? "Entrance: " +
+                        activeJourney.destinationEntrance
+                        : "",
+                    activeJourney.destinationFloor
+                        ? "Floor: " +
+                        activeJourney.destinationFloor
+                        : "",
+                    activeJourney.destinationContactPerson
+                        ? "Contact Person: " +
+                        activeJourney.destinationContactPerson
                         : "",
                     activeJourney.destinationPhone
                         ? "Phone: " +
@@ -1066,6 +1085,26 @@ ${[
                     activeJourney.destinationEmail
                         ? "Email: " +
                         activeJourney.destinationEmail
+                        : "",
+                    activeJourney.destinationInsideNotes
+                        ? "Notes: " +
+                        activeJourney.destinationInsideNotes
+                        : ""
+                ].filter(Boolean).join("<br>")}
+`
+                : ""}
+
+${activeJourney.destinationDirectoryNote ||
+            activeJourney.destinationSourceUrl ||
+            activeJourney.destinationCampusZip
+                ? `
+<br><br>
+<strong>Directory note:</strong><br>
+${[
+                    activeJourney.destinationDirectoryNote,
+                    activeJourney.destinationCampusZip
+                        ? "Campus ZIP: " +
+                        activeJourney.destinationCampusZip
                         : "",
                     activeJourney.destinationSourceUrl
                         ? "Source: " +

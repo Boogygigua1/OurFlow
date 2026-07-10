@@ -835,13 +835,16 @@ async function verifySavedLocation() {
 
     const data = await response.json();
 
-    const candidates =
-        data.candidates || [];
+    const rankedCandidates =
+        rankDestinationPlaceCandidates(
+            data.candidates || [],
+            destination
+        );
 
     window.destinationPlaceCandidates =
-        candidates;
+        rankedCandidates;
 
-    if (!candidates.length) {
+    if (!rankedCandidates.length) {
         showDestinationManualVerificationCard(
             destination,
             data.error
@@ -849,40 +852,11 @@ async function verifySavedLocation() {
         return;
     }
 
-    const candidateButtons =
-        candidates.map(
-            (place, index) => `
-<div class="card">
-    <strong>${escapeDestinationPlaceHtml(
-                place.destinationName ||
-                "Destination"
-            )}</strong>
+    const bestMatch =
+        rankedCandidates[0];
 
-    <br><br>
-
-    ${escapeDestinationPlaceHtml(
-                place.destinationAddress ||
-                "Address not provided"
-            )}
-
-    <br><br>
-
-    <button onclick="saveVerifiedDestinationPlace(window.destinationPlaceCandidates[${index}])">
-        ✓ Save This Destination
-    </button>
-
-    ${place.googleMapsUri
-                    ? `
-    <br><br>
-
-    <button onclick="window.open(window.destinationPlaceCandidates[${index}].googleMapsUri, '_blank')">
-        🗺️ Open Map
-    </button>
-    `
-                    : ""}
-</div>
-`
-        ).join("");
+    const hasOtherMatches =
+        rankedCandidates.length > 1;
 
     document.getElementById("result").innerHTML = `
 <div class="card">
@@ -898,50 +872,50 @@ async function verifySavedLocation() {
 
 <br><br>
 
-    Choose the destination to save:
-</div>
+    <strong>${escapeDestinationPlaceHtml(
+        bestMatch.destinationName ||
+        "Destination"
+    )}</strong>
 
-${candidateButtons}
+    <br><br>
 
-<div class="card">
-    <button onclick="
-window.open(
-'https://www.google.com/search?q=' +
-encodeURIComponent(
-activeJourney?.destinationDetail ||
-activeJourney?.destination
-),
-'_blank'
-);
-">
-    🔍 Look Up Address
-</button>
+    ${escapeDestinationPlaceHtml(
+        bestMatch.destinationAddress ||
+        "Address not provided"
+    )}
 
-<br><br>
+    <br><br>
 
-<input
-    id="verifiedDestinationAddress"
-    type="text"
-    placeholder="Paste verified address here"
-    style="width:90%;padding:8px;"
->
+    ${escapeDestinationPlaceHtml(
+        bestMatch.reason ||
+        "Closest match to your request"
+    )}
 
 <br><br>
 
-<button onclick="
-const address =
-document.getElementById(
-    'verifiedDestinationAddress'
-).value.trim();
+    <button onclick="saveVerifiedDestinationPlace(window.destinationPlaceCandidates[0])">
+        ✅ Use This Destination
+    </button>
 
-if(address){
-    saveVerifiedDestinationAddress(
-        address
-    );
-}
-">
-    ✓ Save Verified Address
-</button>
+    ${bestMatch.googleMapsUri
+        ? `
+    <br><br>
+
+    <button onclick="window.open(window.destinationPlaceCandidates[0].googleMapsUri, '_blank')">
+        🗺️ Open Map
+    </button>
+    `
+        : ""}
+
+    ${hasOtherMatches
+        ? `
+    <br><br>
+
+    <button onclick="showOtherDestinationMatches()">
+        🔍 Show Other Matches
+    </button>
+    `
+        : ""}
 </div>
 `;
 }
@@ -954,6 +928,154 @@ function escapeDestinationPlaceHtml(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#39;");
+}
+
+function normalizeDestinationMatchText(value) {
+
+    return String(value || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function getDestinationCandidateText(place) {
+
+    return normalizeDestinationMatchText(
+        [
+            place?.destinationName,
+            place?.destinationAddress
+        ].filter(Boolean).join(" ")
+    );
+}
+
+function scoreDestinationPlaceCandidate(place, destination) {
+
+    const queryText =
+        normalizeDestinationMatchText(destination);
+
+    const candidateText =
+        getDestinationCandidateText(place);
+
+    let score = 0;
+
+    const queryWords =
+        queryText
+            .split(" ")
+            .filter(word => word.length > 2);
+
+    queryWords.forEach(word => {
+        if (candidateText.includes(word)) {
+            score += 10;
+        }
+    });
+
+    const wantsChicoState =
+        queryText.includes("chico state") ||
+        queryText.includes("csu chico") ||
+        queryText.includes("california state university chico") ||
+        (
+            queryText.includes("chico") &&
+            (
+                queryText.includes("state") ||
+                queryText.includes("department") ||
+                queryText.includes("campus")
+            )
+        );
+
+    if (wantsChicoState) {
+        if (
+            candidateText.includes("chico") ||
+            candidateText.includes("csu chico") ||
+            candidateText.includes("california state university")
+        ) {
+            score += 100;
+        } else {
+            score -= 100;
+        }
+
+        if (
+            candidateText.includes("arcata") ||
+            candidateText.includes("humboldt")
+        ) {
+            score -= 200;
+        }
+    }
+
+    if (
+        queryText.includes("anthropology") &&
+        candidateText.includes("anthropology")
+    ) {
+        score += 60;
+    }
+
+    return score;
+}
+
+function rankDestinationPlaceCandidates(candidates, destination) {
+
+    return [...candidates]
+        .map(place => ({
+            ...place,
+            matchScore:
+                scoreDestinationPlaceCandidate(
+                    place,
+                    destination
+                ),
+            reason:
+                "Closest match to your request"
+        }))
+        .sort(
+            (first, second) =>
+                second.matchScore - first.matchScore
+        );
+}
+
+function showOtherDestinationMatches() {
+
+    const candidates =
+        window.destinationPlaceCandidates || [];
+
+    const otherMatches =
+        candidates.slice(1, 3);
+
+    if (!otherMatches.length) {
+        return;
+    }
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>🔍 Other Matches</strong>
+
+    <br><br>
+
+    These are less likely matches. Choose one only if the recommendation was not right.
+</div>
+
+${otherMatches.map(
+        (place, index) => `
+<div class="card">
+    <strong>${escapeDestinationPlaceHtml(
+            place.destinationName ||
+            "Destination"
+        )}</strong>
+
+    <br><br>
+
+    ${escapeDestinationPlaceHtml(
+            place.destinationAddress ||
+            "Address not provided"
+        )}
+
+    <br><br>
+
+    <button onclick="saveVerifiedDestinationPlace(window.destinationPlaceCandidates[${index + 1}])">
+        Use This Destination
+    </button>
+</div>
+`
+    ).join("")}
+`;
 }
 
 function showDestinationManualVerificationCard(destination, errorMessage) {
@@ -1086,26 +1208,73 @@ function saveDestinationInternalDetails(details) {
         return false;
     }
 
-    activeJourney.destinationInternalLocation =
-        details.destinationInternalLocation || "";
-
     activeJourney.destinationBuilding =
-        details.destinationBuilding || "";
+        details.destinationBuilding ??
+        activeJourney.destinationBuilding ??
+        "";
 
-    activeJourney.destinationCampusZip =
-        details.destinationCampusZip || "";
+    activeJourney.destinationDepartmentOffice =
+        details.destinationDepartmentOffice ??
+        activeJourney.destinationDepartmentOffice ??
+        "";
+
+    activeJourney.destinationRoomSuite =
+        details.destinationRoomSuite ??
+        details.destinationInternalLocation ??
+        activeJourney.destinationRoomSuite ??
+        "";
+
+    activeJourney.destinationInternalLocation =
+        [
+            activeJourney.destinationBuilding,
+            activeJourney.destinationDepartmentOffice,
+            activeJourney.destinationRoomSuite
+        ].filter(Boolean).join(" • ");
+
+    activeJourney.destinationEntrance =
+        details.destinationEntrance ??
+        activeJourney.destinationEntrance ??
+        "";
+
+    activeJourney.destinationFloor =
+        details.destinationFloor ??
+        activeJourney.destinationFloor ??
+        "";
+
+    activeJourney.destinationContactPerson =
+        details.destinationContactPerson ??
+        activeJourney.destinationContactPerson ??
+        "";
 
     activeJourney.destinationPhone =
-        details.destinationPhone || "";
+        details.destinationPhone ??
+        activeJourney.destinationPhone ??
+        "";
 
     activeJourney.destinationEmail =
-        details.destinationEmail || "";
+        details.destinationEmail ??
+        activeJourney.destinationEmail ??
+        "";
 
     activeJourney.destinationSourceUrl =
-        details.destinationSourceUrl || "";
+        details.destinationSourceUrl ??
+        activeJourney.destinationSourceUrl ??
+        "";
 
     activeJourney.destinationDirectoryNote =
-        details.destinationDirectoryNote || "";
+        details.destinationDirectoryNote ??
+        activeJourney.destinationDirectoryNote ??
+        "";
+
+    activeJourney.destinationInsideNotes =
+        details.destinationInsideNotes ??
+        activeJourney.destinationInsideNotes ??
+        "";
+
+    activeJourney.destinationCampusZip =
+        details.destinationCampusZip ??
+        activeJourney.destinationCampusZip ??
+        "";
 
     activeJourney.directories =
         activeJourney.directories || [];
@@ -1122,6 +1291,26 @@ function saveDestinationInternalDetails(details) {
             activeJourney.destinationBuilding
                 ? "Building: " +
                 activeJourney.destinationBuilding
+                : "",
+            activeJourney.destinationDepartmentOffice
+                ? "Department / Office: " +
+                activeJourney.destinationDepartmentOffice
+                : "",
+            activeJourney.destinationRoomSuite
+                ? "Room / Suite: " +
+                activeJourney.destinationRoomSuite
+                : "",
+            activeJourney.destinationEntrance
+                ? "Entrance: " +
+                activeJourney.destinationEntrance
+                : "",
+            activeJourney.destinationFloor
+                ? "Floor: " +
+                activeJourney.destinationFloor
+                : "",
+            activeJourney.destinationContactPerson
+                ? "Contact: " +
+                activeJourney.destinationContactPerson
                 : "",
             activeJourney.destinationCampusZip
                 ? "Campus ZIP: " +
@@ -1142,6 +1331,10 @@ function saveDestinationInternalDetails(details) {
             activeJourney.destinationDirectoryNote
                 ? "Note: " +
                 activeJourney.destinationDirectoryNote
+                : "",
+            activeJourney.destinationInsideNotes
+                ? "Notes: " +
+                activeJourney.destinationInsideNotes
                 : ""
         ]
             .filter(Boolean)
@@ -1162,6 +1355,95 @@ function saveDestinationInternalDetails(details) {
     showActiveJourneyBox();
 
     return true;
+}
+
+function promptDestinationInternalDetails() {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    showDestinationInternalDetailsCard();
+}
+
+function getDestinationInternalInputValue(id) {
+
+    return document.getElementById(id)?.value.trim() || "";
+}
+
+function saveDestinationInternalDetailsFromCard() {
+
+    saveDestinationInternalDetails({
+        destinationBuilding:
+            getDestinationInternalInputValue("destinationBuilding"),
+        destinationDepartmentOffice:
+            getDestinationInternalInputValue("destinationDepartmentOffice"),
+        destinationRoomSuite:
+            getDestinationInternalInputValue("destinationRoomSuite"),
+        destinationEntrance:
+            getDestinationInternalInputValue("destinationEntrance"),
+        destinationFloor:
+            getDestinationInternalInputValue("destinationFloor"),
+        destinationContactPerson:
+            getDestinationInternalInputValue("destinationContactPerson"),
+        destinationPhone:
+            getDestinationInternalInputValue("destinationPhone"),
+        destinationEmail:
+            getDestinationInternalInputValue("destinationEmail"),
+        destinationInsideNotes:
+            getDestinationInternalInputValue("destinationInsideNotes")
+    });
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>🏢 Inside Destination Details Saved</strong>
+
+    <br><br>
+
+    I saved those details with this journey.
+</div>
+`;
+}
+
+function showDestinationInternalDetailsCard() {
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>🏢 Add Inside Destination Details</strong>
+
+    <br><br>
+
+    <input id="destinationBuilding" placeholder="Building" value="${escapeDestinationPlaceHtml(activeJourney.destinationBuilding || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="destinationDepartmentOffice" placeholder="Department / Office" value="${escapeDestinationPlaceHtml(activeJourney.destinationDepartmentOffice || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="destinationRoomSuite" placeholder="Room or Suite" value="${escapeDestinationPlaceHtml(activeJourney.destinationRoomSuite || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="destinationEntrance" placeholder="Entrance" value="${escapeDestinationPlaceHtml(activeJourney.destinationEntrance || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="destinationFloor" placeholder="Floor" value="${escapeDestinationPlaceHtml(activeJourney.destinationFloor || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="destinationContactPerson" placeholder="Contact Person" value="${escapeDestinationPlaceHtml(activeJourney.destinationContactPerson || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="destinationPhone" placeholder="Phone" value="${escapeDestinationPlaceHtml(activeJourney.destinationPhone || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="destinationEmail" placeholder="Email" value="${escapeDestinationPlaceHtml(activeJourney.destinationEmail || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <textarea id="destinationInsideNotes" placeholder="Notes" style="width:90%;padding:8px;min-height:80px;">${escapeDestinationPlaceHtml(activeJourney.destinationInsideNotes || activeJourney.destinationDirectoryNote || "")}</textarea>
+
+    <br><br>
+
+    <button onclick="saveDestinationInternalDetailsFromCard()">
+        Save Inside Details
+    </button>
+
+    <br><br>
+
+    <button onclick="continueFromDestinationVerified()">
+        Continue Journey
+    </button>
+</div>
+`;
 }
 
 function saveVerifiedDestinationAddress(address) {
@@ -1193,20 +1475,14 @@ function saveVerifiedDestinationAddress(address) {
 
     <br><br>
 
-    <button onclick="openGoogleMapsToDestinationDetails('walking')">
-        🚶 Walk There
+    <button onclick="openGoogleMapsToDestinationDetails()">
+        🗺️ Navigate
     </button>
 
     <br><br>
 
-    <button onclick="openGoogleMapsToDestinationDetails('bicycling')">
-        🚴 Bike There
-    </button>
-
-    <br><br>
-
-    <button onclick="openGoogleMapsToDestinationDetails('driving')">
-        🚗 Drive There
+    <button onclick="promptDestinationInternalDetails()">
+        🏢 Add Inside Destination Details
     </button>
 
     <br><br>

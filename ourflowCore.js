@@ -109,6 +109,169 @@ function showParkingMemoryReview(parkingText) {
     savePendingParking();
 }
 
+function getInsideDestinationDetailRows() {
+
+    if (!activeJourney) {
+        return [];
+    }
+
+    return [
+        {
+            key: "building",
+            label: "Building",
+            value: activeJourney.destinationBuilding
+        },
+        {
+            key: "department",
+            label: "Department / Office",
+            value: activeJourney.destinationDepartmentOffice
+        },
+        {
+            key: "room",
+            label: "Room / Suite",
+            value: activeJourney.destinationRoomSuite ||
+                activeJourney.destinationInternalLocation
+        },
+        {
+            key: "entrance",
+            label: "Entrance",
+            value: activeJourney.destinationEntrance
+        },
+        {
+            key: "floor",
+            label: "Floor",
+            value: activeJourney.destinationFloor
+        },
+        {
+            key: "contact",
+            label: "Contact Person",
+            value: activeJourney.destinationContactPerson
+        },
+        {
+            key: "phone",
+            label: "Phone",
+            value: activeJourney.destinationPhone
+        },
+        {
+            key: "email",
+            label: "Email",
+            value: activeJourney.destinationEmail
+        },
+        {
+            key: "notes",
+            label: "Notes",
+            value: activeJourney.destinationInsideNotes ||
+                activeJourney.destinationDirectoryNote
+        }
+    ].filter(row => row.value);
+}
+
+function getInsideDestinationRecallRows(question) {
+
+    const rows =
+        getInsideDestinationDetailRows();
+
+    if (!rows.length) {
+        return [];
+    }
+
+    const text =
+        String(question || "").toLowerCase();
+
+    if (
+        text.includes("room") ||
+        text.includes("suite")
+    ) {
+        return rows.filter(row => row.key === "room");
+    }
+
+    if (text.includes("entrance")) {
+        return rows.filter(row => row.key === "entrance");
+    }
+
+    if (text.includes("phone") || text.includes("number")) {
+        return rows.filter(row => row.key === "phone");
+    }
+
+    if (text.includes("email")) {
+        return rows.filter(row => row.key === "email");
+    }
+
+    if (
+        text.includes("who") ||
+        text.includes("meeting") ||
+        text.includes("contact person")
+    ) {
+        return rows.filter(row => row.key === "contact");
+    }
+
+    if (text.includes("building")) {
+        return rows.filter(row => row.key === "building");
+    }
+
+    if (
+        text.includes("department") ||
+        text.includes("office")
+    ) {
+        return rows.filter(row => row.key === "department");
+    }
+
+    if (text.includes("floor")) {
+        return rows.filter(row => row.key === "floor");
+    }
+
+    if (
+        text.includes("inside destination") ||
+        text.includes("inside details") ||
+        text.includes("destination details") ||
+        text.includes("where am i going") ||
+        text.includes("where do i go")
+    ) {
+        return rows;
+    }
+
+    return [];
+}
+
+function isInsideDestinationRecall(question) {
+
+    return getInsideDestinationRecallRows(question).length > 0;
+}
+
+function showInsideDestinationRecall(question) {
+
+    const result =
+        document.getElementById("result");
+
+    const rows =
+        getInsideDestinationRecallRows(question);
+
+    if (!rows.length) {
+        result.innerHTML = `
+<div class="card">
+    <strong>Inside Destination Details</strong>
+
+    <br><br>
+
+    I don't have inside destination details saved for this journey yet.
+</div>
+`;
+        return;
+    }
+
+    result.innerHTML = `
+<div class="card">
+    <strong>Inside Destination Details</strong>
+
+    <br><br>
+
+    ${rows.map(row =>
+        `<strong>${row.label}:</strong> ${row.value}`
+    ).join("<br>")}
+</div>
+`;
+}
+
 function isArrivalIntent(question) {
 
     const text =
@@ -2052,6 +2215,16 @@ Ready to save?
         ) {
 
             showArrivalMode();
+
+            return;
+        }
+
+        if (
+            activeJourney &&
+            isInsideDestinationRecall(recallQuestion)
+        ) {
+
+            showInsideDestinationRecall(recallQuestion);
 
             return;
         }
