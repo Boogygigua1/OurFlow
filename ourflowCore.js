@@ -235,7 +235,26 @@ function getInsideDestinationRecallRows(question) {
 
 function isInsideDestinationRecall(question) {
 
-    return getInsideDestinationRecallRows(question).length > 0;
+    const text =
+        String(question || "").toLowerCase();
+
+    return (
+        text.includes("inside destination") ||
+        text.includes("inside details") ||
+        text.includes("room") ||
+        text.includes("suite") ||
+        text.includes("entrance") ||
+        text.includes("phone") ||
+        text.includes("email") ||
+        text.includes("building") ||
+        text.includes("floor") ||
+        text.includes("department") ||
+        text.includes("office") ||
+        text.includes("who am i meeting") ||
+        text.includes("who i'm meeting") ||
+        text.includes("who im meeting") ||
+        text.includes("contact person")
+    );
 }
 
 function showInsideDestinationRecall(question) {
