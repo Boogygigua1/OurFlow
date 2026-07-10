@@ -858,9 +858,6 @@ async function verifySavedLocation() {
     const bestMatch =
         rankedCandidates[0];
 
-    const hasOtherMatches =
-        rankedCandidates.length > 1;
-
     document.getElementById("result").innerHTML = `
 <div class="card">
     <strong>📍 Destination Found</strong>
@@ -903,7 +900,7 @@ async function verifySavedLocation() {
     <br><br>
 
     <button onclick="openDestinationGooglePlacesSearch()">
-        Search Google Places
+        📍 Search Google Places
     </button>
 
     ${bestMatch.googleMapsUri
@@ -912,16 +909,6 @@ async function verifySavedLocation() {
 
     <button onclick="window.open(window.destinationPlaceCandidates[0].googleMapsUri, '_blank')">
         🗺️ Open Map
-    </button>
-    `
-        : ""}
-
-    ${hasOtherMatches
-        ? `
-    <br><br>
-
-    <button onclick="showOtherDestinationMatches()">
-        🔍 Show Other Matches
     </button>
     `
         : ""}
