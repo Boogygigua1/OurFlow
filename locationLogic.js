@@ -939,7 +939,7 @@ function openDestinationGooglePlacesSearch() {
     }
 
     window.open(
-        "https://www.google.com/maps/search/?api=1&query=" +
+        "https://www.google.com/search?q=" +
             encodeURIComponent(query),
         "_blank"
     );
