@@ -291,6 +291,143 @@ function showInsideDestinationRecall(question) {
 `;
 }
 
+function appendDestinationGuidanceText(existingValue, newValue) {
+
+    const existing =
+        String(existingValue || "").trim();
+
+    const value =
+        String(newValue || "").trim();
+
+    if (!value) {
+        return existing;
+    }
+
+    if (
+        existing &&
+        existing.toLowerCase().includes(value.toLowerCase())
+    ) {
+        return existing;
+    }
+
+    return [
+        existing,
+        value
+    ].filter(Boolean).join("\n");
+}
+
+function extractNavigationClueDetails(clue) {
+
+    const text =
+        String(clue || "").toLowerCase();
+
+    const details = {
+        destinationInsideNotes: clue,
+        destinationDirectoryNote: clue
+    };
+
+    const entranceMatch =
+        clue.match(/\b(?:use|enter through|go through|take)\s+(?:the\s+)?([^,.!?]*entrance)\b/i) ||
+        clue.match(/\b((?:north|south|east|west|main|front|back|side)\s+entrance)\b/i);
+
+    if (entranceMatch) {
+        details.destinationEntrance =
+            entranceMatch[1].trim();
+    }
+
+    const floorMatch =
+        clue.match(/\b(?:to|on)\s+(?:the\s+)?([a-z0-9-]+\s+floor)\b/i) ||
+        clue.match(/\b((?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|\d+(?:st|nd|rd|th)?)\s+floor)\b/i);
+
+    if (floorMatch) {
+        details.destinationFloor =
+            floorMatch[1].trim();
+    }
+
+    const roomMatch =
+        clue.match(/\b((?:room|suite)\s+[a-z0-9-]+)\b/i);
+
+    if (roomMatch) {
+        details.destinationRoomSuite =
+            roomMatch[1].trim();
+    }
+
+    if (
+        text.includes("elevator") ||
+        text.includes("stairs") ||
+        text.includes("hallway") ||
+        text.includes("fountain") ||
+        text.includes("library") ||
+        text.includes("desk") ||
+        text.includes("office")
+    ) {
+        details.destinationInsideNotes =
+            clue;
+    }
+
+    return details;
+}
+
+function saveNavigationClueToDestinationGuidance(clue) {
+
+    if (!activeJourney) {
+        return false;
+    }
+
+    const details =
+        extractNavigationClueDetails(clue);
+
+    activeJourney.destinationInsideNotes =
+        appendDestinationGuidanceText(
+            activeJourney.destinationInsideNotes,
+            details.destinationInsideNotes
+        );
+
+    activeJourney.destinationDirectoryNote =
+        appendDestinationGuidanceText(
+            activeJourney.destinationDirectoryNote,
+            details.destinationDirectoryNote
+        );
+
+    activeJourney.arrivalTips =
+        appendDestinationGuidanceText(
+            activeJourney.arrivalTips,
+            clue
+        );
+
+    if (details.destinationEntrance) {
+        activeJourney.destinationEntrance =
+            details.destinationEntrance;
+    }
+
+    if (details.destinationFloor) {
+        activeJourney.destinationFloor =
+            details.destinationFloor;
+    }
+
+    if (details.destinationRoomSuite) {
+        activeJourney.destinationRoomSuite =
+            details.destinationRoomSuite;
+    }
+
+    activeJourney.timeline =
+        activeJourney.timeline || [];
+
+    activeJourney.timeline.push(
+        "Destination Guidance Saved: " +
+        clue
+    );
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+
+    return true;
+}
+
 function isArrivalIntent(question) {
 
     const text =
@@ -1083,6 +1220,11 @@ Ready to save?
 
             isInstructionPhrase(lowerQuestion) ||
 
+            (
+                typeof isNavigationCluePhrase === "function" &&
+                isNavigationCluePhrase(lowerQuestion)
+            ) ||
+
             isNotePhrase(lowerQuestion) ||
 
             isMedicationPhrase(lowerQuestion) ||
@@ -1285,6 +1427,11 @@ Ready to save?
             !questionInfo.mentionsParking &&
             !isParkingMemoryCommand(noteQuestion) &&
             !isAppointmentPhrase(noteQuestion) &&
+            !(
+                typeof isNavigationCluePhrase === "function" &&
+                isNavigationCluePhrase(noteQuestion)
+            ) &&
+            !isDirectoryPhrase(noteQuestion) &&
             !isInstructionPhrase(noteQuestion) &&
             !isMedicationPhrase(noteQuestion) &&
             !isQuestionPhrase(noteQuestion) &&
@@ -1311,6 +1458,11 @@ Ready to save?
             isAppointmentPhrase(noteQuestion) ||
 
             isInstructionPhrase(noteQuestion) ||
+
+            (
+                typeof isNavigationCluePhrase === "function" &&
+                isNavigationCluePhrase(noteQuestion)
+            ) ||
 
             isMedicationPhrase(noteQuestion) ||
 
@@ -1547,6 +1699,36 @@ Ready to save?
     <br><br>
 
     I'll remember that for this journey.
+</div>
+`;
+
+            return;
+        }
+
+        // ========================================
+        // DESTINATION NAVIGATION CLUE SAVE
+        // ========================================
+
+        if (
+            activeJourney &&
+            typeof isNavigationCluePhrase === "function" &&
+            isNavigationCluePhrase(noteQuestion)
+        ) {
+            saveNavigationClueToDestinationGuidance(
+                question
+            );
+
+            result.innerHTML = `
+<div class="card">
+    <strong>Destination Guidance Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I'll remember this for arrival and inside-destination guidance.
 </div>
 `;
 

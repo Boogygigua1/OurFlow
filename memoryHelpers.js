@@ -298,6 +298,60 @@ function isDirectoryPhrase(question) {
     );
 }
 
+function isPersonContactDirectoryPhrase(question) {
+
+    const text =
+        String(question || "")
+            .toLowerCase()
+            .replace(/[?.!,]+$/g, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    return (
+        /\breception(?:ist)?s?\b/.test(text) ||
+        /\bstaff\b.*\b(name|phone|email|contact)\b/.test(text) ||
+        /\b(name|phone|email|contact)\b.*\bstaff\b/.test(text) ||
+        /\b(phone|email|contact)\b/.test(text) ||
+        /\bname is\b/.test(text) ||
+        /\bis the receptionist\b/.test(text)
+    );
+}
+
+function isNavigationCluePhrase(question) {
+
+    const text =
+        String(question || "")
+            .toLowerCase()
+            .replace(/[?.!,]+$/g, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    if (!text || isPersonContactDirectoryPhrase(text)) {
+        return false;
+    }
+
+    const routeActionPattern =
+        /^(turn left|turn right|continue straight|go straight|walk straight|take the elevator|take elevator|take the stairs|take stairs|use the .*entrance|use .*entrance|enter through|go past|walk past|head past|turn at|go through|walk through)\b/;
+
+    const spatialPattern =
+        /\b(near|past|beside|next to|across from|behind|in front of|through|at the end of)\b/;
+
+    const destinationClueWords =
+        /\b(entrance|elevator|stairs|stairwell|floor|hallway|hall|landmark|bridge|fountain|desk|office|room|suite|lobby|library|building|door|corridor)\b/;
+
+    return (
+        routeActionPattern.test(text) ||
+        (
+            destinationClueWords.test(text) &&
+            spatialPattern.test(text)
+        ) ||
+        (
+            /\b(use|take|enter|follow|look for)\b/.test(text) &&
+            destinationClueWords.test(text)
+        )
+    );
+}
+
 function isInstructionRecall(question) {
 
     const text =
@@ -894,7 +948,8 @@ function isGeneralNoteObservation(question) {
 
     const looksLikeReceptionDirectoryInfo =
         /\breception(?:ist)?s?\b.*\bname is\b/.test(text) ||
-        /\bname is\b.*\breception(?:ist)?s?\b/.test(text);
+        /\bname is\b.*\breception(?:ist)?s?\b/.test(text) ||
+        /\bis the reception(?:ist)?\b/.test(text);
 
     if (looksLikeReceptionDirectoryInfo) {
         return false;
