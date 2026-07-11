@@ -220,6 +220,10 @@ function isInstructionPhrase(question) {
 
         text.startsWith("remind me to ") ||
 
+        text.startsWith("call ") ||
+
+        text.startsWith("ask for ") ||
+
         text.startsWith("pick up ") ||
 
         text.startsWith("pickup ") ||
@@ -349,6 +353,32 @@ function isNavigationCluePhrase(question) {
             /\b(use|take|enter|follow|look for)\b/.test(text) &&
             destinationClueWords.test(text)
         )
+    );
+}
+
+function isInsideDestinationDetailPhrase(question) {
+
+    const text =
+        String(question || "")
+            .toLowerCase()
+            .replace(/[?.!,]+$/g, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    if (!text || isNavigationCluePhrase(text)) {
+        return false;
+    }
+
+    const hasStructuredField =
+        /\b(room|suite|floor|entrance|building|department|office|contact person|phone|phone number|email|e-mail)\b/.test(text);
+
+    if (!hasStructuredField) {
+        return false;
+    }
+
+    return (
+        /\b(is|in|at|on|located|number|phone|email|e-mail)\b/.test(text) ||
+        /\b[A-Z]{2,}\s*-?\s*\d{2,4}[A-Z]?\b/i.test(question)
     );
 }
 

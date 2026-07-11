@@ -428,6 +428,155 @@ function saveNavigationClueToDestinationGuidance(clue) {
     return true;
 }
 
+function extractStructuredInsideDestinationDetails(text) {
+
+    const value =
+        String(text || "").trim();
+
+    const details = {
+        destinationInsideNotes:
+            appendDestinationGuidanceText(
+                activeJourney?.destinationInsideNotes,
+                value
+            ),
+        destinationDirectoryNote:
+            appendDestinationGuidanceText(
+                activeJourney?.destinationDirectoryNote,
+                value
+            )
+    };
+
+    const phoneMatch =
+        value.match(/\b(?:phone(?: number)?|number)\s*(?:is|:)?\s*([+()0-9][0-9().\-\s]{6,})/i) ||
+        value.match(/\b([+()0-9][0-9().\-\s]{6,})\b/);
+
+    if (phoneMatch) {
+        details.destinationPhone =
+            phoneMatch[1]
+                .trim()
+                .replace(/[.,;:!?]+$/g, "");
+    }
+
+    const emailMatch =
+        value.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i);
+
+    if (emailMatch) {
+        details.destinationEmail =
+            emailMatch[0].trim();
+    }
+
+    const floorMatch =
+        value.match(/\b(?:on|to|is on)\s+(?:the\s+)?([a-z0-9-]+\s+floor)\b/i) ||
+        value.match(/\b((?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|\d+(?:st|nd|rd|th)?)\s+floor)\b/i);
+
+    if (floorMatch) {
+        details.destinationFloor =
+            floorMatch[1].trim();
+    }
+
+    const entranceMatch =
+        value.match(/\b((?:north|south|east|west|main|front|back|side)\s+entrance)\b/i) ||
+        value.match(/\bentrance\s+(?:is|:)?\s*([^,.!?]+)/i);
+
+    if (entranceMatch) {
+        details.destinationEntrance =
+            entranceMatch[1].trim();
+    }
+
+    const roomMatch =
+        value.match(/\b((?:room|suite)\s+[a-z0-9-]+)\b/i) ||
+        value.match(/\b([A-Z]{2,}\s*-?\s*\d{2,4}[A-Z]?)\b/);
+
+    if (roomMatch) {
+        details.destinationRoomSuite =
+            roomMatch[1].trim();
+    }
+
+    const departmentOfficeMatch =
+        value.match(/\b(?:the\s+)?(.+?\b(?:department|office))\b/i);
+
+    if (departmentOfficeMatch) {
+        details.destinationDepartmentOffice =
+            departmentOfficeMatch[1]
+                .replace(/^(the)\s+/i, "")
+                .trim();
+    }
+
+    const buildingMatch =
+        value.match(/\bbuilding\s+(?:is|:)?\s*([^,.!?]+)/i);
+
+    if (buildingMatch) {
+        details.destinationBuilding =
+            buildingMatch[1].trim();
+    }
+
+    const contactMatch =
+        value.match(/\bcontact person\s+(?:is|:)?\s*([^,.!?]+)/i);
+
+    if (contactMatch) {
+        details.destinationContactPerson =
+            contactMatch[1].trim();
+    }
+
+    return details;
+}
+
+function saveStructuredInsideDestinationDetail(text) {
+
+    if (!activeJourney) {
+        return false;
+    }
+
+    const details =
+        extractStructuredInsideDestinationDetails(text);
+
+    if (typeof saveDestinationInternalDetails === "function") {
+        return saveDestinationInternalDetails(details);
+    }
+
+    activeJourney.destinationInsideNotes =
+        details.destinationInsideNotes ||
+        activeJourney.destinationInsideNotes ||
+        "";
+
+    activeJourney.destinationDirectoryNote =
+        details.destinationDirectoryNote ||
+        activeJourney.destinationDirectoryNote ||
+        "";
+
+    [
+        "destinationBuilding",
+        "destinationDepartmentOffice",
+        "destinationRoomSuite",
+        "destinationEntrance",
+        "destinationFloor",
+        "destinationContactPerson",
+        "destinationPhone",
+        "destinationEmail"
+    ].forEach(field => {
+        if (details[field]) {
+            activeJourney[field] =
+                details[field];
+        }
+    });
+
+    activeJourney.directories =
+        activeJourney.directories || [];
+
+    if (!activeJourney.directories.includes(text)) {
+        activeJourney.directories.push(text);
+    }
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox();
+
+    return true;
+}
+
 function isArrivalIntent(question) {
 
     const text =
@@ -1225,6 +1374,11 @@ Ready to save?
                 isNavigationCluePhrase(lowerQuestion)
             ) ||
 
+            (
+                typeof isInsideDestinationDetailPhrase === "function" &&
+                isInsideDestinationDetailPhrase(lowerQuestion)
+            ) ||
+
             isNotePhrase(lowerQuestion) ||
 
             isMedicationPhrase(lowerQuestion) ||
@@ -1431,7 +1585,10 @@ Ready to save?
                 typeof isNavigationCluePhrase === "function" &&
                 isNavigationCluePhrase(noteQuestion)
             ) &&
-            !isDirectoryPhrase(noteQuestion) &&
+            !(
+                typeof isInsideDestinationDetailPhrase === "function" &&
+                isInsideDestinationDetailPhrase(noteQuestion)
+            ) &&
             !isInstructionPhrase(noteQuestion) &&
             !isMedicationPhrase(noteQuestion) &&
             !isQuestionPhrase(noteQuestion) &&
@@ -1462,6 +1619,11 @@ Ready to save?
             (
                 typeof isNavigationCluePhrase === "function" &&
                 isNavigationCluePhrase(noteQuestion)
+            ) ||
+
+            (
+                typeof isInsideDestinationDetailPhrase === "function" &&
+                isInsideDestinationDetailPhrase(noteQuestion)
             ) ||
 
             isMedicationPhrase(noteQuestion) ||
@@ -1729,6 +1891,36 @@ Ready to save?
     <br><br>
 
     I'll remember this for arrival and inside-destination guidance.
+</div>
+`;
+
+            return;
+        }
+
+        // ========================================
+        // STRUCTURED INSIDE DESTINATION DETAIL SAVE
+        // ========================================
+
+        if (
+            activeJourney &&
+            typeof isInsideDestinationDetailPhrase === "function" &&
+            isInsideDestinationDetailPhrase(noteQuestion)
+        ) {
+            saveStructuredInsideDestinationDetail(
+                question
+            );
+
+            result.innerHTML = `
+<div class="card">
+    <strong>Inside Destination Details Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I'll remember this as part of the destination details.
 </div>
 `;
 
