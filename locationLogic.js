@@ -2135,6 +2135,143 @@ function saveDestinationInternalDetailsFromCard() {
 `;
 }
 
+function getParkingDetailInputValue(id) {
+
+    return document.getElementById(id)?.value.trim() || "";
+}
+
+function hasParkingDetailValues(details) {
+
+    return Boolean(
+        details?.garageLot ||
+        details?.levelFloor ||
+        details?.rowSection ||
+        details?.spaceNumber ||
+        details?.entranceUsed ||
+        details?.elevatorStairwell ||
+        details?.nearbyLandmark
+    );
+}
+
+function saveParkingDetails(details) {
+
+    if (!activeJourney || !details) {
+        return false;
+    }
+
+    const cleanDetails = {
+        garageLot:
+            details.garageLot || "",
+        levelFloor:
+            details.levelFloor || "",
+        rowSection:
+            details.rowSection || "",
+        spaceNumber:
+            details.spaceNumber || "",
+        entranceUsed:
+            details.entranceUsed || "",
+        elevatorStairwell:
+            details.elevatorStairwell || "",
+        nearbyLandmark:
+            details.nearbyLandmark || ""
+    };
+
+    activeJourney.parkingDetails =
+        hasParkingDetailValues(cleanDetails)
+            ? cleanDetails
+            : {};
+
+    activeJourney.timeline =
+        activeJourney.timeline || [];
+
+    activeJourney.timeline.push(
+        "Parking Details Saved"
+    );
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    showActiveJourneyBox("journeyLocations");
+
+    return true;
+}
+
+function saveParkingDetailsFromCard() {
+
+    saveParkingDetails({
+        garageLot:
+            getParkingDetailInputValue("parkingGarageLot"),
+        levelFloor:
+            getParkingDetailInputValue("parkingLevelFloor"),
+        rowSection:
+            getParkingDetailInputValue("parkingRowSection"),
+        spaceNumber:
+            getParkingDetailInputValue("parkingSpaceNumber"),
+        entranceUsed:
+            getParkingDetailInputValue("parkingEntranceUsed"),
+        elevatorStairwell:
+            getParkingDetailInputValue("parkingElevatorStairwell"),
+        nearbyLandmark:
+            getParkingDetailInputValue("parkingNearbyLandmark")
+    });
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>🚗 Parking Details Saved</strong>
+
+    <br><br>
+
+    I saved those parking details with this journey.
+</div>
+`;
+}
+
+function showParkingDetailsCard() {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    const details =
+        activeJourney.parkingDetails || {};
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>🚗 Add Parking Details</strong>
+
+    <br><br>
+
+    <input id="parkingGarageLot" placeholder="Garage / Lot" value="${escapeDestinationPlaceHtml(details.garageLot || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="parkingLevelFloor" placeholder="Level / Floor" value="${escapeDestinationPlaceHtml(details.levelFloor || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="parkingRowSection" placeholder="Row / Section" value="${escapeDestinationPlaceHtml(details.rowSection || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="parkingSpaceNumber" placeholder="Space Number" value="${escapeDestinationPlaceHtml(details.spaceNumber || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="parkingEntranceUsed" placeholder="Entrance Used" value="${escapeDestinationPlaceHtml(details.entranceUsed || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="parkingElevatorStairwell" placeholder="Elevator / Stairwell" value="${escapeDestinationPlaceHtml(details.elevatorStairwell || "")}" style="width:90%;padding:8px;">
+    <br><br>
+    <input id="parkingNearbyLandmark" placeholder="Nearby Landmark" value="${escapeDestinationPlaceHtml(details.nearbyLandmark || "")}" style="width:90%;padding:8px;">
+
+    <br><br>
+
+    <button onclick="saveParkingDetailsFromCard()">
+        Save Parking Details
+    </button>
+
+    <br><br>
+
+    <button onclick="continueFromDestinationVerified()">
+        Continue Journey
+    </button>
+</div>
+`;
+}
+
 function showDestinationInternalDetailsCard() {
 
     document.getElementById("result").innerHTML = `

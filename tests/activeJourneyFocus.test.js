@@ -143,6 +143,10 @@ assert(
     "Active Journey should offer editing when inside destination details exist."
 );
 assert(
+    !activeJourneyHtml.includes("Add Parking Details"),
+    "Active Journey should hide parking details action when no parking is saved."
+);
+assert(
     activeJourneyHtml.includes("promptDestinationInternalDetails()"),
     "Inside destination action should reuse the existing detail card opener."
 );
@@ -163,6 +167,48 @@ assert(
     activeJourneyHtml.includes("hematology") &&
     activeJourneyHtml.includes("third floor"),
     "Inside destination department and floor should render."
+);
+
+context.activeJourney.parkingLocation =
+    "Near Bidwell Presbyterian Church";
+
+context.showActiveJourneyBox();
+assert(
+    activeJourneyHtml.includes("Add Parking Details"),
+    "Active Journey should show parking details action when parking is saved."
+);
+assert(
+    activeJourneyHtml.includes("showParkingDetailsCard()"),
+    "Parking details action should open the parking details card."
+);
+
+context.activeJourney.parkingDetails = {
+    garageLot: "Main Garage",
+    levelFloor: "Level 2",
+    rowSection: "",
+    spaceNumber: "145",
+    entranceUsed: "West entrance",
+    elevatorStairwell: "",
+    nearbyLandmark: "Blue elevator"
+};
+
+context.showActiveJourneyBox();
+assert(
+    activeJourneyHtml.includes("Edit Parking Details"),
+    "Active Journey should offer editing when parking details exist."
+);
+assert(
+    activeJourneyHtml.includes("Garage / Lot") &&
+        activeJourneyHtml.includes("Main Garage") &&
+        activeJourneyHtml.includes("Space Number") &&
+        activeJourneyHtml.includes("145") &&
+        activeJourneyHtml.includes("Nearby Landmark") &&
+        activeJourneyHtml.includes("Blue elevator"),
+    "Active Journey should display saved parking details."
+);
+assert(
+    !activeJourneyHtml.includes("Row / Section"),
+    "Active Journey should omit empty parking detail fields."
 );
 
 context.showActiveJourneyBox("notes");

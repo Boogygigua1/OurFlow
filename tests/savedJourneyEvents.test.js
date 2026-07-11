@@ -34,6 +34,16 @@ const context = {
             originalDestinationRequest: "Enloe",
             verifiedDestinationAddress: "1531 Esplanade, Chico, CA 95926",
             journeyPurpose: "Ask Megan a question",
+            parkingLocation: "Near Bidwell Presbyterian Church",
+            parkingDetails: {
+                garageLot: "Main Garage",
+                levelFloor: "Level 2",
+                rowSection: "",
+                spaceNumber: "145",
+                entranceUsed: "West entrance",
+                elevatorStairwell: "",
+                nearbyLandmark: "Blue elevator"
+            },
             startTime: "July 11, 2026, 11:01 AM",
             endTime: "Later",
             duration: 12,
@@ -214,6 +224,19 @@ assert(
         expandedHtml.includes("Arrival Guidance") &&
         expandedHtml.includes("Take the elevator on the left."),
     "Saved journey Events section should show timestamp, category, and text when available."
+);
+assert(
+    expandedHtml.includes("Garage / Lot") &&
+        expandedHtml.includes("Main Garage") &&
+        expandedHtml.includes("Space Number") &&
+        expandedHtml.includes("145") &&
+        expandedHtml.includes("Nearby Landmark") &&
+        expandedHtml.includes("Blue elevator"),
+    "Saved journey detail should display saved parking details."
+);
+assert(
+    !expandedHtml.includes("Row / Section"),
+    "Saved journey detail should omit empty parking detail fields."
 );
 
 context.toggleJourney(0, { open: false });

@@ -12,6 +12,7 @@ function createContext(options = {}) {
     const questionInput = {
         value: ""
     };
+    const inputValues = {};
 
     const context = {
         console,
@@ -126,6 +127,12 @@ function createContext(options = {}) {
                     };
                 }
 
+                if (Object.prototype.hasOwnProperty.call(inputValues, id)) {
+                    return {
+                        value: inputValues[id]
+                    };
+                }
+
                 return null;
             },
             querySelector() {
@@ -148,6 +155,9 @@ function createContext(options = {}) {
     context.__getResultHtml = () => resultHtml;
     context.__getStoredActiveJourney = () =>
         JSON.parse(storage.activeJourney || "null");
+    context.__setInputValue = (id, value) => {
+        inputValues[id] = value;
+    };
 
     vm.createContext(context);
 
@@ -682,6 +692,7 @@ function createContext(options = {}) {
         journeyPurpose: "Ask Megan a question",
         destinationAddress: "",
         verifiedDestinationAddress: "",
+        parkingLocation: "Near Bidwell Presbyterian Church",
         notes: [],
         photos: [],
         questionsForDoctor: [],
@@ -694,6 +705,69 @@ function createContext(options = {}) {
         startTime: "now"
     };
 
+    saveRestoreContext.saveParkingDetails({
+        garageLot: "Main Garage",
+        levelFloor: "Level 2",
+        rowSection: "",
+        spaceNumber: "145",
+        entranceUsed: "West entrance",
+        elevatorStairwell: "",
+        nearbyLandmark: "Blue elevator"
+    });
+
+    assert.strictEqual(
+        saveRestoreContext.activeJourney.parkingDetails.spaceNumber,
+        "145"
+    );
+
+    saveRestoreContext.showParkingDetailsCard();
+
+    assert(
+        saveRestoreContext.__getResultHtml().includes("Add Parking Details") &&
+            saveRestoreContext.__getResultHtml().includes("Main Garage"),
+        "Parking details card should open with existing values for editing."
+    );
+
+    saveRestoreContext.__setInputValue(
+        "parkingGarageLot",
+        "South Lot"
+    );
+    saveRestoreContext.__setInputValue(
+        "parkingLevelFloor",
+        "Level 3"
+    );
+    saveRestoreContext.__setInputValue(
+        "parkingRowSection",
+        ""
+    );
+    saveRestoreContext.__setInputValue(
+        "parkingSpaceNumber",
+        "210"
+    );
+    saveRestoreContext.__setInputValue(
+        "parkingEntranceUsed",
+        "Main entrance"
+    );
+    saveRestoreContext.__setInputValue(
+        "parkingElevatorStairwell",
+        "Stairwell B"
+    );
+    saveRestoreContext.__setInputValue(
+        "parkingNearbyLandmark",
+        "Blue elevator"
+    );
+
+    saveRestoreContext.saveParkingDetailsFromCard();
+
+    assert.strictEqual(
+        saveRestoreContext.activeJourney.parkingDetails.garageLot,
+        "South Lot"
+    );
+    assert.strictEqual(
+        saveRestoreContext.activeJourney.parkingDetails.spaceNumber,
+        "210"
+    );
+
     assert.strictEqual(
         saveRestoreContext.saveJourney(),
         true
@@ -703,12 +777,21 @@ function createContext(options = {}) {
             .journeyPurpose,
         "Ask Megan a question"
     );
+    assert.strictEqual(
+        JSON.parse(saveRestoreContext.localStorage.getItem("savedJourneys"))[0]
+            .parkingDetails.nearbyLandmark,
+        "Blue elevator"
+    );
 
     saveRestoreContext.restoreJourney(0);
 
     assert.strictEqual(
         saveRestoreContext.activeJourney.journeyPurpose,
         "Ask Megan a question"
+    );
+    assert.strictEqual(
+        saveRestoreContext.activeJourney.parkingDetails.garageLot,
+        "South Lot"
     );
 
     console.log("Destination UX regression passed");

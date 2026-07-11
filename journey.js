@@ -1543,6 +1543,73 @@ function getJourneyParkingAddressLine(journey) {
     return "";
 }
 
+function hasParkingDetails(journey) {
+
+    const details =
+        journey?.parkingDetails || {};
+
+    return Boolean(
+        details.garageLot ||
+        details.levelFloor ||
+        details.rowSection ||
+        details.spaceNumber ||
+        details.entranceUsed ||
+        details.elevatorStairwell ||
+        details.nearbyLandmark
+    );
+}
+
+function buildParkingDetailsRows(journey) {
+
+    const details =
+        journey?.parkingDetails || {};
+
+    return [
+        {
+            label: "Garage / Lot",
+            value: details.garageLot
+        },
+        {
+            label: "Level / Floor",
+            value: details.levelFloor
+        },
+        {
+            label: "Row / Section",
+            value: details.rowSection
+        },
+        {
+            label: "Space Number",
+            value: details.spaceNumber
+        },
+        {
+            label: "Entrance Used",
+            value: details.entranceUsed
+        },
+        {
+            label: "Elevator / Stairwell",
+            value: details.elevatorStairwell
+        },
+        {
+            label: "Nearby Landmark",
+            value: details.nearbyLandmark
+        }
+    ];
+}
+
+function buildParkingDetailsAction(journey) {
+
+    const label =
+        hasParkingDetails(journey)
+            ? "Edit Parking Details"
+            : "Add Parking Details";
+
+    return `
+<button onclick="showParkingDetailsCard()">
+    🚗 ${label}
+</button>
+`;
+}
+
 function getJourneyStartDisplay(journey) {
 
     return (
@@ -1695,6 +1762,19 @@ function buildJourneyLocationPanel(journey, includeActions = false) {
             .filter(Boolean)
             .join("<br>");
 
+    const parkingDetailsHtml =
+        buildJourneyRows(
+            buildParkingDetailsRows(journey)
+        );
+
+    const parkingMemoryValue =
+        [
+            parkingValue,
+            parkingDetailsHtml
+        ]
+            .filter(Boolean)
+            .join("<br>");
+
     const panel =
         buildJourneyPanel(
             "Journey Locations",
@@ -1705,7 +1785,7 @@ function buildJourneyLocationPanel(journey, includeActions = false) {
                 },
                 {
                     label: "Parking Memory",
-                    value: parkingValue
+                    value: parkingMemoryValue
                 }
             ],
             "journeyLocations"
@@ -1721,6 +1801,9 @@ function buildJourneyLocationPanel(journey, includeActions = false) {
 <div class="journey-secondary-actions">
     ${parkingDisplay
                 ? `<button onclick="openGoogleMapsToParkingLocation()">🚗 Return To Parking</button>`
+                : ""}
+    ${parkingDisplay
+                ? buildParkingDetailsAction(journey)
                 : ""}
     ${startDisplay
                 ? `<button onclick="openGoogleMapsToStartLocation()">🧭 Return To Start</button>`
