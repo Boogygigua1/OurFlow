@@ -476,9 +476,7 @@ function filterJourneys() {
 
         const index =
             parseInt(
-                item.querySelector("button")
-                    .getAttribute("onclick")
-                    .match(/\d+/)[0]
+                item.getAttribute("data-journey-index")
             );
 
         const journey =
@@ -584,15 +582,31 @@ ${savedJourneys.length >= JOURNEY_LIMIT
     savedJourneys.forEach((journey, index) => {
 
         html += `
-<div
+<details
+    class="saved-journey-item"
     data-journey="${journey.destination}"
-    style="
-        padding:10px;
-        border-bottom:1px solid #ddd;
-        cursor:pointer;
-    "
-    onclick="toggleJourney(${index})"
+    data-journey-index="${index}"
+    ontoggle="toggleJourney(${index}, this)"
 >
+    <summary
+        class="saved-journey-summary-row"
+        aria-label="Saved Journey Summary. Tap to view complete journey."
+    >
+        <span class="saved-journey-summary-main">
+            <span class="saved-journey-summary-title">
+                Saved Journey Summary
+            </span>
+            <span class="saved-journey-summary-hint saved-journey-hint-collapsed">
+                Tap to view complete journey
+            </span>
+            <span class="saved-journey-summary-hint saved-journey-hint-expanded">
+                Tap to collapse
+            </span>
+        </span>
+        <span class="saved-journey-chevron" aria-hidden="true"></span>
+    </summary>
+
+    <div class="saved-journey-preview">
     <strong>
         ${journey.destination}
     </strong>
@@ -626,6 +640,7 @@ Notes:
 ${journey.notes?.length || 0}
 
 <br>
+    </div>
 
     <button onclick="event.stopPropagation(); restoreJourney(${index})">
         Restore Journey
@@ -639,11 +654,11 @@ ${journey.notes?.length || 0}
 
     <div
         id="journey-${index}"
-        style="display:none; margin-top:10px;"
+        class="saved-journey-detail-slot"
     >
     </div>
 
-</div>
+</details>
 `;
     });
 
@@ -654,7 +669,7 @@ ${journey.notes?.length || 0}
     result.innerHTML = html;
 }
 
-function toggleJourney(index) {
+function toggleJourney(index, savedJourneyItem) {
 
     const details =
         document.getElementById(`journey-${index}`);
@@ -662,7 +677,19 @@ function toggleJourney(index) {
     const journey =
         savedJourneys[index];
 
-    if (details.style.display === "block") {
+    if (
+        savedJourneyItem &&
+        !savedJourneyItem.open
+    ) {
+        details.innerHTML = "";
+
+        return;
+    }
+
+    if (
+        !savedJourneyItem &&
+        details.style.display === "block"
+    ) {
 
         details.style.display = "none";
 
@@ -704,7 +731,9 @@ function toggleJourney(index) {
 </div>
 `;
 
-    details.style.display = "block";
+    if (!savedJourneyItem) {
+        details.style.display = "block";
+    }
 
     return;
 

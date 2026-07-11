@@ -110,6 +110,23 @@ assert(
     resultHtml.includes("Events:"),
     "Saved journey list should still show the event count summary."
 );
+assert(
+    resultHtml.includes("<details") &&
+        resultHtml.includes("Saved Journey Summary") &&
+        resultHtml.includes("Tap to view complete journey") &&
+        resultHtml.includes("Tap to collapse"),
+    "Saved journey list should render a native expandable summary affordance."
+);
+assert(
+    resultHtml.includes("ontoggle=\"toggleJourney(0, this)\""),
+    "Saved journey summary should reuse the existing expansion behavior."
+);
+assert(
+    resultHtml.includes("saved-journey-detail-slot") &&
+        resultHtml.indexOf("Restore Journey") >
+            resultHtml.indexOf("</summary>"),
+    "Restore/Delete controls should stay outside the summary tap target."
+);
 
 context.toggleJourney(0);
 
@@ -132,6 +149,17 @@ assert(
         expandedHtml.includes("Take the elevator on the left."),
     "Saved journey Events section should show timestamp, category, and text when available."
 );
+
+context.toggleJourney(0, { open: false });
+
+assert.strictEqual(
+    detailsElements["journey-0"].innerHTML,
+    "",
+    "Closing the native saved journey details should clear expanded content."
+);
+
+context.toggleJourney(0, { open: true });
+
 assert(
     !expandedHtml.includes("<span>Saved Journey</span>") &&
         !expandedHtml.includes("<strong>2</strong>"),
