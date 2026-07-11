@@ -452,7 +452,6 @@ if (activeJourney) {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox("journeyLocations");
 }
 
     const savedParkingNavigationHtml =
@@ -482,6 +481,14 @@ if (activeJourney) {
     <br><br>
     `
             : "";
+
+    const parkingDetailsHtml =
+        buildParkingDetailsSummaryForConfirmation();
+
+    const parkingDetailsActionLabel =
+        hasParkingDetailValues(activeJourney?.parkingDetails || {})
+            ? "Edit Parking Details"
+            : "Add Parking Details";
 
     pendingParkingLocation = "";
     pendingParkingLocationAddress = "";
@@ -514,6 +521,24 @@ if (activeJourney) {
 
     ${savedStartNavigationHtml}
 
+    ${parkingDetailsHtml
+        ? `
+    <strong>Parking Details</strong>
+    <br>
+    ${parkingDetailsHtml}
+    <br>
+    `
+        : ""}
+
+    <button onclick="
+window.parkingDetailsReturnToParkingCard = true;
+showParkingDetailsCard();
+">
+        ðŸš— ${parkingDetailsActionLabel}
+    </button>
+
+    <br><br>
+
 <button onclick="
 showActiveJourneyBox();
 
@@ -533,6 +558,165 @@ document.getElementById(
 });
 ">
     ⬅ Continue Journey
+</button>
+</div>
+`;
+}
+
+function buildParkingDetailsSummaryForConfirmation() {
+
+    const details =
+        activeJourney?.parkingDetails || {};
+
+    if (!hasParkingDetailValues(details)) {
+        return "";
+    }
+
+    return [
+        {
+            label: "Garage / Lot",
+            value: details.garageLot
+        },
+        {
+            label: "Level / Floor",
+            value: details.levelFloor
+        },
+        {
+            label: "Row / Section",
+            value: details.rowSection
+        },
+        {
+            label: "Space Number",
+            value: details.spaceNumber
+        },
+        {
+            label: "Entrance Used",
+            value: details.entranceUsed
+        },
+        {
+            label: "Elevator / Stairwell",
+            value: details.elevatorStairwell
+        },
+        {
+            label: "Nearby Landmark",
+            value: details.nearbyLandmark
+        }
+    ]
+        .filter(item => item.value)
+        .map(item => `
+    <div>
+        <strong>${item.label}:</strong>
+        ${escapeDestinationPlaceHtml(item.value)}
+    </div>
+`)
+        .join("");
+}
+
+function showParkingSavedConfirmationCard(statusMessage = "") {
+
+    const savedParkingNavigationHtml =
+        activeJourney?.verifiedParkingAddress ||
+            activeJourney?.parkingLocationAddress ||
+            activeJourney?.parkingAddress ||
+            activeJourney?.parkingGps
+            ? `
+    <button onclick="openGoogleMapsToParkingLocation()">
+        ðŸš— Return To Parking
+    </button>
+
+    <br><br>
+    `
+            : "";
+
+    const savedStartNavigationHtml =
+        activeJourney?.verifiedStartAddress ||
+            activeJourney?.startLocationAddress ||
+            activeJourney?.startAddress ||
+            activeJourney?.startGps
+            ? `
+    <button onclick="openGoogleMapsToStartLocation()">
+        Return To Start
+    </button>
+
+    <br><br>
+    `
+            : "";
+
+    const parkingDetailsHtml =
+        buildParkingDetailsSummaryForConfirmation();
+
+    const parkingDetailsActionLabel =
+        hasParkingDetailValues(activeJourney?.parkingDetails || {})
+            ? "Edit Parking Details"
+            : "Add Parking Details";
+
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <strong>ðŸš— Parking Saved</strong>
+
+    <br><br>
+
+    ${statusMessage
+        ? `${escapeDestinationPlaceHtml(statusMessage)}<br><br>`
+        : ""}
+
+    ${activeJourney?.parkingDescription ||
+        activeJourney?.parkingLocation ||
+        "Your parking location has been recorded."}
+
+    <br><br>
+
+    ${activeJourney?.parkingVerified
+            ? "Verified address saved."
+            : `
+    <button onclick="verifyParkingLocation()">
+        Add / Verify Parking Address
+    </button>
+
+    <br><br>
+    `}
+
+    ${savedParkingNavigationHtml}
+
+    ${savedStartNavigationHtml}
+
+    ${parkingDetailsHtml
+        ? `
+    <strong>Parking Details</strong>
+    <br>
+    ${parkingDetailsHtml}
+    <br>
+    `
+        : ""}
+
+    <button onclick="
+window.parkingDetailsReturnToParkingCard = true;
+showParkingDetailsCard();
+">
+        &#128663; ${parkingDetailsActionLabel}
+    </button>
+
+    <br><br>
+
+<button onclick="
+showActiveJourneyBox();
+
+document.getElementById(
+    'result'
+).innerHTML = '';
+
+document.getElementById(
+    'questionInput'
+).focus();
+
+document.getElementById(
+    'questionInput'
+).scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+});
+">
+    â¬… Continue Journey
 </button>
 </div>
 `;
@@ -2153,7 +2337,7 @@ function hasParkingDetailValues(details) {
     );
 }
 
-function saveParkingDetails(details) {
+function saveParkingDetails(details, options = {}) {
 
     if (!activeJourney || !details) {
         return false;
@@ -2193,12 +2377,17 @@ function saveParkingDetails(details) {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox("journeyLocations");
+    if (options.refreshJourney !== false) {
+        showActiveJourneyBox("journeyLocations");
+    }
 
     return true;
 }
 
 function saveParkingDetailsFromCard() {
+
+    const returnToParkingCard =
+        Boolean(window.parkingDetailsReturnToParkingCard);
 
     saveParkingDetails({
         garageLot:
@@ -2215,7 +2404,18 @@ function saveParkingDetailsFromCard() {
             getParkingDetailInputValue("parkingElevatorStairwell"),
         nearbyLandmark:
             getParkingDetailInputValue("parkingNearbyLandmark")
+    }, {
+        refreshJourney:
+            !returnToParkingCard
     });
+
+    if (returnToParkingCard) {
+        window.parkingDetailsReturnToParkingCard = false;
+        showParkingSavedConfirmationCard(
+            "Parking details saved."
+        );
+        return;
+    }
 
     document.getElementById("result").innerHTML = `
 <div class="card">
@@ -2265,7 +2465,10 @@ function showParkingDetailsCard() {
 
     <br><br>
 
-    <button onclick="continueFromDestinationVerified()">
+    <button onclick="
+window.parkingDetailsReturnToParkingCard = false;
+continueFromDestinationVerified();
+">
         Continue Journey
     </button>
 </div>

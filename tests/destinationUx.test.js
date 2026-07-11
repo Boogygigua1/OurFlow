@@ -18,6 +18,10 @@ function createContext(options = {}) {
         console,
         activeJourney: null,
         savedJourneys: [],
+        pendingParkingLocation: "",
+        pendingParkingLocationAddress: "",
+        pendingParkingGps: null,
+        pendingLocationType: "",
         pendingPhotoMemory: false,
         pendingPhotoClassification: "",
         pendingDestinationSearch: "",
@@ -153,6 +157,7 @@ function createContext(options = {}) {
         questionInput.value = value;
     };
     context.__getResultHtml = () => resultHtml;
+    context.__getActiveJourneyHtml = () => activeJourneyHtml;
     context.__getStoredActiveJourney = () =>
         JSON.parse(storage.activeJourney || "null");
     context.__setInputValue = (id, value) => {
@@ -766,6 +771,120 @@ function createContext(options = {}) {
     assert.strictEqual(
         saveRestoreContext.activeJourney.parkingDetails.spaceNumber,
         "210"
+    );
+
+    const parkingVerificationContext =
+        createContext();
+
+    parkingVerificationContext.activeJourney = {
+        destination: "Enloe",
+        notes: [],
+        photos: [],
+        questionsForDoctor: [],
+        staffInstructions: [],
+        medications: [],
+        appointments: [],
+        directories: [],
+        answers: [],
+        timeline: [],
+        startTime: "now"
+    };
+
+    parkingVerificationContext.showParkingMemoryReview(
+        "I'm parked near Bidwell Presbyterian Church"
+    );
+    parkingVerificationContext.pendingParkingLocationAddress =
+        "208 W 1st St, Chico, CA 95928";
+    parkingVerificationContext.savePendingParking();
+
+    assert(
+        parkingVerificationContext.__getResultHtml().includes(
+            "Parking Saved"
+        ) &&
+            parkingVerificationContext.__getResultHtml().includes(
+                "Add Parking Details"
+            ),
+        "Parking verification should stay on the local Parking Saved card with Add Parking Details."
+    );
+    assert.strictEqual(
+        parkingVerificationContext.__getActiveJourneyHtml(),
+        "",
+        "Parking verification should not automatically redraw Active Journey."
+    );
+
+    const localParkingCardContext =
+        createContext();
+
+    localParkingCardContext.activeJourney = {
+        destination: "Enloe",
+        parkingDescription: "208 W 1st St, Chico, CA 95928",
+        parkingLocation: "208 W 1st St, Chico, CA 95928",
+        parkingAddress: "208 W 1st St, Chico, CA 95928",
+        parkingLocationAddress: "208 W 1st St, Chico, CA 95928",
+        verifiedParkingAddress: "208 W 1st St, Chico, CA 95928",
+        parkingVerified: true,
+        parkingDetails: {},
+        notes: [],
+        photos: [],
+        questionsForDoctor: [],
+        staffInstructions: [],
+        medications: [],
+        appointments: [],
+        directories: [],
+        answers: [],
+        timeline: [],
+        startTime: "now"
+    };
+
+    localParkingCardContext.window.parkingDetailsReturnToParkingCard = true;
+    localParkingCardContext.showParkingDetailsCard();
+    localParkingCardContext.__setInputValue(
+        "parkingGarageLot",
+        "South Lot"
+    );
+    localParkingCardContext.__setInputValue(
+        "parkingLevelFloor",
+        "Level 1"
+    );
+    localParkingCardContext.__setInputValue(
+        "parkingRowSection",
+        "A"
+    );
+    localParkingCardContext.__setInputValue(
+        "parkingSpaceNumber",
+        "12"
+    );
+    localParkingCardContext.__setInputValue(
+        "parkingEntranceUsed",
+        "Main entrance"
+    );
+    localParkingCardContext.__setInputValue(
+        "parkingElevatorStairwell",
+        "Elevator 2"
+    );
+    localParkingCardContext.__setInputValue(
+        "parkingNearbyLandmark",
+        "Blue sign"
+    );
+
+    localParkingCardContext.saveParkingDetailsFromCard();
+
+    assert.strictEqual(
+        localParkingCardContext.activeJourney.parkingDetails.spaceNumber,
+        "12"
+    );
+    assert(
+        localParkingCardContext.__getResultHtml().includes("Parking Saved") &&
+            localParkingCardContext.__getResultHtml().includes(
+                "Parking Details"
+            ) &&
+            localParkingCardContext.__getResultHtml().includes("Blue sign"),
+        "Saving parking details from the confirmation card should return to the local parking card."
+    );
+    assert.strictEqual(
+        localParkingCardContext.__getActiveJourneyHtml(),
+        "",
+        "Saving parking details from the confirmation card should not refresh Active Journey."
     );
 
     assert.strictEqual(
