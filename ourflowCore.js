@@ -605,9 +605,17 @@ function getRouteDebugHtml(routeDebug) {
 `;
 }
 
+function normalizeJourneyApostrophes(value) {
+
+    return String(value || "")
+        .replace(/[\u2018\u2019]/g, "'")
+        .replace(/[\u201B\u2032\u02BC\uFF07\u0060\u00B4]/g, "'")
+        .replace(/\u00e2\u20ac[\u2122\u02dc]/g, "'");
+}
+
 function normalizeJourneyStartInput(question) {
 
-    return String(question || "")
+    return normalizeJourneyApostrophes(question)
         .toLowerCase()
         .replace(/[\u2018\u2019]/g, "'")
         .replace(/[\u201B\u2032\u02BC\uFF07\u0060\u00B4]/g, "'")
@@ -619,7 +627,7 @@ function normalizeJourneyStartInput(question) {
 
 function normalizeJourneyStartMatchText(question) {
 
-    return String(question || "")
+    return normalizeJourneyApostrophes(question)
         .replace(/[\u2018\u2019]/g, "'")
         .replace(/[\u201B\u2032\u02BC\uFF07\u0060\u00B4]/g, "'")
         .replace(/[Ã¢â‚¬â„¢Ã¢â‚¬Ëœ]/g, "'")
@@ -725,6 +733,10 @@ function isFalsePositiveJourneyStart(question, destination) {
     const blockedDestinations = [
         /^ask\b/,
         /^call\b/,
+        /^tell\b/,
+        /^bring\b/,
+        /^buy\b/,
+        /^get\b/,
         /^text\b/,
         /^email\b/,
         /^message\b/,
@@ -732,12 +744,28 @@ function isFalsePositiveJourneyStart(question, destination) {
         /^fixing\b/,
         /^work on\b/,
         /^working on\b/,
+        /^talk to\b/,
+        /^check\b/,
+        /^see whether\b/,
+        /^find out\b/,
+        /^remember\b/,
         /^think about\b/,
         /^thinking about\b/
     ];
 
     return blockedDestinations.some(pattern =>
         pattern.test(destinationText)
+    );
+}
+
+function isRejectedJourneyStartActionPhrase(question) {
+
+    const text =
+        normalizeJourneyStartInput(question);
+
+    return (
+        /^(?:i'm|im|i am)\s+going\s+to\s+(?:ask|call|tell|bring|buy|get|fix|work on|talk to|check|see whether|find out|remember)\b/.test(text) ||
+        /^(?:i'm|im|i am)\s+headed\s+toward\b/.test(text)
     );
 }
 
@@ -757,55 +785,91 @@ function detectJourneyStartIntent(question) {
         "(?:(?:i'm|im|i am)\\s+)?";
 
     const destinationPatterns = [
-        /^(?:start|begin)\s+(?:a\s+)?journey\s+to\s+(?<destination>.+)$/i,
-        /^start\s+(?:a\s+)?journey\s+(?<destination>.+)$/i,
-        /^starting\s+(?:a\s+)?(?:my\s+)?journey\s+to\s+(?<destination>.+)$/i,
-        /^starting\s+(?:a\s+)?journey\s+(?<destination>.+)$/i,
-        new RegExp(
-            "^" + personPrefix +
-            "on\\s+my\\s+way\\s+to\\s+(?<destination>.+)$",
-            "i"
-        ),
-        new RegExp(
-            "^" + personPrefix +
-            "(?:headed\\s+off|headed|heading)\\s+to\\s+(?<destination>.+)$",
-            "i"
-        ),
-        new RegExp(
-            "^" + personPrefix +
-            "off\\s+to\\s+(?<destination>.+)$",
-            "i"
-        ),
-        new RegExp(
-            "^" + personPrefix +
-            "leaving\\s+for\\s+(?<destination>.+)$",
-            "i"
-        ),
-        new RegExp(
-            "^" + personPrefix +
-            "going\\s+to\\s+(?<destination>.+)$",
-            "i"
-        ),
-        new RegExp(
-            "^" + personPrefix +
-            "(?<mode>driving|walking|biking|cycling|hiking|flying)\\s+to\\s+(?<destination>.+)$",
-            "i"
-        ),
-        new RegExp(
-            "^" + personPrefix +
-            "(?<mode>taking\\s+the\\s+bus)\\s+to\\s+(?<destination>.+)$",
-            "i"
-        ),
-        new RegExp(
-            "^" + personPrefix +
-            "(?<mode>travell?ing)\\s+to\\s+(?<destination>.+)$",
-            "i"
-        )
+        {
+            name: "explicit-journey-to",
+            pattern: /^(?:start|begin)\s+(?:a\s+)?journey\s+to\s+(?<destination>.+)$/i
+        },
+        {
+            name: "explicit-start-journey",
+            pattern: /^start\s+(?:a\s+)?journey\s+(?<destination>.+)$/i
+        },
+        {
+            name: "explicit-starting-journey-to",
+            pattern: /^starting\s+(?:a\s+)?(?:my\s+)?journey\s+to\s+(?<destination>.+)$/i
+        },
+        {
+            name: "explicit-starting-journey",
+            pattern: /^starting\s+(?:a\s+)?journey\s+(?<destination>.+)$/i
+        },
+        {
+            name: "on-my-way-to",
+            pattern: new RegExp(
+                "^" + personPrefix +
+                "on\\s+my\\s+way\\s+to\\s+(?<destination>.+)$",
+                "i"
+            )
+        },
+        {
+            name: "headed-to",
+            pattern: new RegExp(
+                "^" + personPrefix +
+                "(?:headed\\s+off|headed|heading)\\s+to\\s+(?<destination>.+)$",
+                "i"
+            )
+        },
+        {
+            name: "off-to",
+            pattern: new RegExp(
+                "^" + personPrefix +
+                "off\\s+to\\s+(?<destination>.+)$",
+                "i"
+            )
+        },
+        {
+            name: "leaving-for",
+            pattern: new RegExp(
+                "^" + personPrefix +
+                "leaving\\s+for\\s+(?<destination>.+)$",
+                "i"
+            )
+        },
+        {
+            name: "going-to",
+            pattern: new RegExp(
+                "^" + personPrefix +
+                "going\\s+to\\s+(?<destination>.+)$",
+                "i"
+            )
+        },
+        {
+            name: "travel-mode-to",
+            pattern: new RegExp(
+                "^" + personPrefix +
+                "(?<mode>driving|walking|biking|cycling|hiking|flying)\\s+to\\s+(?<destination>.+)$",
+                "i"
+            )
+        },
+        {
+            name: "bus-to",
+            pattern: new RegExp(
+                "^" + personPrefix +
+                "(?<mode>taking\\s+the\\s+bus)\\s+to\\s+(?<destination>.+)$",
+                "i"
+            )
+        },
+        {
+            name: "traveling-to",
+            pattern: new RegExp(
+                "^" + personPrefix +
+                "(?<mode>travell?ing)\\s+to\\s+(?<destination>.+)$",
+                "i"
+            )
+        }
     ];
 
-    for (const pattern of destinationPatterns) {
+    for (const entry of destinationPatterns) {
         const match =
-            matchText.match(pattern);
+            matchText.match(entry.pattern);
 
         if (!match) {
             continue;
@@ -824,6 +888,8 @@ function detectJourneyStartIntent(question) {
 
         return {
             destination,
+            matchedPattern:
+                entry.name,
             travelMode:
                 detectJourneyTravelMode(match),
             normalizedInput:
@@ -1855,7 +1921,8 @@ Ready to save?
 
         if (
             !activeJourney &&
-            looksLikeMemoryEntry
+            looksLikeMemoryEntry &&
+            !isRejectedJourneyStartActionPhrase(question)
         ) {
 
             activeJourney = {

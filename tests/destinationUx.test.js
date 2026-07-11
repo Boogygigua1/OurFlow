@@ -5,7 +5,7 @@ const assert = require("assert");
 
 const root = path.resolve(__dirname, "..");
 
-function createContext() {
+function createContext(options = {}) {
     let resultHtml = "";
     let activeJourneyHtml = "";
     const storage = {};
@@ -59,7 +59,20 @@ function createContext() {
             return false;
         },
         getArrivalHelp: async () => {},
+        buildOurFlowPayload(question) {
+            return {
+                question
+            };
+        },
         fetch: async () => {
+            if (options.allowAiFallback) {
+                return {
+                    json: async () => ({
+                        answer: "AI fallback"
+                    })
+                };
+            }
+
             throw new Error("AI fallback should not be called.");
         },
         alert(message) {
@@ -228,6 +241,83 @@ function createContext() {
         );
     });
 
+    [
+        [
+            "I\u2019m on my way to Enloe Hospital.",
+            "Enloe Hospital",
+            "",
+            "on-my-way-to"
+        ],
+        [
+            "I'm headed to Enloe Hospital.",
+            "Enloe Hospital",
+            "",
+            "headed-to"
+        ],
+        [
+            "I am off to Enloe Hospital.",
+            "Enloe Hospital",
+            "",
+            "off-to"
+        ],
+        [
+            "Hiking to Upper Bidwell Park.",
+            "Upper Bidwell Park",
+            "hiking",
+            "travel-mode-to"
+        ],
+        [
+            "I\u2019m hiking to Upper Bidwell Park.",
+            "Upper Bidwell Park",
+            "hiking",
+            "travel-mode-to"
+        ],
+        [
+            "I am hiking to Upper Bidwell Park.",
+            "Upper Bidwell Park",
+            "hiking",
+            "travel-mode-to"
+        ],
+        [
+            "I\u00e2\u20ac\u2122m hiking to Upper Bidwell Park.",
+            "Upper Bidwell Park",
+            "hiking",
+            "travel-mode-to"
+        ]
+    ].forEach(([input, destination, travelMode, matchedPattern]) => {
+        const intent =
+            detectorContext.detectJourneyStartIntent(input);
+
+        assert(
+            intent,
+            input + " should be detected by the runtime detector."
+        );
+        assert.strictEqual(intent.destination, destination);
+        assert.strictEqual(intent.travelMode, travelMode);
+        assert.strictEqual(intent.matchedPattern, matchedPattern);
+    });
+
+    [
+        "I'm going to ask Enloe Hospital a question.",
+        "I'm going to call the office.",
+        "I'm going to ask my doctor about ibuprofen.",
+        "I'm headed toward fixing the app.",
+        "I'm going to bring my transcripts.",
+        "I'm going to get coffee.",
+        "I'm going to remember my forms."
+    ].forEach(input => {
+        assert.strictEqual(
+            detectorContext.detectJourneyStartIntent(input),
+            null,
+            input + " should be rejected by the false-positive guard."
+        );
+        assert.strictEqual(
+            detectorContext.getJourneyDestinationFromInput(input),
+            "",
+            input + " should not produce a destination."
+        );
+    });
+
     const startContext =
         createContext();
 
@@ -263,6 +353,93 @@ function createContext() {
         busContext.activeJourney.travelMode,
         "transit"
     );
+
+    const browserRouteStarts = [
+        [
+            "I\u2019m on my way to Enloe Hospital.",
+            "Enloe Hospital",
+            ""
+        ],
+        [
+            "I'm headed to Enloe Hospital.",
+            "Enloe Hospital",
+            ""
+        ],
+        [
+            "I am off to Enloe Hospital.",
+            "Enloe Hospital",
+            ""
+        ],
+        [
+            "Hiking to Upper Bidwell Park.",
+            "Upper Bidwell Park",
+            "hiking"
+        ],
+        [
+            "I\u2019m hiking to Upper Bidwell Park.",
+            "Upper Bidwell Park",
+            "hiking"
+        ],
+        [
+            "I am hiking to Upper Bidwell Park.",
+            "Upper Bidwell Park",
+            "hiking"
+        ]
+    ];
+
+    for (const [input, destination, travelMode] of browserRouteStarts) {
+        const context =
+            createContext();
+
+        context.__setQuestion(input);
+
+        await context.askOurFlow();
+
+        assert.strictEqual(
+            context.activeJourney.destination,
+            destination,
+            input + " should start locally through askOurFlow()."
+        );
+        assert.strictEqual(
+            context.__getStoredActiveJourney().destination,
+            destination,
+            input + " should persist the local journey destination."
+        );
+        assert.strictEqual(
+            context.activeJourney.travelMode || "",
+            travelMode,
+            input + " should preserve explicit travel mode."
+        );
+    }
+
+    const browserRouteFalsePositives = [
+        "I'm going to ask Enloe Hospital a question.",
+        "I'm going to call the office.",
+        "I'm going to ask my doctor about ibuprofen.",
+        "I'm headed toward fixing the app."
+    ];
+
+    for (const input of browserRouteFalsePositives) {
+        const context =
+            createContext({
+                allowAiFallback: true
+            });
+
+        context.__setQuestion(input);
+
+        await context.askOurFlow();
+
+        assert.strictEqual(
+            context.activeJourney,
+            null,
+            input + " should not create an active journey."
+        );
+        assert.strictEqual(
+            context.__getStoredActiveJourney(),
+            null,
+            input + " should not persist an active journey."
+        );
+    }
 
     const activeContext =
         createContext();
