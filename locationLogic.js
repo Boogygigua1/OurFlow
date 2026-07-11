@@ -54,6 +54,8 @@ function normalizeParkingDescription(parkingText) {
         .replace(/^\s*parking location:\s*/i, "")
         .replace(/^\s*save parking:\s*/i, "")
         .replace(/^\s*my parking is:\s*/i, "")
+        .replace(/^\s*visitor parking\s*/i, "")
+        .replace(/^\s*parking\s*/i, "")
         .replace(/^\s*you'?re parked\s+i'?m parked\s*/i, "")
         .replace(/^\s*you are parked\s+i am parked\s*/i, "")
         .replace(/^\s*you'?re parked\s+im parked\s*/i, "")
@@ -61,6 +63,7 @@ function normalizeParkingDescription(parkingText) {
         .replace(/^\s*im parked\s*/i, "")
         .replace(/^\s*i am parked\s*/i, "")
         .replace(/^\s*i parked\s*/i, "")
+        .replace(/^\s*parked\s*/i, "")
         .replace(/^\s*you'?re parked\s*/i, "")
         .replace(/^\s*you are parked\s*/i, "")
         .replace(/^\s*my car is parked\s*/i, "")
@@ -461,7 +464,7 @@ if (activeJourney) {
             activeJourney?.parkingGps
             ? `
     <button onclick="openGoogleMapsToParkingLocation()">
-        🚗 Return To Parking
+        &#8617;&#65039; Return to Parking
     </button>
 
     <br><br>
@@ -534,7 +537,7 @@ if (activeJourney) {
 window.parkingDetailsReturnToParkingCard = true;
 showParkingDetailsCard();
 ">
-        ðŸš— ${parkingDetailsActionLabel}
+        &#128663; ${parkingDetailsActionLabel}
     </button>
 
     <br><br>
@@ -557,7 +560,7 @@ document.getElementById(
     block: 'center'
 });
 ">
-    ⬅ Continue Journey
+    &#10145;&#65039; Continue Journey
 </button>
 </div>
 `;
@@ -621,7 +624,7 @@ function showParkingSavedConfirmationCard(statusMessage = "") {
             activeJourney?.parkingGps
             ? `
     <button onclick="openGoogleMapsToParkingLocation()">
-        ðŸš— Return To Parking
+        &#8617;&#65039; Return to Parking
     </button>
 
     <br><br>
@@ -652,7 +655,7 @@ function showParkingSavedConfirmationCard(statusMessage = "") {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>ðŸš— Parking Saved</strong>
+    <strong>&#128663; Parking Saved</strong>
 
     <br><br>
 
@@ -716,7 +719,7 @@ document.getElementById(
     block: 'center'
 });
 ">
-    â¬… Continue Journey
+    &#10145;&#65039; Continue Journey
 </button>
 </div>
 `;

@@ -67,6 +67,10 @@ function createContext() {
             endTime: ""
         },
         savedJourneys: [],
+        pendingParkingLocation: "",
+        pendingParkingLocationAddress: "",
+        pendingParkingGps: null,
+        pendingLocationType: "",
         pendingPhotoMemory: false,
         pendingPhotoClassification: "",
         currentJourneyContextId: "test-context",
@@ -231,6 +235,35 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
     extraAssert(context);
 }
 
+async function assertParkingMemory(input, expectedText) {
+    const context = await runCase(input);
+
+    assert(
+        context.activeJourney.parkingDescription.includes(expectedText),
+        input
+    );
+    assert(
+        context.activeJourney.parkingLocation.includes(expectedText),
+        input
+    );
+    assert(
+        /Parking Saved/.test(context.__getResultHtml()),
+        input + " should save locally as parking memory."
+    );
+    assert(
+        !/AI fallback/.test(context.__getResultHtml()),
+        input + " should not reach AI fallback."
+    );
+
+    const storedJourney =
+        context.__getStoredActiveJourney();
+
+    assert(
+        storedJourney.parkingDescription.includes(expectedText),
+        input + " should persist saved parking text."
+    );
+}
+
 async function assertAiFallback(input) {
     const context = await runCase(input);
     assert(
@@ -240,6 +273,21 @@ async function assertAiFallback(input) {
     assert.strictEqual(context.activeJourney.arrivalTips, "", input);
     assert.strictEqual(context.activeJourney.notes.length, 0, input);
     assert.strictEqual(context.activeJourney.staffInstructions.length, 0, input);
+}
+
+async function assertNotParkingMemory(input) {
+    const context = await runCase(input);
+
+    assert.strictEqual(
+        context.activeJourney.parkingDescription || "",
+        "",
+        input + " should not be saved as parking memory."
+    );
+    assert.strictEqual(
+        context.activeJourney.parkingLocation || "",
+        "",
+        input + " should not be saved as parking memory."
+    );
 }
 
 (async () => {
@@ -356,7 +404,34 @@ async function assertAiFallback(input) {
     );
     await assertArrivalGuidance("The office is past the fountain.");
 
+    await assertParkingMemory(
+        "Parking across from the Diamond Hotel in Chico, CA",
+        "across from the Diamond Hotel in Chico, CA"
+    );
+    await assertParkingMemory(
+        "I'm parked across from the Diamond Hotel in Chico",
+        "across from the Diamond Hotel in Chico"
+    );
+    await assertParkingMemory(
+        "Parking near the Diamond Hotel.",
+        "near the Diamond Hotel"
+    );
+    await assertParkingMemory(
+        "Parked behind the Diamond Hotel.",
+        "behind the Diamond Hotel"
+    );
+    await assertParkingMemory(
+        "My car is next to the Diamond Hotel",
+        "next to the Diamond Hotel"
+    );
+    await assertParkingMemory(
+        "Visitor parking across from the Diamond Hotel.",
+        "across from the Diamond Hotel"
+    );
+
     await assertAiFallback("Tell me a joke.");
+    await assertNotParkingMemory("Does the Diamond Hotel have parking?");
+    await assertNotParkingMemory("How much is parking at the Diamond Hotel?");
 
     const startContext =
         createContext();

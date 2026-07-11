@@ -855,11 +855,16 @@ function isParkingMemoryCommand(question) {
             .replace(/[’‘]/g, "'")
             .trim();
 
+    const relationshipParkingStatement =
+        /^(?:visitor\s+)?parking\s+(?:across from|near|behind|next to|beside|by|in front of)\b/
+            .test(text);
+
     return (
 
         text.startsWith("parking location:") ||
         text.startsWith("save parking:") ||
         text.startsWith("my parking is:") ||
+        relationshipParkingStatement ||
 
         text.includes("i'm parked") ||
         text.includes("im parked") ||
@@ -874,6 +879,9 @@ function isParkingMemoryCommand(question) {
         text.includes("parked at") ||
         text.includes("parked across from") ||
         text.includes("parked behind") ||
+        text.includes("parked next to") ||
+        text.includes("parked beside") ||
+        text.includes("parked in front of") ||
         text.includes("parked far away") ||
         text.includes("parked on the street") ||
         text.includes("street parking") ||

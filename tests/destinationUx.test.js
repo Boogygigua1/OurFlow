@@ -803,8 +803,18 @@ function createContext(options = {}) {
         ) &&
             parkingVerificationContext.__getResultHtml().includes(
                 "Add Parking Details"
+            ) &&
+            parkingVerificationContext.__getResultHtml().includes(
+                "&#8617;&#65039; Return to Parking"
+            ) &&
+            parkingVerificationContext.__getResultHtml().includes(
+                "&#10145;&#65039; Continue Journey"
             ),
         "Parking verification should stay on the local Parking Saved card with Add Parking Details."
+    );
+    assert(
+        !/[ðÃÅâ]/.test(parkingVerificationContext.__getResultHtml()),
+        "Parking verification card should not contain mojibake."
     );
     assert.strictEqual(
         parkingVerificationContext.__getActiveJourneyHtml(),
@@ -878,14 +888,26 @@ function createContext(options = {}) {
             localParkingCardContext.__getResultHtml().includes(
                 "Parking Details"
             ) &&
-            localParkingCardContext.__getResultHtml().includes("Blue sign"),
+            localParkingCardContext.__getResultHtml().includes("Blue sign") &&
+            localParkingCardContext.__getResultHtml().includes(
+                "&#128663; Edit Parking Details"
+            ),
         "Saving parking details from the confirmation card should return to the local parking card."
+    );
+    assert(
+        !/[ðÃÅâ]/.test(localParkingCardContext.__getResultHtml()),
+        "Parking details success card should not contain mojibake."
     );
     assert.strictEqual(
         localParkingCardContext.__getActiveJourneyHtml(),
         "",
         "Saving parking details from the confirmation card should not refresh Active Journey."
     );
+
+    saveRestoreContext.activeJourney.parkingDescription =
+        "You're parked across from the Diamond Hotel in Chico, CA.";
+    saveRestoreContext.activeJourney.parkingLocation =
+        "You're parked across from the Diamond Hotel in Chico, CA.";
 
     assert.strictEqual(
         saveRestoreContext.saveJourney(),
@@ -911,6 +933,10 @@ function createContext(options = {}) {
     assert.strictEqual(
         saveRestoreContext.activeJourney.parkingDetails.garageLot,
         "South Lot"
+    );
+    assert.strictEqual(
+        saveRestoreContext.activeJourney.parkingDescription,
+        "You're parked across from the Diamond Hotel in Chico, CA."
     );
 
     console.log("Destination UX regression passed");
