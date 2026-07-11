@@ -236,6 +236,13 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
 
     await assertPeoplePlace("Amy is the receptionist.");
     await assertPeoplePlace("The receptionist's name is Anna.");
+    await assertPeoplePlace("Megan is the nurse.");
+    await assertPeoplePlace("Remember nurse Megan.");
+    await assertPeoplePlace("Nurse Megan.");
+    await assertPeoplePlace("Megan is my nurse.");
+    await assertPeoplePlace("My nurse is Megan.");
+    await assertPeoplePlace("Dr. Hood is my doctor.");
+    await assertPeoplePlace("Anna is the receptionist.");
 
     await assertInsideDestination(
         "The anthropology office is in BSS 354.",

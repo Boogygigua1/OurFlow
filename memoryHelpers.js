@@ -319,11 +319,17 @@ function isPersonContactDirectoryPhrase(question) {
             .replace(/\s+/g, " ")
             .trim();
 
+    const roleWords =
+        "(?:nurse|doctor|dr\\.?|physician|receptionist|staff|assistant)";
+
     return (
+        new RegExp("\\b" + roleWords + "\\s+[a-z][a-z.'-]*\\b").test(text) ||
+        new RegExp("\\b[a-z][a-z.'-]*\\s+is\\s+(?:my\\s+|the\\s+)?" + roleWords + "\\b").test(text) ||
+        new RegExp("\\bmy\\s+" + roleWords + "\\s+is\\s+[a-z][a-z.'-]*\\b").test(text) ||
+        new RegExp("\\bremember\\s+" + roleWords + "\\s+[a-z][a-z.'-]*\\b").test(text) ||
         /\breception(?:ist)?s?\b/.test(text) ||
         /\bstaff\b.*\b(name|phone|email|contact)\b/.test(text) ||
         /\b(name|phone|email|contact)\b.*\bstaff\b/.test(text) ||
-        /\b(phone|email|contact)\b/.test(text) ||
         /\bname is\b/.test(text) ||
         /\bis the receptionist\b/.test(text)
     );

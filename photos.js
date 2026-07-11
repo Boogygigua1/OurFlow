@@ -12,6 +12,77 @@ function getSelectedLandmarkFile(input) {
     );
 }
 
+function refreshActiveJourneyAfterPhotoChange(targetSectionKey = "photos") {
+
+    if (
+        typeof isActiveJourneyCurrentlyVisible === "function" &&
+        isActiveJourneyCurrentlyVisible()
+    ) {
+        showActiveJourneyBox(targetSectionKey);
+        return;
+    }
+
+    showActiveJourneyBox();
+}
+
+function buildLandmarkThumbnailFromData(imageData) {
+
+    return new Promise(resolve => {
+
+        if (!imageData) {
+            resolve("");
+            return;
+        }
+
+        const img =
+            new Image();
+
+        img.onload = function () {
+
+            try {
+                const canvas =
+                    document.createElement("canvas");
+
+                const ctx =
+                    canvas.getContext("2d");
+
+                const width = 100;
+
+                const scale =
+                    width / img.width;
+
+                canvas.width = width;
+
+                canvas.height =
+                    img.height * scale;
+
+                ctx.drawImage(
+                    img,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                resolve(
+                    canvas.toDataURL(
+                        "image/jpeg",
+                        0.6
+                    )
+                );
+            } catch (error) {
+                resolve(imageData);
+            }
+        };
+
+        img.onerror = function () {
+            resolve(imageData);
+        };
+
+        img.src = imageData;
+    });
+}
+
 function previewLandmarkImage(input) {
 
     const file =
@@ -25,42 +96,15 @@ function previewLandmarkImage(input) {
 
         landmarkImageData = e.target.result;
 
-        const img = new Image();
+        window.landmarkThumbnailPromise =
+            buildLandmarkThumbnailFromData(
+                e.target.result
+            ).then(thumbnail => {
+                landmarkThumbnailData =
+                    thumbnail;
 
-        img.onload = function () {
-
-            const canvas =
-                document.createElement("canvas");
-
-            const ctx =
-                canvas.getContext("2d");
-
-            const width = 100;
-
-            const scale =
-                width / img.width;
-
-            canvas.width = width;
-
-            canvas.height =
-                img.height * scale;
-
-            ctx.drawImage(
-                img,
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-
-            landmarkThumbnailData =
-                canvas.toDataURL(
-                    "image/jpeg",
-                    0.6
-                );
-        };
-
-        img.src = e.target.result;
+                return thumbnail;
+            });
 
         document.getElementById("imagePreview")
             .innerHTML = `
@@ -194,11 +238,6 @@ async function saveJourneyPhoto() {
             "Saving Photo...";
     }
 
-    console.log(
-        "ACTIVE JOURNEY BEFORE PHOTO:",
-        activeJourney
-    );
-
     if (!activeJourney) {
 
         activeJourney = {
@@ -216,10 +255,6 @@ async function saveJourneyPhoto() {
         };
 
         markActiveJourneyContext("new");
-
-        console.log(
-            "AUTO-CREATED JOURNEY FOR PHOTO"
-        );
     }
 
     if (!landmarkImageData) {
@@ -231,23 +266,24 @@ async function saveJourneyPhoto() {
         activeJourney.photos = [];
     }
 
-    console.log(
-        "IMAGE SIZE:",
-        landmarkImageData?.length
-    );
+    if (
+        !landmarkThumbnailData &&
+        window.landmarkThumbnailPromise
+    ) {
+        landmarkThumbnailData =
+            await window.landmarkThumbnailPromise;
+    }
+
+    const savedThumbnail =
+        landmarkThumbnailData ||
+        landmarkImageData;
 
     activeJourney.photos.push({
         timestamp: new Date().toLocaleString(),
         title: "",
         analysis: "",
-        thumbnail: landmarkThumbnailData
+        thumbnail: savedThumbnail
     });
-
-    console.log(
-        "THUMBNAIL LENGTH:",
-        landmarkThumbnailData.length
-    );
-    
     activeJourney.timeline.push("📷 Photo Saved");
 
     localStorage.setItem(
@@ -255,7 +291,7 @@ async function saveJourneyPhoto() {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox("photos");
+    refreshActiveJourneyAfterPhotoChange("photos");
 
     showPhotoSavedCard();
 
@@ -282,8 +318,6 @@ async function analyzeSavedJourneyPhotoLegacy() {
 </div>
 `;
 
-    console.log("STARTING PHOTO AI CALL");
-
     const response = await fetch("/api/askOurFlow", {
         method: "POST",
         headers: {
@@ -299,16 +333,7 @@ async function analyzeSavedJourneyPhotoLegacy() {
         )
     });
 
-    console.log("PHOTO RESPONSE RECEIVED");
-
     const data = await response.json();
-
-    console.log("PHOTO JSON RECEIVED", data);
-
-    console.log(
-        "PHOTO AI RESPONSE:",
-        data.answer
-    );
 
     const lastPhoto =
         activeJourney.photos[
@@ -332,7 +357,7 @@ async function analyzeSavedJourneyPhotoLegacy() {
 
     pendingPhotoMemory = true;
 
-    showActiveJourneyBox("photos");
+    refreshActiveJourneyAfterPhotoChange("photos");
 
     document.getElementById("result").innerHTML = `
 <div class="card">
@@ -403,7 +428,7 @@ function savePhotoMemory(note) {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox("photos");
+    refreshActiveJourneyAfterPhotoChange("photos");
 
     document.getElementById("result").innerHTML = `
 <div class="card">
@@ -876,7 +901,7 @@ async function analyzeSavedJourneyPhoto() {
 
         pendingPhotoMemory = true;
 
-        showActiveJourneyBox("photos");
+        refreshActiveJourneyAfterPhotoChange("photos");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -1120,3 +1145,4 @@ function savePhotoAsLocation(type) {
 `;
     }
 }
+

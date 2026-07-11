@@ -462,6 +462,94 @@ function showJourneyUpgradeBox() {
     );
 }
 
+function getSavedJourneyTitleDestination(journey) {
+
+    return (
+        journey?.originalDestinationRequest ||
+        journey?.destinationDetail ||
+        journey?.destinationName ||
+        journey?.destination ||
+        "Saved Journey"
+    );
+}
+
+function getSavedJourneyDateParts(journey) {
+
+    const date =
+        new Date(journey?.startTime || "");
+
+    if (Number.isNaN(date.getTime())) {
+        return {
+            dateLabel:
+                journey?.startTime || "Date unknown",
+            timeLabel: ""
+        };
+    }
+
+    return {
+        dateLabel:
+            date.toLocaleDateString(
+                undefined,
+                {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                }
+            ),
+        timeLabel:
+            date.toLocaleTimeString(
+                undefined,
+                {
+                    hour: "numeric",
+                    minute: "2-digit"
+                }
+            )
+    };
+}
+
+function shouldShowSavedJourneyTime(journey, index) {
+
+    const destination =
+        normalizeJourneyDisplayValue(
+            getSavedJourneyTitleDestination(journey)
+        );
+
+    const dateParts =
+        getSavedJourneyDateParts(journey);
+
+    return savedJourneys.some((otherJourney, otherIndex) => {
+
+        if (otherIndex === index) {
+            return false;
+        }
+
+        return (
+            normalizeJourneyDisplayValue(
+                getSavedJourneyTitleDestination(otherJourney)
+            ) === destination &&
+            getSavedJourneyDateParts(otherJourney).dateLabel ===
+                dateParts.dateLabel
+        );
+    });
+}
+
+function getSavedJourneyDisplayTitle(journey, index) {
+
+    const destination =
+        getSavedJourneyTitleDestination(journey);
+
+    const dateParts =
+        getSavedJourneyDateParts(journey);
+
+    const dateLabel =
+        shouldShowSavedJourneyTime(journey, index) &&
+        dateParts.timeLabel
+            ? `${dateParts.dateLabel} at ${dateParts.timeLabel}`
+            : dateParts.dateLabel;
+
+    return `${destination} — ${dateLabel}`;
+}
+
 function filterJourneys() {
 
     const search =
@@ -581,10 +669,16 @@ ${savedJourneys.length >= JOURNEY_LIMIT
 
     savedJourneys.forEach((journey, index) => {
 
+        const journeyDisplayTitle =
+            getSavedJourneyDisplayTitle(
+                journey,
+                index
+            );
+
         html += `
 <details
     class="saved-journey-item"
-    data-journey="${journey.destination}"
+    data-journey="${journeyDisplayTitle}"
     data-journey-index="${index}"
     ontoggle="toggleJourney(${index}, this)"
 >
@@ -607,6 +701,10 @@ ${savedJourneys.length >= JOURNEY_LIMIT
     </summary>
 
     <div class="saved-journey-preview">
+    <div class="saved-journey-trip-title">
+        ${journeyDisplayTitle}
+    </div>
+
     <strong>
         ${journey.destination}
     </strong>

@@ -29,7 +29,7 @@ const context = {
     savedJourneys: [
         {
             destination: "Enloe Hospital",
-            startTime: "Now",
+            startTime: "July 11, 2026, 11:01 AM",
             endTime: "Later",
             duration: 12,
             timeline: [
@@ -109,6 +109,10 @@ context.showSavedJourneys();
 assert(
     resultHtml.includes("Events:"),
     "Saved journey list should still show the event count summary."
+);
+assert(
+    resultHtml.includes("Enloe Hospital — July 11, 2026"),
+    "Saved journey list should show a clear trip title with destination and date."
 );
 assert(
     resultHtml.includes("<details") &&

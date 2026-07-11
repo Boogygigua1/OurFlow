@@ -1669,6 +1669,11 @@ Ready to save?
 
             isQuestionPhrase(lowerQuestion) ||
 
+            (
+                typeof isPersonContactDirectoryPhrase === "function" &&
+                isPersonContactDirectoryPhrase(lowerQuestion)
+            ) ||
+
             // EXPLICIT SAVE COMMANDS
 
             lowerQuestion.startsWith("save appointment:") ||
@@ -1912,6 +1917,11 @@ Ready to save?
 
             isMedicationPhrase(noteQuestion) ||
 
+            (
+                typeof isPersonContactDirectoryPhrase === "function" &&
+                isPersonContactDirectoryPhrase(noteQuestion)
+            ) ||
+
             isDirectoryPhrase(noteQuestion) ||
 
             isQuestionPhrase(noteQuestion) ||
@@ -2080,6 +2090,56 @@ Ready to save?
         // ========================================
         // QUESTION SAVE
         // ========================================        
+
+        if (
+            activeJourney &&
+            typeof isPersonContactDirectoryPhrase === "function" &&
+            isPersonContactDirectoryPhrase(noteQuestion)
+        ) {
+
+            if (
+                activeJourney.directories.includes(question)
+            ) {
+
+                result.innerHTML = `
+<div class="card">
+    <strong>🏢 Directory Already Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I already have that people or place detail.
+</div>
+`;
+
+                return;
+            }
+
+            saveJourneyItem(
+                "directories",
+                question,
+                "🏢 Directory Saved: "
+            );
+
+            result.innerHTML = `
+<div class="card">
+    <strong>🏢 People &amp; Place Detail Saved</strong>
+
+    <br><br>
+
+    ${question}
+
+    <br><br>
+
+    I'll remember this for the journey.
+</div>
+`;
+
+            return;
+        }
 
 
 
