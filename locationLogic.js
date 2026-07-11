@@ -49,11 +49,14 @@ function analyzeUserQuestion(question) {
 
 function normalizeParkingDescription(parkingText) {
 
-    return parkingText
+    return String(parkingText || "")
         .replace(/[.?!]+$/g, "")
         .replace(/^\s*parking location:\s*/i, "")
         .replace(/^\s*save parking:\s*/i, "")
         .replace(/^\s*my parking is:\s*/i, "")
+        .replace(/^\s*you'?re parked\s+i'?m parked\s*/i, "")
+        .replace(/^\s*you are parked\s+i am parked\s*/i, "")
+        .replace(/^\s*you'?re parked\s+im parked\s*/i, "")
         .replace(/^\s*i'?m parked\s*/i, "")
         .replace(/^\s*im parked\s*/i, "")
         .replace(/^\s*i am parked\s*/i, "")
@@ -86,6 +89,39 @@ function getParkingDescriptionForDisplay(parkingText) {
     return "You're parked " +
         description.replace(/^parked\s+/i, "") +
         ".";
+}
+
+function getStartingLocationDescriptionForDisplay(startText) {
+
+    if (
+        String(startText || "").trim().toLowerCase() ===
+        "current location"
+    ) {
+        return "Current location";
+    }
+
+    const description =
+        normalizeParkingDescription(startText);
+
+    if (!description) {
+        return "";
+    }
+
+    const cleanDescription =
+        description
+            .replace(/^parked\s+/i, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    if (
+        /^(near|behind|across from|next to|beside|by|in front of|on)\b/i
+            .test(cleanDescription)
+    ) {
+        return cleanDescription.charAt(0).toUpperCase() +
+            cleanDescription.slice(1);
+    }
+
+    return cleanDescription;
 }
 
 function isVagueParkingDescription(parkingText) {
@@ -141,12 +177,18 @@ function saveLocationType(type) {
 
     if (type === "start") {
 
-        activeJourney.startLocation =
+        const startLocation =
+            getStartingLocationDescriptionForDisplay(
+                pendingLocationClassification
+            ) ||
             pendingLocationClassification;
+
+        activeJourney.startLocation =
+            startLocation;
 
         activeJourney.timeline.push(
             "🧭 Starting Location Saved: " +
-            pendingLocationClassification
+            startLocation
         );
 
         saveMessage =
@@ -382,6 +424,9 @@ if (activeJourney) {
     ) {
 
         activeJourney.startLocation =
+            getStartingLocationDescriptionForDisplay(
+                pendingParkingLocation
+            ) ||
             savedParkingText;
 
         activeJourney.startLocationAddress =
@@ -2172,3 +2217,4 @@ function saveVerifiedDestinationAddress(address) {
 </div>
 `;
 }
+

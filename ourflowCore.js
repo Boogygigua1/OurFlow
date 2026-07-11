@@ -2780,12 +2780,18 @@ Ready to save?
                 .replace(/save start location:/i, "")
                 .trim();
 
+            const cleanStartLocation =
+                typeof getStartingLocationDescriptionForDisplay === "function"
+                    ? getStartingLocationDescriptionForDisplay(startLocation) ||
+                    startLocation
+                    : startLocation;
+
             activeJourney.startLocation =
-                startLocation;
+                cleanStartLocation;
 
             activeJourney.timeline.push(
                 "🧭 Starting Location Saved: " +
-                startLocation
+                cleanStartLocation
             );
 
             showActiveJourneyBox("journeyLocations");
@@ -2796,7 +2802,7 @@ Ready to save?
 
     <br><br>
 
-    ${startLocation}
+    ${cleanStartLocation}
 
     <br><br>
 
@@ -3937,3 +3943,4 @@ if (address) {
 `;
     }
 }
+

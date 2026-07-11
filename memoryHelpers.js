@@ -352,14 +352,15 @@ function isNavigationCluePhrase(question) {
         /^(turn left|turn right|continue straight|go straight|walk straight|take the elevator|take elevator|take the stairs|take stairs|use the .*entrance|use .*entrance|enter through|go past|walk past|head past|turn at|go through|walk through)\b/;
 
     const spatialPattern =
-        /\b(near|past|beside|next to|across from|behind|in front of|through|at the end of)\b/;
+        /\b(near|past|beside|next to|across from|behind|in front of|through|at the end of|on the .*floor|on .*floor)\b/;
 
     const destinationClueWords =
-        /\b(entrance|elevator|stairs|stairwell|floor|hallway|hall|landmark|bridge|fountain|desk|office|room|suite|lobby|library|building|door|corridor)\b/;
+        /\b(entrance|exit|elevator|stairs|stairwell|floor|hallway|hall|landmark|bridge|waterfall|fountain|statue|museum|mural|lobby|reception|desk|office|room|suite|library|building|sign|door|corridor)\b/;
 
     return (
         routeActionPattern.test(text) ||
         (
+            !/\b(department|phone|email|e-mail)\b/.test(text) &&
             destinationClueWords.test(text) &&
             spatialPattern.test(text)
         ) ||

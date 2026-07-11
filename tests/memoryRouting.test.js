@@ -130,6 +130,11 @@ function createContext() {
             return false;
         },
         getArrivalHelp: async () => {},
+        buildOurFlowPayload(question) {
+            return {
+                question
+            };
+        },
         fetch: async () => ({
             json: async () => ({
                 answer: "AI fallback"
@@ -224,6 +229,17 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
     assert.strictEqual(context.activeJourney.destinationDirectoryNote || "", "", input);
     assert.strictEqual(context.activeJourney.staffInstructions.length, 0, input);
     extraAssert(context);
+}
+
+async function assertAiFallback(input) {
+    const context = await runCase(input);
+    assert(
+        /AI fallback/.test(context.__getResultHtml()),
+        input + " should reach AI fallback."
+    );
+    assert.strictEqual(context.activeJourney.arrivalTips, "", input);
+    assert.strictEqual(context.activeJourney.notes.length, 0, input);
+    assert.strictEqual(context.activeJourney.staffInstructions.length, 0, input);
 }
 
 (async () => {
@@ -324,6 +340,8 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
     await assertArrivalGuidance("Turn right at the library.");
     await assertArrivalGuidance("Take the elevator on the left.");
     await assertArrivalGuidance("Need to use the elevator on the left.");
+    await assertArrivalGuidance("There's a waterfall near the entrance.");
+    await assertArrivalGuidance("There's a museum on the first floor.");
     await assertArrivalGuidance(
         "Take the elevator to the third floor.",
         context => {
@@ -337,6 +355,31 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
         }
     );
     await assertArrivalGuidance("The office is past the fountain.");
+
+    await assertAiFallback("Tell me a joke.");
+
+    const startContext =
+        createContext();
+
+    vm.runInContext(
+        "pendingLocationClassification = \"I'm parked near Bidwell Presbyterian Church\"; saveLocationType('start');",
+        startContext
+    );
+
+    assert.strictEqual(
+        startContext.activeJourney.startLocation,
+        "Near Bidwell Presbyterian Church"
+    );
+
+    const duplicateStartContext =
+        await runCase(
+            "save start location: You're parked I'm parked near Bidwell Presbyterian Church"
+        );
+
+    assert.strictEqual(
+        duplicateStartContext.activeJourney.startLocation,
+        "Near Bidwell Presbyterian Church"
+    );
 
     console.log("Memory routing regression matrix passed");
 })();
