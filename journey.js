@@ -465,10 +465,10 @@ function showJourneyUpgradeBox() {
 function getSavedJourneyTitleDestination(journey) {
 
     return (
-        journey?.originalDestinationRequest ||
-        journey?.destinationDetail ||
         journey?.destinationName ||
         journey?.destination ||
+        journey?.destinationDetail ||
+        journey?.originalDestinationRequest ||
         "Saved Journey"
     );
 }
@@ -548,6 +548,21 @@ function getSavedJourneyDisplayTitle(journey, index) {
             : dateParts.dateLabel;
 
     return `${destination} — ${dateLabel}`;
+}
+
+function getSavedJourneyDisplayDate(journey, index) {
+
+    const dateParts =
+        getSavedJourneyDateParts(journey);
+
+    if (
+        shouldShowSavedJourneyTime(journey, index) &&
+        dateParts.timeLabel
+    ) {
+        return `${dateParts.dateLabel} at ${dateParts.timeLabel}`;
+    }
+
+    return dateParts.dateLabel;
 }
 
 function filterJourneys() {
@@ -670,6 +685,17 @@ ${savedJourneys.length >= JOURNEY_LIMIT
     savedJourneys.forEach((journey, index) => {
 
         const journeyDisplayTitle =
+            getSavedJourneyTitleDestination(
+                journey
+            );
+
+        const journeyDisplayDate =
+            getSavedJourneyDisplayDate(
+                journey,
+                index
+            );
+
+        const journeySearchTitle =
             getSavedJourneyDisplayTitle(
                 journey,
                 index
@@ -678,17 +704,20 @@ ${savedJourneys.length >= JOURNEY_LIMIT
         html += `
 <details
     class="saved-journey-item"
-    data-journey="${journeyDisplayTitle}"
+    data-journey="${journeySearchTitle}"
     data-journey-index="${index}"
     ontoggle="toggleJourney(${index}, this)"
 >
     <summary
         class="saved-journey-summary-row"
-        aria-label="Saved Journey Summary. Tap to view complete journey."
+        aria-label="${journeyDisplayTitle}. ${journeyDisplayDate}. Tap to view complete journey."
     >
         <span class="saved-journey-summary-main">
             <span class="saved-journey-summary-title">
-                Saved Journey Summary
+                ${journeyDisplayTitle}
+            </span>
+            <span class="saved-journey-summary-date">
+                ${journeyDisplayDate}
             </span>
             <span class="saved-journey-summary-hint saved-journey-hint-collapsed">
                 Tap to view complete journey
@@ -701,20 +730,6 @@ ${savedJourneys.length >= JOURNEY_LIMIT
     </summary>
 
     <div class="saved-journey-preview">
-    <div class="saved-journey-trip-title">
-        ${journeyDisplayTitle}
-    </div>
-
-    <strong>
-        ${journey.destination}
-    </strong>
-
-    <br>
-
-    ${journey.startTime}
-
-    <br>
-
 Destination:
 ${journey.verifiedDestinationAddress ||
             journey.destinationAddress ||

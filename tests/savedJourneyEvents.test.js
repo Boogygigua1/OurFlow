@@ -28,7 +28,12 @@ const context = {
     activeJourney: null,
     savedJourneys: [
         {
-            destination: "Enloe Hospital",
+            destinationName: "Enloe Health Medical Center",
+            destination: "Enloe",
+            destinationDetail: "Enloe",
+            originalDestinationRequest: "Enloe",
+            verifiedDestinationAddress: "1531 Esplanade, Chico, CA 95926",
+            journeyPurpose: "Ask Megan a question",
             startTime: "July 11, 2026, 11:01 AM",
             endTime: "Later",
             duration: 12,
@@ -40,6 +45,31 @@ const context = {
                     text: "Take the elevator on the left."
                 }
             ],
+            notes: [],
+            photos: [],
+            staffInstructions: [],
+            questionsForDoctor: [],
+            medications: [],
+            appointments: [],
+            directories: []
+        },
+        {
+            destination: "Chico State",
+            destinationDetail: "Chico State",
+            startTime: "July 12, 2026, 9:30 AM",
+            timeline: [],
+            notes: [],
+            photos: [],
+            staffInstructions: [],
+            questionsForDoctor: [],
+            medications: [],
+            appointments: [],
+            directories: []
+        },
+        {
+            destination: "Legacy Clinic",
+            startTime: "",
+            timeline: [],
             notes: [],
             photos: [],
             staffInstructions: [],
@@ -74,6 +104,18 @@ const context = {
                 return getDetailsElement(id);
             }
 
+            if (id === "activeJourneyBox") {
+                return {
+                    innerHTML: "",
+                    getBoundingClientRect() {
+                        return {
+                            top: 900,
+                            bottom: 1200
+                        };
+                    }
+                };
+            }
+
             return null;
         },
         querySelector() {
@@ -106,17 +148,37 @@ vm.runInContext(
 );
 
 context.showSavedJourneys();
+
 assert(
     resultHtml.includes("Events:"),
     "Saved journey list should still show the event count summary."
 );
 assert(
-    resultHtml.includes("Enloe Hospital — July 11, 2026"),
-    "Saved journey list should show a clear trip title with destination and date."
+    resultHtml.includes("Enloe Health Medical Center") &&
+        resultHtml.includes("July 11, 2026"),
+    "Verified saved journey should show verified destination name and date."
+);
+assert(
+    !resultHtml.includes("Saved Journey Summary"),
+    "Saved journey summary should not use a generic card title."
+);
+assert(
+    resultHtml.includes("Chico State") &&
+        resultHtml.includes("July 12, 2026"),
+    "Unverified saved journey should fall back to clean destination and date."
+);
+assert(
+    resultHtml.includes("Legacy Clinic") &&
+        resultHtml.includes("Date unknown"),
+    "Older saved journeys should still render with available fields."
+);
+assert(
+    resultHtml.includes("Purpose:") &&
+        resultHtml.includes("Ask Megan a question"),
+    "Journey purpose should remain a separate preview row."
 );
 assert(
     resultHtml.includes("<details") &&
-        resultHtml.includes("Saved Journey Summary") &&
         resultHtml.includes("Tap to view complete journey") &&
         resultHtml.includes("Tap to collapse"),
     "Saved journey list should render a native expandable summary affordance."
@@ -177,6 +239,23 @@ context.toggleJourney(0);
 assert(
     !detailsElements["journey-0"].innerHTML.includes("<span>Events</span>"),
     "Saved journey Events section should be hidden when no events exist."
+);
+
+context.restoreJourney(1);
+
+assert.strictEqual(
+    context.activeJourney.destination,
+    "Chico State",
+    "Restore Journey should still restore the selected saved journey."
+);
+
+context.confirm = () => true;
+context.deleteJourney(2);
+
+assert.strictEqual(
+    context.savedJourneys.length,
+    2,
+    "Delete Journey should still remove the selected saved journey."
 );
 
 console.log("Saved Journey events expansion passed");
