@@ -144,6 +144,8 @@ function createContext() {
     context.__setQuestion = value => {
         questionInput.value = value;
     };
+    context.__getStoredActiveJourney = () =>
+        JSON.parse(storage.activeJourney || "null");
 
     vm.createContext(context);
 
@@ -230,6 +232,7 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
     await assertNotes("Parking is easier after 3 PM.");
     await assertNotes("The front entry is closed for construction.");
     await assertNotes("The front door is blocked.");
+    await assertNotes("The main entrance is blocked.");
 
     await assertPeoplePlace("Amy is the receptionist.");
     await assertPeoplePlace("The receptionist's name is Anna.");
@@ -288,6 +291,20 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
                 context.activeJourney.destinationRoomSuite || "",
                 ""
             );
+            const storedJourney =
+                context.__getStoredActiveJourney();
+            assert.strictEqual(
+                storedJourney.destinationDepartmentOffice,
+                "hematology"
+            );
+            assert.strictEqual(
+                storedJourney.destinationFloor,
+                "third floor"
+            );
+            assert.strictEqual(
+                storedJourney.destinationRoomSuite || "",
+                ""
+            );
         }
     );
 
@@ -299,6 +316,7 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
 
     await assertArrivalGuidance("Turn right at the library.");
     await assertArrivalGuidance("Take the elevator on the left.");
+    await assertArrivalGuidance("Need to use the elevator on the left.");
     await assertArrivalGuidance(
         "Take the elevator to the third floor.",
         context => {

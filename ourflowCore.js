@@ -326,7 +326,7 @@ function extractArrivalGuidanceText(value) {
     }
 
     const guidanceMatch =
-        text.match(/\b(turn left|turn right|continue straight|go straight|walk straight|take the elevator|take elevator|take the stairs|take stairs|use the [^.!?\n]*entrance|use [^.!?\n]*entrance|enter through|go past|walk past|head past|turn at|go through|walk through|follow [^.!?\n]*|look for [^.!?\n]*)\b[\s\S]*/i);
+        text.match(/\b(need to use [^.!?\n]*(?:elevator|stairs|entrance|door|hallway|hall|corridor)|use [^.!?\n]*(?:elevator|stairs|entrance|door|hallway|hall|corridor)|turn left|turn right|continue straight|go straight|walk straight|take the elevator|take elevator|take the stairs|take stairs|use the [^.!?\n]*entrance|use [^.!?\n]*entrance|enter through|go past|walk past|head past|turn at|go through|walk through|follow [^.!?\n]*|look for [^.!?\n]*)\b[\s\S]*/i);
 
     if (guidanceMatch) {
         return guidanceMatch[0]

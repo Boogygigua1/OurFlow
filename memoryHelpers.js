@@ -377,6 +377,14 @@ function isInsideDestinationDetailPhrase(question) {
         return false;
     }
 
+    const isEntranceWarning =
+        /\b(entrance|door|entry)\b/.test(text) &&
+        /\b(blocked|closed|locked|under construction|not working|out of service|hard to use|difficult to use)\b/.test(text);
+
+    if (isEntranceWarning) {
+        return false;
+    }
+
     const hasStructuredField =
         /\b(room|suite|floor|entrance|building|department|office|contact person|phone|phone number|email|e-mail)\b/.test(text);
 

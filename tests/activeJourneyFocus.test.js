@@ -45,7 +45,7 @@ const context = {
         notes: ["The fountain lights up at night."],
         verifiedDestinationAddress: "1531 Esplanade, Chico, CA",
         arrivalTips:
-            "Enloe Hospital Address: 1531 Esplanade, Chico, CA. Take the elevator on the left.",
+            "Enloe Hospital is located at 1531 Esplanade, Chico, CA 95926. Need to use the elevator on the left.",
         destinationDepartmentOffice: "hematology",
         destinationRoomSuite: "hematology department",
         destinationFloor: "third floor",
@@ -139,11 +139,11 @@ assert.strictEqual(
     "Untargeted refresh should not scroll to the top."
 );
 assert(
-    activeJourneyHtml.includes("Take the elevator on the left."),
+    activeJourneyHtml.includes("Need to use the elevator on the left."),
     "Clean arrival guidance should remain visible."
 );
 assert(
-    !activeJourneyHtml.includes("Enloe Hospital Address"),
+    !activeJourneyHtml.includes("Enloe Hospital is located"),
     "Verified address text should not appear in Arrival Guidance."
 );
 assert(
