@@ -575,6 +575,69 @@ function createContext(options = {}) {
         );
     }
 
+    const parkingFirstContext =
+        createContext();
+
+    parkingFirstContext.activeJourney = {
+        destination: "Untitled Journey",
+        destinationName: "",
+        destinationDetail: "",
+        destinationAddress: "",
+        verifiedDestinationAddress: "",
+        parkingLocation: "Across from the Diamond Hotel",
+        parkingDescription: "You're parked across from the Diamond Hotel.",
+        verifiedParkingAddress: "123 Parking St",
+        parkingDetails: {
+            garageLot: "Visitor Lot"
+        },
+        notes: [
+            "Keep parking note"
+        ],
+        photos: [],
+        questionsForDoctor: [],
+        staffInstructions: [],
+        medications: [],
+        appointments: [],
+        directories: [],
+        answers: [],
+        timeline: [
+            "Journey Started: Parking Memory"
+        ],
+        startTime: "now"
+    };
+
+    parkingFirstContext.__setQuestion(
+        "I'm headed to Chico State Anthropology Department"
+    );
+
+    await parkingFirstContext.askOurFlow();
+
+    assert.strictEqual(
+        parkingFirstContext.activeJourney.destination,
+        "Chico State Anthropology Department",
+        "Parking-first shell should accept the first real destination without warning."
+    );
+    assert.strictEqual(
+        parkingFirstContext.activeJourney.parkingLocation,
+        "Across from the Diamond Hotel"
+    );
+    assert.strictEqual(
+        parkingFirstContext.activeJourney.verifiedParkingAddress,
+        "123 Parking St"
+    );
+    assert.strictEqual(
+        parkingFirstContext.activeJourney.parkingDetails.garageLot,
+        "Visitor Lot"
+    );
+    assert(
+        !/Journey Already Active/.test(parkingFirstContext.__getResultHtml()),
+        "Parking-first shell should not show the active-journey warning."
+    );
+    assert.strictEqual(
+        parkingFirstContext.__getStoredActiveJourney().destination,
+        "Chico State Anthropology Department"
+    );
+
     const activeContext =
         createContext();
 
@@ -583,10 +646,19 @@ function createContext(options = {}) {
         destinationDetail: "Existing Journey",
         destinationAddress: "",
         verifiedDestinationAddress: "",
-        notes: [],
-        photos: [],
+        parkingLocation: "Across from the old entrance",
+        notes: [
+            "Keep this note"
+        ],
+        photos: [
+            {
+                note: "Photo note"
+            }
+        ],
         questionsForDoctor: [],
-        staffInstructions: [],
+        staffInstructions: [
+            "Bring forms"
+        ],
         medications: [],
         appointments: [],
         directories: [],
@@ -609,6 +681,85 @@ function createContext(options = {}) {
     assert(
         /Journey Already Active/.test(activeContext.__getResultHtml()),
         "Active journey guard should show a visible choice."
+    );
+    assert(
+        /continueCurrentJourneyWithDetectedDestination/.test(
+            activeContext.__getResultHtml()
+        ),
+        "Continue Current Journey should use the destination merge handler."
+    );
+    assert(
+        /requestEndJourney/.test(activeContext.__getResultHtml()),
+        "End Current Journey behavior should remain available."
+    );
+
+    activeContext.continueCurrentJourneyWithDetectedDestination();
+
+    assert.strictEqual(
+        activeContext.activeJourney.destination,
+        "Enloe Hospital",
+        "Continue Current Journey should update the active destination."
+    );
+    assert.strictEqual(
+        activeContext.activeJourney.destinationDetail,
+        "Enloe Hospital"
+    );
+    assert.strictEqual(
+        activeContext.activeJourney.parkingLocation,
+        "Across from the old entrance",
+        "Existing parking data should be preserved."
+    );
+    assert.deepStrictEqual(
+        activeContext.activeJourney.notes,
+        [
+            "Keep this note"
+        ]
+    );
+    assert.strictEqual(
+        activeContext.activeJourney.photos[0].note,
+        "Photo note"
+    );
+    assert.strictEqual(
+        activeContext.__getStoredActiveJourney().destination,
+        "Enloe Hospital"
+    );
+
+    const activeVerifiedContext =
+        createContext();
+
+    activeVerifiedContext.activeJourney = {
+        destination: "Verified Destination",
+        destinationDetail: "Verified Destination",
+        destinationAddress: "123 Verified St",
+        verifiedDestinationAddress: "123 Verified St",
+        notes: [],
+        photos: [],
+        questionsForDoctor: [],
+        staffInstructions: [],
+        medications: [],
+        appointments: [],
+        directories: [],
+        answers: [],
+        timeline: [],
+        startTime: "now"
+    };
+
+    activeVerifiedContext.__setQuestion(
+        "I'm headed to Chico State Anthropology Department"
+    );
+
+    await activeVerifiedContext.askOurFlow();
+
+    activeVerifiedContext.continueCurrentJourneyWithDetectedDestination();
+
+    assert.strictEqual(
+        activeVerifiedContext.activeJourney.destination,
+        "Chico State Anthropology Department"
+    );
+    assert.strictEqual(
+        activeVerifiedContext.activeJourney.verifiedDestinationAddress,
+        "123 Verified St",
+        "Continue Current Journey should not overwrite verified destination fields."
     );
 
     const verifyContext =

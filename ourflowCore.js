@@ -87,6 +87,97 @@ function showParkingRecall() {
 `;
 }
 
+function continueCurrentJourneyWithDetectedDestination() {
+
+    if (
+        !activeJourney ||
+        !window.pendingActiveJourneyDestination
+    ) {
+        showActiveJourneyBox();
+        document.getElementById("result").innerHTML = "";
+        return;
+    }
+
+    const pendingDestination =
+        window.pendingActiveJourneyDestination;
+
+    const destination =
+        String(pendingDestination.destination || "").trim();
+
+    if (!destination) {
+        showActiveJourneyBox();
+        document.getElementById("result").innerHTML = "";
+        return;
+    }
+
+    activeJourney.destination =
+        destination;
+
+    activeJourney.destinationDetail =
+        destination;
+
+    activeJourney.originalDestinationRequest =
+        activeJourney.originalDestinationRequest ||
+        destination;
+
+    if (pendingDestination.purpose) {
+        activeJourney.journeyPurpose =
+            pendingDestination.purpose;
+    }
+
+    if (pendingDestination.travelMode) {
+        activeJourney.travelMode =
+            pendingDestination.travelMode;
+    }
+
+    activeJourney.journeyStatus =
+        "traveling";
+
+    activeJourney.timeline =
+        activeJourney.timeline || [];
+
+    activeJourney.timeline.push(
+        "Destination Updated: " + destination
+    );
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    window.pendingActiveJourneyDestination = null;
+
+    showActiveJourneyBox();
+
+    document.getElementById("result").innerHTML = "";
+
+    document.getElementById("questionInput")?.focus?.();
+}
+
+function hasMeaningfulActiveJourneyDestination(journey) {
+
+    if (!journey) {
+        return false;
+    }
+
+    const destination =
+        String(journey.destination || "").trim();
+
+    const placeholderDestination =
+        !destination ||
+        destination === "Untitled Journey" ||
+        destination === "Photo Memory";
+
+    return Boolean(
+        !placeholderDestination ||
+        journey.destinationName ||
+        journey.destinationDetail ||
+        journey.destinationAddress ||
+        journey.verifiedDestinationAddress ||
+        journey.destinationPlaceId
+    );
+}
+
 function showParkingMemoryReview(parkingText) {
 
     pendingParkingLocation =
@@ -1295,8 +1386,18 @@ How should I save this?
 
             if (
                 hadActiveJourneyAtQuestionStart &&
-                journeyStartIntent
+                journeyStartIntent &&
+                hasMeaningfulActiveJourneyDestination(activeJourney)
             ) {
+                window.pendingActiveJourneyDestination = {
+                    destination:
+                        journeyStartIntent.destination,
+                    purpose:
+                        journeyStartIntent.purpose || "",
+                    travelMode:
+                        journeyStartIntent.travelMode || ""
+                };
+
                 result.innerHTML = `
 <div class="card">
     <strong>🧭 Journey Already Active</strong>
@@ -1312,7 +1413,7 @@ How should I save this?
 
     <br><br>
 
-    <button onclick="showActiveJourneyBox(); document.getElementById('result').innerHTML = '';">
+    <button onclick="continueCurrentJourneyWithDetectedDestination()">
         Continue Current Journey
     </button>
 
