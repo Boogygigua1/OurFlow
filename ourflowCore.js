@@ -629,6 +629,7 @@ function getJourneyDestinationFromInput(question) {
         /^(?:i'm|im|i am)\s+headed\s+to\s+(.+)$/i,
         /^(?:i'm|im|i am)\s+heading\s+to\s+(.+)$/i,
         /^(?:i'm|im|i am)\s+going\s+to\s+(.+)$/i,
+        /^(?:i'm|im|i am)\s+on\s+my\s+way\s+to\s+(.+)$/i,
         /^on\s+my\s+way\s+to\s+(.+)$/i,
         /^off\s+to\s+(.+)$/i,
         /^headed\s+to\s+(.+)$/i,
@@ -936,6 +937,9 @@ How should I save this?
 
                 .replace(/i'm going to /i, "")
                 .replace(/im going to /i, "")
+                .replace(/i'm on my way to /i, "")
+                .replace(/im on my way to /i, "")
+                .replace(/i am on my way to /i, "")
                 .replace(/going to /i, "")
                 .replace(/headed to /i, "")
                 .replace(/heading to /i, "")

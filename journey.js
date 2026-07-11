@@ -690,10 +690,6 @@ function toggleJourney(index) {
                     typeof journey.duration !== "undefined"
                         ? `${journey.duration || 0} minute(s)`
                         : ""
-            },
-            {
-                label: "Events",
-                value: journey.timeline?.length || ""
             }
         ]
     )}
@@ -704,12 +700,7 @@ function toggleJourney(index) {
 
     ${buildJourneyMemorySections(journey)}
 
-    ${journey.timeline?.length
-        ? buildJourneyMemorySection(
-            "Journey Events",
-            journey.timeline
-        )
-        : ""}
+    ${buildJourneyEventSection(journey.timeline)}
 </div>
 `;
 
@@ -1060,6 +1051,95 @@ function buildJourneyPanel(title, rows) {
 `;
 }
 
+function hasInsideDestinationDetails(journey) {
+
+    return Boolean(
+        journey?.destinationBuilding ||
+        journey?.destinationDepartmentOffice ||
+        journey?.destinationRoomSuite ||
+        journey?.destinationInternalLocation ||
+        journey?.destinationEntrance ||
+        journey?.destinationFloor ||
+        journey?.destinationContactPerson ||
+        journey?.destinationPhone ||
+        journey?.destinationEmail ||
+        journey?.destinationCampusZip ||
+        journey?.destinationInsideNotes ||
+        journey?.destinationDirectoryNote
+    );
+}
+
+function buildInsideDestinationAction(journey) {
+
+    const label =
+        hasInsideDestinationDetails(journey)
+            ? "Edit Inside Destination Details"
+            : "Add Inside Destination Details";
+
+    return `
+<div class="journey-secondary-actions">
+    <button onclick="promptDestinationInternalDetails()">
+        🏢 ${label}
+    </button>
+</div>
+`;
+}
+
+function buildInsideDestinationPanel(journey, includeAction = false) {
+
+    const rowsHtml =
+        buildJourneyRows([
+            {
+                label: "Building",
+                value: journey?.destinationBuilding
+            },
+            {
+                label: "Department",
+                value: journey?.destinationDepartmentOffice
+            },
+            {
+                label: "Room",
+                value: getCleanRoomSuite(journey)
+            },
+            {
+                label: "Floor",
+                value: journey?.destinationFloor
+            },
+            {
+                label: "Entrance",
+                value: journey?.destinationEntrance
+            },
+            {
+                label: "Contact",
+                value: journey?.destinationContactPerson
+            },
+            {
+                label: "Phone",
+                value: journey?.destinationPhone
+            },
+            {
+                label: "Email",
+                value: journey?.destinationEmail
+            },
+            {
+                label: "Campus ZIP",
+                value: journey?.destinationCampusZip
+            }
+        ]);
+
+    if (!rowsHtml && !includeAction) {
+        return "";
+    }
+
+    return `
+<section class="journey-panel" data-journey-section="insideDestination">
+    <h3>Inside Destination</h3>
+    ${rowsHtml}
+    ${includeAction ? buildInsideDestinationAction(journey) : ""}
+</section>
+`;
+}
+
 function getJourneySectionTarget(arrayName) {
 
     const targets = {
@@ -1402,47 +1482,9 @@ function buildJourneyDestinationPanels(journey) {
             ],
             "destination"
         ),
-        buildJourneyPanel(
-            "Inside Destination",
-            [
-                {
-                    label: "Building",
-                    value: journey?.destinationBuilding
-                },
-                {
-                    label: "Department",
-                    value: journey?.destinationDepartmentOffice
-                },
-                {
-                    label: "Room",
-                    value: getCleanRoomSuite(journey)
-                },
-                {
-                    label: "Floor",
-                    value: journey?.destinationFloor
-                },
-                {
-                    label: "Entrance",
-                    value: journey?.destinationEntrance
-                },
-                {
-                    label: "Contact",
-                    value: journey?.destinationContactPerson
-                },
-                {
-                    label: "Phone",
-                    value: journey?.destinationPhone
-                },
-                {
-                    label: "Email",
-                    value: journey?.destinationEmail
-                },
-                {
-                    label: "Campus ZIP",
-                    value: journey?.destinationCampusZip
-                }
-            ],
-            "insideDestination"
+        buildInsideDestinationPanel(
+            journey,
+            journey === activeJourney
         ),
         buildJourneyPanel(
             "Arrival Guidance",
@@ -1532,6 +1574,98 @@ function buildJourneyListItems(items) {
 </li>
 `)
         .join("");
+}
+
+function getJourneyEventParts(event) {
+
+    if (
+        event &&
+        typeof event === "object"
+    ) {
+        const text =
+            event.text ||
+            event.message ||
+            event.value ||
+            event.description ||
+            "";
+
+        return {
+            timestamp:
+                event.timestamp ||
+                event.time ||
+                event.createdAt ||
+                event.date ||
+                "",
+            type:
+                event.type ||
+                event.category ||
+                event.label ||
+                "",
+            text:
+                text ||
+                JSON.stringify(event)
+        };
+    }
+
+    const text =
+        String(event || "").trim();
+
+    const typeMatch =
+        text.match(/^([^:]{2,40}):\s*(.+)$/);
+
+    return {
+        timestamp: "",
+        type: typeMatch ? typeMatch[1].trim() : "",
+        text: typeMatch ? typeMatch[2].trim() : text
+    };
+}
+
+function buildJourneyEventItems(events) {
+
+    return events
+        .map((event, index) => {
+
+            const parts =
+                getJourneyEventParts(event);
+
+            const meta =
+                [
+                    parts.timestamp,
+                    parts.type
+                ]
+                    .filter(Boolean)
+                    .join(" • ");
+
+            return `
+<li>
+    <span>${index + 1}.</span>
+    <span>
+        ${meta ? `<strong>${meta}</strong><br>` : ""}
+        ${parts.text}
+    </span>
+</li>
+`;
+        })
+        .join("");
+}
+
+function buildJourneyEventSection(events) {
+
+    if (!events || !events.length) {
+        return "";
+    }
+
+    return `
+<details class="journey-compact-section" data-journey-section="events">
+    <summary aria-label="Events, ${events.length} item${events.length === 1 ? "" : "s"}. Tap to expand.">
+        <span>Events</span>
+        <span>${events.length}</span>
+    </summary>
+    <ol>
+        ${buildJourneyEventItems(events)}
+    </ol>
+</details>
+`;
 }
 
 function buildJourneyPhotoItems(photos) {

@@ -139,6 +139,14 @@ assert.strictEqual(
     "Untargeted refresh should not scroll to the top."
 );
 assert(
+    activeJourneyHtml.includes("Edit Inside Destination Details"),
+    "Active Journey should offer editing when inside destination details exist."
+);
+assert(
+    activeJourneyHtml.includes("promptDestinationInternalDetails()"),
+    "Inside destination action should reuse the existing detail card opener."
+);
+assert(
     activeJourneyHtml.includes("Need to use the elevator on the left."),
     "Clean arrival guidance should remain visible."
 );
@@ -174,5 +182,15 @@ assert.strictEqual(sections.notes.highlighted, true);
 context.showActiveJourneyBox("photos");
 assert.strictEqual(sections.photos.open, true);
 assert.strictEqual(sections.photos.scrolled, true);
+
+context.activeJourney.destinationDepartmentOffice = "";
+context.activeJourney.destinationFloor = "";
+context.activeJourney.destinationRoomSuite = "";
+
+context.showActiveJourneyBox();
+assert(
+    activeJourneyHtml.includes("Add Inside Destination Details"),
+    "Active Journey should offer adding inside destination details when none exist."
+);
 
 console.log("Active Journey focus behavior passed");

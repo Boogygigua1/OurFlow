@@ -2160,12 +2160,6 @@ function saveVerifiedDestinationAddress(address) {
 
     <br><br>
 
-    <button onclick="openGoogleMapsToDestinationDetails()">
-        🗺️ Navigate
-    </button>
-
-    <br><br>
-
     <button onclick="promptDestinationInternalDetails()">
         🏢 Add Inside Destination Details
     </button>
