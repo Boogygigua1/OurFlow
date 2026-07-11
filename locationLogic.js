@@ -167,7 +167,7 @@ function saveLocationType(type) {
 
     pendingLocationClassification = "";
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("journeyLocations");
 
     const hasDestination =
         activeJourney?.verifiedDestinationAddress ||
@@ -407,7 +407,7 @@ if (activeJourney) {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("journeyLocations");
 }
 
     const savedParkingNavigationHtml =
@@ -731,7 +731,7 @@ function saveInformationSearchAsDestination() {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("destination");
 
     document.getElementById("result").innerHTML = `
 <div class="card">
@@ -1883,7 +1883,7 @@ function saveManualVerifiedDestinationAddressFromCard() {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("destination");
 
     document.getElementById("result").innerHTML = "";
 
@@ -2032,80 +2032,12 @@ function saveDestinationInternalDetails(details) {
     activeJourney.directories =
         activeJourney.directories || [];
 
-    const readableDirectoryCopy =
-        [
-            activeJourney.destinationName ||
-            activeJourney.destination ||
-            "Destination",
-            activeJourney.destinationInternalLocation
-                ? "Inside destination: " +
-                activeJourney.destinationInternalLocation
-                : "",
-            activeJourney.destinationBuilding
-                ? "Building: " +
-                activeJourney.destinationBuilding
-                : "",
-            activeJourney.destinationDepartmentOffice
-                ? "Department / Office: " +
-                activeJourney.destinationDepartmentOffice
-                : "",
-            activeJourney.destinationRoomSuite
-                ? "Room / Suite: " +
-                activeJourney.destinationRoomSuite
-                : "",
-            activeJourney.destinationEntrance
-                ? "Entrance: " +
-                activeJourney.destinationEntrance
-                : "",
-            activeJourney.destinationFloor
-                ? "Floor: " +
-                activeJourney.destinationFloor
-                : "",
-            activeJourney.destinationContactPerson
-                ? "Contact: " +
-                activeJourney.destinationContactPerson
-                : "",
-            activeJourney.destinationCampusZip
-                ? "Campus ZIP: " +
-                activeJourney.destinationCampusZip
-                : "",
-            activeJourney.destinationPhone
-                ? "Phone: " +
-                activeJourney.destinationPhone
-                : "",
-            activeJourney.destinationEmail
-                ? "Email: " +
-                activeJourney.destinationEmail
-                : "",
-            activeJourney.destinationSourceUrl
-                ? "Source: " +
-                activeJourney.destinationSourceUrl
-                : "",
-            activeJourney.destinationDirectoryNote
-                ? "Note: " +
-                activeJourney.destinationDirectoryNote
-                : "",
-            activeJourney.destinationInsideNotes
-                ? "Notes: " +
-                activeJourney.destinationInsideNotes
-                : ""
-        ]
-            .filter(Boolean)
-            .join(" | ");
-
-    if (
-        readableDirectoryCopy &&
-        !activeJourney.directories.includes(readableDirectoryCopy)
-    ) {
-        activeJourney.directories.push(readableDirectoryCopy);
-    }
-
     localStorage.setItem(
         "activeJourney",
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("insideDestination");
 
     return true;
 }
@@ -2212,7 +2144,7 @@ function saveVerifiedDestinationAddress(address) {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("destination");
 
     document.getElementById("result").innerHTML = `
 <div class="card">

@@ -11,7 +11,8 @@ function showCard(title, body) {
 function saveJourneyItem(
     arrayName,
     value,
-    timelineLabel
+    timelineLabel,
+    targetSectionKey
 ) {
     activeJourney[arrayName].push(
         value
@@ -21,7 +22,14 @@ function saveJourneyItem(
         timelineLabel + value
     );
 
-    showActiveJourneyBox();
+    showActiveJourneyBox(
+        targetSectionKey ||
+        (
+            typeof getJourneySectionTarget === "function"
+                ? getJourneySectionTarget(arrayName)
+                : ""
+        )
+    );
 }
 
 function showJourneyList(

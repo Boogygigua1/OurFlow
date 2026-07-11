@@ -318,13 +318,7 @@ function appendDestinationGuidanceText(existingValue, newValue) {
 
 function extractNavigationClueDetails(clue) {
 
-    const text =
-        String(clue || "").toLowerCase();
-
-    const details = {
-        destinationInsideNotes: clue,
-        destinationDirectoryNote: clue
-    };
+    const details = {};
 
     const entranceMatch =
         clue.match(/\b(?:use|enter through|go through|take)\s+(?:the\s+)?([^,.!?]*entrance)\b/i) ||
@@ -352,19 +346,6 @@ function extractNavigationClueDetails(clue) {
             roomMatch[1].trim();
     }
 
-    if (
-        text.includes("elevator") ||
-        text.includes("stairs") ||
-        text.includes("hallway") ||
-        text.includes("fountain") ||
-        text.includes("library") ||
-        text.includes("desk") ||
-        text.includes("office")
-    ) {
-        details.destinationInsideNotes =
-            clue;
-    }
-
     return details;
 }
 
@@ -376,18 +357,6 @@ function saveNavigationClueToDestinationGuidance(clue) {
 
     const details =
         extractNavigationClueDetails(clue);
-
-    activeJourney.destinationInsideNotes =
-        appendDestinationGuidanceText(
-            activeJourney.destinationInsideNotes,
-            details.destinationInsideNotes
-        );
-
-    activeJourney.destinationDirectoryNote =
-        appendDestinationGuidanceText(
-            activeJourney.destinationDirectoryNote,
-            details.destinationDirectoryNote
-        );
 
     activeJourney.arrivalTips =
         appendDestinationGuidanceText(
@@ -423,7 +392,7 @@ function saveNavigationClueToDestinationGuidance(clue) {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("arrivalGuidance");
 
     return true;
 }
@@ -433,18 +402,7 @@ function extractStructuredInsideDestinationDetails(text) {
     const value =
         String(text || "").trim();
 
-    const details = {
-        destinationInsideNotes:
-            appendDestinationGuidanceText(
-                activeJourney?.destinationInsideNotes,
-                value
-            ),
-        destinationDirectoryNote:
-            appendDestinationGuidanceText(
-                activeJourney?.destinationDirectoryNote,
-                value
-            )
-    };
+    const details = {};
 
     const phoneMatch =
         value.match(/\b(?:phone(?: number)?|number)\s*(?:is|:)?\s*([+()0-9][0-9().\-\s]{6,})/i) ||
@@ -499,6 +457,7 @@ function extractStructuredInsideDestinationDetails(text) {
         details.destinationDepartmentOffice =
             departmentOfficeMatch[1]
                 .replace(/^(the)\s+/i, "")
+                .replace(/\s+department$/i, "")
                 .trim();
     }
 
@@ -534,16 +493,6 @@ function saveStructuredInsideDestinationDetail(text) {
         return saveDestinationInternalDetails(details);
     }
 
-    activeJourney.destinationInsideNotes =
-        details.destinationInsideNotes ||
-        activeJourney.destinationInsideNotes ||
-        "";
-
-    activeJourney.destinationDirectoryNote =
-        details.destinationDirectoryNote ||
-        activeJourney.destinationDirectoryNote ||
-        "";
-
     [
         "destinationBuilding",
         "destinationDepartmentOffice",
@@ -560,19 +509,12 @@ function saveStructuredInsideDestinationDetail(text) {
         }
     });
 
-    activeJourney.directories =
-        activeJourney.directories || [];
-
-    if (!activeJourney.directories.includes(text)) {
-        activeJourney.directories.push(text);
-    }
-
     localStorage.setItem(
         "activeJourney",
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("insideDestination");
 
     return true;
 }
@@ -764,7 +706,7 @@ async function askOurFlow() {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("photos");
 
         // REVIEW:
         // May be redundant.
@@ -1475,7 +1417,7 @@ Ready to save?
                 "Journey Started: Parking Memory"
             );
 
-            showActiveJourneyBox();
+            showActiveJourneyBox("journeyLocations");
         }
 
         // ========================================
@@ -1755,7 +1697,7 @@ Ready to save?
                 cleanDestination
             );
 
-            showActiveJourneyBox();
+            showActiveJourneyBox("destination");
 
             result.innerHTML = `
 <div class="card">
@@ -2107,7 +2049,7 @@ Ready to save?
                 doctorQuestion
             );
 
-            showActiveJourneyBox();
+            showActiveJourneyBox("questions");
 
             result.innerHTML = `
 <div class="card">
@@ -2148,7 +2090,7 @@ Ready to save?
                 medication
             );
 
-            showActiveJourneyBox();
+            showActiveJourneyBox("medications");
 
             result.innerHTML = `
 <div class="card">
@@ -2190,7 +2132,7 @@ Ready to save?
                 directory
             );
 
-            showActiveJourneyBox();
+            showActiveJourneyBox("peoplePlace");
 
             result.innerHTML = `
 <div class="card">
@@ -2340,7 +2282,7 @@ Ready to save?
                 startLocation
             );
 
-            showActiveJourneyBox();
+            showActiveJourneyBox("journeyLocations");
 
             result.innerHTML = `
 <div class="card">

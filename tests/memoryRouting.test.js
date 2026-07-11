@@ -185,6 +185,29 @@ async function assertPeoplePlace(input, extraAssert = () => {}) {
     extraAssert(context);
 }
 
+async function assertInsideDestination(input, extraAssert = () => {}) {
+    const context = await runCase(input);
+    assert.strictEqual(context.activeJourney.directories.length, 0, input);
+    assert.strictEqual(context.activeJourney.staffInstructions.length, 0, input);
+    assert.strictEqual(context.activeJourney.notes.length, 0, input);
+    assert.strictEqual(context.activeJourney.arrivalTips, "", input);
+    extraAssert(context);
+}
+
+async function assertQuestion(input) {
+    const context = await runCase(input);
+    assert.strictEqual(context.activeJourney.questionsForDoctor.length, 1, input);
+    assert.strictEqual(context.activeJourney.notes.length, 0, input);
+    assert.strictEqual(context.activeJourney.staffInstructions.length, 0, input);
+}
+
+async function assertMedication(input) {
+    const context = await runCase(input);
+    assert.strictEqual(context.activeJourney.medications.length, 1, input);
+    assert.strictEqual(context.activeJourney.notes.length, 0, input);
+    assert.strictEqual(context.activeJourney.staffInstructions.length, 0, input);
+}
+
 async function assertReminder(input) {
     const context = await runCase(input);
     assert.strictEqual(context.activeJourney.staffInstructions.length, 1, input);
@@ -195,7 +218,8 @@ async function assertReminder(input) {
 async function assertArrivalGuidance(input, extraAssert = () => {}) {
     const context = await runCase(input);
     assert(context.activeJourney.arrivalTips.includes(input), input);
-    assert(context.activeJourney.destinationInsideNotes.includes(input), input);
+    assert.strictEqual(context.activeJourney.destinationInsideNotes || "", "", input);
+    assert.strictEqual(context.activeJourney.destinationDirectoryNote || "", "", input);
     assert.strictEqual(context.activeJourney.staffInstructions.length, 0, input);
     extraAssert(context);
 }
@@ -204,9 +228,12 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
     await assertNotes("The fountain lights up at night.");
     await assertNotes("The lobby was crowded.");
     await assertNotes("Parking is easier after 3 PM.");
+    await assertNotes("The front entry is closed for construction.");
 
     await assertPeoplePlace("Amy is the receptionist.");
-    await assertPeoplePlace(
+    await assertPeoplePlace("The receptionist's name is Anna.");
+
+    await assertInsideDestination(
         "The anthropology office is in BSS 354.",
         context => {
             assert.strictEqual(
@@ -219,7 +246,7 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
             );
         }
     );
-    await assertPeoplePlace(
+    await assertInsideDestination(
         "The department phone number is 530-555-1234.",
         context => {
             assert.strictEqual(
@@ -228,10 +255,29 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
             );
         }
     );
+    await assertInsideDestination(
+        "The hematology department is on the first floor.",
+        context => {
+            assert.strictEqual(
+                context.activeJourney.destinationDepartmentOffice,
+                "hematology"
+            );
+            assert.strictEqual(
+                context.activeJourney.destinationFloor,
+                "first floor"
+            );
+            assert.strictEqual(
+                context.activeJourney.destinationRoomSuite || "",
+                ""
+            );
+        }
+    );
 
     await assertReminder("Remember to bring my transcripts.");
     await assertReminder("Call the office tomorrow.");
     await assertReminder("Ask for a receipt.");
+    await assertQuestion("Need to ask about Lanier.");
+    await assertMedication("Need to take ibuprofen.");
 
     await assertArrivalGuidance("Turn right at the library.");
     await assertArrivalGuidance(

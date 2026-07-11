@@ -255,7 +255,7 @@ async function saveJourneyPhoto() {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("photos");
 
     showPhotoSavedCard();
 
@@ -332,7 +332,7 @@ async function analyzeSavedJourneyPhotoLegacy() {
 
     pendingPhotoMemory = true;
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("photos");
 
     document.getElementById("result").innerHTML = `
 <div class="card">
@@ -403,7 +403,7 @@ function savePhotoMemory(note) {
         JSON.stringify(activeJourney)
     );
 
-    showActiveJourneyBox();
+    showActiveJourneyBox("photos");
 
     document.getElementById("result").innerHTML = `
 <div class="card">
@@ -502,7 +502,7 @@ function savePhotoClassification(type) {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("destination");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -562,7 +562,7 @@ function savePhotoClassification(type) {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("peoplePlace");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -612,7 +612,7 @@ function savePhotoAsLocationLegacy(type) {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("journeyLocations");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -642,7 +642,7 @@ function savePhotoAsLocationLegacy(type) {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("journeyLocations");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -681,7 +681,7 @@ function savePhotoAsLocationLegacy(type) {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("journeyLocations");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -714,7 +714,7 @@ function savePhotoAsLocationLegacy(type) {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("destination");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -876,7 +876,7 @@ async function analyzeSavedJourneyPhoto() {
 
         pendingPhotoMemory = true;
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("photos");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -1008,7 +1008,7 @@ function savePhotoAsLocation(type) {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("journeyLocations");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -1039,7 +1039,7 @@ function savePhotoAsLocation(type) {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("journeyLocations");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -1075,7 +1075,7 @@ function savePhotoAsLocation(type) {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("journeyLocations");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
@@ -1107,7 +1107,7 @@ function savePhotoAsLocation(type) {
             JSON.stringify(activeJourney)
         );
 
-        showActiveJourneyBox();
+        showActiveJourneyBox("destination");
 
         document.getElementById("result").innerHTML = `
 <div class="card">
