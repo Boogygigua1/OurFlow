@@ -43,6 +43,12 @@ const context = {
         destination: "Chico State",
         startTime: "Now",
         notes: ["The fountain lights up at night."],
+        verifiedDestinationAddress: "1531 Esplanade, Chico, CA",
+        arrivalTips:
+            "Enloe Hospital Address: 1531 Esplanade, Chico, CA. Take the elevator on the left.",
+        destinationDepartmentOffice: "hematology",
+        destinationRoomSuite: "hematology department",
+        destinationFloor: "third floor",
         photos: [
             {
                 note: "Bidwell Presbyterian Church"
@@ -131,6 +137,24 @@ assert.strictEqual(
     activeJourneyTopScrolls,
     0,
     "Untargeted refresh should not scroll to the top."
+);
+assert(
+    activeJourneyHtml.includes("Take the elevator on the left."),
+    "Clean arrival guidance should remain visible."
+);
+assert(
+    !activeJourneyHtml.includes("Enloe Hospital Address"),
+    "Verified address text should not appear in Arrival Guidance."
+);
+assert(
+    !activeJourneyHtml.includes("Room</span>"),
+    "Department text should not render as Room."
+);
+assert(
+    activeJourneyHtml.includes("Department") &&
+    activeJourneyHtml.includes("hematology") &&
+    activeJourneyHtml.includes("third floor"),
+    "Inside destination department and floor should render."
 );
 
 context.showActiveJourneyBox("notes");

@@ -1190,12 +1190,18 @@ function getCleanArrivalGuidance(journey) {
         getJourneyVerifiedDestination(journey);
 
     if (!guidance || !verifiedDestination) {
-        return guidance;
+        return guidance
+            .split(/\n+/)
+            .map(extractDisplayArrivalGuidance)
+            .filter(Boolean)
+            .join("\n");
     }
 
     return guidance
         .split(/\n+/)
         .map(line => line.trim())
+        .filter(Boolean)
+        .map(extractDisplayArrivalGuidance)
         .filter(Boolean)
         .filter(line => !(
             journeyDisplayAlreadyIncludesAddress(
@@ -1208,6 +1214,64 @@ function getCleanArrivalGuidance(journey) {
             )
         ))
         .join("\n");
+}
+
+function extractDisplayArrivalGuidance(value) {
+
+    const text =
+        String(value || "").trim();
+
+    if (!text) {
+        return "";
+    }
+
+    const guidanceMatch =
+        text.match(/\b(turn left|turn right|continue straight|go straight|walk straight|take the elevator|take elevator|take the stairs|take stairs|use the [^.!?\n]*entrance|use [^.!?\n]*entrance|enter through|go past|walk past|head past|turn at|go through|walk through|follow [^.!?\n]*|look for [^.!?\n]*)\b[\s\S]*/i);
+
+    if (guidanceMatch) {
+        return guidanceMatch[0]
+            .trim()
+            .replace(/^[,;:\s]+/, "");
+    }
+
+    return "";
+}
+
+function getCleanRoomSuite(journey) {
+
+    const room =
+        String(journey?.destinationRoomSuite || "").trim();
+
+    if (!room) {
+        return "";
+    }
+
+    const normalizedRoom =
+        normalizeJourneyDisplayValue(room);
+
+    const normalizedDepartment =
+        normalizeJourneyDisplayValue(
+            journey?.destinationDepartmentOffice
+        );
+
+    if (
+        normalizedDepartment &&
+        (
+            normalizedRoom === normalizedDepartment ||
+            normalizedRoom === `${normalizedDepartment} department` ||
+            normalizedRoom.includes(normalizedDepartment)
+        )
+    ) {
+        return "";
+    }
+
+    const looksLikeRoom =
+        /\b(room|suite)\s+[a-z0-9-]+\b/i.test(room) ||
+        /\b[A-Z]{2,}\s*-?\s*\d{2,4}[A-Z]?\b/.test(room);
+
+    return looksLikeRoom
+        ? room
+        : "";
 }
 
 function getJourneyParkingDisplay(journey) {
@@ -1351,7 +1415,7 @@ function buildJourneyDestinationPanels(journey) {
                 },
                 {
                     label: "Room",
-                    value: journey?.destinationRoomSuite
+                    value: getCleanRoomSuite(journey)
                 },
                 {
                     label: "Floor",

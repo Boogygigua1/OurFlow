@@ -229,6 +229,7 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
     await assertNotes("The lobby was crowded.");
     await assertNotes("Parking is easier after 3 PM.");
     await assertNotes("The front entry is closed for construction.");
+    await assertNotes("The front door is blocked.");
 
     await assertPeoplePlace("Amy is the receptionist.");
     await assertPeoplePlace("The receptionist's name is Anna.");
@@ -272,6 +273,23 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
             );
         }
     );
+    await assertInsideDestination(
+        "The hematology department is on third floor.",
+        context => {
+            assert.strictEqual(
+                context.activeJourney.destinationDepartmentOffice,
+                "hematology"
+            );
+            assert.strictEqual(
+                context.activeJourney.destinationFloor,
+                "third floor"
+            );
+            assert.strictEqual(
+                context.activeJourney.destinationRoomSuite || "",
+                ""
+            );
+        }
+    );
 
     await assertReminder("Remember to bring my transcripts.");
     await assertReminder("Call the office tomorrow.");
@@ -280,6 +298,7 @@ async function assertArrivalGuidance(input, extraAssert = () => {}) {
     await assertMedication("Need to take ibuprofen.");
 
     await assertArrivalGuidance("Turn right at the library.");
+    await assertArrivalGuidance("Take the elevator on the left.");
     await assertArrivalGuidance(
         "Take the elevator to the third floor.",
         context => {

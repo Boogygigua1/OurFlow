@@ -316,6 +316,36 @@ function appendDestinationGuidanceText(existingValue, newValue) {
     ].filter(Boolean).join("\n");
 }
 
+function extractArrivalGuidanceText(value) {
+
+    const text =
+        String(value || "").trim();
+
+    if (!text) {
+        return "";
+    }
+
+    const guidanceMatch =
+        text.match(/\b(turn left|turn right|continue straight|go straight|walk straight|take the elevator|take elevator|take the stairs|take stairs|use the [^.!?\n]*entrance|use [^.!?\n]*entrance|enter through|go past|walk past|head past|turn at|go through|walk through|follow [^.!?\n]*|look for [^.!?\n]*)\b[\s\S]*/i);
+
+    if (guidanceMatch) {
+        return guidanceMatch[0]
+            .trim()
+            .replace(/^[,;:\s]+/, "");
+    }
+
+    return "";
+}
+
+function sanitizeArrivalGuidanceText(value) {
+
+    return String(value || "")
+        .split(/\n+/)
+        .map(extractArrivalGuidanceText)
+        .filter(Boolean)
+        .join("\n");
+}
+
 function extractNavigationClueDetails(clue) {
 
     const details = {};
@@ -360,7 +390,9 @@ function saveNavigationClueToDestinationGuidance(clue) {
 
     activeJourney.arrivalTips =
         appendDestinationGuidanceText(
-            activeJourney.arrivalTips,
+            sanitizeArrivalGuidanceText(
+                activeJourney.arrivalTips
+            ),
             clue
         );
 
