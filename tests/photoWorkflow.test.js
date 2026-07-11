@@ -137,9 +137,9 @@ vm.runInContext(
         "Room 145"
     );
     assert.strictEqual(
-        activeJourneyRefreshes[0],
-        "",
-        "Photo note save should refresh Active Journey silently when it is not already visible."
+        activeJourneyRefreshes.length,
+        0,
+        "Photo note save should not refresh or scroll Active Journey."
     );
 
     context.activeJourney.photos = [];
@@ -162,6 +162,11 @@ vm.runInContext(
         /Photo Saved/.test(resultHtml) &&
             /data:image\/jpeg;base64,new-thumb/.test(resultHtml),
         "Photo saved card should show the real thumbnail."
+    );
+    assert.strictEqual(
+        activeJourneyRefreshes.length,
+        0,
+        "Photo save should keep the user on the photo confirmation screen."
     );
 
     context.activeJourney.photos = [];

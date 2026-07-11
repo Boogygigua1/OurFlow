@@ -14,15 +14,7 @@ function getSelectedLandmarkFile(input) {
 
 function refreshActiveJourneyAfterPhotoChange(targetSectionKey = "photos") {
 
-    if (
-        typeof isActiveJourneyCurrentlyVisible === "function" &&
-        isActiveJourneyCurrentlyVisible()
-    ) {
-        showActiveJourneyBox(targetSectionKey);
-        return;
-    }
-
-    showActiveJourneyBox();
+    return;
 }
 
 function buildLandmarkThumbnailFromData(imageData) {
