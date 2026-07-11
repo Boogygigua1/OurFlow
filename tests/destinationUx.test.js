@@ -22,6 +22,7 @@ function createContext(options = {}) {
         pendingDestinationSearch: "",
         currentJourneyContextId: "test-context",
         conversationHistory: [],
+        JOURNEY_LIMIT: 10,
         addConversationHistoryEntry() {},
         resetJourneySessionContext() {},
         markActiveJourneyContext() {},
@@ -318,6 +319,44 @@ function createContext(options = {}) {
         );
     });
 
+    [
+        [
+            "I'm on my way to Enloe",
+            "Enloe",
+            ""
+        ],
+        [
+            "I'm on my way to Enloe to ask Megan a question.",
+            "Enloe",
+            "Ask Megan a question"
+        ],
+        [
+            "Start a journey to Chico State for my appointment",
+            "Chico State",
+            "My appointment"
+        ],
+        [
+            "Start a journey to Avenue 9",
+            "Avenue 9",
+            ""
+        ],
+        [
+            "Going to To Go Sushi",
+            "To Go Sushi",
+            ""
+        ]
+    ].forEach(([input, destination, purpose]) => {
+        const intent =
+            detectorContext.detectJourneyStartIntent(input);
+
+        assert(
+            intent,
+            input + " should be detected as journey-start intent."
+        );
+        assert.strictEqual(intent.destination, destination);
+        assert.strictEqual(intent.purpose || "", purpose);
+    });
+
     const startContext =
         createContext();
 
@@ -334,6 +373,86 @@ function createContext(options = {}) {
     assert.strictEqual(
         startContext.__getStoredActiveJourney().destination,
         "Enloe Hospital"
+    );
+
+    const purposeContext =
+        createContext();
+
+    purposeContext.__setQuestion(
+        "I'm on my way to Enloe to ask Megan a question."
+    );
+
+    await purposeContext.askOurFlow();
+
+    assert.strictEqual(
+        purposeContext.activeJourney.destination,
+        "Enloe"
+    );
+    assert.strictEqual(
+        purposeContext.activeJourney.journeyPurpose,
+        "Ask Megan a question"
+    );
+    assert.strictEqual(
+        purposeContext.__getStoredActiveJourney().destination,
+        "Enloe"
+    );
+    assert.strictEqual(
+        purposeContext.__getStoredActiveJourney().journeyPurpose,
+        "Ask Megan a question"
+    );
+
+    const appointmentContext =
+        createContext();
+
+    appointmentContext.__setQuestion(
+        "Start a journey to Chico State for my appointment"
+    );
+
+    await appointmentContext.askOurFlow();
+
+    assert.strictEqual(
+        appointmentContext.activeJourney.destination,
+        "Chico State"
+    );
+    assert.strictEqual(
+        appointmentContext.activeJourney.journeyPurpose,
+        "My appointment"
+    );
+
+    const avenueContext =
+        createContext();
+
+    avenueContext.__setQuestion(
+        "Start a journey to Avenue 9"
+    );
+
+    await avenueContext.askOurFlow();
+
+    assert.strictEqual(
+        avenueContext.activeJourney.destination,
+        "Avenue 9"
+    );
+    assert.strictEqual(
+        avenueContext.activeJourney.journeyPurpose || "",
+        ""
+    );
+
+    const sushiContext =
+        createContext();
+
+    sushiContext.__setQuestion(
+        "Going to To Go Sushi"
+    );
+
+    await sushiContext.askOurFlow();
+
+    assert.strictEqual(
+        sushiContext.activeJourney.destination,
+        "To Go Sushi"
+    );
+    assert.strictEqual(
+        sushiContext.activeJourney.journeyPurpose || "",
+        ""
     );
 
     const busContext =
@@ -513,6 +632,83 @@ function createContext(options = {}) {
     assert(
         /Continue Journey/.test(verifiedHtml),
         "Continue Journey should remain."
+    );
+
+    const verifyPurposeContext =
+        createContext();
+
+    verifyPurposeContext.activeJourney = {
+        destination: "Enloe",
+        destinationAddress: "",
+        verifiedDestinationAddress: "",
+        journeyPurpose: "Ask Megan a question",
+        notes: [],
+        photos: [],
+        questionsForDoctor: [],
+        staffInstructions: [],
+        medications: [],
+        appointments: [],
+        directories: [],
+        timeline: [],
+        startTime: "now"
+    };
+
+    verifyPurposeContext.saveVerifiedDestinationPlace({
+        destinationName: "Enloe Medical Center",
+        destinationAddress: "1531 Esplanade, Chico, CA 95926",
+        destinationPlaceId: "place-1",
+        destinationGps: {
+            latitude: 39.74,
+            longitude: -121.85
+        },
+        googleMapsUri: "https://maps.example/enloe"
+    });
+
+    assert.strictEqual(
+        verifyPurposeContext.activeJourney.destination,
+        "Enloe Medical Center"
+    );
+    assert.strictEqual(
+        verifyPurposeContext.activeJourney.journeyPurpose,
+        "Ask Megan a question"
+    );
+
+    const saveRestoreContext =
+        createContext();
+
+    saveRestoreContext.activeJourney = {
+        destination: "Enloe",
+        destinationDetail: "Enloe",
+        journeyPurpose: "Ask Megan a question",
+        destinationAddress: "",
+        verifiedDestinationAddress: "",
+        notes: [],
+        photos: [],
+        questionsForDoctor: [],
+        staffInstructions: [],
+        medications: [],
+        appointments: [],
+        directories: [],
+        answers: [],
+        timeline: [],
+        startTime: "now"
+    };
+
+    assert.strictEqual(
+        saveRestoreContext.saveJourney(),
+        true
+    );
+    assert.strictEqual(
+        JSON.parse(saveRestoreContext.localStorage.getItem("savedJourneys"))[0]
+            .journeyPurpose,
+        "Ask Megan a question"
+    );
+
+    saveRestoreContext.restoreJourney(0);
+
+    assert.strictEqual(
+        saveRestoreContext.activeJourney.journeyPurpose,
+        "Ask Megan a question"
     );
 
     console.log("Destination UX regression passed");

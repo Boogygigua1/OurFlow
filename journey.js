@@ -715,12 +715,21 @@ ${savedJourneys.length >= JOURNEY_LIMIT
 
     <br>
 
-    Destination:
+Destination:
 ${journey.verifiedDestinationAddress ||
             journey.destinationAddress ||
             journey.destinationDetail ||
             journey.destination ||
             "Not recorded"}
+
+${journey.journeyPurpose
+            ? `
+    <br>
+
+    Purpose:
+    ${journey.journeyPurpose}
+`
+            : ""}
 
     <br>
 
@@ -1388,6 +1397,11 @@ function getJourneyVerifiedDestination(journey) {
     );
 }
 
+function getJourneyPurpose(journey) {
+
+    return String(journey?.journeyPurpose || "").trim();
+}
+
 function getCleanArrivalGuidance(journey) {
 
     const guidance =
@@ -1554,6 +1568,14 @@ function buildJourneySummary(journey) {
         <span>Destination</span>
         <strong>${getJourneyDestinationLabel(journey)}</strong>
     </div>
+    ${getJourneyPurpose(journey)
+        ? `
+    <div>
+        <span>Purpose</span>
+        <strong>${getJourneyPurpose(journey)}</strong>
+    </div>
+`
+        : ""}
     <div>
         <span>Journey Started</span>
         <strong>${journey?.startTime || "In progress"}</strong>
@@ -1601,6 +1623,10 @@ function buildJourneyDestinationPanels(journey) {
                 {
                     label: "Original request",
                     value: getJourneyOriginalDestination(journey)
+                },
+                {
+                    label: "Purpose",
+                    value: getJourneyPurpose(journey)
                 },
                 {
                     label: "Verified map address",

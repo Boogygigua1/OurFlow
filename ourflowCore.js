@@ -644,6 +644,73 @@ function extractJourneyDestination(match) {
         .trim();
 }
 
+function normalizeJourneyPurpose(value) {
+
+    const text =
+        String(value || "")
+            .replace(/[.?!]+$/g, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    if (!text) {
+        return "";
+    }
+
+    return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function splitJourneyDestinationAndPurpose(destination) {
+
+    const text =
+        String(destination || "")
+            .replace(/[.?!]+$/g, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    if (!text) {
+        return {
+            destination: "",
+            purpose: ""
+        };
+    }
+
+    const purposePatterns = [
+        /\s+to\s+(ask|see|meet|pick\s+up|drop\s+off)\b(.+)$/i,
+        /\s+for\s+((?:my\s+|an?\s+)?appointment|(?:my\s+|an?\s+)?meeting)\b(.*)$/i
+    ];
+
+    for (const pattern of purposePatterns) {
+        const match =
+            text.match(pattern);
+
+        if (!match || !match.index) {
+            continue;
+        }
+
+        const cleanDestination =
+            text.slice(0, match.index).trim();
+
+        if (!isLikelyPlaceDestination(cleanDestination)) {
+            continue;
+        }
+
+        return {
+            destination:
+                cleanDestination,
+            purpose:
+                normalizeJourneyPurpose(
+                    match[1] + (match[2] || "")
+                )
+        };
+    }
+
+    return {
+        destination:
+            text,
+        purpose: ""
+    };
+}
+
 function detectJourneyTravelMode(match) {
 
     const mode =
@@ -875,8 +942,13 @@ function detectJourneyStartIntent(question) {
             continue;
         }
 
+        const destinationParts =
+            splitJourneyDestinationAndPurpose(
+                extractJourneyDestination(match)
+            );
+
         const destination =
-            extractJourneyDestination(match);
+            destinationParts.destination;
 
         if (!isLikelyPlaceDestination(destination)) {
             continue;
@@ -888,6 +960,8 @@ function detectJourneyStartIntent(question) {
 
         return {
             destination,
+            purpose:
+                destinationParts.purpose,
             matchedPattern:
                 entry.name,
             travelMode:
@@ -996,6 +1070,9 @@ async function askOurFlow() {
 
     const journeyDestination =
         journeyStartIntent?.destination || "";
+
+    const journeyPurpose =
+        journeyStartIntent?.purpose || "";
 
     const isJourneyDestinationInput =
         Boolean(journeyDestination) ||
@@ -1125,6 +1202,8 @@ How should I save this?
 
             destinationName: "",
 
+            journeyPurpose: "",
+
             destinationAddress: "",
 
             destinationDetail: "",
@@ -1251,6 +1330,9 @@ How should I save this?
 
             let destination =
                 journeyDestination || question.trim();
+
+            const destinationPurpose =
+                journeyPurpose;
             // ========================================
             // DESTINATION JOURNEY CREATION
             // ========================================
@@ -1259,6 +1341,14 @@ How should I save this?
 
                     destination:
                         destination,
+
+                    originalDestinationRequest:
+                        journeyStartIntent
+                            ? destination
+                            : "",
+
+                    journeyPurpose:
+                        destinationPurpose,
 
                     destinationAddress:
                         looksLikeAddress ? destination : "",
@@ -1323,6 +1413,19 @@ How should I save this?
             } else {
                 activeJourney.destination =
                     destination;
+
+                activeJourney.originalDestinationRequest =
+                    activeJourney.originalDestinationRequest ||
+                    (
+                        journeyStartIntent
+                            ? destination
+                            : ""
+                    );
+
+                if (destinationPurpose) {
+                    activeJourney.journeyPurpose =
+                        destinationPurpose;
+                }
 
                 activeJourney.destinationDetail =
                     destination;
