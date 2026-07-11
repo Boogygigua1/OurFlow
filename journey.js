@@ -1762,19 +1762,6 @@ function buildJourneyLocationPanel(journey, includeActions = false) {
             .filter(Boolean)
             .join("<br>");
 
-    const parkingDetailsHtml =
-        buildJourneyRows(
-            buildParkingDetailsRows(journey)
-        );
-
-    const parkingMemoryValue =
-        [
-            parkingValue,
-            parkingDetailsHtml
-        ]
-            .filter(Boolean)
-            .join("<br>");
-
     const panel =
         buildJourneyPanel(
             "Journey Locations",
@@ -1785,8 +1772,9 @@ function buildJourneyLocationPanel(journey, includeActions = false) {
                 },
                 {
                     label: "Parking Memory",
-                    value: parkingMemoryValue
-                }
+                    value: parkingValue
+                },
+                ...buildParkingDetailsRows(journey)
             ],
             "journeyLocations"
         );

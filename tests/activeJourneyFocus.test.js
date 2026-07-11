@@ -207,6 +207,12 @@ assert(
     "Active Journey should display saved parking details."
 );
 assert(
+    /<span>Parking Memory<\/span>\s*<strong>Near Bidwell Presbyterian Church<\/strong>/.test(
+        activeJourneyHtml
+    ),
+    "Parking details should not render nested inside the Parking Memory row."
+);
+assert(
     !activeJourneyHtml.includes("Row / Section"),
     "Active Journey should omit empty parking detail fields."
 );
