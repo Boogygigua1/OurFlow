@@ -268,31 +268,34 @@ function requestEndJourney() {
 
     <br><br>
 
-    Choose how to close this journey:
+    Choose what to do with this journey:
 
     <br><br>
 
     <button onclick="saveAndEndJourney()">
-        &#128190; Save &amp; End Journey
+        &#128190; Save Journey
     </button>
 
-    <br><br>
-
-    <button onclick="saveAndKeepJourneyActive()">
-        &#128221; Save / Keep Journey Active
-    </button>
-
-    <br><br>
-
-    <button onclick="returnToJourney()">
-        &#8617;&#65039; Return to Journey
-    </button>
+    <br>
+    Ends the journey and saves it to the archive.
 
     <br><br>
 
     <button onclick="endJourneyWithoutSaving()">
-        &#128465; End Journey Without Saving
+        &#127937; End Without Saving
     </button>
+
+    <br>
+    Ends the active journey and returns to the home screen without saving.
+
+    <br><br>
+
+    <button onclick="returnToJourney()">
+        &#10060; Cancel
+    </button>
+
+    <br>
+    Returns to the active journey with no changes.
 </div>
 `;
 
