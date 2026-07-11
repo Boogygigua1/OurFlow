@@ -85,7 +85,17 @@ const context = {
             return null;
         }
     },
-    Image: function ImageStub() {},
+    Image: function ImageStub() {
+        Object.defineProperty(this, "src", {
+            set() {
+                setTimeout(() => {
+                    if (this.onerror) {
+                        this.onerror();
+                    }
+                }, 0);
+            }
+        });
+    },
     showActiveJourneyBox(sectionKey) {
         activeJourneyRefreshes.push(sectionKey || "");
     },
@@ -152,6 +162,26 @@ vm.runInContext(
         /Photo Saved/.test(resultHtml) &&
             /data:image\/jpeg;base64,new-thumb/.test(resultHtml),
         "Photo saved card should show the real thumbnail."
+    );
+
+    context.activeJourney.photos = [];
+    context.landmarkThumbnailData = "";
+    context.window.landmarkThumbnailPromise =
+        Promise.resolve("");
+    context.landmarkImageData =
+        "data:image/jpeg;base64,full-photo";
+    resultHtml = "";
+
+    await context.saveJourneyPhoto();
+
+    assert.strictEqual(
+        context.activeJourney.photos[0].thumbnail,
+        "",
+        "Thumbnail failure should not persist the full photo data URL."
+    );
+    assert(
+        /preview could not be created/.test(resultHtml),
+        "Thumbnail failure should show a calm non-blocking message."
     );
 
     console.log("Photo workflow regression passed");

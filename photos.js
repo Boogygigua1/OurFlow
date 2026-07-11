@@ -71,16 +71,59 @@ function buildLandmarkThumbnailFromData(imageData) {
                     )
                 );
             } catch (error) {
-                resolve(imageData);
+                resolve("");
             }
         };
 
         img.onerror = function () {
-            resolve(imageData);
+            resolve("");
         };
 
         img.src = imageData;
     });
+}
+
+function isUsablePhotoThumbnail(thumbnail) {
+
+    return (
+        typeof thumbnail === "string" &&
+        thumbnail.startsWith("data:image/") &&
+        thumbnail !== landmarkImageData
+    );
+}
+
+async function resolveLandmarkThumbnailForSave() {
+
+    if (isUsablePhotoThumbnail(landmarkThumbnailData)) {
+        return landmarkThumbnailData;
+    }
+
+    if (window.landmarkThumbnailPromise) {
+        try {
+            const thumbnail =
+                await window.landmarkThumbnailPromise;
+
+            if (isUsablePhotoThumbnail(thumbnail)) {
+                landmarkThumbnailData = thumbnail;
+                return thumbnail;
+            }
+        } catch (error) {
+            landmarkThumbnailData = "";
+        }
+    }
+
+    const retryThumbnail =
+        await buildLandmarkThumbnailFromData(
+            landmarkImageData
+        );
+
+    if (isUsablePhotoThumbnail(retryThumbnail)) {
+        landmarkThumbnailData = retryThumbnail;
+        return retryThumbnail;
+    }
+
+    landmarkThumbnailData = "";
+    return "";
 }
 
 function previewLandmarkImage(input) {
@@ -185,7 +228,11 @@ function showPhotoSavedCard() {
         "
     >
     `
-                : ""}
+                : `
+    Photo saved, but the preview could not be created.
+
+    <br><br>
+    `}
 
     Saved to this journey.
 
@@ -266,17 +313,8 @@ async function saveJourneyPhoto() {
         activeJourney.photos = [];
     }
 
-    if (
-        !landmarkThumbnailData &&
-        window.landmarkThumbnailPromise
-    ) {
-        landmarkThumbnailData =
-            await window.landmarkThumbnailPromise;
-    }
-
     const savedThumbnail =
-        landmarkThumbnailData ||
-        landmarkImageData;
+        await resolveLandmarkThumbnailForSave();
 
     activeJourney.photos.push({
         timestamp: new Date().toLocaleString(),
