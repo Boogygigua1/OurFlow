@@ -669,6 +669,54 @@ function toggleJourney(index) {
         return;
     }
 
+    details.innerHTML = `
+<div class="journey-saved-detail">
+    ${buildJourneySummary(journey)}
+
+    ${buildJourneyPanel(
+        "Saved Journey",
+        [
+            {
+                label: "Started",
+                value: journey.startTime
+            },
+            {
+                label: "Ended",
+                value: journey.endTime
+            },
+            {
+                label: "Duration",
+                value:
+                    typeof journey.duration !== "undefined"
+                        ? `${journey.duration || 0} minute(s)`
+                        : ""
+            },
+            {
+                label: "Events",
+                value: journey.timeline?.length || ""
+            }
+        ]
+    )}
+
+    ${buildJourneyDestinationPanels(journey)}
+
+    ${buildJourneyLocationPanel(journey, false)}
+
+    ${buildJourneyMemorySections(journey)}
+
+    ${journey.timeline?.length
+        ? buildJourneyMemorySection(
+            "Journey Events",
+            journey.timeline
+        )
+        : ""}
+</div>
+`;
+
+    details.style.display = "block";
+
+    return;
+
     let html = `
 <div style="
     background:#f8f8f8;
@@ -952,6 +1000,434 @@ function journeyDisplayAlreadyIncludesAddress(displayValue, addressValue) {
     );
 }
 
+function buildJourneyRows(rows) {
+
+    const visibleRows =
+        rows.filter(row => row.value);
+
+    if (!visibleRows.length) {
+        return "";
+    }
+
+    return visibleRows
+        .map(row => `
+<div class="journey-info-row">
+    <span>${row.label}</span>
+    <strong>${row.value}</strong>
+</div>
+`)
+        .join("");
+}
+
+function buildJourneyPanel(title, rows) {
+
+    const html =
+        buildJourneyRows(rows);
+
+    if (!html) {
+        return "";
+    }
+
+    return `
+<section class="journey-panel">
+    <h3>${title}</h3>
+    ${html}
+</section>
+`;
+}
+
+function getJourneyDestinationLabel(journey) {
+
+    return (
+        journey?.destinationName ||
+        journey?.destination ||
+        journey?.destinationDetail ||
+        "Not set yet"
+    );
+}
+
+function getJourneyOriginalDestination(journey) {
+
+    const original =
+        journey?.originalDestinationRequest ||
+        journey?.destinationDetail ||
+        "";
+
+    if (
+        original &&
+        normalizeJourneyDisplayValue(original) !==
+            normalizeJourneyDisplayValue(getJourneyDestinationLabel(journey))
+    ) {
+        return original;
+    }
+
+    return "";
+}
+
+function getJourneyVerifiedDestination(journey) {
+
+    return (
+        journey?.verifiedDestinationAddress ||
+        journey?.destinationAddress ||
+        ""
+    );
+}
+
+function getJourneyParkingDisplay(journey) {
+
+    return (
+        journey?.parkingLocation ||
+        journey?.parkingDescription ||
+        journey?.verifiedParkingAddress ||
+        journey?.parkingLocationAddress ||
+        journey?.parkingAddress ||
+        ""
+    );
+}
+
+function getJourneyParkingAddressLine(journey) {
+
+    const display =
+        getJourneyParkingDisplay(journey);
+
+    const address =
+        journey?.verifiedParkingAddress ||
+        journey?.parkingLocationAddress ||
+        journey?.parkingAddress ||
+        "";
+
+    if (
+        address &&
+        !journeyDisplayAlreadyIncludesAddress(display, address)
+    ) {
+        return address;
+    }
+
+    return "";
+}
+
+function getJourneyStartDisplay(journey) {
+
+    return (
+        journey?.startLocation ||
+        journey?.verifiedStartAddress ||
+        journey?.startLocationAddress ||
+        journey?.startAddress ||
+        ""
+    );
+}
+
+function getJourneyStartAddressLine(journey) {
+
+    const display =
+        getJourneyStartDisplay(journey);
+
+    const address =
+        journey?.verifiedStartAddress ||
+        journey?.startLocationAddress ||
+        journey?.startAddress ||
+        "";
+
+    if (
+        address &&
+        !journeyDisplayAlreadyIncludesAddress(display, address)
+    ) {
+        return address;
+    }
+
+    return "";
+}
+
+function buildJourneySummary(journey) {
+
+    return `
+<section class="journey-summary-grid" aria-label="Journey summary">
+    <div>
+        <span>Destination</span>
+        <strong>${getJourneyDestinationLabel(journey)}</strong>
+    </div>
+    <div>
+        <span>Journey Started</span>
+        <strong>${journey?.startTime || "In progress"}</strong>
+    </div>
+    <div>
+        <span>Parking Saved</span>
+        <strong>${getJourneyParkingDisplay(journey) ? "Yes" : "No"}</strong>
+    </div>
+    <div>
+        <span>Verified Destination</span>
+        <strong>${getJourneyVerifiedDestination(journey) ? "Yes" : "No"}</strong>
+    </div>
+</section>
+`;
+}
+
+function buildActiveJourneyActions(journey) {
+
+    const verifyLabel =
+        getJourneyVerifiedDestination(journey)
+            ? "✅ Location Verified"
+            : "📍 Verify Destination";
+
+    return `
+<div class="journey-primary-actions" aria-label="Primary journey actions">
+    <button onclick="verifySavedLocation()">
+        ${verifyLabel}
+    </button>
+    <button onclick="openGoogleMapsForJourney()">
+        🗺 Open Map
+    </button>
+    <button onclick="requestEndJourney()">
+        🏁 End Journey
+    </button>
+</div>
+`;
+}
+
+function buildJourneyDestinationPanels(journey) {
+
+    return [
+        buildJourneyPanel(
+            "Destination",
+            [
+                {
+                    label: "Original request",
+                    value: getJourneyOriginalDestination(journey)
+                },
+                {
+                    label: "Verified map address",
+                    value: getJourneyVerifiedDestination(journey)
+                }
+            ]
+        ),
+        buildJourneyPanel(
+            "Inside Destination",
+            [
+                {
+                    label: "Building",
+                    value: journey?.destinationBuilding
+                },
+                {
+                    label: "Department",
+                    value: journey?.destinationDepartmentOffice
+                },
+                {
+                    label: "Room",
+                    value:
+                        journey?.destinationRoomSuite ||
+                        journey?.destinationInternalLocation
+                },
+                {
+                    label: "Floor",
+                    value: journey?.destinationFloor
+                },
+                {
+                    label: "Entrance",
+                    value: journey?.destinationEntrance
+                },
+                {
+                    label: "Contact",
+                    value: journey?.destinationContactPerson
+                },
+                {
+                    label: "Phone",
+                    value: journey?.destinationPhone
+                },
+                {
+                    label: "Email",
+                    value: journey?.destinationEmail
+                },
+                {
+                    label: "Directory note",
+                    value:
+                        journey?.destinationDirectoryNote ||
+                        journey?.destinationInsideNotes
+                },
+                {
+                    label: "Campus ZIP",
+                    value: journey?.destinationCampusZip
+                },
+                {
+                    label: "Source",
+                    value: journey?.destinationSourceUrl
+                }
+            ]
+        ),
+        buildJourneyPanel(
+            "Arrival Guidance",
+            [
+                {
+                    label: "Navigation clues",
+                    value: journey?.arrivalTips
+                }
+            ]
+        )
+    ]
+        .filter(Boolean)
+        .join("");
+}
+
+function buildJourneyLocationPanel(journey, includeActions = false) {
+
+    const parkingDisplay =
+        getJourneyParkingDisplay(journey);
+
+    const startDisplay =
+        getJourneyStartDisplay(journey);
+
+    const parkingValue =
+        [
+            parkingDisplay,
+            getJourneyParkingAddressLine(journey),
+            journey?.parkingVerified ? "✓ Verified Address" : ""
+        ]
+            .filter(Boolean)
+            .join("<br>");
+
+    const startValue =
+        [
+            startDisplay,
+            getJourneyStartAddressLine(journey),
+            journey?.startVerified ? "✓ Verified Address" : ""
+        ]
+            .filter(Boolean)
+            .join("<br>");
+
+    const panel =
+        buildJourneyPanel(
+            "Journey Locations",
+            [
+                {
+                    label: "Starting Location",
+                    value: startValue
+                },
+                {
+                    label: "Parking Memory",
+                    value: parkingValue
+                }
+            ]
+        );
+
+    if (!panel) {
+        return "";
+    }
+
+    const actionHtml =
+        includeActions
+            ? `
+<div class="journey-secondary-actions">
+    ${parkingDisplay
+                ? `<button onclick="openGoogleMapsToParkingLocation()">🚗 Return To Parking</button>`
+                : ""}
+    ${startDisplay
+                ? `<button onclick="openGoogleMapsToStartLocation()">🧭 Return To Start</button>`
+                : ""}
+</div>
+`
+            : "";
+
+    return panel + actionHtml;
+}
+
+function buildJourneyListItems(items) {
+
+    return items
+        .map((item, index) => `
+<li>
+    <span>${index + 1}.</span>
+    <span>${item}</span>
+</li>
+`)
+        .join("");
+}
+
+function buildJourneyPhotoItems(photos) {
+
+    return photos
+        .map((photo, index) => `
+<li>
+    ${photo.thumbnail
+                ? `
+<img
+    src="${photo.thumbnail}"
+    alt=""
+    class="journey-photo-thumb"
+>
+`
+                : ""}
+    <span>
+        ${index + 1}.
+        ${photo.note || photo.title || photo.name || "Unnamed Photo"}
+    </span>
+</li>
+`)
+        .join("");
+}
+
+function buildJourneyMemorySection(title, items, options = {}) {
+
+    if (!items || !items.length) {
+        return "";
+    }
+
+    const visibleItems =
+        items.slice(-5);
+
+    const itemHtml =
+        options.type === "photos"
+            ? buildJourneyPhotoItems(visibleItems)
+            : buildJourneyListItems(visibleItems);
+
+    return `
+<details class="journey-compact-section">
+    <summary aria-label="${title}, ${items.length} item${items.length === 1 ? "" : "s"}. Tap to expand.">
+        <span>${title}</span>
+        <span>${items.length}</span>
+    </summary>
+    <ol>
+        ${itemHtml}
+    </ol>
+</details>
+`;
+}
+
+function buildJourneyMemorySections(journey) {
+
+    return [
+        buildJourneyMemorySection(
+            "Notes",
+            journey?.notes
+        ),
+        buildJourneyMemorySection(
+            "Reminders",
+            journey?.staffInstructions
+        ),
+        buildJourneyMemorySection(
+            "Questions",
+            journey?.questionsForDoctor
+        ),
+        buildJourneyMemorySection(
+            "Medications",
+            journey?.medications
+        ),
+        buildJourneyMemorySection(
+            "Appointments",
+            journey?.appointments
+        ),
+        buildJourneyMemorySection(
+            "People & Place Details",
+            journey?.directories
+        ),
+        buildJourneyMemorySection(
+            "Photos",
+            journey?.photos,
+            { type: "photos" }
+        )
+    ]
+        .filter(Boolean)
+        .join("");
+}
+
 
 function showActiveJourneyBox() {
 
@@ -961,6 +1437,47 @@ function showActiveJourneyBox() {
     if (!activeJourney) {
         return;
     }
+
+    result.innerHTML = `
+<div class="card journey-active-card">
+    <div class="journey-card-header">
+        <strong>🧭 Active Journey</strong>
+    </div>
+
+    ${buildJourneySummary(activeJourney)}
+
+    ${buildActiveJourneyActions(activeJourney)}
+
+    ${buildJourneyDestinationPanels(activeJourney)}
+
+    ${buildJourneyLocationPanel(activeJourney, true)}
+
+    ${buildJourneyMemorySections(activeJourney)}
+
+    <div class="journey-secondary-actions">
+        <button onclick="saveJourney()">
+            💾 Save Journey
+        </button>
+    </div>
+</div>
+`;
+
+    setTimeout(() => {
+
+        document.getElementById("activeJourneyBox")
+            ?.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+    }, 150);
+
+    localStorage.setItem(
+        "activeJourney",
+        JSON.stringify(activeJourney)
+    );
+
+    return;
 
     result.innerHTML = `
 <div class="card">

@@ -88,6 +88,166 @@ button,
     text-align: left;
 }
 
+.journey-active-card,
+.journey-saved-detail {
+    text-align: left;
+}
+
+.journey-card-header {
+    margin-bottom: 10px;
+}
+
+.journey-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 8px 0 12px;
+}
+
+.journey-summary-grid div,
+.journey-panel,
+.journey-compact-section {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #f9fafb;
+}
+
+.journey-summary-grid div {
+    padding: 9px;
+}
+
+.journey-summary-grid span,
+.journey-info-row span {
+    display: block;
+    color: #4b5563;
+    font-size: 13px;
+    line-height: 1.25;
+}
+
+.journey-summary-grid strong,
+.journey-info-row strong {
+    display: block;
+    margin-top: 3px;
+    color: #111827;
+    font-size: 15px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.journey-primary-actions,
+.journey-secondary-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.journey-primary-actions button,
+.journey-secondary-actions button {
+    margin: 0;
+}
+
+.journey-panel {
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.journey-panel h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    line-height: 1.25;
+}
+
+.journey-info-row + .journey-info-row {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.journey-compact-section {
+    margin: 8px 0;
+    overflow: hidden;
+}
+
+.journey-compact-section summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    padding: 0 10px;
+    cursor: pointer;
+    font-size: 16px;
+    list-style: none;
+}
+
+.journey-compact-section summary::-webkit-details-marker {
+    display: none;
+}
+
+.journey-compact-section summary::before {
+    content: "▶";
+    margin-right: 8px;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.journey-compact-section[open] summary::before {
+    content: "▼";
+}
+
+.journey-compact-section summary span:first-child {
+    flex: 1;
+}
+
+.journey-compact-section summary span:last-child {
+    min-width: 28px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #e0f2fe;
+    color: #075985;
+    font-size: 13px;
+    text-align: center;
+}
+
+.journey-compact-section ol {
+    margin: 0;
+    padding: 0 10px 10px;
+    list-style: none;
+}
+
+.journey-compact-section li {
+    display: flex;
+    gap: 8px;
+    padding: 8px 0;
+    border-top: 1px solid #e5e7eb;
+    font-size: 15px;
+    line-height: 1.3;
+}
+
+.journey-photo-thumb {
+    width: 56px;
+    height: 56px;
+    flex: 0 0 auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+@media (max-width: 520px) {
+    .journey-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .journey-primary-actions,
+    .journey-secondary-actions {
+        flex-direction: column;
+    }
+
+    .journey-primary-actions button,
+    .journey-secondary-actions button {
+        width: 100%;
+    }
+}
+
 .project-credit {
     font-size: 10px;
     color: #aaa;
