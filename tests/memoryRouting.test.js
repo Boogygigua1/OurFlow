@@ -456,5 +456,15 @@ async function assertNotParkingMemory(input) {
         "Near Bidwell Presbyterian Church"
     );
 
+    const statePunctuationStartContext =
+        await runCase(
+            "save start location: Near the Hotel Diamond in Chico CA"
+        );
+
+    assert.strictEqual(
+        statePunctuationStartContext.activeJourney.startLocation,
+        "Near the Hotel Diamond in Chico, CA"
+    );
+
     console.log("Memory routing regression matrix passed");
 })();

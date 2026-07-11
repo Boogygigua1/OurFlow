@@ -8,6 +8,8 @@ const root = path.resolve(__dirname, "..");
 function createContext(options = {}) {
     let resultHtml = "";
     let activeJourneyHtml = "";
+    let resultScrolled = false;
+    let activeJourneyScrolled = false;
     const storage = {};
     const questionInput = {
         value: ""
@@ -109,7 +111,9 @@ function createContext(options = {}) {
                         get innerHTML() {
                             return resultHtml;
                         },
-                        scrollIntoView() {}
+                        scrollIntoView() {
+                            resultScrolled = true;
+                        }
                     };
                 }
 
@@ -127,7 +131,9 @@ function createContext(options = {}) {
                                 bottom: 1200
                             };
                         },
-                        scrollIntoView() {}
+                        scrollIntoView() {
+                            activeJourneyScrolled = true;
+                        }
                     };
                 }
 
@@ -158,6 +164,8 @@ function createContext(options = {}) {
     };
     context.__getResultHtml = () => resultHtml;
     context.__getActiveJourneyHtml = () => activeJourneyHtml;
+    context.__wasResultScrolled = () => resultScrolled;
+    context.__wasActiveJourneyScrolled = () => activeJourneyScrolled;
     context.__getStoredActiveJourney = () =>
         JSON.parse(storage.activeJourney || "null");
     context.__setInputValue = (id, value) => {
@@ -601,7 +609,7 @@ function createContext(options = {}) {
         directories: [],
         answers: [],
         timeline: [
-            "Journey Started: Parking Memory"
+            "\uD83D\uDE97 Parking Saved: Across from the Diamond Hotel"
         ],
         startTime: "now"
     };
@@ -799,6 +807,12 @@ function createContext(options = {}) {
         /Continue Journey/.test(verifiedHtml),
         "Continue Journey should remain."
     );
+    assert(
+        verifyContext.activeJourney.timeline.includes(
+            "Destination Verified: 1531 Esplanade, Chico, CA 95926"
+        ),
+        "Destination verification should add the standardized event wording."
+    );
 
     const verifyPurposeContext =
         createContext();
@@ -971,6 +985,33 @@ function createContext(options = {}) {
         parkingVerificationContext.__getActiveJourneyHtml(),
         "",
         "Parking verification should not automatically redraw Active Journey."
+    );
+    assert.strictEqual(
+        parkingVerificationContext.__wasResultScrolled(),
+        true,
+        "Parking verification should keep the local Parking Saved card in view."
+    );
+    assert.strictEqual(
+        parkingVerificationContext.__wasActiveJourneyScrolled(),
+        false,
+        "Parking verification should not scroll to Active Journey."
+    );
+
+    const parkingCreatedContext =
+        createContext();
+
+    parkingCreatedContext.__setQuestion(
+        "Parking near the Hotel Diamond in Chico CA"
+    );
+
+    await parkingCreatedContext.askOurFlow();
+
+    assert(
+        parkingCreatedContext.activeJourney.timeline.some(event =>
+            event.includes("Parking Saved") &&
+            event.includes("Near the Hotel Diamond in Chico, CA")
+        ),
+        "Parking-created journeys should start with a cleaned Parking Saved event."
     );
 
     const localParkingCardContext =

@@ -73,6 +73,28 @@ function normalizeParkingDescription(parkingText) {
         .trim();
 }
 
+function formatLocationStatePunctuation(locationText) {
+
+    const statePattern =
+        "AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|" +
+        "ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|" +
+        "OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY";
+
+    return String(locationText || "")
+        .replace(/\s+/g, " ")
+        .replace(
+            new RegExp(
+                "\\b([A-Za-z][A-Za-z.'-]*(?:\\s+[A-Za-z][A-Za-z.'-]*){0,3})\\s+(" +
+                statePattern +
+                ")\\b",
+                "g"
+            ),
+            "$1, $2"
+        )
+        .replace(/\s+,/g, ",")
+        .trim();
+}
+
 function getParkingDescriptionForDisplay(parkingText) {
 
     if (
@@ -90,7 +112,9 @@ function getParkingDescriptionForDisplay(parkingText) {
     }
 
     return "You're parked " +
-        description.replace(/^parked\s+/i, "") +
+        formatLocationStatePunctuation(
+            description.replace(/^parked\s+/i, "")
+        ) +
         ".";
 }
 
@@ -111,7 +135,7 @@ function getStartingLocationDescriptionForDisplay(startText) {
     }
 
     const cleanDescription =
-        description
+        formatLocationStatePunctuation(description)
             .replace(/^parked\s+/i, "")
             .replace(/\s+/g, " ")
             .trim();
@@ -125,6 +149,19 @@ function getStartingLocationDescriptionForDisplay(startText) {
     }
 
     return cleanDescription;
+}
+
+function keepParkingSavedCardInView() {
+
+    const result =
+        document.getElementById("result");
+
+    if (result?.scrollIntoView) {
+        result.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 }
 
 function isVagueParkingDescription(parkingText) {
@@ -457,113 +494,13 @@ if (activeJourney) {
 
 }
 
-    const savedParkingNavigationHtml =
-        activeJourney?.verifiedParkingAddress ||
-            activeJourney?.parkingLocationAddress ||
-            activeJourney?.parkingAddress ||
-            activeJourney?.parkingGps
-            ? `
-    <button onclick="openGoogleMapsToParkingLocation()">
-        &#8617;&#65039; Return to Parking
-    </button>
-
-    <br><br>
-    `
-            : "";
-
-    const savedStartNavigationHtml =
-        activeJourney?.verifiedStartAddress ||
-            activeJourney?.startLocationAddress ||
-            activeJourney?.startAddress ||
-            activeJourney?.startGps
-            ? `
-    <button onclick="openGoogleMapsToStartLocation()">
-        Return To Start
-    </button>
-
-    <br><br>
-    `
-            : "";
-
-    const parkingDetailsHtml =
-        buildParkingDetailsSummaryForConfirmation();
-
-    const parkingDetailsActionLabel =
-        hasParkingDetailValues(activeJourney?.parkingDetails || {})
-            ? "Edit Parking Details"
-            : "Add Parking Details";
-
     pendingParkingLocation = "";
     pendingParkingLocationAddress = "";
     pendingParkingGps = null;
     pendingLocationType = "";
 
-    document.getElementById("result").innerHTML = `
-<div class="card">
-    <strong>🚗 Parking Saved</strong>
-
-    <br><br>
-
-    ${activeJourney?.parkingDescription ||
-        activeJourney?.parkingLocation ||
-        "Your parking location has been recorded."}
-
-    <br><br>
-
-    ${activeJourney?.parkingVerified
-            ? "Verified address saved."
-            : `
-    <button onclick="verifyParkingLocation()">
-        Add / Verify Parking Address
-    </button>
-
-    <br><br>
-    `}
-
-    ${savedParkingNavigationHtml}
-
-    ${savedStartNavigationHtml}
-
-    ${parkingDetailsHtml
-        ? `
-    <strong>Parking Details</strong>
-    <br>
-    ${parkingDetailsHtml}
-    <br>
-    `
-        : ""}
-
-    <button onclick="
-window.parkingDetailsReturnToParkingCard = true;
-showParkingDetailsCard();
-">
-        &#128663; ${parkingDetailsActionLabel}
-    </button>
-
-    <br><br>
-
-<button onclick="
-showActiveJourneyBox();
-
-document.getElementById(
-    'result'
-).innerHTML = '';
-
-document.getElementById(
-    'questionInput'
-).focus();
-
-document.getElementById(
-    'questionInput'
-).scrollIntoView({
-    behavior: 'smooth',
-    block: 'center'
-});
-">
-    &#10145;&#65039; Continue Journey
-</button>
-</div>
-`;
+    showParkingSavedConfirmationCard();
+    return;
 }
 
 function buildParkingDetailsSummaryForConfirmation() {
@@ -723,6 +660,8 @@ document.getElementById(
 </button>
 </div>
 `;
+
+    keepParkingSavedCardInView();
 }
 
 async function verifyParkingLocation() {
@@ -2526,6 +2465,22 @@ function saveVerifiedDestinationAddress(address) {
 
     activeJourney.verifiedDestinationAddress =
         address;
+
+    activeJourney.timeline =
+        activeJourney.timeline || [];
+
+    const destinationVerifiedEvent =
+        "Destination Verified: " + address;
+
+    if (
+        !activeJourney.timeline.includes(
+            destinationVerifiedEvent
+        )
+    ) {
+        activeJourney.timeline.push(
+            destinationVerifiedEvent
+        );
+    }
 
     localStorage.setItem(
         "activeJourney",

@@ -53,7 +53,9 @@ const context = {
                     timestamp: "10:15 AM",
                     category: "Arrival Guidance",
                     text: "Take the elevator on the left."
-                }
+                },
+                "Photo Note Added: Museum on the first floor",
+                "Directory Added from Photo: Museum on the first floor"
             ],
             notes: [],
             photos: [],
@@ -211,8 +213,8 @@ const expandedHtml =
 
 assert(
     expandedHtml.includes("<span>Events</span>") &&
-        expandedHtml.includes("<span>2</span>"),
-    "Saved journey detail should render an expandable Events section."
+        expandedHtml.includes("<span>3</span>"),
+    "Saved journey detail should render an expandable Events section without duplicate photo-directory entries."
 );
 assert(
     expandedHtml.includes("Journey Started") &&
@@ -224,6 +226,12 @@ assert(
         expandedHtml.includes("Arrival Guidance") &&
         expandedHtml.includes("Take the elevator on the left."),
     "Saved journey Events section should show timestamp, category, and text when available."
+);
+assert(
+    expandedHtml.includes("Photo Note Added") &&
+        expandedHtml.includes("Museum on the first floor") &&
+        !expandedHtml.includes("Directory Added from Photo"),
+    "Saved journey Events section should hide exact duplicate Directory Added from Photo entries."
 );
 assert(
     expandedHtml.includes("Garage / Lot") &&

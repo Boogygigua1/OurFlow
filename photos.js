@@ -314,7 +314,7 @@ async function saveJourneyPhoto() {
         analysis: "",
         thumbnail: savedThumbnail
     });
-    activeJourney.timeline.push("📷 Photo Saved");
+    activeJourney.timeline.push("Photo Added");
 
     localStorage.setItem(
         "activeJourney",
@@ -447,9 +447,7 @@ function savePhotoMemory(note) {
 
     lastPhoto.note = note;
 
-    activeJourney.timeline.push(
-        "📝 Photo Note Saved: " + note
-    );
+    activeJourney.timeline.push("Photo Note Added: " + note);
 
     pendingPhotoMemory = false;
 
@@ -607,10 +605,7 @@ function savePhotoClassification(type) {
             directoryInfo
         );
 
-        activeJourney.timeline.push(
-            "🏢 Directory Saved From Photo: " +
-            directoryInfo
-        );
+        activeJourney.timeline.push("Directory Added from Photo: " + directoryInfo);
 
         localStorage.setItem(
             "activeJourney",

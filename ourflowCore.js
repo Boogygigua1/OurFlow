@@ -1964,8 +1964,19 @@ Ready to save?
 
             markActiveJourneyContext("new");
 
+            const parkingEventText =
+                typeof getStartingLocationDescriptionForDisplay === "function"
+                    ? getStartingLocationDescriptionForDisplay(question)
+                    : "";
+
+            const fallbackParkingEventText =
+                typeof getParkingDescriptionForDisplay === "function"
+                    ? getParkingDescriptionForDisplay(question)
+                    : question;
+
             activeJourney.timeline.push(
-                "Journey Started: Parking Memory"
+                "\uD83D\uDE97 Parking Saved: " +
+                (parkingEventText || fallbackParkingEventText)
             );
 
             showActiveJourneyBox("journeyLocations");

@@ -1891,20 +1891,71 @@ function buildJourneyEventItems(events) {
         .join("");
 }
 
+function normalizeJourneyEventDisplayText(value) {
+
+    return String(value || "")
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function getVisibleJourneyEvents(events) {
+
+    const photoNoteTexts =
+        new Set();
+
+    return events.filter(event => {
+
+        const parts =
+            getJourneyEventParts(event);
+
+        const eventType =
+            normalizeJourneyEventDisplayText(parts.type);
+
+        const eventText =
+            normalizeJourneyEventDisplayText(parts.text);
+
+        if (
+            eventType === "photo note added" &&
+            eventText
+        ) {
+            photoNoteTexts.add(eventText);
+            return true;
+        }
+
+        if (
+            eventType === "directory added from photo" &&
+            eventText &&
+            photoNoteTexts.has(eventText)
+        ) {
+            return false;
+        }
+
+        return true;
+    });
+}
+
 function buildJourneyEventSection(events) {
 
     if (!events || !events.length) {
         return "";
     }
 
+    const visibleEvents =
+        getVisibleJourneyEvents(events);
+
+    if (!visibleEvents.length) {
+        return "";
+    }
+
     return `
 <details class="journey-compact-section" data-journey-section="events">
-    <summary aria-label="Events, ${events.length} item${events.length === 1 ? "" : "s"}. Tap to expand.">
+    <summary aria-label="Events, ${visibleEvents.length} item${visibleEvents.length === 1 ? "" : "s"}. Tap to expand.">
         <span>Events</span>
-        <span>${events.length}</span>
+        <span>${visibleEvents.length}</span>
     </summary>
     <ol>
-        ${buildJourneyEventItems(events)}
+        ${buildJourneyEventItems(visibleEvents)}
     </ol>
 </details>
 `;
