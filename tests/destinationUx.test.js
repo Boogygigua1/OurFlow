@@ -156,6 +156,78 @@ function createContext() {
 }
 
 (async () => {
+    const detectorContext =
+        createContext();
+
+    [
+        [
+            "I’m headed off to Enloe Hospital.",
+            "Enloe Hospital",
+            ""
+        ],
+        [
+            "I am headed to Enloe Hospital",
+            "Enloe Hospital",
+            ""
+        ],
+        [
+            "Heading to Enloe Hospital",
+            "Enloe Hospital",
+            ""
+        ],
+        [
+            "I’m taking the bus to Chico State.",
+            "Chico State",
+            "transit"
+        ],
+        [
+            "I am hiking to Upper Bidwell Park.",
+            "Upper Bidwell Park",
+            "hiking"
+        ],
+        [
+            "I'm driving to Enloe Hospital",
+            "Enloe Hospital",
+            "driving"
+        ],
+        [
+            "I'm cycling to Chico State",
+            "Chico State",
+            "biking"
+        ],
+        [
+            "I’m flying to Sacramento",
+            "Sacramento",
+            "traveling"
+        ]
+    ].forEach(([input, destination, travelMode]) => {
+        const intent =
+            detectorContext.detectJourneyStartIntent(input);
+
+        assert(
+            intent,
+            input + " should be detected as journey-start intent."
+        );
+        assert.strictEqual(intent.destination, destination);
+        assert.strictEqual(intent.travelMode, travelMode);
+    });
+
+    [
+        "I'm going to ask Enloe Hospital a question",
+        "I'm going to call the office",
+        "I'm headed toward fixing the app",
+        "I'm thinking about Enloe Hospital",
+        "I worked at Enloe Hospital",
+        "I was at Enloe Hospital yesterday",
+        "Navigate to Enloe Hospital"
+    ].forEach(input => {
+        assert.strictEqual(
+            detectorContext.detectJourneyStartIntent(input),
+            null,
+            input + " should not start a journey."
+        );
+    });
+
     const startContext =
         createContext();
 
@@ -172,6 +244,60 @@ function createContext() {
     assert.strictEqual(
         startContext.__getStoredActiveJourney().destination,
         "Enloe Hospital"
+    );
+
+    const busContext =
+        createContext();
+
+    busContext.__setQuestion(
+        "I'm taking the bus to Chico State."
+    );
+
+    await busContext.askOurFlow();
+
+    assert.strictEqual(
+        busContext.activeJourney.destination,
+        "Chico State"
+    );
+    assert.strictEqual(
+        busContext.activeJourney.travelMode,
+        "transit"
+    );
+
+    const activeContext =
+        createContext();
+
+    activeContext.activeJourney = {
+        destination: "Existing Journey",
+        destinationDetail: "Existing Journey",
+        destinationAddress: "",
+        verifiedDestinationAddress: "",
+        notes: [],
+        photos: [],
+        questionsForDoctor: [],
+        staffInstructions: [],
+        medications: [],
+        appointments: [],
+        directories: [],
+        answers: [],
+        timeline: [],
+        startTime: "now"
+    };
+
+    activeContext.__setQuestion(
+        "I'm headed to Enloe Hospital"
+    );
+
+    await activeContext.askOurFlow();
+
+    assert.strictEqual(
+        activeContext.activeJourney.destination,
+        "Existing Journey",
+        "New journey-start phrases should not silently replace an active journey."
+    );
+    assert(
+        /Journey Already Active/.test(activeContext.__getResultHtml()),
+        "Active journey guard should show a visible choice."
     );
 
     const verifyContext =

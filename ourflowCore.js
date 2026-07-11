@@ -605,7 +605,241 @@ function getRouteDebugHtml(routeDebug) {
 `;
 }
 
+function normalizeJourneyStartInput(question) {
+
+    return String(question || "")
+        .toLowerCase()
+        .replace(/[\u2018\u2019]/g, "'")
+        .replace(/[\u201B\u2032\u02BC\uFF07\u0060\u00B4]/g, "'")
+        .replace(/[Ã¢â‚¬â„¢Ã¢â‚¬Ëœ]/g, "'")
+        .replace(/[?.!,]+$/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function normalizeJourneyStartMatchText(question) {
+
+    return String(question || "")
+        .replace(/[\u2018\u2019]/g, "'")
+        .replace(/[\u201B\u2032\u02BC\uFF07\u0060\u00B4]/g, "'")
+        .replace(/[Ã¢â‚¬â„¢Ã¢â‚¬Ëœ]/g, "'")
+        .replace(/[?.!,]+$/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function extractJourneyDestination(match) {
+
+    return String(match?.groups?.destination || "")
+        .replace(/[.?!]+$/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function detectJourneyTravelMode(match) {
+
+    const mode =
+        String(match?.groups?.mode || "")
+            .toLowerCase()
+            .trim();
+
+    if (!mode) {
+        return "";
+    }
+
+    if (mode.includes("driving")) {
+        return "driving";
+    }
+
+    if (mode.includes("walking")) {
+        return "walking";
+    }
+
+    if (
+        mode.includes("biking") ||
+        mode.includes("cycling")
+    ) {
+        return "biking";
+    }
+
+    if (mode.includes("hiking")) {
+        return "hiking";
+    }
+
+    if (mode.includes("bus")) {
+        return "transit";
+    }
+
+    if (mode.includes("flying")) {
+        return "traveling";
+    }
+
+    return "";
+}
+
+function isLikelyPlaceDestination(destination) {
+
+    const text =
+        String(destination || "").trim();
+
+    if (!text || text.length < 3) {
+        return false;
+    }
+
+    const normalized =
+        normalizeJourneyStartInput(text);
+
+    if (/^(a|an|the|there|home|work)$/.test(normalized)) {
+        return false;
+    }
+
+    return /[a-z0-9]/i.test(text);
+}
+
+function isFalsePositiveJourneyStart(question, destination) {
+
+    const text =
+        normalizeJourneyStartInput(question);
+
+    const destinationText =
+        normalizeJourneyStartInput(destination);
+
+    if (!destinationText) {
+        return true;
+    }
+
+    const blockedWholePhrases = [
+        /\bi'?m thinking about\b/,
+        /\bi am thinking about\b/,
+        /\bi worked at\b/,
+        /\bi was at\b/,
+        /\bi used to go to\b/,
+        /\bi heard about\b/,
+        /\bi like\b/
+    ];
+
+    if (blockedWholePhrases.some(pattern => pattern.test(text))) {
+        return true;
+    }
+
+    const blockedDestinations = [
+        /^ask\b/,
+        /^call\b/,
+        /^text\b/,
+        /^email\b/,
+        /^message\b/,
+        /^fix\b/,
+        /^fixing\b/,
+        /^work on\b/,
+        /^working on\b/,
+        /^think about\b/,
+        /^thinking about\b/
+    ];
+
+    return blockedDestinations.some(pattern =>
+        pattern.test(destinationText)
+    );
+}
+
+function detectJourneyStartIntent(question) {
+
+    const normalizedText =
+        normalizeJourneyStartInput(question);
+
+    const matchText =
+        normalizeJourneyStartMatchText(question);
+
+    if (!normalizedText) {
+        return null;
+    }
+
+    const personPrefix =
+        "(?:(?:i'm|im|i am)\\s+)?";
+
+    const destinationPatterns = [
+        /^(?:start|begin)\s+(?:a\s+)?journey\s+to\s+(?<destination>.+)$/i,
+        /^start\s+(?:a\s+)?journey\s+(?<destination>.+)$/i,
+        /^starting\s+(?:a\s+)?(?:my\s+)?journey\s+to\s+(?<destination>.+)$/i,
+        /^starting\s+(?:a\s+)?journey\s+(?<destination>.+)$/i,
+        new RegExp(
+            "^" + personPrefix +
+            "on\\s+my\\s+way\\s+to\\s+(?<destination>.+)$",
+            "i"
+        ),
+        new RegExp(
+            "^" + personPrefix +
+            "(?:headed\\s+off|headed|heading)\\s+to\\s+(?<destination>.+)$",
+            "i"
+        ),
+        new RegExp(
+            "^" + personPrefix +
+            "off\\s+to\\s+(?<destination>.+)$",
+            "i"
+        ),
+        new RegExp(
+            "^" + personPrefix +
+            "leaving\\s+for\\s+(?<destination>.+)$",
+            "i"
+        ),
+        new RegExp(
+            "^" + personPrefix +
+            "going\\s+to\\s+(?<destination>.+)$",
+            "i"
+        ),
+        new RegExp(
+            "^" + personPrefix +
+            "(?<mode>driving|walking|biking|cycling|hiking|flying)\\s+to\\s+(?<destination>.+)$",
+            "i"
+        ),
+        new RegExp(
+            "^" + personPrefix +
+            "(?<mode>taking\\s+the\\s+bus)\\s+to\\s+(?<destination>.+)$",
+            "i"
+        ),
+        new RegExp(
+            "^" + personPrefix +
+            "(?<mode>travell?ing)\\s+to\\s+(?<destination>.+)$",
+            "i"
+        )
+    ];
+
+    for (const pattern of destinationPatterns) {
+        const match =
+            matchText.match(pattern);
+
+        if (!match) {
+            continue;
+        }
+
+        const destination =
+            extractJourneyDestination(match);
+
+        if (!isLikelyPlaceDestination(destination)) {
+            continue;
+        }
+
+        if (isFalsePositiveJourneyStart(question, destination)) {
+            continue;
+        }
+
+        return {
+            destination,
+            travelMode:
+                detectJourneyTravelMode(match),
+            normalizedInput:
+                normalizedText
+        };
+    }
+
+    return null;
+}
+
 function getJourneyDestinationFromInput(question) {
+
+    return detectJourneyStartIntent(question)?.destination || "";
+}
+
+function getJourneyDestinationFromInputLegacy(question) {
 
     const originalText =
         String(question || "").trim();
@@ -691,12 +925,18 @@ async function askOurFlow() {
 
     const questionInfo = analyzeUserQuestion(question);
 
+    const journeyStartIntent =
+        detectJourneyStartIntent(question);
+
     const journeyDestination =
-        getJourneyDestinationFromInput(question);
+        journeyStartIntent?.destination || "";
 
     const isJourneyDestinationInput =
         Boolean(journeyDestination) ||
         looksLikeAddress;
+
+    const hadActiveJourneyAtQuestionStart =
+        Boolean(activeJourney);
 
     if (
         activeJourney &&
@@ -908,48 +1148,43 @@ How should I save this?
             isJourneyDestinationInput
         ) {
 
+            if (
+                hadActiveJourneyAtQuestionStart &&
+                journeyStartIntent
+            ) {
+                result.innerHTML = `
+<div class="card">
+    <strong>🧭 Journey Already Active</strong>
+
+    <br><br>
+
+    You already have an active journey.
+
+    <br><br>
+
+    New destination detected:
+    ${journeyStartIntent.destination}
+
+    <br><br>
+
+    <button onclick="showActiveJourneyBox(); document.getElementById('result').innerHTML = '';">
+        Continue Current Journey
+    </button>
+
+    <br><br>
+
+    <button onclick="requestEndJourney()">
+        End Current Journey
+    </button>
+</div>
+`;
+                return;
+            }
+
             resetJourneySessionContext();
 
             let destination =
-                journeyDestination || question;
-
-            destination = destination
-                .replace(/start a journey to /i, "")
-                .replace(/start journey to /i, "")
-                .replace(/starting my journey to /i, "")
-                .replace(/starting journey to /i, "")
-                .replace(/begin journey to /i, "")
-                .replace(/i'm off to /i, "")
-                .replace(/im off to /i, "")
-                .replace(/i am off to /i, "")
-                .replace(/i'm headed to /i, "")
-                .replace(/im headed to /i, "")
-                .replace(/i am headed to /i, "")
-                .replace(/i'm heading to /i, "")
-                .replace(/im heading to /i, "")
-                .replace(/i am heading to /i, "")
-                .replace(/i am going to /i, "")
-
-                .replace(/start a journey /i, "")
-                .replace(/start journey /i, "")
-                .replace(/starting a journey /i, "")
-                .replace(/starting journey /i, "")
-
-                .replace(/i'm going to /i, "")
-                .replace(/im going to /i, "")
-                .replace(/i'm on my way to /i, "")
-                .replace(/im on my way to /i, "")
-                .replace(/i am on my way to /i, "")
-                .replace(/going to /i, "")
-                .replace(/headed to /i, "")
-                .replace(/heading to /i, "")
-                .replace(/on my way to /i, "")
-                .replace(/leaving for /i, "")
-                .replace(/leave for /i, "")
-                .replace(/off to /i, "")
-                .replace(/traveling to /i, "")
-                .replace(/travelling to /i, "")
-                .trim();
+                journeyDestination || question.trim();
             // ========================================
             // DESTINATION JOURNEY CREATION
             // ========================================
@@ -1067,6 +1302,11 @@ How should I save this?
                 activeJourney.startTime =
                     activeJourney.startTime ||
                     new Date().toLocaleString();
+            }
+
+            if (journeyStartIntent?.travelMode) {
+                activeJourney.travelMode =
+                    journeyStartIntent.travelMode;
             }
 
             addConversationHistoryEntry(question);
