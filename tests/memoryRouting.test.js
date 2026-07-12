@@ -111,6 +111,7 @@ function createContext() {
         },
         showActiveJourneyRecoveryCard() {},
         showActiveJourneyBox() {},
+        resetJourneySessionContext() {},
         markActiveJourneyContext() {},
         isRecoveryIntent() {
             return false;
@@ -182,6 +183,14 @@ async function runCase(input) {
     return context;
 }
 
+async function runCaseWithoutActiveJourney(input) {
+    const context = createContext();
+    context.activeJourney = null;
+    context.__setQuestion(input);
+    await context.askOurFlow();
+    return context;
+}
+
 async function assertNotes(input) {
     const context = await runCase(input);
     assert.strictEqual(context.activeJourney.notes.length, 1, input);
@@ -226,6 +235,55 @@ async function assertReminder(input) {
     assert.strictEqual(context.activeJourney.arrivalTips, "", input);
 
     return context;
+}
+
+async function assertNoActiveReminder(input) {
+    const context =
+        await runCaseWithoutActiveJourney(input);
+
+    assert(
+        context.activeJourney,
+        input + " should create an Untitled Journey shell."
+    );
+    assert.strictEqual(
+        context.activeJourney.destination,
+        "Untitled Journey",
+        input + " should use the minimal Untitled Journey shell."
+    );
+    assert.strictEqual(
+        context.activeJourney.staffInstructions.length,
+        1,
+        input + " should save as an instruction."
+    );
+    assert.strictEqual(
+        context.activeJourney.staffInstructions[0],
+        input
+    );
+    assert(
+        /Instruction Saved/.test(context.__getResultHtml()),
+        input + " should use the existing instruction save route."
+    );
+    assert(
+        !/AI fallback/.test(context.__getResultHtml()),
+        input + " should not reach AI fallback."
+    );
+
+    return context;
+}
+
+async function assertNoActiveAiFallback(input) {
+    const context =
+        await runCaseWithoutActiveJourney(input);
+
+    assert(
+        /AI fallback/.test(context.__getResultHtml()),
+        input + " should reach AI fallback without an active journey."
+    );
+    assert.strictEqual(
+        context.activeJourney,
+        null,
+        input + " should not create an Untitled Journey shell."
+    );
 }
 
 async function assertArrivalGuidance(input, extraAssert = () => {}) {
@@ -394,8 +452,19 @@ async function assertNotParkingMemory(input) {
     await assertQuestion("Should I bring my insurance card?");
     await assertQuestion("Where can I pick up my prescription?");
 
+    await assertNoActiveReminder("Bring my insurance card");
+    await assertNoActiveReminder("Bring transcripts");
+    await assertNoActiveReminder("Grab umbrella");
+    await assertNoActiveReminder("Pick up prescription");
+    await assertNoActiveReminder("Call Dr. Smith");
+    await assertNoActiveReminder("Email Megan");
+    await assertNoActiveReminder("Buy batteries");
+    await assertNoActiveAiFallback("Should I bring my insurance card?");
+    await assertNoActiveAiFallback("Can I bring food?");
+    await assertNoActiveAiFallback("Where can I pick up my prescription?");
+
     const archiveReminderContext =
-        await assertReminder("Bring insurance card");
+        await assertNoActiveReminder("Bring my insurance card");
 
     archiveReminderContext.savedJourneys.push(
         JSON.parse(
@@ -405,8 +474,34 @@ async function assertNotParkingMemory(input) {
 
     assert.strictEqual(
         archiveReminderContext.savedJourneys[0].staffInstructions[0],
-        "Bring insurance card",
+        "Bring my insurance card",
         "Saved journeys should preserve imperative reminders."
+    );
+
+    const destinationMergeContext =
+        await assertNoActiveReminder("Bring my insurance card");
+
+    destinationMergeContext.__setQuestion(
+        "I'm headed to Chico State"
+    );
+
+    await destinationMergeContext.askOurFlow();
+
+    assert.strictEqual(
+        destinationMergeContext.activeJourney.destination,
+        "Chico State",
+        "First later destination should fill the reminder-created shell."
+    );
+    assert.strictEqual(
+        destinationMergeContext.activeJourney.staffInstructions[0],
+        "Bring my insurance card",
+        "Destination merge should preserve the saved reminder."
+    );
+    assert(
+        !/Journey Already Active/.test(
+            destinationMergeContext.__getResultHtml()
+        ),
+        "Reminder-created shell should not show Journey Already Active for the first destination."
     );
 
     await assertQuestion("Need to ask about Lanier.");

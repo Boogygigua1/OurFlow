@@ -2137,12 +2137,7 @@ Ready to save?
                 isPersonContactDirectoryPhrase(noteQuestion)
             ) ||
 
-            isDirectoryPhrase(noteQuestion) ||
-
-            isQuestionPhrase(noteQuestion) ||
-
-            noteQuestion.startsWith("ask about ") ||
-            noteQuestion.startsWith("ask doctor about ");
+            isDirectoryPhrase(noteQuestion);
 
         if (
             !activeJourney &&
