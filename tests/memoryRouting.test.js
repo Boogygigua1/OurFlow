@@ -224,6 +224,8 @@ async function assertReminder(input) {
     assert.strictEqual(context.activeJourney.staffInstructions.length, 1, input);
     assert.strictEqual(context.activeJourney.notes.length, 0, input);
     assert.strictEqual(context.activeJourney.arrivalTips, "", input);
+
+    return context;
 }
 
 async function assertArrivalGuidance(input, extraAssert = () => {}) {
@@ -382,6 +384,31 @@ async function assertNotParkingMemory(input) {
     await assertReminder("Remember to bring my transcripts.");
     await assertReminder("Call the office tomorrow.");
     await assertReminder("Ask for a receipt.");
+    await assertReminder("Bring insurance card");
+    await assertReminder("Bring transcripts");
+    await assertReminder("Pick up prescription");
+    await assertReminder("Grab umbrella");
+    await assertReminder("Call Dr. Smith");
+    await assertReminder("Email Megan");
+    await assertReminder("Buy batteries");
+    await assertQuestion("Should I bring my insurance card?");
+    await assertQuestion("Where can I pick up my prescription?");
+
+    const archiveReminderContext =
+        await assertReminder("Bring insurance card");
+
+    archiveReminderContext.savedJourneys.push(
+        JSON.parse(
+            JSON.stringify(archiveReminderContext.activeJourney)
+        )
+    );
+
+    assert.strictEqual(
+        archiveReminderContext.savedJourneys[0].staffInstructions[0],
+        "Bring insurance card",
+        "Saved journeys should preserve imperative reminders."
+    );
+
     await assertQuestion("Need to ask about Lanier.");
     await assertMedication("Need to take ibuprofen.");
 

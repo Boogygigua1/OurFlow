@@ -2308,6 +2308,7 @@ Ready to save?
 
         if (
             activeJourney &&
+            !isInstructionPhrase(noteQuestion) &&
             typeof isPersonContactDirectoryPhrase === "function" &&
             isPersonContactDirectoryPhrase(noteQuestion)
         ) {
@@ -2463,6 +2464,7 @@ Ready to save?
 
         if (
             activeJourney &&
+            !isInstructionPhrase(noteQuestion) &&
             typeof isInsideDestinationDetailPhrase === "function" &&
             isInsideDestinationDetailPhrase(noteQuestion)
         ) {

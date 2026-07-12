@@ -168,7 +168,16 @@ function isQuestionWord(question) {
 function isInstructionPhrase(question) {
 
     const text =
-        question.toLowerCase().trim();
+        question
+            .toLowerCase()
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/[?.!]+$/g, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    const startsAsQuestion =
+        isQuestionWord(text) ||
+        /^(?:should|can|could|would|do|does|did|is|are|am|will)\b/.test(text);
 
     const isNavigationNeed =
         text.startsWith("i need to get to ") ||
@@ -181,8 +190,25 @@ function isInstructionPhrase(question) {
         text.startsWith("need to search ") ||
         text.startsWith("i need directions to ");
 
+    const isNavigationInstruction =
+        typeof isNavigationCluePhrase === "function" &&
+        isNavigationCluePhrase(text);
+
+    const isImperativeInstruction =
+        /^(?:bring|grab|pick up|pickup|call|text|email|buy|stop by)\b/.test(text) ||
+        (
+            /^take\b/.test(text) &&
+            !isNavigationInstruction
+        );
+
+    if (startsAsQuestion) {
+        return false;
+    }
+
     return (
 
+
+        isImperativeInstruction ||
 
         text.startsWith("remember to ") ||
 
@@ -1109,9 +1135,17 @@ function isMedicationPhrase(question) {
 function isQuestionPhrase(question) {
 
     const text =
-        question.toLowerCase().trim();
+        question
+            .toLowerCase()
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/\s+/g, " ")
+            .trim();
 
     return (
+
+        /^(?:should|can|could|would|do|does|did|is|are|am|will)\b/.test(text) ||
+
+        text.startsWith("where can ") ||
 
         text.startsWith("ask about ") ||
 
