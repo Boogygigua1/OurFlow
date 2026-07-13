@@ -49,6 +49,7 @@ const context = {
             duration: 12,
             timeline: [
                 "Journey Started: Enloe Hospital",
+                "Journey Started: Auto-Created",
                 {
                     timestamp: "10:15 AM",
                     category: "Arrival Guidance",
@@ -213,19 +214,34 @@ const expandedHtml =
 
 assert(
     expandedHtml.includes("<span>Events</span>") &&
-        expandedHtml.includes("<span>3</span>"),
+        expandedHtml.includes("<span>4</span>"),
     "Saved journey detail should render an expandable Events section without duplicate photo-directory entries."
 );
 assert(
-    expandedHtml.includes("Journey Started") &&
+    expandedHtml.includes("Destination Set") &&
         expandedHtml.includes("Enloe Hospital"),
-    "Saved journey Events section should show string timeline entries."
+    "Saved journey Events section should normalize legacy Journey Started destination entries at display time."
+);
+assert(
+    !expandedHtml.includes("Auto-Created"),
+    "Saved journey Events section should not expose internal Auto-Created wording."
+);
+assert(
+    expandedHtml.includes("Journey Created"),
+    "Saved journey Events section should normalize legacy Auto-Created entries at display time."
 );
 assert(
     expandedHtml.includes("10:15 AM") &&
         expandedHtml.includes("Arrival Guidance") &&
         expandedHtml.includes("Take the elevator on the left."),
     "Saved journey Events section should show timestamp, category, and text when available."
+);
+assert(
+    expandedHtml.includes("Original request") &&
+        expandedHtml.includes("Enloe") &&
+        expandedHtml.includes("Verified map address") &&
+        expandedHtml.includes("1531 Esplanade, Chico, CA 95926"),
+    "Saved journey detail should keep original destination request and verified map address separate."
 );
 assert(
     expandedHtml.includes("Photo Note Added") &&

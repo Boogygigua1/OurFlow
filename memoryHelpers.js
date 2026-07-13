@@ -346,7 +346,7 @@ function isPersonContactDirectoryPhrase(question) {
             .trim();
 
     const roleWords =
-        "(?:nurse|doctor|dr\\.?|physician|receptionist|staff|assistant)";
+        "(?:nurse|doctor|dr\\.?|physician|receptionist|administrator|admin|staff|assistant)";
 
     return (
         new RegExp("\\b" + roleWords + "\\s+[a-z][a-z.'-]*\\b").test(text) ||
@@ -702,7 +702,13 @@ function isMedicationRecall(question) {
     const text =
         question
             .toLowerCase()
-            .replace(/[?.!,]/g, "")
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/\bmedication's\b/g, "medications")
+            .replace(/\bmedicine's\b/g, "medicines")
+            .replace(/\bmedications'\b/g, "medications")
+            .replace(/([a-z])'s\b/g, "$1s")
+            .replace(/s'\b/g, "s")
+            .replace(/[?.!,']/g, "")
             .trim();
 
     const medicationRecallPhrases = [

@@ -397,6 +397,12 @@ function createContext(options = {}) {
         startContext.__getStoredActiveJourney().destination,
         "Enloe Hospital"
     );
+    assert(
+        startContext.activeJourney.timeline.includes(
+            "Destination Set: Enloe Hospital"
+        ),
+        "New journey destination should use Destination Set wording."
+    );
 
     const purposeContext =
         createContext();
@@ -711,6 +717,12 @@ function createContext(options = {}) {
     assert.strictEqual(
         activeContext.activeJourney.destinationDetail,
         "Enloe Hospital"
+    );
+    assert(
+        activeContext.activeJourney.timeline.includes(
+            "Destination Updated: Enloe Hospital"
+        ),
+        "Replacing a meaningful destination should use Destination Updated wording."
     );
     assert.strictEqual(
         activeContext.activeJourney.parkingLocation,

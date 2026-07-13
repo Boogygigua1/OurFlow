@@ -1862,13 +1862,48 @@ function getJourneyEventParts(event) {
     };
 }
 
+function normalizeJourneyEventPartsForDisplay(parts) {
+
+    const type =
+        String(parts?.type || "").trim();
+
+    const text =
+        String(parts?.text || "").trim();
+
+    if (
+        /^Journey Started$/i.test(type) &&
+        /^Auto-Created$/i.test(text)
+    ) {
+        return {
+            ...parts,
+            type: "",
+            text: "Journey Created"
+        };
+    }
+
+    if (
+        /^Journey Started$/i.test(type) &&
+        text
+    ) {
+        return {
+            ...parts,
+            type: "Destination Set",
+            text
+        };
+    }
+
+    return parts;
+}
+
 function buildJourneyEventItems(events) {
 
     return events
         .map((event, index) => {
 
             const parts =
-                getJourneyEventParts(event);
+                normalizeJourneyEventPartsForDisplay(
+                    getJourneyEventParts(event)
+                );
 
             const meta =
                 [

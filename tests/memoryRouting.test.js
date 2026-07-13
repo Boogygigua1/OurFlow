@@ -34,6 +34,7 @@ function createContext() {
 
     const context = {
         console,
+        result: resultElement,
         alert(message) {
             throw new Error("Unexpected alert: " + message);
         },
@@ -228,6 +229,28 @@ async function assertMedication(input) {
     assert.strictEqual(context.activeJourney.staffInstructions.length, 0, input);
 }
 
+async function assertMedicationRecall(input) {
+    const context = createContext();
+
+    context.activeJourney.medications = [
+        "Ibuprofen"
+    ];
+
+    context.__setQuestion(input);
+
+    await context.askOurFlow();
+
+    assert(
+        context.__getResultHtml().includes("Ibuprofen"),
+        input + " should recall saved medications."
+    );
+    assert.strictEqual(
+        context.activeJourney.questionsForDoctor.length,
+        0,
+        input + " should not be saved as a question."
+    );
+}
+
 async function assertReminder(input) {
     const context = await runCase(input);
     assert.strictEqual(context.activeJourney.staffInstructions.length, 1, input);
@@ -258,6 +281,10 @@ async function assertNoActiveReminder(input) {
     assert.strictEqual(
         context.activeJourney.staffInstructions[0],
         input
+    );
+    assert(
+        context.activeJourney.timeline.includes("Journey Created"),
+        input + " should use user-facing shell event wording."
     );
     assert(
         /Instruction Saved/.test(context.__getResultHtml()),
@@ -367,6 +394,9 @@ async function assertNotParkingMemory(input) {
     await assertPeoplePlace("My nurse is Megan.");
     await assertPeoplePlace("Dr. Hood is my doctor.");
     await assertPeoplePlace("Anna is the receptionist.");
+    await assertPeoplePlace("Amy is the administrator.");
+    await assertPeoplePlace("John is the receptionist.");
+    await assertPeoplePlace("Dr. Smith is my doctor.");
 
     await assertInsideDestination(
         "The anthropology office is in BSS 354.",
@@ -498,6 +528,12 @@ async function assertNotParkingMemory(input) {
         "Destination merge should preserve the saved reminder."
     );
     assert(
+        destinationMergeContext.activeJourney.timeline.includes(
+            "Destination Set: Chico State"
+        ),
+        "First later destination should use Destination Set wording."
+    );
+    assert(
         !/Journey Already Active/.test(
             destinationMergeContext.__getResultHtml()
         ),
@@ -506,6 +542,9 @@ async function assertNotParkingMemory(input) {
 
     await assertQuestion("Need to ask about Lanier.");
     await assertMedication("Need to take ibuprofen.");
+    await assertMedicationRecall("What are my medications");
+    await assertMedicationRecall("What are my medication's?");
+    await assertMedicationRecall("What are my medication\u2019s?");
 
     await assertArrivalGuidance("Turn right at the library.");
     await assertArrivalGuidance("Take the elevator on the left.");

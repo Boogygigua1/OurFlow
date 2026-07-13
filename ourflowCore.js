@@ -1434,6 +1434,10 @@ How should I save this?
 
             const destinationPurpose =
                 journeyPurpose;
+
+            const hadMeaningfulDestinationBeforeSet =
+                hasMeaningfulActiveJourneyDestination(activeJourney);
+
             // ========================================
             // DESTINATION JOURNEY CREATION
             // ========================================
@@ -1582,7 +1586,11 @@ How should I save this?
             addConversationHistoryEntry(question);
 
             activeJourney.timeline.push(
-                "🧭 Journey Started: " +
+                (
+                    hadMeaningfulDestinationBeforeSet
+                        ? "Destination Updated: "
+                        : "Destination Set: "
+                ) +
                 destination
             );
 
@@ -2185,7 +2193,7 @@ Ready to save?
             markActiveJourneyContext("new");
 
             activeJourney.timeline.push(
-                "🧭 Journey Started: Auto-Created"
+                "Journey Created"
             );
 
             showActiveJourneyBox();
