@@ -826,6 +826,64 @@ function createContext(options = {}) {
         "Destination verification should add the standardized event wording."
     );
 
+    verifyContext.__setInputValue(
+        "destinationBuilding",
+        "Student Services Building"
+    );
+    verifyContext.__setInputValue(
+        "destinationRoomSuite",
+        "204"
+    );
+    verifyContext.__setInputValue(
+        "destinationFloor",
+        "second floor"
+    );
+    verifyContext.__setInputValue(
+        "destinationContactPerson",
+        "Amy"
+    );
+
+    verifyContext.saveDestinationInternalDetailsFromCard();
+
+    assert.strictEqual(
+        verifyContext.activeJourney.destinationBuilding,
+        "Student Services Building",
+        "Destination details should save Building from the form."
+    );
+    assert.strictEqual(
+        verifyContext.activeJourney.destinationRoomSuite,
+        "204",
+        "Destination details should save plain numeric Room from the form."
+    );
+    assert.strictEqual(
+        verifyContext.activeJourney.destinationFloor,
+        "second floor",
+        "Destination details should save additional populated fields from the form."
+    );
+    assert.strictEqual(
+        verifyContext.activeJourney.destinationContactPerson,
+        "Amy",
+        "Destination details should save all populated form fields."
+    );
+
+    const storedInsideDestination =
+        verifyContext.__getStoredActiveJourney();
+
+    assert.strictEqual(
+        storedInsideDestination.destinationRoomSuite,
+        "204",
+        "Destination details should persist Room to localStorage."
+    );
+    assert(
+        verifyContext.__getActiveJourneyHtml().includes(
+            "Student Services Building"
+        ) &&
+            verifyContext.__getActiveJourneyHtml().includes("204") &&
+            verifyContext.__getActiveJourneyHtml().includes("second floor") &&
+            verifyContext.__getActiveJourneyHtml().includes("Amy"),
+        "Active Journey should display every populated destination detail field."
+    );
+
     const verifyPurposeContext =
         createContext();
 

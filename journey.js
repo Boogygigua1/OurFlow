@@ -1506,7 +1506,9 @@ function getCleanRoomSuite(journey) {
 
     const looksLikeRoom =
         /\b(room|suite)\s+[a-z0-9-]+\b/i.test(room) ||
-        /\b[A-Z]{2,}\s*-?\s*\d{2,4}[A-Z]?\b/.test(room);
+        /\b[A-Z]{2,}\s*-?\s*\d{2,4}[A-Z]?\b/.test(room) ||
+        /^\d{1,5}[A-Z]?$/i.test(room) ||
+        /^[A-Z]\d{1,5}[A-Z]?$/i.test(room);
 
     return looksLikeRoom
         ? room
