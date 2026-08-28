@@ -106,9 +106,7 @@ function showNoVerifiedAddressMessage() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>No verified address yet.</strong>
-
-    <br><br>
+    <h2 class="card-title">No verified address yet.</h2>
 
     Add or verify an address first.
 </div>
@@ -179,9 +177,7 @@ function requestCurrentLocationIntake() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Current Location</strong>
-
-    <br><br>
+    <h2 class="card-title">Current Location</h2>
 
     Requesting your current location...
 </div>
@@ -200,9 +196,7 @@ function requestCurrentLocationIntake() {
         function () {
             document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Current Location Unavailable</strong>
-
-    <br><br>
+    <h2 class="card-title">Current Location Unavailable</h2>
 
     Location access was not completed. You can still save a parking or starting location manually.
 </div>
@@ -234,9 +228,7 @@ function showVerifiedLocationSaveTargetCard(candidate) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>&#128205; Address Verified</strong>
-
-    <br><br>
+    <h2 class="card-title">&#128205; Address Verified</h2>
 
     Detected note:
 
@@ -347,9 +339,7 @@ function showLocationConfirmationCard(candidate) {
 
     result.innerHTML = `
 <div class="card">
-    <strong>&#128205; Location Found</strong>
-
-    <br><br>
+    <h2 class="card-title">&#128205; Location Found</h2>
 
     You said:
 
@@ -567,9 +557,7 @@ function dismissLocationIntakeCandidate() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Location Not Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Location Not Saved</h2>
 
     Nothing was saved as a location.
 </div>
@@ -611,9 +599,7 @@ function startJourneyFromLocationIntake() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Journey Started</strong>
-
-    <br><br>
+    <h2 class="card-title">Journey Started</h2>
 
     ${escapeLocationIntakeHtml(candidate.locationText)}
 
@@ -660,9 +646,7 @@ function saveLocationIntakeAsDestination() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Destination Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Destination Saved</h2>
 
     ${escapeLocationIntakeHtml(candidate.locationText)}
 
@@ -741,9 +725,7 @@ function saveLocationIntakeAsStart() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Starting Location Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Starting Location Saved</h2>
 
     ${escapeLocationIntakeHtml(candidate.locationText)}
 
@@ -822,7 +804,7 @@ async function continueLocationIntakeWithAI() {
 
     result.innerHTML = `
 <div class="card">
-    <strong>OurFlow</strong><br><br>
+    <h2 class="card-title">OurFlow</h2>
     Looking into that...
 </div>
 `;
@@ -847,7 +829,7 @@ async function continueLocationIntakeWithAI() {
 
     result.innerHTML = `
 <div class="card">
-    <strong>OurFlow</strong><br><br>
+    <h2 class="card-title">OurFlow</h2>
     ${data.answer}
 </div>
 `;

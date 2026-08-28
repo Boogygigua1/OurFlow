@@ -101,7 +101,7 @@ function renderOrientationPhotos(photos) {
 
             return `
 <div style="margin-bottom:12px;">
-    <strong>${escapeOrientationHtml(title)}</strong>
+    <h3 class="card-subtitle">${escapeOrientationHtml(title)}</h3>
 
     ${photo.thumbnail
                     ? `
@@ -131,7 +131,7 @@ function renderOrientationSection(title, content) {
 
     return `
 <br>
-<strong>${title}</strong>
+<h3 class="card-subtitle">${title}</h3>
 
 <br><br>
 
@@ -171,9 +171,7 @@ function showOrientationPhotos() {
 
     result.innerHTML = `
 <div class="card">
-    <strong>&#128247; Saved Photos</strong>
-
-    <br><br>
+    <h2 class="card-title">&#128247; Saved Photos</h2>
 
     ${photos.length
                 ? renderOrientationPhotos(photos)
@@ -193,7 +191,7 @@ function renderOrientationActions(photos) {
     return `
 <br><br>
 
-<strong>Orientation Actions</strong>
+<h3 class="card-subtitle">Orientation Actions</h3>
 
 <br><br>
 
@@ -239,9 +237,7 @@ function showOrientationHub() {
     if (!activeJourney) {
         result.innerHTML = `
 <div class="card">
-    <strong>Orientation Hub</strong>
-
-    <br><br>
+    <h2 class="card-title">Orientation Hub</h2>
 
     No active journey is available yet.
 </div>
@@ -295,9 +291,7 @@ function showOrientationHub() {
 
     result.innerHTML = `
 <div class="card">
-    <strong>&#129517; Orientation Hub</strong>
-
-    <br><br>
+    <h2 class="card-title">&#129517; Orientation Hub</h2>
 
     Here's what I already know about this place:
 
@@ -314,7 +308,7 @@ function showOrientationHub() {
 
     ${destination.verifiedAddress
                 ? `
-    <strong>Verified Address:</strong><br>
+    <h3 class="card-subtitle">Verified Address</h3>
     ${escapeOrientationHtml(destination.verifiedAddress)}
     `
                 : ""}

@@ -1,8 +1,7 @@
 function showCard(title, body) {
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>${title}</strong>
-    <br><br>
+    <h2 class="card-title">${title}</h2>
     ${body}
 </div>
 `;
@@ -41,9 +40,7 @@ function showJourneyList(
 
         result.innerHTML = `
 <div class="card">
-    <strong>${title}</strong>
-
-    <br><br>
+    <h2 class="card-title">${title}</h2>
 
     No items saved for this journey yet.
 </div>
@@ -63,9 +60,7 @@ ${index + 1}. ${item}<br><br>
 
     result.innerHTML = `
 <div class="card">
-    <strong>${title}</strong>
-
-    <br><br>
+    <h2 class="card-title">${title}</h2>
 
     ${listHtml}
 </div>

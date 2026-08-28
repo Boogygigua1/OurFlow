@@ -61,9 +61,7 @@ function showRecoveryChoices() {
     if (!activeJourney) {
         result.innerHTML = `
 <div class="card">
-    <strong>Journey Recovery</strong>
-
-    <br><br>
+    <h2 class="card-title">Journey Recovery</h2>
 
     I don't have an active journey to recover yet.
 </div>
@@ -77,9 +75,7 @@ function showRecoveryChoices() {
     if (places.length === 0) {
         result.innerHTML = `
 <div class="card">
-    <strong>Journey Recovery</strong>
-
-    <br><br>
+    <h2 class="card-title">Journey Recovery</h2>
 
     I don't have remembered places for this journey yet.
 </div>
@@ -90,9 +86,7 @@ function showRecoveryChoices() {
     const placeButtons =
         places.map(place => `
 <div style="margin-bottom:16px;">
-    <strong>${place.label}</strong>
-
-    <br>
+    <h3 class="card-subtitle">${place.label}</h3>
 
     ${place.title || "Unnamed place"}
 
@@ -114,9 +108,7 @@ function showRecoveryChoices() {
 
     result.innerHTML = `
 <div class="card">
-    <strong>Journey Recovery</strong>
-
-    <br><br>
+    <h2 class="card-title">Journey Recovery</h2>
 
     I found these remembered places from this journey:
 

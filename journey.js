@@ -120,7 +120,7 @@ function saveJourney() {
 
     result.innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">🧭 Journey Saved</strong><br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">🧭 Journey Saved</h2>
 
     Destination:
     ${journeyToSave.destination}
@@ -184,7 +184,7 @@ function continueActiveJourneyFromRecovery() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>&#129517; Journey Active</strong>
+    <h2 class="card-title">&#129517; Journey Active</h2>
 
     <br><br>
 
@@ -212,7 +212,7 @@ function showActiveJourneyRecoveryCard() {
 
     result.innerHTML = `
 <div class="card">
-    <strong>&#129517; Journey in Progress</strong>
+    <h2 class="card-title">&#129517; Journey in Progress</h2>
 
     <br><br>
 
@@ -252,7 +252,7 @@ function requestEndJourney() {
     if (!activeJourney) {
         result.innerHTML = `
 <div class="card">
-    <strong>OurFlow</strong><br><br>
+    <h2 class="card-title">OurFlow</h2>
     No active journey to end.
 </div>
 `;
@@ -268,7 +268,7 @@ function requestEndJourney() {
 
     result.innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">&#127937; End Journey?</strong>
+    <h2 class="card-title" data-card-heading tabindex="-1">&#127937; End Journey?</h2>
 
     <br><br>
 
@@ -374,7 +374,7 @@ function saveAndKeepJourneyActive() {
 
     result.innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">&#128190; Journey Saved</strong>
+    <h2 class="card-title" data-card-heading tabindex="-1">&#128190; Journey Saved</h2>
 
     <br><br>
 
@@ -414,7 +414,7 @@ function endJourneyWithoutSaving() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">&#127937; Journey Discarded</strong>
+    <h2 class="card-title" data-card-heading tabindex="-1">&#127937; Journey Discarded</h2>
 
     <br><br>
 
@@ -640,7 +640,7 @@ function showSavedJourneys() {
 
         result.innerHTML = `
 <div class="card">
-    <strong>🧭 Saved Journeys</strong>
+    <h2 class="card-title">🧭 Saved Journeys</h2>
     <br><br>
     No journeys saved yet.
 </div>
@@ -652,7 +652,7 @@ function showSavedJourneys() {
     let html =
         `<div class="card">
 
-<strong>🗂 Journey Archive</strong>
+<h2 class="card-title">🗂 Journey Archive</h2>
 
 <br><br>
 
@@ -663,7 +663,7 @@ ${savedJourneys.length >= JOURNEY_LIMIT
 <br><br>
 
 <div class="card">
-    <strong>📦 Archive Full</strong>
+    <h2 class="card-title">📦 Archive Full</h2>
 
     <br><br>
 
@@ -886,9 +886,7 @@ function toggleJourney(index, savedJourneyItem) {
     border-radius:8px;
     margin-bottom:10px;
 ">
-    <strong>🧭 Journey Summary</strong>
-
-    <br><br>
+    <h2 class="card-title">🧭 Journey Summary</h2>
 
     Destination:
     ${journey.destination}
@@ -906,9 +904,7 @@ ${journey.timeline?.length || 0}
 
 <br><br>
 
-<strong>🧭 Quick Summary</strong>
-
-<br><br>
+<h3 class="card-subtitle">🧭 Quick Summary</h3>
 
 ${journey.notes?.length
             ? `<strong>📝 Notes:</strong> ${journey.notes.length}<br>`
@@ -946,24 +942,24 @@ ${journey.startLocation
             ? `<strong>🧭 Start:</strong> ${journey.startLocation}<br>`
             : ""}
 
-<strong>📍 Destination:</strong>
+<h3 class="card-subtitle">📍 Destination</h3>
 ${journey.destination}
 
 <br><br>
 
 <hr>
-        <strong>Destination:</strong>
+        <h3 class="card-subtitle">Destination</h3>
         ${journey.destination}
 
         <br><br>
 
-        <strong>📍 Destination Details:</strong>
+        <h3 class="card-subtitle">📍 Destination Details</h3>
         ${journey.destinationDetail ||
         "No destination details recorded"}
 
         <br><br>
 
-        <strong>📬 Verified Destination:</strong>
+        <h3 class="card-subtitle">📬 Verified Destination</h3>
         ${journey.verifiedDestinationAddress || "Not verified"}
 
         <br><br>
@@ -989,8 +985,7 @@ ${journey.destination}
 
         <br><br>
 
-     <strong>🧭 Starting Location:</strong>
-<br>
+     <h3 class="card-subtitle">🧭 Starting Location</h3>
 ${journey.startLocation || "Not recorded"}
 
 ${journey.startLocationAddress &&
@@ -1002,7 +997,7 @@ ${journey.startLocationAddress &&
             : ""}
     <br><br>
 
-        <strong>Parking:</strong>
+        <h3 class="card-subtitle">Parking</h3>
         ${journey.parkingLocation || "Not recorded"}
 
 ${journey.parkingLocation
@@ -1029,7 +1024,7 @@ ${journey.startLocation
             : ""}
 <br><br>
 
-        <strong>Journey Details</strong>
+        <h3 class="card-subtitle">Journey Details</h3>
 
         <br><br>
     `;
@@ -1060,12 +1055,12 @@ ${event}
             html += `
     <br>
 
-    <strong>📷 Saved Photos</strong>
+    <h3 class="card-subtitle">📷 Saved Photos</h3>
 
     <br><br>
 
     ${journey.photos.map((photo, index) => `
-        <strong>📷 Photo ${index + 1}</strong>
+        <h3 class="card-subtitle">📷 Photo ${index + 1}</h3>
 
         <br>
 
@@ -1118,7 +1113,7 @@ function restoreJourney(index) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Journey Restored</strong>
+    <h2 class="card-title">Journey Restored</h2>
 
     <br><br>
 
@@ -2180,7 +2175,7 @@ function showActiveJourneyBox(targetSectionKey = "") {
     result.innerHTML = `
 <div class="card journey-active-card">
     <div class="journey-card-header">
-        <strong>🧭 Active Journey</strong>
+        <h2 class="card-title">🧭 Active Journey</h2>
     </div>
 
     ${buildJourneySummary(activeJourney)}
@@ -2217,9 +2212,7 @@ function showActiveJourneyBox(targetSectionKey = "") {
     result.innerHTML = `
 <div class="card">
 
-    <strong>🧭 Journey Started</strong>
-
-    <br><br>
+    <h2 class="card-title">🧭 Journey Started</h2>
 
     I see you're starting a journey to:
 
@@ -2241,11 +2234,11 @@ function showActiveJourneyBox(targetSectionKey = "") {
 
 ${activeJourney?.verifiedDestinationAddress
             ? `
-<strong>📬 Verified Destination:</strong><br>
+<h3 class="card-subtitle">📬 Verified Destination</h3>
 ${activeJourney.verifiedDestinationAddress}
 `
             : `
-<strong>⚠️ Destination Not Verified</strong><br>
+<h3 class="card-subtitle">⚠️ Destination Not Verified</h3>
 Verify the location before navigating.
 `}
 
@@ -2283,7 +2276,7 @@ showActiveJourneyBox();
 
 ${window.showJourneyInfo ? `
 
-<strong>Destination:</strong><br>
+<h3 class="card-subtitle">Destination</h3>
 ${activeJourney.destinationName ||
             activeJourney.destination ||
             "No destination saved yet."}
@@ -2304,7 +2297,7 @@ ${activeJourney.destinationInternalLocation ||
             activeJourney.destinationInsideNotes
                 ? `
 <br><br>
-<strong>Inside Destination Details:</strong><br>
+<h3 class="card-subtitle">Inside Destination Details</h3>
 ${[
                     activeJourney.destinationBuilding
                         ? "Building: " +
@@ -2351,7 +2344,7 @@ ${activeJourney.destinationDirectoryNote ||
             activeJourney.destinationCampusZip
                 ? `
 <br><br>
-<strong>Directory note:</strong><br>
+<h3 class="card-subtitle">Directory note</h3>
 ${[
                     activeJourney.destinationDirectoryNote,
                     activeJourney.destinationCampusZip
@@ -2368,16 +2361,16 @@ ${[
 
 <br><br>
 
-    <strong>Arrival Help:</strong><br>
+    <h3 class="card-subtitle">Arrival Help</h3>
 ${activeJourney.arrivalTips || "No arrival tips yet."}
 
 <br><br>
 
-<strong>📍 Destination Details:</strong><br>
+<h3 class="card-subtitle">📍 Destination Details</h3>
 ${activeJourney.destinationDetail ||
             "No destination details saved yet."}
 <br><br>
-<strong>🧭 Starting Location:</strong><br>
+<h3 class="card-subtitle">🧭 Starting Location</h3>
 
 ${activeJourney.startLocation ||
             "No starting location saved yet."}
@@ -2396,7 +2389,7 @@ ${activeJourney.startVerified
 
 <br><br>
 
-<strong>🚗 Parking Memory:</strong><br>
+<h3 class="card-subtitle">🚗 Parking Memory</h3>
 
 ${activeJourney.parkingLocation ||
             activeJourney.parkingDescription ||
@@ -2444,7 +2437,7 @@ ${activeJourney.startLocation
 
 <br><br>
 
-<strong>📅 Appointments:</strong><br>
+<h3 class="card-subtitle">📅 Appointments</h3>
 ${activeJourney.appointments?.length
                 ? activeJourney.appointments
                     .slice(-3)
@@ -2457,7 +2450,7 @@ ${activeJourney.appointments?.length
 
 <br><br>
 
-<strong>👩‍⚕️ Instructions:</strong><br>
+<h3 class="card-subtitle">👩‍⚕️ Instructions</h3>
 ${activeJourney.staffInstructions?.length
                 ? activeJourney.staffInstructions
                     .slice(-3)
@@ -2470,7 +2463,7 @@ ${activeJourney.staffInstructions?.length
 
 <br><br>
 
-<strong>📝 Notes:</strong><br>
+<h3 class="card-subtitle">📝 Notes</h3>
 ${activeJourney.notes?.length
                 ? activeJourney.notes
                     .slice(-3)
@@ -2483,7 +2476,7 @@ ${activeJourney.notes?.length
 
 <br><br>
 
-<strong>💊 Medications:</strong><br>
+<h3 class="card-subtitle">💊 Medications</h3>
 ${activeJourney.medications?.length
                 ? activeJourney.medications
                     .slice(-3)
@@ -2496,7 +2489,7 @@ ${activeJourney.medications?.length
 
 <br><br>
 
-<strong>❓ Questions:</strong><br>
+<h3 class="card-subtitle">❓ Questions</h3>
 ${activeJourney.questionsForDoctor?.length
                 ? activeJourney.questionsForDoctor
                     .slice(-3)
@@ -2509,7 +2502,7 @@ ${activeJourney.questionsForDoctor?.length
 
 <br><br>
 
-<strong>📷 Photos:</strong><br>
+<h3 class="card-subtitle">📷 Photos</h3>
 
 ${activeJourney.photos?.length
                 ? activeJourney.photos
@@ -2545,7 +2538,7 @@ ${index + 1}. ${item.note ||
 
 ` : ""}
 
-<strong>🏢 Directory Memory:</strong><br>
+<h3 class="card-subtitle">🏢 Directory Memory</h3>
 ${activeJourney.directories?.length
             ? activeJourney.directories
                 .slice(-3)
@@ -2654,7 +2647,7 @@ function showQuickSummaryPhotos() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>&#128247; Saved Photos</strong>
+    <h2 class="card-title">&#128247; Saved Photos</h2>
 
     <br><br>
 
@@ -2662,7 +2655,7 @@ function showQuickSummaryPhotos() {
                 ? photos
                     .map((photo, index) => `
 <div style="margin-bottom:12px;">
-    <strong>&#128247; Photo ${index + 1}</strong>
+    <h3 class="card-subtitle">&#128247; Photo ${index + 1}</h3>
 
     <br>
 
@@ -2715,7 +2708,7 @@ function showQuickJourneySummary() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>&#129517; Quick Summary</strong>
+    <h2 class="card-title">&#129517; Quick Summary</h2>
 
     <br><br>
 
@@ -2727,7 +2720,7 @@ function showQuickJourneySummary() {
 
     <br><br>
 
-    <strong>Journey Memory</strong>
+    <h3 class="card-subtitle">Journey Memory</h3>
 
     <br><br>
 
@@ -2751,7 +2744,7 @@ function showQuickJourneySummary() {
 
     <br><br>
 
-    <strong>Actions</strong>
+    <h3 class="card-subtitle">Actions</h3>
 
     <br><br>
 
@@ -2833,7 +2826,7 @@ function showArrivalMode() {
     document.getElementById("result").innerHTML = `
 <div class="card">
 
-    <strong>&#129517; Destination Reached</strong>
+    <h2 class="card-title">&#129517; Destination Reached</h2>
 
     <br><br>
 
@@ -2877,7 +2870,7 @@ function startArrivalPhoto() {
     document.getElementById("result").innerHTML = `
 <div class="card">
 
-    <strong>&#128247; Arrival Photo</strong>
+    <h2 class="card-title">&#128247; Arrival Photo</h2>
 
     <br><br>
 

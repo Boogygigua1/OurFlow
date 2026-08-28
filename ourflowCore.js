@@ -47,9 +47,7 @@ function showParkingRecall() {
 
         result.innerHTML = `
 <div class="card">
-    <strong>Parking Location</strong>
-
-    <br><br>
+    <h2 class="card-title">Parking Location</h2>
 
     Your vehicle is parked at:
 
@@ -78,9 +76,7 @@ function showParkingRecall() {
 
     result.innerHTML = `
 <div class="card">
-    <strong>Parking Reminder</strong>
-
-    <br><br>
+    <h2 class="card-title">Parking Reminder</h2>
 
     I don't have a parking location recorded for this journey.
 </div>
@@ -359,9 +355,7 @@ function showInsideDestinationRecall(question) {
     if (!rows.length) {
         result.innerHTML = `
 <div class="card">
-    <strong>Inside Destination Details</strong>
-
-    <br><br>
+    <h2 class="card-title">Inside Destination Details</h2>
 
     I don't have inside destination details saved for this journey yet.
 </div>
@@ -371,9 +365,7 @@ function showInsideDestinationRecall(question) {
 
     result.innerHTML = `
 <div class="card">
-    <strong>Inside Destination Details</strong>
-
-    <br><br>
+    <h2 class="card-title">Inside Destination Details</h2>
 
     ${rows.map(row =>
         `<strong>${row.label}:</strong> ${row.value}`
@@ -1228,9 +1220,7 @@ async function askOurFlow() {
         document.getElementById("result").innerHTML = `
 <div class="card">
 
-<strong>📷 Photo Memory</strong>
-
-<br><br>
+<h2 class="card-title">📷 Photo Memory</h2>
 
 ${question}
 
@@ -1359,7 +1349,7 @@ How should I save this?
 
     result.innerHTML = `
     <div class="card">
-        <strong>🧭 OurFlow</strong><br><br>
+        <h2 class="card-title">🧭 OurFlow</h2>
         Looking into that...
     </div>
     `;
@@ -1400,9 +1390,7 @@ How should I save this?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>🧭 Journey Already Active</strong>
-
-    <br><br>
+    <h2 class="card-title">🧭 Journey Already Active</h2>
 
     You already have an active journey.
 
@@ -1659,7 +1647,7 @@ How should I save this?
 
                 result.innerHTML = `
         <div class="card">
-            <strong>🧭 OurFlow</strong><br><br>
+            <h2 class="card-title">🧭 OurFlow</h2>
             No active journey to end.
         </div>
         `;
@@ -1703,7 +1691,7 @@ How should I save this?
 
             result.innerHTML = `
 <div class="card">
-    <strong>🧭 Journey Recap</strong>
+    <h2 class="card-title">🧭 Journey Recap</h2>
 
     <br><br>
 
@@ -2272,7 +2260,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>📍 Location Detail Saved</strong>
+    <h2 class="card-title">📍 Location Detail Saved</h2>
 
     <br><br>
 
@@ -2322,7 +2310,7 @@ Ready to save?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>🏢 Directory Already Saved</strong>
+    <h2 class="card-title">🏢 Directory Already Saved</h2>
 
     <br><br>
 
@@ -2345,7 +2333,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>🏢 People &amp; Place Detail Saved</strong>
+    <h2 class="card-title">🏢 People &amp; Place Detail Saved</h2>
 
     <br><br>
 
@@ -2380,7 +2368,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>❓ Question Saved</strong>
+    <h2 class="card-title">❓ Question Saved</h2>
 
     <br><br>
 
@@ -2416,7 +2404,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>💊 Medication Saved</strong>
+    <h2 class="card-title">💊 Medication Saved</h2>
 
     <br><br>
 
@@ -2446,7 +2434,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>Destination Guidance Saved</strong>
+    <h2 class="card-title">Destination Guidance Saved</h2>
 
     <br><br>
 
@@ -2477,7 +2465,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>Inside Destination Details Saved</strong>
+    <h2 class="card-title">Inside Destination Details Saved</h2>
 
     <br><br>
 
@@ -2530,7 +2518,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>👩‍⚕️ Instruction Saved</strong>
+    <h2 class="card-title">👩‍⚕️ Instruction Saved</h2>
 
     <br><br>
 
@@ -2576,7 +2564,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>📝 Note Saved</strong>
+    <h2 class="card-title">📝 Note Saved</h2>
 
     <br><br>
 
@@ -2616,7 +2604,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>📝 Note Saved</strong>
+    <h2 class="card-title">📝 Note Saved</h2>
 
     <br><br>
 
@@ -2676,7 +2664,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>❓ Question Saved</strong>
+    <h2 class="card-title">❓ Question Saved</h2>
 
     <br><br>
 
@@ -2717,7 +2705,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>💊 Medication Saved</strong>
+    <h2 class="card-title">💊 Medication Saved</h2>
 
     <br><br>
 
@@ -2759,7 +2747,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>🏢 Directory Saved</strong>
+    <h2 class="card-title">🏢 Directory Saved</h2>
 
     <br><br>
 
@@ -2816,7 +2804,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>📅 Appointment Saved</strong>
+    <h2 class="card-title">📅 Appointment Saved</h2>
 
     <br><br>
 
@@ -2867,7 +2855,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>👩‍⚕️ Instruction Saved</strong>
+    <h2 class="card-title">👩‍⚕️ Instruction Saved</h2>
 
     <br><br>
 
@@ -2915,7 +2903,7 @@ Ready to save?
 
             result.innerHTML = `
 <div class="card">
-    <strong>🧭 Start Location Saved</strong>
+    <h2 class="card-title">🧭 Start Location Saved</h2>
 
     <br><br>
 
@@ -2943,7 +2931,7 @@ Ready to save?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>🏢 Directories</strong>
+    <h2 class="card-title">🏢 Directories</h2>
 
     <br><br>
 
@@ -2978,7 +2966,7 @@ Ready to save?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>📝 Notes</strong>
+    <h2 class="card-title">📝 Notes</h2>
 
     <br><br>
 
@@ -3016,7 +3004,7 @@ Ready to save?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>❓ Saved Questions</strong>
+    <h2 class="card-title">❓ Saved Questions</h2>
 
     <br><br>
 
@@ -3052,7 +3040,7 @@ Ready to save?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>💊 Medications</strong>
+    <h2 class="card-title">💊 Medications</h2>
 
     <br><br>
 
@@ -3088,7 +3076,7 @@ Ready to save?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>📅 Appointments</strong>
+    <h2 class="card-title">📅 Appointments</h2>
 
     <br><br>
 
@@ -3125,7 +3113,7 @@ Ready to save?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>👩‍⚕️ Instructions</strong>
+    <h2 class="card-title">👩‍⚕️ Instructions</h2>
 
     <br><br>
 
@@ -3253,7 +3241,7 @@ Ready to save?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>🧭 Starting Location</strong>
+    <h2 class="card-title">🧭 Starting Location</h2>
 
     <br><br>
 
@@ -3280,7 +3268,7 @@ Can I help you get back there?
 
             result.innerHTML = `
 <div class="card">
-    <strong>🧭 Starting Location</strong>
+    <h2 class="card-title">🧭 Starting Location</h2>
 
     <br><br>
 
@@ -3330,7 +3318,7 @@ Can I help you get back there?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>🏢 Directory Already Saved</strong>
+    <h2 class="card-title">🏢 Directory Already Saved</h2>
 
     <br><br>
 
@@ -3353,7 +3341,7 @@ Can I help you get back there?
 
             result.innerHTML = `
 <div class="card">
-    <strong>🏢 Directory Info Saved</strong>
+    <h2 class="card-title">🏢 Directory Info Saved</h2>
 
     <br><br>
 
@@ -3453,7 +3441,7 @@ Can I help you get back there?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>📍 Location Found</strong>
+    <h2 class="card-title">📍 Location Found</h2>
 
     <br><br>
 
@@ -3519,7 +3507,7 @@ Can I help you get back there?
 
             result.innerHTML = `
 <div class="card">
-    <strong>🧭 Destination Updated</strong>
+    <h2 class="card-title">🧭 Destination Updated</h2>
     <br><br>
     I saved this as your journey destination:
     <br><br>
@@ -3741,7 +3729,7 @@ Can I help you get back there?
 
                 result.innerHTML = `
 <div class="card">
-    <strong>🔍 Information Search</strong>
+    <h2 class="card-title">🔍 Information Search</h2>
 
     <br><br>
 
@@ -3823,11 +3811,11 @@ Chico, CA
                 if (savedDestinationAddress) {
                     result.innerHTML = `
 <div class="card">
-    <strong>Navigation Available</strong>
+    <h2 class="card-title">Navigation Available</h2>
 
     <br><br>
 
-    <strong>Verified Destination</strong>
+    <h3 class="card-subtitle">Verified Destination</h3>
 
     <br><br>
 
@@ -3845,7 +3833,7 @@ Chico, CA
 
                 result.innerHTML = `
 <div class="card">
-    <strong>📍 Destination Saved</strong>
+    <h2 class="card-title">📍 Destination Saved</h2>
 
     <br><br>
 
@@ -3853,7 +3841,7 @@ Chico, CA
 
     <br><br>
 
-    <strong>Address not verified yet</strong>
+    <h3 class="card-subtitle">Address not verified yet</h3>
 
     <br><br>
 
@@ -3887,12 +3875,12 @@ if (address) {
 
             result.innerHTML = `
 <div class="card">
-    <strong>🧭 Verified Map Search</strong>
+    <h2 class="card-title">🧭 Verified Map Search</h2>
 
     ${pendingParkingLocation
                     ? `
             <br><br>
-<strong>📍 Parking location detected.</strong>
+<h3 class="card-subtitle">📍 Parking location detected.</h3>
 
 <br><br>
 
@@ -3939,7 +3927,7 @@ if (address) {
 
             result.innerHTML = `
 <div class="card">
-    <strong>🧭 Navigation Available</strong>
+    <h2 class="card-title">🧭 Navigation Available</h2>
 
     <br><br>
 
@@ -4039,7 +4027,7 @@ if (address) {
 
         result.innerHTML = `
 <div class="card">
-    <strong>🧭 OurFlow</strong><br><br>
+    <h2 class="card-title">🧭 OurFlow</h2>
     ${data.answer}
 
     ${getRouteDebugHtml(routeDebug)}
@@ -4054,7 +4042,7 @@ if (address) {
 
         result.innerHTML = `
 <div class="card">
-    <strong>🧭 OurFlow</strong><br><br>
+    <h2 class="card-title">🧭 OurFlow</h2>
     Error contacting OurFlow.
 </div>
 `;

@@ -144,6 +144,19 @@ button,
     text-align: left;
 }
 
+.card-title,
+.card-subtitle {
+    margin: 0 0 12px;
+    color: inherit;
+    font-size: 1em;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+.card-subtitle {
+    margin-top: 12px;
+}
+
 .journey-active-card,
 .journey-saved-detail {
     text-align: left;

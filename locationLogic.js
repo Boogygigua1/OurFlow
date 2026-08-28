@@ -260,9 +260,7 @@ function saveLocationType(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📍 Location Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">📍 Location Saved</h2>
 
     ${saveMessage}
 
@@ -314,9 +312,7 @@ function saveLocationType(type) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📍 Location Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">📍 Location Saved</h2>
 
     ${saveMessage}
 
@@ -592,9 +588,7 @@ function showParkingSavedConfirmationCard(statusMessage = "") {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">&#128663; Parking Saved</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">&#128663; Parking Saved</h2>
 
     ${statusMessage
         ? `${escapeDestinationPlaceHtml(statusMessage)}<br><br>`
@@ -622,8 +616,7 @@ function showParkingSavedConfirmationCard(statusMessage = "") {
 
     ${parkingDetailsHtml
         ? `
-    <strong>Parking Details</strong>
-    <br>
+    <h3 class="card-subtitle">Parking Details</h3>
     ${parkingDetailsHtml}
     <br>
     `
@@ -691,9 +684,7 @@ async function verifyParkingLocation() {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">Parking Address Optional</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">Parking Address Optional</h2>
 
     ${parkingLocation}
 
@@ -762,9 +753,7 @@ if(address){
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">🚗 Verifying Parking Location</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">🚗 Verifying Parking Location</h2>
 
     ${parkingLocation}
 
@@ -802,9 +791,7 @@ if(address){
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">📍 Suggested Location</strong>
-
-<br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">📍 Suggested Location</h2>
 
 ${data.suggestion || "No suggestion found."}
 
@@ -920,9 +907,7 @@ function saveInformationSearchAsDestination() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📍 Destination Detail Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">📍 Destination Detail Saved</h2>
 
     ${pendingDestinationSearch}
 
@@ -1002,9 +987,7 @@ async function verifySavedLocation() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📍 Verify Location</strong>
-
-    <br><br>
+    <h2 class="card-title">📍 Verify Location</h2>
 
     Searching for:
 
@@ -1066,9 +1049,7 @@ async function verifySavedLocation() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">📍 Destination Found</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">📍 Destination Found</h2>
 
     You said:
 
@@ -1872,9 +1853,7 @@ function showOtherDestinationMatches() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>🔍 Other Matches</strong>
-
-    <br><br>
+    <h2 class="card-title">🔍 Other Matches</h2>
 
     These are less likely matches. Choose one only if the recommendation was not right.
 </div>
@@ -1882,12 +1861,10 @@ function showOtherDestinationMatches() {
 ${otherMatches.map(
         (place, index) => `
 <div class="card">
-    <strong>${escapeDestinationPlaceHtml(
+    <h3 class="card-subtitle">${escapeDestinationPlaceHtml(
             place.destinationName ||
             "Destination"
-        )}</strong>
-
-    <br><br>
+        )}</h3>
 
     ${escapeDestinationPlaceHtml(
             place.destinationAddress ||
@@ -1912,9 +1889,7 @@ function showDestinationManualVerificationCard(destination, errorMessage) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">📍 Destination Not Found</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">📍 Destination Not Found</h2>
 
     ${errorMessage
             ? escapeDestinationPlaceHtml(errorMessage)
@@ -1985,9 +1960,7 @@ function showDestinationManualAddressEntryCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">&#9999;&#65039; Enter Correct Address</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">&#9999;&#65039; Enter Correct Address</h2>
 
     Original request:
 
@@ -2287,9 +2260,7 @@ function saveDestinationInternalDetailsFromCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">🏢 Inside Destination Details Saved</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">🏢 Inside Destination Details Saved</h2>
 
     I saved those details with this journey.
 </div>
@@ -2400,9 +2371,7 @@ function saveParkingDetailsFromCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">🚗 Parking Details Saved</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">🚗 Parking Details Saved</h2>
 
     I saved those parking details with this journey.
 </div>
@@ -2424,9 +2393,7 @@ function showParkingDetailsCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">🚗 Add Parking Details</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">🚗 Add Parking Details</h2>
 
     <label for="parkingGarageLot" class="field-label">Garage or lot</label>
     <input id="parkingGarageLot" placeholder="Garage / Lot" value="${escapeDestinationPlaceHtml(details.garageLot || "")}" style="width:90%;padding:8px;">
@@ -2475,9 +2442,7 @@ function showDestinationInternalDetailsCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">🏢 Add Inside Destination Details</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">🏢 Add Inside Destination Details</h2>
 
     <label for="destinationBuilding" class="field-label">Building</label>
     <input id="destinationBuilding" placeholder="Building" value="${escapeDestinationPlaceHtml(activeJourney.destinationBuilding || "")}" style="width:90%;padding:8px;">
@@ -2558,9 +2523,7 @@ function saveVerifiedDestinationAddress(address) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">📬 Destination Verified</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">📬 Destination Verified</h2>
 
     ${address}
 

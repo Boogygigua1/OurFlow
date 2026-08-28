@@ -172,9 +172,7 @@ async function analyzeLandmarkImage(input) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">📸 Photo Ready</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">📸 Photo Ready</h2>
 
     Your image has been loaded.
 
@@ -205,9 +203,7 @@ function showPhotoSavedCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong data-card-heading tabindex="-1">📷 Photo Saved</strong>
-
-    <br><br>
+    <h2 class="card-title" data-card-heading tabindex="-1">📷 Photo Saved</h2>
 
     ${lastPhoto?.thumbnail
                 ? `
@@ -346,9 +342,7 @@ async function analyzeSavedJourneyPhotoLegacy() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Analyzing Photo...</strong>
-
-    <br><br>
+    <h2 class="card-title">Analyzing Photo...</h2>
 
     Looking for useful location clues.
 </div>
@@ -397,9 +391,7 @@ async function analyzeSavedJourneyPhotoLegacy() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📷 Photo Analyzed</strong>
-
-    <br><br>
+    <h2 class="card-title">📷 Photo Analyzed</h2>
 
     ${data.answer}
 
@@ -466,9 +458,7 @@ function savePhotoMemory(note) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📷 Photo Note Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">📷 Photo Note Saved</h2>
 
     ${note}
 
@@ -565,9 +555,7 @@ function savePhotoClassification(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📬 Verified Location Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">📬 Verified Location Saved</h2>
 
     ${location}
 
@@ -622,9 +610,7 @@ function savePhotoClassification(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>🏢 Directory Info Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">🏢 Directory Info Saved</h2>
 
     ${directoryInfo}
 </div>
@@ -672,9 +658,7 @@ function savePhotoAsLocationLegacy(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Parking Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Parking Saved</h2>
 
     ${location}
 </div>
@@ -702,9 +686,7 @@ function savePhotoAsLocationLegacy(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Start Location Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Start Location Saved</h2>
 
     ${location}
 </div>
@@ -741,9 +723,7 @@ function savePhotoAsLocationLegacy(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Parking + Start Location Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Parking + Start Location Saved</h2>
 
     ${location}
 </div>
@@ -774,9 +754,7 @@ function savePhotoAsLocationLegacy(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Destination Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Destination Saved</h2>
 
     ${location}
 </div>
@@ -936,9 +914,7 @@ async function analyzeSavedJourneyPhoto() {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Photo Analyzed</strong>
-
-    <br><br>
+    <h2 class="card-title">Photo Analyzed</h2>
 
     ${data.answer}
 
@@ -986,9 +962,7 @@ function showPhotoAnalysisInProgressCard(title) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>${title}</strong>
-
-    <br><br>
+    <h2 class="card-title">${title}</h2>
 
     Looking for useful location clues.
 
@@ -1005,9 +979,7 @@ function showPhotoAnalysisFailedCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Photo Analysis Did Not Finish</strong>
-
-    <br><br>
+    <h2 class="card-title">Photo Analysis Did Not Finish</h2>
 
     You can continue your journey and try again later.
 
@@ -1068,9 +1040,7 @@ function savePhotoAsLocation(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Parking Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Parking Saved</h2>
 
     ${location}
 </div>
@@ -1099,9 +1069,7 @@ function savePhotoAsLocation(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Start Location Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Start Location Saved</h2>
 
     ${location}
 </div>
@@ -1135,9 +1103,7 @@ function savePhotoAsLocation(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Parking + Start Location Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Parking + Start Location Saved</h2>
 
     ${location}
 </div>
@@ -1167,9 +1133,7 @@ function savePhotoAsLocation(type) {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Destination Saved</strong>
-
-    <br><br>
+    <h2 class="card-title">Destination Saved</h2>
 
     ${location}
 </div>
