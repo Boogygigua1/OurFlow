@@ -120,7 +120,7 @@ function saveJourney() {
 
     result.innerHTML = `
 <div class="card">
-    <strong>🧭 Journey Saved</strong><br><br>
+    <strong data-card-heading tabindex="-1">🧭 Journey Saved</strong><br><br>
 
     Destination:
     ${journeyToSave.destination}
@@ -191,6 +191,10 @@ function continueActiveJourneyFromRecovery() {
     Your current journey is still active.
 </div>
 `;
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Your current journey is still active.");
+    }
 }
 
 function showActiveJourneyRecoveryCard() {
@@ -264,7 +268,7 @@ function requestEndJourney() {
 
     result.innerHTML = `
 <div class="card">
-    <strong>&#127937; End Journey?</strong>
+    <strong data-card-heading tabindex="-1">&#127937; End Journey?</strong>
 
     <br><br>
 
@@ -298,6 +302,10 @@ function requestEndJourney() {
     Returns to the active journey with no changes.
 </div>
 `;
+
+    if (typeof focusResultCardTarget === "function") {
+        focusResultCardTarget("[data-card-heading]");
+    }
 
     result.scrollIntoView({
         behavior: "smooth",
@@ -366,7 +374,7 @@ function saveAndKeepJourneyActive() {
 
     result.innerHTML = `
 <div class="card">
-    <strong>&#128190; Journey Saved</strong>
+    <strong data-card-heading tabindex="-1">&#128190; Journey Saved</strong>
 
     <br><br>
 
@@ -379,6 +387,10 @@ function saveAndKeepJourneyActive() {
     </button>
 </div>
 `;
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Journey saved and is still active.");
+    }
 
     result.scrollIntoView({
         behavior: "smooth",
@@ -402,13 +414,17 @@ function endJourneyWithoutSaving() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>&#127937; Journey Discarded</strong>
+    <strong data-card-heading tabindex="-1">&#127937; Journey Discarded</strong>
 
     <br><br>
 
     This journey was ended without saving.
 </div>
 `;
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Journey ended without saving.");
+    }
 
     const questionInput =
         document.getElementById("questionInput");
@@ -670,10 +686,11 @@ ${savedJourneys.length >= JOURNEY_LIMIT
 `
 : ""}
 
+<label for="journeySearch" class="field-label">Find a saved journey</label>
 <input
     type="text"
     id="journeySearch"
-    placeholder="🔍 Find Journey"
+    placeholder="Search by destination or memory"
     onkeyup="filterJourneys()"
     style="
         width:95%;
@@ -1058,6 +1075,7 @@ ${event}
 
         <img
             src="${photo.thumbnail}"
+            alt=""
             style="
                 max-width:200px;
                 border-radius:8px;
@@ -2502,6 +2520,7 @@ ${activeJourney.photos?.length
 ${item.thumbnail ? `
 <img
     src="${item.thumbnail}"
+    alt=""
     style="
         width:60px;
         height:auto;
@@ -2654,6 +2673,7 @@ function showQuickSummaryPhotos() {
     <br><br>
     <img
         src="${photo.thumbnail}"
+        alt=""
         style="
             max-width:120px;
             border-radius:8px;

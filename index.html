@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
@@ -12,7 +12,7 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#000000">
 
-    <link rel="stylesheet" href="style.css?v=2026-07-11-11">
+    <link rel="stylesheet" href="style.css?v=2026-08-28-1">
 
     <script defer src="/_vercel/insights/script.js"></script>
 
@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
 
     <script>
-        const OURFLOW_BUILD = "2026-07-14-1";
+        const OURFLOW_BUILD = "2026-08-28-1";
         console.log("OurFlow build loaded:", OURFLOW_BUILD);
     </script>
 
@@ -58,7 +58,7 @@ gap:10px;
 margin-bottom:5px;
 ">
 
-        <img src="ourflow-logo.png" style="
+        <img src="ourflow-logo.png" alt="" style="
 width:42px;
 height:42px;
 ">
@@ -228,7 +228,7 @@ color:#555;
         </div>
         <div style="margin-top:10px;">
             <button onclick="togglePhilosophy(this)"
-                style="background:none; color:#8a63ff; border:none; padding:0; cursor:pointer; font-size:14px; opacity:0.9;">
+                style="background:none; color:#6D28D9; border:none; padding:0; cursor:pointer; font-size:14px; opacity:1;">
 
                 ✨ Our Philosophy
             </button>
@@ -252,6 +252,7 @@ color:#555;
         </div>
     </div>
 
+    <label for="questionInput" class="field-label">Ask OurFlow</label>
     <input type="text" id="questionInput" placeholder="Where do you need help?" onkeydown="handleKey(event)">
 
     <button onclick="askOurFlow()">Ask OurFlow 🧭</button>
@@ -319,6 +320,8 @@ if (event.key === 'Enter' || event.key === ' ') {
         🧭 View Journeys
     </button>
 
+    <div id="ourflowStatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
     <div id="result"></div>
 
     <div id="activeJourneyBox"></div>
@@ -354,7 +357,7 @@ if (event.key === 'Enter' || event.key === ' ') {
 
     <button onclick="toggleLegal(this)" style="
 background:none;
-color:#888;
+color:#555;
 border:none;
 font-size:11px;
 cursor:pointer;
@@ -447,11 +450,14 @@ margin-right:auto;
 
     <form action="https://formspree.io/f/xojrboej" method="POST">
 
+        <label for="supportName" class="field-label">Your name</label>
         <input type="text" id="supportName" name="name" placeholder="Your name" style="width:100%; margin-bottom:10px;">
 
+        <label for="supportContact" class="field-label">Contact info</label>
         <input type="text" id="supportContact" name="contact" placeholder="Optional contact info"
             style="width:100%; margin-bottom:10px;">
 
+        <label for="supportTopic" class="field-label">Support topic</label>
         <select id="supportTopic" name="topic" style="width:100%; margin-bottom:10px; padding:10px;">
             <option>Billing</option>
             <option>Bug</option>
@@ -460,6 +466,7 @@ margin-right:auto;
             <option>Other</option>
         </select>
 
+        <label for="supportMessage" class="field-label">Message</label>
         <textarea id="supportMessage" name="message" placeholder="Short message..." maxlength="400" style="
             width:100%;
             height:100px;
@@ -496,7 +503,7 @@ margin-right:auto;
 
         <div style="margin-bottom:10px;">
 
-            <img src="ourflow-logo.png" style="
+            <img src="ourflow-logo.png" alt="" style="
 width:60px;
 height:auto;
 ">
@@ -508,21 +515,21 @@ height:auto;
         Powered by DNII • ChatGPT Aided
         <br>
         <span style="font-size:10px; opacity:0.65;">
-            Build: 2026-07-14-1
+            Build: 2026-08-28-1
         </span>
     </footer>
 
- <script src="state.js?v=2026-07-09-1"></script>
+ <script src="state.js?v=2026-08-28-1"></script>
 
 <script src="maps.js?v=2026-07-07-1"></script>
 <script src="journeyPlaces.js?v=2026-06-30-1"></script>
 <script src="recoveryLogic.js?v=2026-06-30-1"></script>
 <script src="locationIntake.js?v=2026-07-07-1"></script>
-<script src="orientationLogic.js?v=2026-06-30-1"></script>
+<script src="orientationLogic.js?v=2026-08-28-1"></script>
 
-<script src="locationLogic.js?v=2026-07-11-16"></script>
-<script src="photos.js?v=2026-07-11-9"></script>
-<script src="journey.js?v=2026-07-14-1"></script>
+<script src="locationLogic.js?v=2026-08-28-1"></script>
+<script src="photos.js?v=2026-08-28-1"></script>
+<script src="journey.js?v=2026-08-28-1"></script>
 <script src="mic.js?v=2026-06-30-1"></script>
 
 <script src="memoryHelpers.js?v=2026-07-12-1"></script>

@@ -155,6 +155,62 @@ let JOURNEY_LIMIT =
         5
     );
 
+function announceOurFlowStatus(message) {
+
+    const status =
+        document.getElementById("ourflowStatus");
+
+    if (
+        !status ||
+        !message
+    ) {
+        return;
+    }
+
+    status.textContent = "";
+
+    setTimeout(() => {
+        status.textContent = message;
+    }, 20);
+}
+
+function focusResultCardTarget(selector) {
+
+    const result =
+        document.getElementById("result");
+
+    if (!result) {
+        return;
+    }
+
+    const target =
+        selector
+            ? result.querySelector(selector)
+            : result.querySelector(
+                "[data-card-heading], input:not([type='hidden']), textarea, select"
+            );
+
+    if (!target) {
+        return;
+    }
+
+    const nativeFocusable =
+        /^(INPUT|TEXTAREA|SELECT|BUTTON|A)$/.test(
+            target.tagName
+        );
+
+    if (
+        !nativeFocusable &&
+        !target.hasAttribute("tabindex")
+    ) {
+        target.setAttribute("tabindex", "-1");
+    }
+
+    target.focus({
+        preventScroll: false
+    });
+}
+
 function resetJourneySessionContext() {
 
     conversationHistory = [];

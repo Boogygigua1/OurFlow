@@ -592,7 +592,7 @@ function showParkingSavedConfirmationCard(statusMessage = "") {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>&#128663; Parking Saved</strong>
+    <strong data-card-heading tabindex="-1">&#128663; Parking Saved</strong>
 
     <br><br>
 
@@ -661,6 +661,10 @@ document.getElementById(
 </div>
 `;
 
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Parking saved.");
+    }
+
     keepParkingSavedCardInView();
 }
 
@@ -687,7 +691,7 @@ async function verifyParkingLocation() {
 
         document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Parking Address Optional</strong>
+    <strong data-card-heading tabindex="-1">Parking Address Optional</strong>
 
     <br><br>
 
@@ -717,10 +721,11 @@ encodeURIComponent(window.parkingLookupAddress),
 
     <br><br>
 
+    <label for="verifiedParkingAddress" class="field-label">Verified parking address</label>
     <input
         id="verifiedParkingAddress"
         type="text"
-        placeholder="Paste verified parking address here"
+        placeholder="Paste a verified parking address"
         style="width:90%;padding:8px;"
     >
 
@@ -748,12 +753,16 @@ if(address){
 </div>
 `;
 
+        if (typeof focusResultCardTarget === "function") {
+            focusResultCardTarget("[data-card-heading]");
+        }
+
         return;
     }
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>🚗 Verifying Parking Location</strong>
+    <strong data-card-heading tabindex="-1">🚗 Verifying Parking Location</strong>
 
     <br><br>
 
@@ -764,6 +773,10 @@ if(address){
     Please wait...
 </div>
 `;
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Verifying parking location.");
+    }
 
     const response = await fetch(
         "/api/findDestinationAddress",
@@ -789,7 +802,7 @@ if(address){
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📍 Suggested Location</strong>
+    <strong data-card-heading tabindex="-1">📍 Suggested Location</strong>
 
 <br><br>
 
@@ -850,10 +863,11 @@ window.parkingLookupAddress
 </button>
     <br><br>
 
+    <label for="verifiedParkingAddress" class="field-label">Verified parking address</label>
     <input
     id="verifiedParkingAddress"
     type="text"
-    placeholder="Paste verified parking address here"
+    placeholder="Paste a verified parking address"
     style="width:90%;padding:8px;"
 >
 
@@ -1052,7 +1066,7 @@ async function verifySavedLocation() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📍 Destination Found</strong>
+    <strong data-card-heading tabindex="-1">📍 Destination Found</strong>
 
     <br><br>
 
@@ -1109,6 +1123,10 @@ async function verifySavedLocation() {
     </button>
 </div>
 `;
+
+    if (typeof focusResultCardTarget === "function") {
+        focusResultCardTarget("[data-card-heading]");
+    }
 }
 
 function escapeDestinationPlaceHtml(value) {
@@ -1894,7 +1912,7 @@ function showDestinationManualVerificationCard(destination, errorMessage) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📍 Destination Not Found</strong>
+    <strong data-card-heading tabindex="-1">📍 Destination Not Found</strong>
 
     <br><br>
 
@@ -1924,10 +1942,11 @@ window.destinationVerificationSearchQuery
 
     <br><br>
 
+    <label for="verifiedDestinationAddress" class="field-label">Verified destination address</label>
     <input
         id="verifiedDestinationAddress"
         type="text"
-        placeholder="Paste verified address here"
+        placeholder="Paste a verified destination address"
         style="width:90%;padding:8px;"
     >
 
@@ -1949,6 +1968,10 @@ if(address){
     </button>
 </div>
 `;
+
+    if (typeof focusResultCardTarget === "function") {
+        focusResultCardTarget("#verifiedDestinationAddress");
+    }
 }
 
 function showDestinationManualAddressEntryCard() {
@@ -1962,7 +1985,7 @@ function showDestinationManualAddressEntryCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>&#9999;&#65039; Enter Correct Address</strong>
+    <strong data-card-heading tabindex="-1">&#9999;&#65039; Enter Correct Address</strong>
 
     <br><br>
 
@@ -1974,10 +1997,11 @@ function showDestinationManualAddressEntryCard() {
 
     <br><br>
 
+    <label for="manualDestinationAddress" class="field-label">Full destination address</label>
     <input
         id="manualDestinationAddress"
         type="text"
-        placeholder="Paste or enter the full destination address"
+        placeholder="400 W 1st St, Chico, CA 95929"
         style="width:90%;padding:8px;"
     >
 
@@ -1994,6 +2018,10 @@ function showDestinationManualAddressEntryCard() {
     </button>
 </div>
 `;
+
+    if (typeof focusResultCardTarget === "function") {
+        focusResultCardTarget("#manualDestinationAddress");
+    }
 }
 
 function saveManualVerifiedDestinationAddressFromCard() {
@@ -2011,6 +2039,9 @@ function saveManualVerifiedDestinationAddressFromCard() {
             : "";
 
     if (!destinationAddress) {
+        if (typeof announceOurFlowStatus === "function") {
+            announceOurFlowStatus("Enter a destination address first.");
+        }
         alert("Enter a destination address first.");
         return;
     }
@@ -2063,6 +2094,10 @@ function saveManualVerifiedDestinationAddressFromCard() {
 
     if (questionInput) {
         questionInput.focus();
+    }
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Destination address saved.");
     }
 }
 
@@ -2252,13 +2287,17 @@ function saveDestinationInternalDetailsFromCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>🏢 Inside Destination Details Saved</strong>
+    <strong data-card-heading tabindex="-1">🏢 Inside Destination Details Saved</strong>
 
     <br><br>
 
     I saved those details with this journey.
 </div>
 `;
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Inside destination details saved.");
+    }
 }
 
 function getParkingDetailInputValue(id) {
@@ -2361,13 +2400,17 @@ function saveParkingDetailsFromCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>🚗 Parking Details Saved</strong>
+    <strong data-card-heading tabindex="-1">🚗 Parking Details Saved</strong>
 
     <br><br>
 
     I saved those parking details with this journey.
 </div>
 `;
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Parking details saved.");
+    }
 }
 
 function showParkingDetailsCard() {
@@ -2381,22 +2424,29 @@ function showParkingDetailsCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>🚗 Add Parking Details</strong>
+    <strong data-card-heading tabindex="-1">🚗 Add Parking Details</strong>
 
     <br><br>
 
+    <label for="parkingGarageLot" class="field-label">Garage or lot</label>
     <input id="parkingGarageLot" placeholder="Garage / Lot" value="${escapeDestinationPlaceHtml(details.garageLot || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="parkingLevelFloor" class="field-label">Level or floor</label>
     <input id="parkingLevelFloor" placeholder="Level / Floor" value="${escapeDestinationPlaceHtml(details.levelFloor || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="parkingRowSection" class="field-label">Row or section</label>
     <input id="parkingRowSection" placeholder="Row / Section" value="${escapeDestinationPlaceHtml(details.rowSection || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="parkingSpaceNumber" class="field-label">Space number</label>
     <input id="parkingSpaceNumber" placeholder="Space Number" value="${escapeDestinationPlaceHtml(details.spaceNumber || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="parkingEntranceUsed" class="field-label">Entrance used</label>
     <input id="parkingEntranceUsed" placeholder="Entrance Used" value="${escapeDestinationPlaceHtml(details.entranceUsed || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="parkingElevatorStairwell" class="field-label">Elevator or stairwell</label>
     <input id="parkingElevatorStairwell" placeholder="Elevator / Stairwell" value="${escapeDestinationPlaceHtml(details.elevatorStairwell || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="parkingNearbyLandmark" class="field-label">Nearby landmark</label>
     <input id="parkingNearbyLandmark" placeholder="Nearby Landmark" value="${escapeDestinationPlaceHtml(details.nearbyLandmark || "")}" style="width:90%;padding:8px;">
 
     <br><br>
@@ -2415,32 +2465,45 @@ continueFromDestinationVerified();
     </button>
 </div>
 `;
+
+    if (typeof focusResultCardTarget === "function") {
+        focusResultCardTarget("#parkingGarageLot");
+    }
 }
 
 function showDestinationInternalDetailsCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>🏢 Add Inside Destination Details</strong>
+    <strong data-card-heading tabindex="-1">🏢 Add Inside Destination Details</strong>
 
     <br><br>
 
+    <label for="destinationBuilding" class="field-label">Building</label>
     <input id="destinationBuilding" placeholder="Building" value="${escapeDestinationPlaceHtml(activeJourney.destinationBuilding || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="destinationDepartmentOffice" class="field-label">Department or office</label>
     <input id="destinationDepartmentOffice" placeholder="Department / Office" value="${escapeDestinationPlaceHtml(activeJourney.destinationDepartmentOffice || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="destinationRoomSuite" class="field-label">Room or suite</label>
     <input id="destinationRoomSuite" placeholder="Room or Suite" value="${escapeDestinationPlaceHtml(activeJourney.destinationRoomSuite || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="destinationEntrance" class="field-label">Entrance</label>
     <input id="destinationEntrance" placeholder="Entrance" value="${escapeDestinationPlaceHtml(activeJourney.destinationEntrance || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="destinationFloor" class="field-label">Floor</label>
     <input id="destinationFloor" placeholder="Floor" value="${escapeDestinationPlaceHtml(activeJourney.destinationFloor || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="destinationContactPerson" class="field-label">Contact person</label>
     <input id="destinationContactPerson" placeholder="Contact Person" value="${escapeDestinationPlaceHtml(activeJourney.destinationContactPerson || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="destinationPhone" class="field-label">Phone</label>
     <input id="destinationPhone" placeholder="Phone" value="${escapeDestinationPlaceHtml(activeJourney.destinationPhone || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="destinationEmail" class="field-label">Email</label>
     <input id="destinationEmail" placeholder="Email" value="${escapeDestinationPlaceHtml(activeJourney.destinationEmail || "")}" style="width:90%;padding:8px;">
     <br><br>
+    <label for="destinationInsideNotes" class="field-label">Notes</label>
     <textarea id="destinationInsideNotes" placeholder="Notes" style="width:90%;padding:8px;min-height:80px;">${escapeDestinationPlaceHtml(activeJourney.destinationInsideNotes || activeJourney.destinationDirectoryNote || "")}</textarea>
 
     <br><br>
@@ -2456,6 +2519,10 @@ function showDestinationInternalDetailsCard() {
     </button>
 </div>
 `;
+
+    if (typeof focusResultCardTarget === "function") {
+        focusResultCardTarget("#destinationBuilding");
+    }
 }
 
 function saveVerifiedDestinationAddress(address) {
@@ -2491,7 +2558,7 @@ function saveVerifiedDestinationAddress(address) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📬 Destination Verified</strong>
+    <strong data-card-heading tabindex="-1">📬 Destination Verified</strong>
 
     <br><br>
 
@@ -2514,5 +2581,9 @@ function saveVerifiedDestinationAddress(address) {
 </button>
 </div>
 `;
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Destination verified.");
+    }
 }
 

@@ -108,6 +108,7 @@ function renderOrientationPhotos(photos) {
     <br><br>
     <img
         src="${escapeOrientationHtml(photo.thumbnail)}"
+        alt=""
         style="
             max-width:120px;
             border-radius:8px;

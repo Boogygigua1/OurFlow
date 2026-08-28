@@ -145,6 +145,7 @@ function previewLandmarkImage(input) {
             .innerHTML = `
 <img
     src="${e.target.result}"
+    alt="Selected photo preview"
     style="
         max-width:300px;
         margin-top:10px;
@@ -171,7 +172,7 @@ async function analyzeLandmarkImage(input) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📸 Photo Ready</strong>
+    <strong data-card-heading tabindex="-1">📸 Photo Ready</strong>
 
     <br><br>
 
@@ -204,7 +205,7 @@ function showPhotoSavedCard() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>📷 Photo Saved</strong>
+    <strong data-card-heading tabindex="-1">📷 Photo Saved</strong>
 
     <br><br>
 
@@ -212,6 +213,7 @@ function showPhotoSavedCard() {
                 ? `
     <img
         src="${lastPhoto.thumbnail}"
+        alt="Saved photo preview"
         style="
             max-width:160px;
             border-radius:8px;
@@ -258,6 +260,10 @@ document.getElementById('questionInput').focus();
     </button>
 </div>
 `;
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Photo saved.");
+    }
 }
 
 async function saveJourneyPhoto() {
