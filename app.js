@@ -85,9 +85,7 @@ function clearNewList() {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <strong>Journey list cleared.</strong>
-
-    <br><br>
+    <h2 class="card-title">Journey list cleared.</h2>
 
     All saved journeys have been deleted.
 </div>

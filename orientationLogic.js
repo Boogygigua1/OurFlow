@@ -100,8 +100,8 @@ function renderOrientationPhotos(photos) {
                 `Photo ${index + 1}`;
 
             return `
-<div style="margin-bottom:12px;">
-    <h3 class="card-subtitle">${escapeOrientationHtml(title)}</h3>
+<li>
+    <span class="orientation-photo-title">${escapeOrientationHtml(title)}</span>
 
     ${photo.thumbnail
                     ? `
@@ -117,7 +117,7 @@ function renderOrientationPhotos(photos) {
     >
     `
                     : ""}
-</div>
+</li>
 `;
         })
         .join("");
@@ -174,7 +174,7 @@ function showOrientationPhotos() {
     <h2 class="card-title">&#128247; Saved Photos</h2>
 
     ${photos.length
-                ? renderOrientationPhotos(photos)
+                ? `<ul class="orientation-photo-list">${renderOrientationPhotos(photos)}</ul>`
                 : "No saved photos for this journey yet."}
 
     <br><br>
@@ -266,7 +266,7 @@ function showOrientationHub() {
     const sections = [
         renderOrientationSection(
             "Saved Photos",
-            renderOrientationPhotos(photos)
+            `<ul class="orientation-photo-list">${renderOrientationPhotos(photos)}</ul>`
         ),
         renderOrientationSection(
             "Entrance / Arrival Clues",

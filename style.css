@@ -157,6 +157,23 @@ button,
     margin-top: 12px;
 }
 
+.new-user-info-list,
+.orientation-photo-list {
+    margin: 0 0 12px;
+    padding: 0;
+    list-style: none;
+}
+
+.new-user-info-list li + li,
+.orientation-photo-list li + li {
+    margin-top: 4px;
+}
+
+.orientation-photo-title {
+    display: block;
+    font-weight: 700;
+}
+
 .journey-active-card,
 .journey-saved-detail {
     text-align: left;
