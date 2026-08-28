@@ -76,6 +76,26 @@ button,
 .photo-picker-button {
     user-select: none;
     -webkit-user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.photo-picker-button:focus-within {
+    outline: auto;
+    outline-offset: 2px;
+}
+
+.photo-picker-button span {
+    pointer-events: none;
+}
+
+.photo-picker-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }
 
 .field-label {

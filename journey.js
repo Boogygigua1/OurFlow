@@ -2885,23 +2885,15 @@ function startArrivalPhoto() {
 
     <br><br>
 
-    <label for="landmarkImage" class="photo-picker-button" role="button" tabindex="0" onkeydown="
-if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    document.getElementById('landmarkImage').click();
-}
-">
+    <button type="button" class="photo-picker-button" onclick="document.getElementById('landmarkImage').click()"
+        onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); document.getElementById('landmarkImage').click(); }">
         &#128247; Take Photo
-    </label>
+    </button>
 
-    <label for="landmarkImageLibrary" class="photo-picker-button" role="button" tabindex="0" onkeydown="
-if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    document.getElementById('landmarkImageLibrary').click();
-}
-">
+    <button type="button" class="photo-picker-button" onclick="document.getElementById('landmarkImageLibrary').click()"
+        onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); document.getElementById('landmarkImageLibrary').click(); }">
         &#128444;&#65039; Choose From Library
-    </label>
+    </button>
 </div>
 `;
 }
