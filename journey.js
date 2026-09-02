@@ -308,7 +308,7 @@ function requestEndJourney() {
     }
 
     result.scrollIntoView({
-        behavior: "smooth",
+        behavior: typeof getOurFlowScrollBehavior === "function" ? getOurFlowScrollBehavior() : "smooth",
         block: "center"
     });
 }
@@ -393,7 +393,7 @@ function saveAndKeepJourneyActive() {
     }
 
     result.scrollIntoView({
-        behavior: "smooth",
+        behavior: typeof getOurFlowScrollBehavior === "function" ? getOurFlowScrollBehavior() : "smooth",
         block: "center"
     });
 
@@ -1353,7 +1353,7 @@ function focusActiveJourneySection(sectionKey) {
     );
 
     section.scrollIntoView({
-        behavior: "smooth",
+        behavior: typeof getOurFlowScrollBehavior === "function" ? getOurFlowScrollBehavior() : "smooth",
         block: "center"
     });
 
@@ -2560,7 +2560,7 @@ ${activeJourney.directories?.length
 
         document.getElementById("result")
             ?.scrollIntoView({
-                behavior: "smooth",
+                behavior: typeof getOurFlowScrollBehavior === "function" ? getOurFlowScrollBehavior() : "smooth",
                 block: "center"
             });
 
@@ -2592,7 +2592,7 @@ function continueJourneyFromArrival() {
     input.focus();
 
     input.scrollIntoView({
-        behavior: "smooth",
+        behavior: typeof getOurFlowScrollBehavior === "function" ? getOurFlowScrollBehavior() : "smooth",
         block: "center"
     });
 }
@@ -2635,7 +2635,7 @@ function addJourneyNoteFromQuickSummary() {
     input.focus();
 
     input.scrollIntoView({
-        behavior: "smooth",
+        behavior: typeof getOurFlowScrollBehavior === "function" ? getOurFlowScrollBehavior() : "smooth",
         block: "center"
     });
 }

@@ -156,7 +156,7 @@ function focusOrientationNoteInput(prefix) {
     input.focus();
 
     input.scrollIntoView({
-        behavior: "smooth",
+        behavior: typeof getOurFlowScrollBehavior === "function" ? getOurFlowScrollBehavior() : "smooth",
         block: "center"
     });
 }

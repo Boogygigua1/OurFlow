@@ -158,7 +158,7 @@ function keepParkingSavedCardInView() {
 
     if (result?.scrollIntoView) {
         result.scrollIntoView({
-            behavior: "smooth",
+            behavior: typeof getOurFlowScrollBehavior === "function" ? getOurFlowScrollBehavior() : "smooth",
             block: "start"
         });
     }
@@ -645,7 +645,7 @@ document.getElementById(
 document.getElementById(
     'questionInput'
 ).scrollIntoView({
-    behavior: 'smooth',
+    behavior: typeof getOurFlowScrollBehavior === "function" ? getOurFlowScrollBehavior() : "smooth",
     block: 'center'
 });
 ">

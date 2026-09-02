@@ -25,6 +25,7 @@ function toggleNewUserInfo(button) {
 
         button.innerHTML =
             "▼ New Here? Read Me!";
+        button.setAttribute("aria-expanded", "true");
 
     } else {
 
@@ -32,6 +33,7 @@ function toggleNewUserInfo(button) {
 
         button.innerHTML =
             "▶ New Here? Read Me!";
+        button.setAttribute("aria-expanded", "false");
     }
 }
 
@@ -47,6 +49,10 @@ function togglePhilosophy(button) {
     button.innerText = isHidden
         ? "Hide Philosophy"
         : "✨ Our Philosophy";
+    button.setAttribute(
+        "aria-expanded",
+        isHidden ? "true" : "false"
+    );
 }
 
 function toggleLegal(button) {
@@ -61,6 +67,10 @@ function toggleLegal(button) {
     button.innerText = isHidden
         ? "▲ Hide AI, Usage & Platform Information"
         : "▼ AI, Usage & Platform Information";
+    button.setAttribute(
+        "aria-expanded",
+        isHidden ? "true" : "false"
+    );
 }
 
 function clearNewList() {

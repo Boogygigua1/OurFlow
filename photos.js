@@ -188,7 +188,7 @@ async function analyzeLandmarkImage(input) {
 `;
 
     document.getElementById("result").scrollIntoView({
-        behavior: "smooth",
+        behavior: typeof getOurFlowScrollBehavior === "function" ? getOurFlowScrollBehavior() : "smooth",
         block: "start"
     });
 }

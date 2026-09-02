@@ -73,16 +73,22 @@ button,
     -webkit-appearance: none;
 }
 
+button:focus-visible,
+.photo-picker-button:focus-within,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+a:focus-visible {
+    outline: 3px solid #111827;
+    outline-offset: 2px;
+}
+
 .photo-picker-button {
     user-select: none;
     -webkit-user-select: none;
     position: relative;
     overflow: hidden;
-}
-
-.photo-picker-button:focus-within {
-    outline: auto;
-    outline-offset: 2px;
 }
 
 .photo-picker-button span {
@@ -425,6 +431,21 @@ button,
     outline: 3px solid rgba(37, 99, 235, 0.35);
     box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.08);
     transition: outline-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
+    .journey-section-highlight {
+        transition: none;
+    }
 }
 
 @media (max-width: 520px) {

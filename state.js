@@ -174,6 +174,19 @@ function announceOurFlowStatus(message) {
     }, 20);
 }
 
+function getOurFlowScrollBehavior() {
+
+    if (
+        typeof window !== "undefined" &&
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+        return "auto";
+    }
+
+    return "smooth";
+}
+
 function focusResultCardTarget(selector) {
 
     const result =
