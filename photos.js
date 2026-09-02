@@ -299,7 +299,15 @@ async function saveJourneyPhoto() {
     }
 
     if (!landmarkImageData) {
-        alert("No image data");
+        if (typeof showOurFlowStatusCard === "function") {
+            showOurFlowStatusCard(
+                "Photo Not Ready",
+                "No image data is available yet. Choose or take a photo before saving.",
+                {
+                    role: "alert"
+                }
+            );
+        }
         return;
     }
 
@@ -852,7 +860,15 @@ async function analyzeSavedJourneyPhoto() {
         !activeJourney.photos ||
         activeJourney.photos.length === 0
     ) {
-        alert("No saved photo to analyze.");
+        if (typeof showOurFlowStatusCard === "function") {
+            showOurFlowStatusCard(
+                "No Saved Photo",
+                "No saved photo is available to analyze yet. Save a photo to the journey first.",
+                {
+                    role: "alert"
+                }
+            );
+        }
         return;
     }
 

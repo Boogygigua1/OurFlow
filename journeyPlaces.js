@@ -107,7 +107,15 @@ function navigateToJourneyPlace(placeId) {
         findJourneyPlaceById(placeId);
 
     if (!place) {
-        alert("That remembered place is not available yet.");
+        if (typeof showOurFlowStatusCard === "function") {
+            showOurFlowStatusCard(
+                "Remembered Place Unavailable",
+                "That remembered place is not available yet.",
+                {
+                    role: "alert"
+                }
+            );
+        }
         return;
     }
 

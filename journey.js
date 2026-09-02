@@ -475,10 +475,32 @@ function deleteJourney(index) {
 
 function showJourneyUpgradeBox() {
 
-    alert(
-        "🧭 Journey archive full.\n\n" +
-        "Upgrade for 25 additional saved journeys."
-    );
+    if (typeof showOurFlowStatusCard === "function") {
+        showOurFlowStatusCard(
+            "🧭 Journey Archive Full",
+            "Your free journey archive is full. Delete older journeys or expand your archive to save more.",
+            {
+                role: "alert",
+                announce: false
+            }
+        );
+    }
+
+    if (typeof showOurFlowStatusCard !== "function") {
+        const result =
+            document.getElementById("result");
+
+        if (result) {
+            result.innerHTML = `
+<div class="card" role="alert">
+    <h2 class="card-title">🧭 Journey Archive Full</h2>
+
+    Your free journey archive is full. Delete older journeys or expand your archive to save more.
+</div>
+`;
+        }
+    }
+
 }
 
 function getSavedJourneyTitleDestination(journey) {

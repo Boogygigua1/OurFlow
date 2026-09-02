@@ -116,6 +116,18 @@ a:focus-visible {
     text-align: left;
 }
 
+.field-error {
+    width: 90%;
+    max-width: 420px;
+    min-height: 1.2em;
+    margin: 6px auto 0;
+    color: #b91c1c;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: left;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;

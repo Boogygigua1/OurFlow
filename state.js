@@ -174,6 +174,89 @@ function announceOurFlowStatus(message) {
     }, 20);
 }
 
+function showOurFlowStatusCard(title, message, options = {}) {
+
+    const result =
+        document.getElementById("result");
+
+    if (!result) {
+        return;
+    }
+
+    const card =
+        document.createElement("div");
+
+    card.className = "card";
+
+    if (options.role) {
+        card.setAttribute("role", options.role);
+    }
+
+    const heading =
+        document.createElement("h2");
+
+    heading.className = "card-title";
+    heading.setAttribute("data-card-heading", "");
+    heading.tabIndex = -1;
+    heading.textContent = title;
+
+    const body =
+        document.createElement("p");
+
+    body.textContent = message;
+
+    card.appendChild(heading);
+    card.appendChild(body);
+
+    result.replaceChildren(card);
+
+    if (
+        options.announce !== false &&
+        options.role !== "alert"
+    ) {
+        announceOurFlowStatus(message);
+    }
+
+    if (typeof focusResultCardTarget === "function") {
+        focusResultCardTarget("[data-card-heading]");
+    }
+}
+
+function setAskOurFlowInputError(message) {
+
+    const input =
+        document.getElementById("questionInput");
+
+    const error =
+        document.getElementById("questionInputError");
+
+    if (!input || !error) {
+        return;
+    }
+
+    input.setAttribute("aria-invalid", "true");
+    error.setAttribute("role", "alert");
+    error.textContent = message;
+}
+
+function clearAskOurFlowInputError() {
+
+    const input =
+        document.getElementById("questionInput");
+
+    const error =
+        document.getElementById("questionInputError");
+
+    if (input) {
+        input.removeAttribute("aria-invalid");
+    }
+
+    if (error) {
+        error.removeAttribute("role");
+        error.textContent = "";
+    }
+}
+
 function getOurFlowScrollBehavior() {
 
     if (

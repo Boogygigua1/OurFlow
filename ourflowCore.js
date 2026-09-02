@@ -1207,12 +1207,6 @@ async function askOurFlow() {
 
         showActiveJourneyBox("photos");
 
-        // REVIEW:
-        // May be redundant.
-        // User already receives card feedback below.
-
-        alert("Destination saved successfully");
-
         // ========================================
         // PHOTO CLASSIFICATION UI
         // ========================================
@@ -1337,8 +1331,22 @@ How should I save this?
     }
 
     if (!question) {
-        alert("Ask OurFlow a question first 🧭");
+        if (typeof setAskOurFlowInputError === "function") {
+            setAskOurFlowInputError("Ask OurFlow a question first.");
+        }
+
+        const questionInput =
+            document.getElementById("questionInput");
+
+        if (questionInput) {
+            questionInput.focus();
+        }
+
         return;
+    }
+
+    if (typeof clearAskOurFlowInputError === "function") {
+        clearAskOurFlowInputError();
     }
 
     // ========================================

@@ -171,7 +171,15 @@ function buildCurrentLocationGps(position) {
 function requestCurrentLocationIntake() {
 
     if (!navigator.geolocation) {
-        alert("Current location is not available in this browser.");
+        if (typeof showOurFlowStatusCard === "function") {
+            showOurFlowStatusCard(
+                "Current Location Unavailable",
+                "Current location is not available in this browser. You can still save a parking or starting location manually.",
+                {
+                    role: "alert"
+                }
+            );
+        }
         return;
     }
 

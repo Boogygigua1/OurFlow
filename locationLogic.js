@@ -669,7 +669,15 @@ async function verifyParkingLocation() {
         activeJourney?.parkingLocation;
 
     if (!parkingLocation) {
-        alert("No parking location found.");
+        if (typeof showOurFlowStatusCard === "function") {
+            showOurFlowStatusCard(
+                "No Parking Location Found",
+                "No parking location was found. Save a parking note or address first.",
+                {
+                    role: "alert"
+                }
+            );
+        }
         return;
     }
 
@@ -945,7 +953,15 @@ async function verifySavedLocation() {
         activeJourney?.destination;
 
     if (!destination) {
-        alert("No destination found.");
+        if (typeof showOurFlowStatusCard === "function") {
+            showOurFlowStatusCard(
+                "No Destination Found",
+                "No destination was found. Save a destination before verifying it.",
+                {
+                    role: "alert"
+                }
+            );
+        }
         return;
     }
     // const useSuggested = confirm(
@@ -1975,8 +1991,10 @@ function showDestinationManualAddressEntryCard() {
         id="manualDestinationAddress"
         type="text"
         placeholder="400 W 1st St, Chico, CA 95929"
+        aria-describedby="manualDestinationAddressError"
         style="width:90%;padding:8px;"
     >
+    <div id="manualDestinationAddressError" class="field-error" aria-live="polite"></div>
 
     <br><br>
 
@@ -2015,8 +2033,33 @@ function saveManualVerifiedDestinationAddressFromCard() {
         if (typeof announceOurFlowStatus === "function") {
             announceOurFlowStatus("Enter a destination address first.");
         }
-        alert("Enter a destination address first.");
+
+        if (addressInput) {
+            addressInput.setAttribute("aria-invalid", "true");
+            addressInput.focus();
+        }
+
+        const error =
+            document.getElementById("manualDestinationAddressError");
+
+        if (error) {
+            error.textContent =
+                "Enter a destination address first.";
+        }
+
         return;
+    }
+
+    if (addressInput) {
+        addressInput.removeAttribute("aria-invalid");
+    }
+
+    const error =
+        document.getElementById("manualDestinationAddressError");
+
+    if (error) {
+        error.removeAttribute("role");
+        error.textContent = "";
     }
 
     const originalDestination =
