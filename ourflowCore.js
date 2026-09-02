@@ -678,8 +678,8 @@ function getRouteDebugHtml(routeDebug) {
 
     return `
 <br><br>
-<div style="font-size:11px; color:#666; line-height:1.5; border-top:1px solid #ddd; padding-top:8px;">
-    <strong>Route Debug</strong><br>
+<div style="font-size:11px; color:#4b5563; line-height:1.5; border-top:1px solid #ddd; padding-top:8px;">
+    <h3 class="card-subtitle">Route Debug</h3>
     Raw input: ${escapeRouteDebugValue(routeDebug.rawInput)}<br>
     Normalized input: ${escapeRouteDebugValue(routeDebug.normalizedInput)}<br>
     isInstructionPhrase: ${escapeRouteDebugValue(routeDebug.isInstructionPhrase)}<br>
