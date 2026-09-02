@@ -1332,7 +1332,7 @@ How should I save this?
 
     if (!question) {
         if (typeof setAskOurFlowInputError === "function") {
-            setAskOurFlowInputError("Ask OurFlow a question first.");
+            setAskOurFlowInputError("Tell OurFlow where you want to go first.");
         }
 
         const questionInput =

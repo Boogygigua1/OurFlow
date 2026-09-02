@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
 
     <script>
-        const OURFLOW_BUILD = "2026-09-02-2";
+        const OURFLOW_BUILD = "2026-09-02-3";
         console.log("OurFlow build loaded:", OURFLOW_BUILD);
     </script>
 
@@ -205,18 +205,18 @@ color:#555;
         </div>
     </div>
 
-    <label for="questionInput" class="field-label">Ask OurFlow</label>
+    <label for="questionInput" class="field-label">Tell OurFlow</label>
     <input
         type="text"
         id="questionInput"
-        placeholder="Where do you need help?"
+        placeholder="Where do you want to go?"
         aria-describedby="questionInputError"
         oninput="clearAskOurFlowInputError()"
         onkeydown="handleKey(event)"
     >
     <div id="questionInputError" class="field-error" aria-live="polite"></div>
 
-    <button onclick="askOurFlow()">Ask OurFlow 🧭</button>
+    <button onclick="askOurFlow()">Tell OurFlow 🧭</button>
 
     <button onclick="requestCurrentLocationIntake()">Use Current Location</button>
 
@@ -472,7 +472,7 @@ height:auto;
 <script src="mic.js?v=2026-06-30-1"></script>
 
 <script src="memoryHelpers.js?v=2026-08-28-3"></script>
-<script src="ourflowCore.js?v=2026-09-02-2"></script>
+<script src="ourflowCore.js?v=2026-09-02-3"></script>
 <script src="app.js?v=2026-09-02-1"></script>
 
 </body>
