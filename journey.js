@@ -708,11 +708,11 @@ ${savedJourneys.length >= JOURNEY_LIMIT
 `
 : ""}
 
-<label for="journeySearch" class="field-label">Find a saved journey</label>
+<label for="journeySearch" class="field-label">Find a saved journey (optional)</label>
 <input
     type="text"
     id="journeySearch"
-    placeholder="Search by destination or memory"
+    placeholder="Example: pharmacy or parking note"
     onkeyup="filterJourneys()"
     style="
         width:95%;

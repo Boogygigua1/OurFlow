@@ -720,11 +720,11 @@ encodeURIComponent(window.parkingLookupAddress),
 
     <br><br>
 
-    <label for="verifiedParkingAddress" class="field-label">Verified parking address</label>
+    <label for="verifiedParkingAddress" class="field-label">Verified parking address (required to save)</label>
     <input
         id="verifiedParkingAddress"
         type="text"
-        placeholder="Paste a verified parking address"
+        placeholder="Example: 123 Main St, Chico, CA"
         style="width:90%;padding:8px;"
     >
 
@@ -858,11 +858,11 @@ window.parkingLookupAddress
 </button>
     <br><br>
 
-    <label for="verifiedParkingAddress" class="field-label">Verified parking address</label>
+    <label for="verifiedParkingAddress" class="field-label">Verified parking address (required to save)</label>
     <input
     id="verifiedParkingAddress"
     type="text"
-    placeholder="Paste a verified parking address"
+    placeholder="Example: 123 Main St, Chico, CA"
     style="width:90%;padding:8px;"
 >
 
@@ -1933,11 +1933,11 @@ window.destinationVerificationSearchQuery
 
     <br><br>
 
-    <label for="verifiedDestinationAddress" class="field-label">Verified destination address</label>
+    <label for="verifiedDestinationAddress" class="field-label">Verified destination address (required to save)</label>
     <input
         id="verifiedDestinationAddress"
         type="text"
-        placeholder="Paste a verified destination address"
+        placeholder="Example: 123 Main St, Chico, CA"
         style="width:90%;padding:8px;"
     >
 
@@ -1986,7 +1986,7 @@ function showDestinationManualAddressEntryCard() {
 
     <br><br>
 
-    <label for="manualDestinationAddress" class="field-label">Full destination address</label>
+    <label for="manualDestinationAddress" class="field-label">Full destination address (required to save)</label>
     <input
         id="manualDestinationAddress"
         type="text"
@@ -2438,26 +2438,26 @@ function showParkingDetailsCard() {
 <div class="card">
     <h2 class="card-title" data-card-heading tabindex="-1">🚗 Add Parking Details</h2>
 
-    <label for="parkingGarageLot" class="field-label">Garage or lot</label>
-    <input id="parkingGarageLot" placeholder="Garage / Lot" value="${escapeDestinationPlaceHtml(details.garageLot || "")}" style="width:90%;padding:8px;">
+    <label for="parkingGarageLot" class="field-label">Garage or lot (optional)</label>
+    <input id="parkingGarageLot" placeholder="Example: North garage" value="${escapeDestinationPlaceHtml(details.garageLot || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="parkingLevelFloor" class="field-label">Level or floor</label>
-    <input id="parkingLevelFloor" placeholder="Level / Floor" value="${escapeDestinationPlaceHtml(details.levelFloor || "")}" style="width:90%;padding:8px;">
+    <label for="parkingLevelFloor" class="field-label">Level or floor (optional)</label>
+    <input id="parkingLevelFloor" placeholder="Example: Level 2" value="${escapeDestinationPlaceHtml(details.levelFloor || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="parkingRowSection" class="field-label">Row or section</label>
-    <input id="parkingRowSection" placeholder="Row / Section" value="${escapeDestinationPlaceHtml(details.rowSection || "")}" style="width:90%;padding:8px;">
+    <label for="parkingRowSection" class="field-label">Row or section (optional)</label>
+    <input id="parkingRowSection" placeholder="Example: Row C" value="${escapeDestinationPlaceHtml(details.rowSection || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="parkingSpaceNumber" class="field-label">Space number</label>
-    <input id="parkingSpaceNumber" placeholder="Space Number" value="${escapeDestinationPlaceHtml(details.spaceNumber || "")}" style="width:90%;padding:8px;">
+    <label for="parkingSpaceNumber" class="field-label">Space number (optional)</label>
+    <input id="parkingSpaceNumber" placeholder="Example: Space 42" value="${escapeDestinationPlaceHtml(details.spaceNumber || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="parkingEntranceUsed" class="field-label">Entrance used</label>
-    <input id="parkingEntranceUsed" placeholder="Entrance Used" value="${escapeDestinationPlaceHtml(details.entranceUsed || "")}" style="width:90%;padding:8px;">
+    <label for="parkingEntranceUsed" class="field-label">Entrance used (optional)</label>
+    <input id="parkingEntranceUsed" placeholder="Example: East entrance" value="${escapeDestinationPlaceHtml(details.entranceUsed || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="parkingElevatorStairwell" class="field-label">Elevator or stairwell</label>
-    <input id="parkingElevatorStairwell" placeholder="Elevator / Stairwell" value="${escapeDestinationPlaceHtml(details.elevatorStairwell || "")}" style="width:90%;padding:8px;">
+    <label for="parkingElevatorStairwell" class="field-label">Elevator or stairwell (optional)</label>
+    <input id="parkingElevatorStairwell" placeholder="Example: Stairwell B" value="${escapeDestinationPlaceHtml(details.elevatorStairwell || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="parkingNearbyLandmark" class="field-label">Nearby landmark</label>
-    <input id="parkingNearbyLandmark" placeholder="Nearby Landmark" value="${escapeDestinationPlaceHtml(details.nearbyLandmark || "")}" style="width:90%;padding:8px;">
+    <label for="parkingNearbyLandmark" class="field-label">Nearby landmark (optional)</label>
+    <input id="parkingNearbyLandmark" placeholder="Example: Red building" value="${escapeDestinationPlaceHtml(details.nearbyLandmark || "")}" style="width:90%;padding:8px;">
 
     <br><br>
 
@@ -2487,32 +2487,32 @@ function showDestinationInternalDetailsCard() {
 <div class="card">
     <h2 class="card-title" data-card-heading tabindex="-1">🏢 Add Inside Destination Details</h2>
 
-    <label for="destinationBuilding" class="field-label">Building</label>
-    <input id="destinationBuilding" placeholder="Building" value="${escapeDestinationPlaceHtml(activeJourney.destinationBuilding || "")}" style="width:90%;padding:8px;">
+    <label for="destinationBuilding" class="field-label">Building (optional)</label>
+    <input id="destinationBuilding" placeholder="Example: West wing" value="${escapeDestinationPlaceHtml(activeJourney.destinationBuilding || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="destinationDepartmentOffice" class="field-label">Department or office</label>
-    <input id="destinationDepartmentOffice" placeholder="Department / Office" value="${escapeDestinationPlaceHtml(activeJourney.destinationDepartmentOffice || "")}" style="width:90%;padding:8px;">
+    <label for="destinationDepartmentOffice" class="field-label">Department or office (optional)</label>
+    <input id="destinationDepartmentOffice" placeholder="Example: Records office" value="${escapeDestinationPlaceHtml(activeJourney.destinationDepartmentOffice || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="destinationRoomSuite" class="field-label">Room or suite</label>
-    <input id="destinationRoomSuite" placeholder="Room or Suite" value="${escapeDestinationPlaceHtml(activeJourney.destinationRoomSuite || "")}" style="width:90%;padding:8px;">
+    <label for="destinationRoomSuite" class="field-label">Room or suite (optional)</label>
+    <input id="destinationRoomSuite" placeholder="Example: Suite 210" value="${escapeDestinationPlaceHtml(activeJourney.destinationRoomSuite || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="destinationEntrance" class="field-label">Entrance</label>
-    <input id="destinationEntrance" placeholder="Entrance" value="${escapeDestinationPlaceHtml(activeJourney.destinationEntrance || "")}" style="width:90%;padding:8px;">
+    <label for="destinationEntrance" class="field-label">Entrance (optional)</label>
+    <input id="destinationEntrance" placeholder="Example: South entrance" value="${escapeDestinationPlaceHtml(activeJourney.destinationEntrance || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="destinationFloor" class="field-label">Floor</label>
-    <input id="destinationFloor" placeholder="Floor" value="${escapeDestinationPlaceHtml(activeJourney.destinationFloor || "")}" style="width:90%;padding:8px;">
+    <label for="destinationFloor" class="field-label">Floor (optional)</label>
+    <input id="destinationFloor" placeholder="Example: Third floor" value="${escapeDestinationPlaceHtml(activeJourney.destinationFloor || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="destinationContactPerson" class="field-label">Contact person</label>
-    <input id="destinationContactPerson" placeholder="Contact Person" value="${escapeDestinationPlaceHtml(activeJourney.destinationContactPerson || "")}" style="width:90%;padding:8px;">
+    <label for="destinationContactPerson" class="field-label">Contact person (optional)</label>
+    <input id="destinationContactPerson" placeholder="Example: Jamie Lee" value="${escapeDestinationPlaceHtml(activeJourney.destinationContactPerson || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="destinationPhone" class="field-label">Phone</label>
-    <input id="destinationPhone" placeholder="Phone" value="${escapeDestinationPlaceHtml(activeJourney.destinationPhone || "")}" style="width:90%;padding:8px;">
+    <label for="destinationPhone" class="field-label">Phone (optional)</label>
+    <input id="destinationPhone" placeholder="Example: 555-123-4567" value="${escapeDestinationPlaceHtml(activeJourney.destinationPhone || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="destinationEmail" class="field-label">Email</label>
-    <input id="destinationEmail" placeholder="Email" value="${escapeDestinationPlaceHtml(activeJourney.destinationEmail || "")}" style="width:90%;padding:8px;">
+    <label for="destinationEmail" class="field-label">Email (optional)</label>
+    <input id="destinationEmail" placeholder="Example: name@example.com" value="${escapeDestinationPlaceHtml(activeJourney.destinationEmail || "")}" style="width:90%;padding:8px;">
     <br><br>
-    <label for="destinationInsideNotes" class="field-label">Notes</label>
-    <textarea id="destinationInsideNotes" placeholder="Notes" style="width:90%;padding:8px;min-height:80px;">${escapeDestinationPlaceHtml(activeJourney.destinationInsideNotes || activeJourney.destinationDirectoryNote || "")}</textarea>
+    <label for="destinationInsideNotes" class="field-label">Notes (optional)</label>
+    <textarea id="destinationInsideNotes" placeholder="Example: Check in at the front desk" style="width:90%;padding:8px;min-height:80px;">${escapeDestinationPlaceHtml(activeJourney.destinationInsideNotes || activeJourney.destinationDirectoryNote || "")}</textarea>
 
     <br><br>
 

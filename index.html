@@ -205,11 +205,11 @@ color:#374151;
         </div>
     </div>
 
-    <label for="questionInput" class="field-label">Tell OurFlow</label>
+    <label for="questionInput" class="field-label">Tell OurFlow (required)</label>
     <input
         type="text"
         id="questionInput"
-        placeholder="Where do you want to go?"
+        placeholder="Example: Start journey to the pharmacy"
         aria-describedby="questionInputError"
         oninput="clearAskOurFlowInputError()"
         onkeydown="handleKey(event)"
@@ -232,18 +232,16 @@ color:#374151;
     </button>
 -->
 
-    <label class="photo-picker-button">
-        <span>&#128247; Take Photo</span>
+    <label for="landmarkImage" class="photo-picker-button">
+        <span>&#128247; Take Photo (optional)</span>
         <input type="file" id="landmarkImage" class="photo-picker-input" accept="image/*" capture="environment"
-            aria-label="Take Photo"
             onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }"
             onchange="analyzeLandmarkImage(this)">
     </label>
 
-    <label class="photo-picker-button">
-        <span>&#128444;&#65039; Choose From Library</span>
+    <label for="landmarkImageLibrary" class="photo-picker-button">
+        <span>&#128444;&#65039; Choose From Library (optional)</span>
         <input type="file" id="landmarkImageLibrary" class="photo-picker-input" accept="image/*"
-            aria-label="Choose From Library"
             onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }"
             onchange="analyzeLandmarkImage(this)">
     </label>
@@ -401,11 +399,11 @@ margin-right:auto;
 
     <form id="supportForm" action="https://formspree.io/f/xojrboej" method="POST" onsubmit="return handleSupportFormSubmit(event)">
 
-        <label for="supportName" class="field-label">Your name</label>
-        <input type="text" id="supportName" name="name" placeholder="Your name" style="width:100%; margin-bottom:10px;">
+        <label for="supportName" class="field-label">Name (optional)</label>
+        <input type="text" id="supportName" name="name" placeholder="Example: Alex" style="width:100%; margin-bottom:10px;">
 
-        <label for="supportContact" class="field-label">Contact info</label>
-        <input type="text" id="supportContact" name="contact" placeholder="Optional contact info"
+        <label for="supportContact" class="field-label">Email or phone (optional)</label>
+        <input type="text" id="supportContact" name="contact" placeholder="name@example.com or phone number"
             style="width:100%; margin-bottom:10px;">
 
         <label for="supportTopic" class="field-label">Support topic</label>
@@ -417,8 +415,8 @@ margin-right:auto;
             <option>Other</option>
         </select>
 
-        <label for="supportMessage" class="field-label">Message (required)</label>
-        <textarea id="supportMessage" name="message" placeholder="Short message..." maxlength="400" required
+        <label for="supportMessage" class="field-label">Support message (required)</label>
+        <textarea id="supportMessage" name="message" placeholder="Briefly describe what you need help with" maxlength="400" required
             aria-describedby="supportMessageError" oninput="clearSupportMessageError()" style="
             width:100%;
             height:100px;

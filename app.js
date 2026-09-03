@@ -107,11 +107,11 @@ let supportFinalSubmitInProgress = false;
 function getSupportReviewFields(form) {
     return [
         {
-            label: "Your name",
+            label: "Name (optional)",
             value: form.elements.name?.value || ""
         },
         {
-            label: "Contact info",
+            label: "Email or phone (optional)",
             value: form.elements.contact?.value || ""
         },
         {
@@ -119,7 +119,7 @@ function getSupportReviewFields(form) {
             value: form.elements.topic?.value || ""
         },
         {
-            label: "Message (required)",
+            label: "Support message (required)",
             value: form.elements.message?.value || ""
         }
     ];
