@@ -85,9 +85,14 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible,
-a:focus-visible {
-    outline: 3px solid #111827;
+a:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible {
+    outline: 3px solid #1e40af;
     outline-offset: 2px;
+    box-shadow:
+        0 0 0 5px #ffffff,
+        0 0 0 8px #1e40af;
+    border-radius: 6px;
 }
 
 button:hover,
