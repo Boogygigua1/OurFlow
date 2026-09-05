@@ -17,6 +17,15 @@ function refreshActiveJourneyAfterPhotoChange(targetSectionKey = "photos") {
     return;
 }
 
+function escapePhotoAriaLabel(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
 function buildLandmarkThumbnailFromData(imageData) {
 
     return new Promise(resolve => {
@@ -410,15 +419,24 @@ Choose a suggestion above, or click Enter Your Own Memory.
 </strong>
     <br><br>
 
-<button onclick="savePhotoMemory(window.photoSuggestions[0])">
+<button
+    aria-label="Save photo memory suggestion 1: ${escapePhotoAriaLabel(window.photoSuggestions[0])}"
+    onclick="savePhotoMemory(window.photoSuggestions[0])"
+>
     1
 </button>
 
-<button onclick="savePhotoMemory(window.photoSuggestions[1])">
+<button
+    aria-label="Save photo memory suggestion 2: ${escapePhotoAriaLabel(window.photoSuggestions[1])}"
+    onclick="savePhotoMemory(window.photoSuggestions[1])"
+>
     2
 </button>
 
-<button onclick="savePhotoMemory(window.photoSuggestions[2])">
+<button
+    aria-label="Save photo memory suggestion 3: ${escapePhotoAriaLabel(window.photoSuggestions[2])}"
+    onclick="savePhotoMemory(window.photoSuggestions[2])"
+>
     3
 </button>
 
@@ -941,15 +959,24 @@ Choose a suggestion above, or click Enter Your Own Memory.
 </strong>
     <br><br>
 
-<button onclick="savePhotoMemory(window.photoSuggestions[0])">
+<button
+    aria-label="Save photo memory suggestion 1: ${escapePhotoAriaLabel(window.photoSuggestions[0])}"
+    onclick="savePhotoMemory(window.photoSuggestions[0])"
+>
     1
 </button>
 
-<button onclick="savePhotoMemory(window.photoSuggestions[1])">
+<button
+    aria-label="Save photo memory suggestion 2: ${escapePhotoAriaLabel(window.photoSuggestions[1])}"
+    onclick="savePhotoMemory(window.photoSuggestions[1])"
+>
     2
 </button>
 
-<button onclick="savePhotoMemory(window.photoSuggestions[2])">
+<button
+    aria-label="Save photo memory suggestion 3: ${escapePhotoAriaLabel(window.photoSuggestions[2])}"
+    onclick="savePhotoMemory(window.photoSuggestions[2])"
+>
     3
 </button>
 

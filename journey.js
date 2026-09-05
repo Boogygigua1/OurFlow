@@ -752,7 +752,6 @@ ${savedJourneys.length >= JOURNEY_LIMIT
 >
     <summary
         class="saved-journey-summary-row"
-        aria-label="${journeyDisplayTitle}. ${journeyDisplayDate}. Tap to view complete journey."
     >
         <span class="saved-journey-summary-main">
             <span class="saved-journey-summary-title">
@@ -2022,7 +2021,7 @@ function buildJourneyEventSection(events) {
 
     return `
 <details class="journey-compact-section" data-journey-section="events">
-    <summary aria-label="Events, ${visibleEvents.length} item${visibleEvents.length === 1 ? "" : "s"}. Tap to expand.">
+    <summary>
         <span>Events</span>
         <span>${visibleEvents.length}</span>
     </summary>
@@ -2072,7 +2071,7 @@ function buildJourneyMemorySection(title, items, options = {}) {
 
     return `
 <details class="journey-compact-section"${options.sectionKey ? ` data-journey-section="${options.sectionKey}"` : ""}>
-    <summary aria-label="${title}, ${items.length} item${items.length === 1 ? "" : "s"}. Tap to expand.">
+    <summary>
         <span>${title}</span>
         <span>${items.length}</span>
     </summary>
