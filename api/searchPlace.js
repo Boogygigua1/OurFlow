@@ -1,3 +1,18 @@
+import {
+    applyRateLimit,
+    getSafeErrorCategory,
+    getLimitedString,
+    getUpstreamFailureStatus,
+    readJsonSafely,
+    rejectOversizedBody
+} from "./requestGuards.js";
+
+const SEARCH_PLACE_LIMITS = {
+    bodyBytes: 16 * 1024,
+    queryChars: 300,
+    searchTypeChars: 50
+};
+
 export default async function handler(req, res) {
     if (req.method !== "POST") {
         return res.status(405).json({
@@ -5,10 +20,39 @@ export default async function handler(req, res) {
         });
     }
 
+    if (
+        applyRateLimit(req, res, {
+            name: "searchPlace",
+            windowMs: 60 * 1000,
+            maxRequests: 30
+        })
+    ) {
+        return;
+    }
+
+    if (rejectOversizedBody(req, res, SEARCH_PLACE_LIMITS.bodyBytes)) {
+        return;
+    }
+
     const {
-        query,
-        searchType = "arrival"
+        query: rawQuery,
+        searchType: rawSearchType = "arrival"
     } = req.body;
+
+    const query =
+        getLimitedString(rawQuery, SEARCH_PLACE_LIMITS.queryChars);
+
+    const limitedSearchType =
+        getLimitedString(rawSearchType, SEARCH_PLACE_LIMITS.searchTypeChars);
+
+    if (query === null || limitedSearchType === null) {
+        return res.status(413).json({
+            error: "Request is too large."
+        });
+    }
+
+    const searchType =
+        limitedSearchType || "arrival";
 
     if (!query) {
         return res.status(400).json({
@@ -33,20 +77,35 @@ export default async function handler(req, res) {
         "https://www.google.com/search?q=" +
         encodeURIComponent(cleanQuery);
 
-    const aiResponse = await fetch(
-        "https://api.openai.com/v1/chat/completions",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + process.env.OPENAI_API_KEY
-            },
-            body: JSON.stringify({
-                model: "gpt-4o-mini",
-                messages: [
-                    {
-                        role: "system",
-                        content: `
+    const apiKey =
+        process.env.OPENAI_API_KEY;
+
+    if (!apiKey) {
+        console.error("SEARCH PLACE ERROR:", {
+            errorCategory: "missing_configuration"
+        });
+
+        return res.status(500).json({
+            error: "Location lookup is temporarily unavailable."
+        });
+    }
+
+    try {
+        const aiResponse = await fetch(
+            "https://api.openai.com/v1/chat/completions",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + apiKey
+                },
+                body: JSON.stringify({
+                    model: "gpt-4o-mini",
+                    max_completion_tokens: 256,
+                    messages: [
+                        {
+                            role: "system",
+                            content: `
 You are OurFlow.
 
 Create a short arrival preparation note for someone going to an unfamiliar destination.
@@ -75,10 +134,10 @@ Use 4 short bullet points maximum.
 Keep each bullet under 12 words.
 Do not say "safe travels."
 `
-                    },
-                    {
-                        role: "user",
-                        content: `
+                        },
+                        {
+                            role: "user",
+                            content: `
 Destination:
 ${cleanQuery}
 
@@ -90,23 +149,59 @@ and provide the building's street address.
 Do not return only the department name.
 Do not return only the campus name.
 `
-                    }
-                ]
-            })
+                        }
+                    ]
+                })
+            }
+        );
+
+        if (!aiResponse.ok) {
+            console.error("SEARCH PLACE ERROR:", {
+                errorCategory: "upstream_http_error",
+                upstreamStatus: aiResponse.status
+            });
+
+            return res.status(getUpstreamFailureStatus(aiResponse.status)).json({
+                error: "Location lookup is temporarily unavailable."
+            });
         }
-    );
 
-    const aiData = await aiResponse.json();
+        const aiData =
+            await readJsonSafely(aiResponse);
 
-    const arrivalTip =
-        aiData?.choices?.[0]?.message?.content ||
-        "Map search ready. Before leaving, check Google Maps for Street View, photos, reviews, parking, entrances, directories, suite numbers, and check-in details.";
+        const choice =
+            aiData?.choices?.[0];
 
-    return res.status(200).json({
-        query,
-        searchQuery,
-        mapUrl,
-        webSearchUrl,
-        arrivalTip
-    });
+        const arrivalTip =
+            choice?.message?.content;
+
+        // Never display or save a response cut off by the output-token limit.
+        if (choice?.finish_reason === "length" || typeof arrivalTip !== "string" || !arrivalTip.trim()) {
+            console.error("SEARCH PLACE ERROR:", {
+                errorCategory: choice?.finish_reason === "length"
+                    ? "upstream_truncated_response"
+                    : "upstream_invalid_response"
+            });
+
+            return res.status(502).json({
+                error: "Location lookup is temporarily unavailable."
+            });
+        }
+
+        return res.status(200).json({
+            query,
+            searchQuery,
+            mapUrl,
+            webSearchUrl,
+            arrivalTip
+        });
+    } catch (error) {
+        console.error("SEARCH PLACE ERROR:", {
+            errorCategory: getSafeErrorCategory(error)
+        });
+
+        return res.status(503).json({
+            error: "Location lookup is temporarily unavailable."
+        });
+    }
 }

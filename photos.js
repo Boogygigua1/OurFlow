@@ -1,3 +1,35 @@
+var escapeOurFlowHtml =
+    typeof escapeOurFlowHtml === "function"
+        ? escapeOurFlowHtml
+        : function (value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        };
+
+var escapeOurFlowHtmlWithBreaks =
+    typeof escapeOurFlowHtmlWithBreaks === "function"
+        ? escapeOurFlowHtmlWithBreaks
+        : function (value) {
+            return escapeOurFlowHtml(value)
+                .replace(/\r?\n/g, "<br>");
+        };
+
+var getSafeOurFlowImageSrc =
+    typeof getSafeOurFlowImageSrc === "function"
+        ? getSafeOurFlowImageSrc
+        : function (value) {
+            const source =
+                String(value || "").trim();
+
+            return /^data:image\/(?:png|jpe?g|gif|webp);base64,/i.test(source)
+                ? escapeOurFlowHtml(source)
+                : "";
+        };
+
 function getSelectedLandmarkFile(input) {
 
     if (input?.files?.[0]) {
@@ -10,6 +42,126 @@ function getSelectedLandmarkFile(input) {
         document.getElementById("landmarkImageLibrary")
             ?.files?.[0]
     );
+}
+
+const OURFLOW_ALLOWED_PHOTO_TYPES = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+];
+
+const OURFLOW_MAX_PHOTO_BYTES =
+    4 * 1024 * 1024;
+
+// Keep image data below 3.5 MB, leaving room for the JSON context and a
+// final 4,000,000-byte UTF-8 request cap (below Vercel's 4.5 MB limit).
+const OURFLOW_MAX_ENCODED_PHOTO_CHARS = 3500000;
+
+function getCurrentPhotoSelectionVersion() {
+    return window.ourFlowPhotoSelectionVersion || 0;
+}
+
+function isCurrentPhotoSelection(version) {
+    return version === getCurrentPhotoSelectionVersion();
+}
+
+function resetCurrentPhotoSelection(input) {
+
+    const previousReader = window.ourFlowPhotoReader;
+    window.ourFlowPhotoSelectionVersion = getCurrentPhotoSelectionVersion() + 1;
+    window.ourFlowPhotoSelectionPending = false;
+    window.ourFlowPhotoSelectionPromise = null;
+    window.ourFlowPhotoReader = null;
+
+    if (previousReader?.readyState === 1 && typeof previousReader.abort === "function") {
+        previousReader.abort();
+    }
+
+    landmarkImageData = "";
+    landmarkThumbnailData = "";
+    window.landmarkThumbnailPromise = null;
+
+    const preview =
+        document.getElementById("imagePreview");
+
+    if (preview) {
+        preview.replaceChildren();
+    }
+
+    if (input) {
+        input.value = "";
+    }
+}
+
+function showPhotoSelectionError(message) {
+
+    if (typeof showOurFlowStatusCard === "function") {
+        showOurFlowStatusCard(
+            "Photo Not Loaded",
+            message,
+            {
+                role: "alert"
+            }
+        );
+    }
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus(message);
+    }
+}
+
+function validateSelectedLandmarkFile(file) {
+
+    if (!file) {
+        return {
+            valid: false,
+            message: ""
+        };
+    }
+
+    if (!OURFLOW_ALLOWED_PHOTO_TYPES.includes(file.type)) {
+        return {
+            valid: false,
+            message: "Please choose a JPG, PNG, or WebP image."
+        };
+    }
+
+    if (file.size > OURFLOW_MAX_PHOTO_BYTES) {
+        return {
+            valid: false,
+            message: "The selected photo is too large. Please choose an image under 4 MB."
+        };
+    }
+
+    return {
+        valid: true,
+        message: ""
+    };
+}
+
+function prepareSelectedLandmarkFile(input) {
+
+    const file =
+        getSelectedLandmarkFile(input);
+
+    if (!file) {
+        return null;
+    }
+
+    const validation =
+        validateSelectedLandmarkFile(file);
+
+    if (!validation.valid) {
+        resetCurrentPhotoSelection(input);
+
+        if (validation.message) {
+            showPhotoSelectionError(validation.message);
+        }
+
+        return null;
+    }
+
+    return file;
 }
 
 function refreshActiveJourneyAfterPhotoChange(targetSectionKey = "photos") {
@@ -95,104 +247,165 @@ function isUsablePhotoThumbnail(thumbnail) {
 
 async function resolveLandmarkThumbnailForSave() {
 
+    const version = getCurrentPhotoSelectionVersion();
+    const imageData = landmarkImageData;
+    const stillCurrent = () => isCurrentPhotoSelection(version) &&
+        imageData === landmarkImageData && !window.ourFlowPhotoSelectionPending;
+
+    if (!stillCurrent()) return "";
+
     if (isUsablePhotoThumbnail(landmarkThumbnailData)) {
         return landmarkThumbnailData;
     }
 
     if (window.landmarkThumbnailPromise) {
         try {
-            const thumbnail =
-                await window.landmarkThumbnailPromise;
-
+            const thumbnail = await window.landmarkThumbnailPromise;
+            if (!stillCurrent()) return "";
             if (isUsablePhotoThumbnail(thumbnail)) {
                 landmarkThumbnailData = thumbnail;
                 return thumbnail;
             }
-        } catch (error) {
+        } catch {
+            if (!stillCurrent()) return "";
             landmarkThumbnailData = "";
         }
     }
 
-    const retryThumbnail =
-        await buildLandmarkThumbnailFromData(
-            landmarkImageData
-        );
+    const retryThumbnail = await buildLandmarkThumbnailFromData(imageData);
+    if (!stillCurrent()) return "";
 
-    if (isUsablePhotoThumbnail(retryThumbnail)) {
-        landmarkThumbnailData = retryThumbnail;
-        return retryThumbnail;
+    landmarkThumbnailData = isUsablePhotoThumbnail(retryThumbnail) ? retryThumbnail : "";
+    return landmarkThumbnailData;
+}
+
+function prepareLandmarkImageData(imageData) {
+
+    if (typeof imageData !== "string" ||
+        !/^data:image\/(?:png|jpe?g|webp);base64,/i.test(imageData)) {
+        return Promise.reject(new Error("Photo could not be loaded"));
     }
 
-    landmarkThumbnailData = "";
-    return "";
+    if (imageData.length <= OURFLOW_MAX_ENCODED_PHOTO_CHARS) {
+        return Promise.resolve(imageData);
+    }
+
+    // Large accepted source files are resized locally. Only the bounded result
+    // becomes the selected AI image; the original is never submitted.
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onerror = () => reject(new Error("Photo could not be resized"));
+        image.onload = () => {
+            try {
+                if (!Number.isFinite(image.width) || !Number.isFinite(image.height) ||
+                    image.width <= 0 || image.height <= 0) throw new Error("Invalid image size");
+
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                if (!ctx) throw new Error("Image resizing unavailable");
+                let scale = Math.min(1, 2048 / Math.max(image.width, image.height));
+
+                for (let attempt = 0; attempt < 5; attempt += 1) {
+                    canvas.width = Math.max(1, Math.round(image.width * scale));
+                    canvas.height = Math.max(1, Math.round(image.height * scale));
+                    ctx.fillStyle = "#fff";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    const resized = canvas.toDataURL("image/jpeg", Math.max(0.55, 0.85 - attempt * 0.1));
+                    if (/^data:image\/jpeg;base64,/i.test(resized) &&
+                        resized.length <= OURFLOW_MAX_ENCODED_PHOTO_CHARS) {
+                        resolve(resized);
+                        return;
+                    }
+                    scale *= 0.75;
+                }
+                throw new Error("Photo remains too large");
+            } catch {
+                reject(new Error("Photo could not be resized"));
+            }
+        };
+        image.src = imageData;
+    });
+}
+
+function showPhotoSelectionProcessingCard() {
+    document.getElementById("result").innerHTML = `
+<div class="card" role="status">
+    <h2 class="card-title">Preparing Photo</h2>
+    Please wait while your photo is loaded and its preview is prepared.
+</div>
+`;
 }
 
 function previewLandmarkImage(input) {
 
-    const file =
-        getSelectedLandmarkFile(input);
+    const file = prepareSelectedLandmarkFile(input);
+    if (!file) return Promise.resolve(false);
 
-    if (!file) return;
+    // Invalidate and clear all previous data before the new asynchronous read.
+    resetCurrentPhotoSelection();
+    const version = getCurrentPhotoSelectionVersion();
+    window.ourFlowPhotoSelectionPending = true;
+    showPhotoSelectionProcessingCard();
 
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-
-        landmarkImageData = e.target.result;
-
-        window.landmarkThumbnailPromise =
-            buildLandmarkThumbnailFromData(
-                e.target.result
-            ).then(thumbnail => {
-                landmarkThumbnailData =
-                    thumbnail;
-
-                return thumbnail;
+    const task = (async () => {
+        try {
+            const rawImageData = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                window.ourFlowPhotoReader = reader;
+                reader.onload = event => resolve(event.target.result);
+                reader.onerror = () => reject(new Error("Photo could not be read"));
+                reader.onabort = () => resolve("");
+                reader.readAsDataURL(file);
             });
+            if (!isCurrentPhotoSelection(version)) return false;
 
-        document.getElementById("imagePreview")
-            .innerHTML = `
-<img
-    src="${e.target.result}"
-    alt="Selected photo preview"
-    style="
-        max-width:300px;
-        margin-top:10px;
-        border-radius:10px;
-    "
->
+            const imageData = await prepareLandmarkImageData(rawImageData);
+            if (!isCurrentPhotoSelection(version)) return false;
+
+            const thumbnailTask = buildLandmarkThumbnailFromData(imageData);
+            window.landmarkThumbnailPromise = thumbnailTask;
+            const thumbnail = await thumbnailTask;
+            if (!isCurrentPhotoSelection(version)) return false;
+
+            landmarkImageData = imageData;
+            landmarkThumbnailData = isUsablePhotoThumbnail(thumbnail) ? thumbnail : "";
+            const previewSource = getSafeOurFlowImageSrc(imageData);
+            document.getElementById("imagePreview").innerHTML = `
+<img src="${previewSource}" alt="Selected photo preview" style="max-width:300px;margin-top:10px;border-radius:10px;">
 `;
-    };
+            return true;
+        } catch {
+            if (isCurrentPhotoSelection(version)) {
+                resetCurrentPhotoSelection(input);
+                showPhotoSelectionError("This photo could not be prepared. Try a smaller JPG, PNG, or WebP image.");
+            }
+            return false;
+        } finally {
+            if (isCurrentPhotoSelection(version)) {
+                window.ourFlowPhotoSelectionPending = false;
+                window.ourFlowPhotoReader = null;
+                window.ourFlowPhotoSelectionPromise = null;
+            }
+        }
+    })();
 
-    reader.readAsDataURL(file);
+    window.ourFlowPhotoSelectionPromise = task;
+    return task;
 }
-
 
 async function analyzeLandmarkImage(input) {
 
-
-    previewLandmarkImage(input);
-
-
-    const file =
-        getSelectedLandmarkFile(input);
-
-    if (!file) return;
+    const task = previewLandmarkImage(input);
+    const version = getCurrentPhotoSelectionVersion();
+    if (!await task || !isCurrentPhotoSelection(version)) return;
 
     document.getElementById("result").innerHTML = `
 <div class="card">
     <h2 class="card-title" data-card-heading tabindex="-1">📸 Photo Ready</h2>
-
     Your image has been loaded.
-
     <br><br>
-
-    <button
-    id="saveJourneyButton"
-    onclick="saveJourneyPhoto()"
->
-    📷 Save To Journey
-</button>
+    <button id="saveJourneyButton" onclick="saveJourneyPhoto()">📷 Save To Journey</button>
 </div>
 `;
 
@@ -210,14 +423,17 @@ function showPhotoSavedCard() {
         activeJourney.photos.length - 1
         ];
 
+    const thumbnailSrc =
+        getSafeOurFlowImageSrc(lastPhoto?.thumbnail);
+
     document.getElementById("result").innerHTML = `
 <div class="card">
     <h2 class="card-title" data-card-heading tabindex="-1">📷 Photo Saved</h2>
 
-    ${lastPhoto?.thumbnail
+    ${thumbnailSrc
                 ? `
     <img
-        src="${lastPhoto.thumbnail}"
+        src="${thumbnailSrc}"
         alt="Saved photo preview"
         style="
             max-width:160px;
@@ -273,80 +489,85 @@ document.getElementById('questionInput').focus();
 
 async function saveJourneyPhoto() {
 
-    const button =
-        document.getElementById(
-            "saveJourneyButton"
-        );
-
-    if (button) {
-
-        button.disabled = true;
-
-        button.style.opacity = "0.5";
-
-        button.innerHTML =
-            "Saving Photo...";
-    }
-
-    if (!activeJourney) {
-
-        activeJourney = {
-            destination: "Photo Memory",
-            startLocation: "",
-            parkingLocation: "",
-            appointments: [],
-            staffInstructions: [],
-            notes: [],
-            medications: [],
-            questionsForDoctor: [],
-            directories: [],
-            photos: [],
-            timeline: []
-        };
-
-        markActiveJourneyContext("new");
+    if (window.ourFlowPhotoSelectionPending) {
+        showPhotoSelectionProcessingCard();
+        return false;
     }
 
     if (!landmarkImageData) {
-        if (typeof showOurFlowStatusCard === "function") {
-            showOurFlowStatusCard(
-                "Photo Not Ready",
-                "No image data is available yet. Choose or take a photo before saving.",
-                {
-                    role: "alert"
-                }
-            );
+        showPhotoSelectionError("Choose or take a photo and wait for it to finish loading before saving.");
+        return false;
+    }
+
+    const version = getCurrentPhotoSelectionVersion();
+    const imageData = landmarkImageData;
+    if (window.ourFlowPhotoSaveVersion === version) return false;
+    window.ourFlowPhotoSaveVersion = version;
+
+    const button = document.getElementById("saveJourneyButton");
+    if (button) {
+        button.disabled = true;
+        button.style.opacity = "0.5";
+        button.textContent = "Saving Photo...";
+    }
+
+    let saved = false;
+    try {
+        if (!activeJourney) {
+            activeJourney = {
+                destination: "Photo Memory",
+                startLocation: "",
+                parkingLocation: "",
+                appointments: [],
+                staffInstructions: [],
+                notes: [],
+                medications: [],
+                questionsForDoctor: [],
+                directories: [],
+                photos: [],
+                timeline: []
+            };
+            markActiveJourneyContext("new");
+            if (typeof trackOurFlowJourneyStarted === "function") {
+                trackOurFlowJourneyStarted();
+            }
         }
-        return;
+
+        const journey = activeJourney;
+        const savedThumbnail = await resolveLandmarkThumbnailForSave();
+
+        if (!isCurrentPhotoSelection(version) || window.ourFlowPhotoSelectionPending ||
+            landmarkImageData !== imageData || activeJourney !== journey) return false;
+
+        if (!journey.photos) journey.photos = [];
+        journey.photos.push({
+            timestamp: new Date().toLocaleString(),
+            title: "",
+            analysis: "",
+            thumbnail: savedThumbnail
+        });
+        journey.timeline.push("Photo Added");
+        localStorage.setItem("activeJourney", JSON.stringify(journey));
+        refreshActiveJourneyAfterPhotoChange("photos");
+        showPhotoSavedCard();
+        saved = true;
+        return true;
+    } finally {
+        if (window.ourFlowPhotoSaveVersion === version) window.ourFlowPhotoSaveVersion = null;
+        if (!saved && isCurrentPhotoSelection(version) && button) {
+            button.disabled = false;
+            button.style.opacity = "";
+            button.textContent = "📷 Save To Journey";
+        }
     }
-
-    if (!activeJourney.photos) {
-        activeJourney.photos = [];
-    }
-
-    const savedThumbnail =
-        await resolveLandmarkThumbnailForSave();
-
-    activeJourney.photos.push({
-        timestamp: new Date().toLocaleString(),
-        title: "",
-        analysis: "",
-        thumbnail: savedThumbnail
-    });
-    activeJourney.timeline.push("Photo Added");
-
-    localStorage.setItem(
-        "activeJourney",
-        JSON.stringify(activeJourney)
-    );
-
-    refreshActiveJourneyAfterPhotoChange("photos");
-
-    showPhotoSavedCard();
-
 }
 
 async function analyzeSavedJourneyPhotoLegacy() {
+
+    if (window.ourFlowPhotoSelectionPending) {
+        showPhotoSelectionProcessingCard();
+        return;
+    }
 
     if (
         !activeJourney ||
@@ -365,52 +586,57 @@ async function analyzeSavedJourneyPhotoLegacy() {
 </div>
 `;
 
-    const response = await fetch("/api/askOurFlow", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(
-            buildOurFlowPayload(
-                "Look at this image and suggest 3 short practical location memories the user may want to remember. Read all visible signs, names, numbers, suite numbers, building names, landmarks, and notices. Group related visible clues into one useful memory, such as building or place name + number + distinguishing landmark or notice. Do not return a standalone number unless no other useful text is visible. Do not split related clues into unrelated choices. Return only a simple numbered list of memory names, with no explanations.",
-                {
-                    injectJourneyContext: true
-                }
+    try {
+        const response = await fetch("/api/askOurFlow", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(
+                buildOurFlowPayload(
+                    "Look at this image and suggest 3 short practical location memories the user may want to remember. Read all visible signs, names, numbers, suite numbers, building names, landmarks, and notices. Group related visible clues into one useful memory, such as building or place name + number + distinguishing landmark or notice. Do not return a standalone number unless no other useful text is visible. Do not split related clues into unrelated choices. Return only a simple numbered list of memory names, with no explanations.",
+                    {
+                        injectJourneyContext: true
+                    }
+                )
             )
-        )
-    });
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    const lastPhoto =
-        activeJourney.photos[
-        activeJourney.photos.length - 1
-        ];
+        if (response.ok === false || typeof data?.answer !== "string" || !data.answer.trim()) {
+            throw new Error("AI assistance is temporarily unavailable.");
+        }
 
-    lastPhoto.analysis = data.answer;
+        const lastPhoto =
+            activeJourney.photos[
+            activeJourney.photos.length - 1
+            ];
 
-    localStorage.setItem(
-        "activeJourney",
-        JSON.stringify(activeJourney)
-    );
+        lastPhoto.analysis = data.answer;
 
-    const suggestions = data.answer.match(
-        /^\d+\.\s(.+)$/gm
-    )?.map(
-        line => line.replace(/^\d+\.\s/, "")
-    ) || [];
+        localStorage.setItem(
+            "activeJourney",
+            JSON.stringify(activeJourney)
+        );
 
-    window.photoSuggestions = suggestions;
+        const suggestions = data.answer.match(
+            /^\d+\.\s(.+)$/gm
+        )?.map(
+            line => line.replace(/^\d+\.\s/, "")
+        ) || [];
 
-    pendingPhotoMemory = true;
+        window.photoSuggestions = suggestions;
 
-    refreshActiveJourneyAfterPhotoChange("photos");
+        pendingPhotoMemory = true;
 
-    document.getElementById("result").innerHTML = `
+        refreshActiveJourneyAfterPhotoChange("photos");
+
+        document.getElementById("result").innerHTML = `
 <div class="card">
     <h2 class="card-title">📷 Photo Analyzed</h2>
 
-    ${data.answer}
+    ${escapeOurFlowHtmlWithBreaks(data.answer)}
 
     <br><br>
 
@@ -454,6 +680,12 @@ if(memory){
     <br><br>
 </div>
 `;
+    } catch (error) {
+        showPhotoAnalysisFailedCard(error?.code === "OURFLOW_REQUEST_TOO_LARGE"
+            ? "This photo and its context are too large to send. Choose a smaller photo or shorten the request."
+            : undefined);
+    }
+
 }
 
 function savePhotoMemory(note) {
@@ -486,7 +718,7 @@ function savePhotoMemory(note) {
 <div class="card">
     <h2 class="card-title">📷 Photo Note Saved</h2>
 
-    ${note}
+    ${escapeOurFlowHtmlWithBreaks(note)}
 
     <br><br>
 
@@ -583,7 +815,7 @@ function savePhotoClassification(type) {
 <div class="card">
     <h2 class="card-title">📬 Verified Location Saved</h2>
 
-    ${location}
+    ${escapeOurFlowHtmlWithBreaks(location)}
 
     <br><br>
 
@@ -638,7 +870,7 @@ function savePhotoClassification(type) {
 <div class="card">
     <h2 class="card-title">🏢 Directory Info Saved</h2>
 
-    ${directoryInfo}
+    ${escapeOurFlowHtmlWithBreaks(directoryInfo)}
 </div>
 `;
     }
@@ -686,7 +918,7 @@ function savePhotoAsLocationLegacy(type) {
 <div class="card">
     <h2 class="card-title">Parking Saved</h2>
 
-    ${location}
+    ${escapeOurFlowHtmlWithBreaks(location)}
 </div>
 `;
 
@@ -714,7 +946,7 @@ function savePhotoAsLocationLegacy(type) {
 <div class="card">
     <h2 class="card-title">Start Location Saved</h2>
 
-    ${location}
+    ${escapeOurFlowHtmlWithBreaks(location)}
 </div>
 `;
 
@@ -751,7 +983,7 @@ function savePhotoAsLocationLegacy(type) {
 <div class="card">
     <h2 class="card-title">Parking + Start Location Saved</h2>
 
-    ${location}
+    ${escapeOurFlowHtmlWithBreaks(location)}
 </div>
 `;
 
@@ -782,7 +1014,7 @@ function savePhotoAsLocationLegacy(type) {
 <div class="card">
     <h2 class="card-title">Destination Saved</h2>
 
-    ${location}
+    ${escapeOurFlowHtmlWithBreaks(location)}
 </div>
 `;
 
@@ -873,6 +1105,11 @@ function applyPhotoStartFields(location, verifiedAddress) {
 
 async function analyzeSavedJourneyPhoto() {
 
+    if (window.ourFlowPhotoSelectionPending) {
+        showPhotoSelectionProcessingCard();
+        return;
+    }
+
     if (
         !activeJourney ||
         !activeJourney.photos ||
@@ -921,6 +1158,10 @@ async function analyzeSavedJourneyPhoto() {
         const data =
             await response.json();
 
+        if (response.ok === false || typeof data?.answer !== "string" || !data.answer.trim()) {
+            throw new Error("AI assistance is temporarily unavailable.");
+        }
+
         const lastPhoto =
             activeJourney.photos[
             activeJourney.photos.length - 1
@@ -950,7 +1191,7 @@ async function analyzeSavedJourneyPhoto() {
 <div class="card">
     <h2 class="card-title">Photo Analyzed</h2>
 
-    ${data.answer}
+    ${escapeOurFlowHtmlWithBreaks(data.answer)}
 
     <br><br>
 
@@ -995,7 +1236,9 @@ if(memory){
 </div>
 `;
     } catch (error) {
-        showPhotoAnalysisFailedCard();
+        showPhotoAnalysisFailedCard(error?.code === "OURFLOW_REQUEST_TOO_LARGE"
+            ? "This photo and its context are too large to send. Choose a smaller photo or shorten the request."
+            : undefined);
     } finally {
         window.photoAnalysisInProgress = false;
     }
@@ -1005,7 +1248,7 @@ function showPhotoAnalysisInProgressCard(title) {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <h2 class="card-title">${title}</h2>
+    <h2 class="card-title">${escapeOurFlowHtml(title)}</h2>
 
     Looking for useful location clues.
 
@@ -1018,13 +1261,13 @@ function showPhotoAnalysisInProgressCard(title) {
 `;
 }
 
-function showPhotoAnalysisFailedCard() {
+function showPhotoAnalysisFailedCard(message = "You can continue your journey and try again later.") {
 
     document.getElementById("result").innerHTML = `
 <div class="card">
     <h2 class="card-title">Photo Analysis Did Not Finish</h2>
 
-    You can continue your journey and try again later.
+    ${escapeOurFlowHtmlWithBreaks(message)}
 
     <br><br>
 
@@ -1085,7 +1328,7 @@ function savePhotoAsLocation(type) {
 <div class="card">
     <h2 class="card-title">Parking Saved</h2>
 
-    ${location}
+    ${escapeOurFlowHtmlWithBreaks(location)}
 </div>
 `;
 
@@ -1114,7 +1357,7 @@ function savePhotoAsLocation(type) {
 <div class="card">
     <h2 class="card-title">Start Location Saved</h2>
 
-    ${location}
+    ${escapeOurFlowHtmlWithBreaks(location)}
 </div>
 `;
 
@@ -1148,7 +1391,7 @@ function savePhotoAsLocation(type) {
 <div class="card">
     <h2 class="card-title">Parking + Start Location Saved</h2>
 
-    ${location}
+    ${escapeOurFlowHtmlWithBreaks(location)}
 </div>
 `;
 
@@ -1178,7 +1421,7 @@ function savePhotoAsLocation(type) {
 <div class="card">
     <h2 class="card-title">Destination Saved</h2>
 
-    ${location}
+    ${escapeOurFlowHtmlWithBreaks(location)}
 </div>
 `;
     }

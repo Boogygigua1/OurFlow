@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
 
     <script>
-        const OURFLOW_BUILD = "2026-09-02-3";
+        const OURFLOW_BUILD = "2026-10-06-1";
         console.log("OurFlow build loaded:", OURFLOW_BUILD);
     </script>
 
@@ -239,14 +239,14 @@ color:#374151;
 
     <label for="landmarkImage" class="photo-picker-button">
         <span>&#128247; Take Photo (optional)</span>
-        <input type="file" id="landmarkImage" class="photo-picker-input" accept="image/*" capture="environment"
+        <input type="file" id="landmarkImage" class="photo-picker-input" accept="image/jpeg,image/png,image/webp" capture="environment"
             onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }"
             onchange="analyzeLandmarkImage(this)">
     </label>
 
     <label for="landmarkImageLibrary" class="photo-picker-button">
         <span>&#128444;&#65039; Choose From Library (optional)</span>
-        <input type="file" id="landmarkImageLibrary" class="photo-picker-input" accept="image/*"
+        <input type="file" id="landmarkImageLibrary" class="photo-picker-input" accept="image/jpeg,image/png,image/webp"
             onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }"
             onchange="analyzeLandmarkImage(this)">
     </label>
@@ -354,7 +354,21 @@ margin-right:auto;
 
         <br><br>
 
-        Anonymous usage analytics may be collected to improve app performance, reliability, and user experience.
+        OurFlow uses privacy-focused analytics to measure anonymous site usage and feature activity. Journey content and
+        personal information are not sent to analytics.
+
+        <br><br>
+
+        OurFlow runs on Vercel and may use OpenAI for AI assistance, Google Maps or Places for location lookup and map
+        links, Formspree for support messages, and Vercel Analytics for basic usage analytics. Information you enter may
+        be sent to these services only as needed to provide the feature you are using. Selected photos may be sent to
+        OpenAI when you use AI photo-analysis features.
+
+        <br><br>
+
+        Journey information, including saved journeys, notes, locations, parking details, appointment information,
+        medication-related notes, directory information, instructions, and photo thumbnails, is stored locally on this
+        device unless a feature clearly sends it to a service for help with that request.
 
         <br><br>
 
@@ -391,6 +405,20 @@ margin-right:auto;
         <br><br>
 
         OurFlow is provided for personal, non-commercial use unless otherwise authorized in writing.
+
+        <br><br>
+
+        <button type="button" onclick="clearAllOurFlowDeviceData()" style="
+background:none;
+color:#991b1b;
+border:1px solid rgba(153,27,27,0.45);
+border-radius:8px;
+font-size:11px;
+cursor:pointer;
+padding:8px 10px;
+">
+            Clear all OurFlow data from this device
+        </button>
 
         <br><br>
 
@@ -472,17 +500,17 @@ height:auto;
 <script src="maps.js?v=2026-07-07-1"></script>
 <script src="journeyPlaces.js?v=2026-09-02-2"></script>
     <script src="recoveryLogic.js?v=2026-08-28-3"></script>
-    <script src="locationIntake.js?v=2026-09-02-2"></script>
+<script src="locationIntake.js?v=2026-10-06-1"></script>
     <script src="orientationLogic.js?v=2026-09-02-1"></script>
 
     <script src="locationLogic.js?v=2026-09-02-2"></script>
-    <script src="photos.js?v=2026-09-02-2"></script>
-    <script src="journey.js?v=2026-09-02-2"></script>
+<script src="photos.js?v=2026-10-06-1"></script>
+<script src="journey.js?v=2026-10-06-1"></script>
 <script src="mic.js?v=2026-06-30-1"></script>
 
 <script src="memoryHelpers.js?v=2026-08-28-3"></script>
-<script src="ourflowCore.js?v=2026-09-02-3"></script>
-<script src="app.js?v=2026-09-02-3"></script>
+<script src="ourflowCore.js?v=2026-10-06-1"></script>
+<script src="app.js?v=2026-10-06-1"></script>
 
 </body>
 

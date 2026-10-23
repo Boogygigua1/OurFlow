@@ -1,3 +1,23 @@
+var escapeOurFlowHtml =
+    typeof escapeOurFlowHtml === "function"
+        ? escapeOurFlowHtml
+        : function (value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        };
+
+var escapeOurFlowHtmlWithBreaks =
+    typeof escapeOurFlowHtmlWithBreaks === "function"
+        ? escapeOurFlowHtmlWithBreaks
+        : function (value) {
+            return escapeOurFlowHtml(value)
+                .replace(/\r?\n/g, "<br>");
+        };
+
 function getBlankLocationIntakeJourney(destination) {
 
     return {
@@ -41,6 +61,10 @@ function ensureLocationIntakeJourney(destination) {
             getBlankLocationIntakeJourney(destination);
 
         markActiveJourneyContext("new");
+
+        if (typeof trackOurFlowJourneyStarted === "function") {
+            trackOurFlowJourneyStarted();
+        }
     }
 
     if (!activeJourney.timeline) {
@@ -586,6 +610,10 @@ function startJourneyFromLocationIntake() {
 
     markActiveJourneyContext("new");
 
+    if (typeof trackOurFlowJourneyStarted === "function") {
+        trackOurFlowJourneyStarted();
+    }
+
     if (candidate.confidence === "address") {
         activeJourney.destinationAddress =
             candidate.locationText;
@@ -817,28 +845,41 @@ async function continueLocationIntakeWithAI() {
 </div>
 `;
 
-    const response = await fetch("/api/askOurFlow", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(
-            buildOurFlowPayload(
-                candidate.originalText,
-                {
-                    injectJourneyContext: true
-                }
+    try {
+        const response = await fetch("/api/askOurFlow", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(
+                buildOurFlowPayload(
+                    candidate.originalText,
+                    {
+                        injectJourneyContext: true
+                    }
+                )
             )
-        )
-    });
+        });
 
-    const data =
-        await response.json();
+        const data =
+            await response.json();
 
-    result.innerHTML = `
+        if (response.ok === false || typeof data?.answer !== "string" || !data.answer.trim()) {
+            throw new Error("AI assistance is temporarily unavailable.");
+        }
+
+        result.innerHTML = `
 <div class="card">
     <h2 class="card-title">OurFlow</h2>
-    ${data.answer}
+    ${escapeOurFlowHtmlWithBreaks(data.answer)}
 </div>
 `;
+    } catch (error) {
+        if (typeof showOurFlowStatusCard === "function") {
+            showOurFlowStatusCard("OurFlow", error?.code === "OURFLOW_REQUEST_TOO_LARGE"
+                ? "This photo and its context are too large to send. Choose a smaller photo or shorten the request."
+                : "AI assistance is temporarily unavailable. Please try again.", { role: "alert" });
+        }
+    }
+
 }

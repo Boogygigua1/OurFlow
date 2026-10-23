@@ -24,6 +24,45 @@ const PROFILE_STORAGE_KEYS = [
     "userProfile"
 ];
 
+function escapeOurFlowHtml(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function escapeOurFlowHtmlWithBreaks(value) {
+
+    return escapeOurFlowHtml(value)
+        .replace(/\r?\n/g, "<br>");
+}
+
+var getSafeOurFlowMapUrl = function (value) {
+    const source = typeof value === "string" ? value.trim() : "";
+
+    // Accept only HTTPS Google Maps URLs, never executable schemes or lookalike hosts.
+    return /^https:\/\/(?:www\.google\.com\/maps(?:[/?#]|$)|maps\.google\.com(?:[/?#]|$)|maps\.app\.goo\.gl\/)[^\u0000-\u0020\u007f\\]*$/i.test(source)
+        ? source
+        : "";
+};
+
+function getSafeOurFlowImageSrc(value) {
+
+    const source =
+        String(value || "").trim();
+
+    if (
+        /^data:image\/(?:png|jpe?g|gif|webp);base64,/i.test(source)
+    ) {
+        return escapeOurFlowHtml(source);
+    }
+
+    return "";
+}
+
 function safeReadLocalStorageJson(key, fallback, maxChars, isValid) {
 
     try {
@@ -66,8 +105,10 @@ function safeReadLocalStorageJson(key, fallback, maxChars, isValid) {
 
         console.warn(
             "Ignoring unreadable localStorage data:",
-            key,
-            error
+            {
+                key,
+                errorCategory: "storage_read_error"
+            }
         );
 
         return fallback;
@@ -309,6 +350,9 @@ function focusResultCardTarget(selector) {
 
 function resetJourneySessionContext() {
 
+    // A late FileReader/thumbnail callback must not restore a cleared journey's photo.
+    if (typeof resetCurrentPhotoSelection === "function") resetCurrentPhotoSelection();
+
     conversationHistory = [];
 
     currentJourneyContextId =
@@ -453,33 +497,47 @@ function shouldInjectActiveJourneyContext(question) {
     );
 }
 
+const OURFLOW_MAX_AI_REQUEST_BYTES = 4000000;
+
+function assertOurFlowRequestSize(payload) {
+    const bodyBytes = new TextEncoder().encode(JSON.stringify(payload)).byteLength;
+    if (bodyBytes > OURFLOW_MAX_AI_REQUEST_BYTES) {
+        const error = new Error("Request is too large");
+        error.code = "OURFLOW_REQUEST_TOO_LARGE";
+        throw error;
+    }
+    return payload;
+}
+
 function buildOurFlowPayload(question, overrides = {}) {
 
     const injectJourneyContext =
         overrides.injectJourneyContext ??
         shouldInjectActiveJourneyContext(question);
 
-    const journey =
-        injectJourneyContext
-            ? activeJourney
-            : null;
+    const journey = injectJourneyContext ? activeJourney : null;
+    const text = value => typeof value === "string" ? value : "";
 
+    // Send only context the AI handler consumes. Full journeys, timelines, profiles,
+    // contact fields, and saved photo collections stay in local device storage.
     const payload = {
-        question,
-        activeJourney: journey,
+        question: text(question),
         history: injectJourneyContext
-            ? getScopedConversationHistory()
+            ? getScopedConversationHistory().filter(value => typeof value === "string")
             : [],
-        notes: journey?.notes?.slice(-5) || [],
-        destination: journey?.destination || "",
-        destinationAddress: journey?.destinationAddress || "",
-        parkingLocation: journey?.parkingLocation || "",
-        arrivalTips: journey?.arrivalTips || "",
-        startLocation: journey?.startLocation || "",
-        journeyStatus: journey?.journeyStatus || "",
-        landmarkImageData
+        notes: Array.isArray(journey?.notes)
+            ? journey.notes.slice(-5).filter(value => typeof value === "string")
+            : [],
+        destination: text(journey?.destination),
+        destinationAddress: text(journey?.destinationAddress),
+        parkingLocation: text(journey?.parkingLocation),
+        arrivalTips: text(journey?.arrivalTips),
+        startLocation: text(journey?.startLocation),
+        journeyStatus: text(journey?.journeyStatus),
+        landmarkImageData: text(landmarkImageData)
     };
 
+    assertOurFlowRequestSize(payload);
     logOurFlowPromptDiagnostics(payload, injectJourneyContext);
 
     return payload;
@@ -487,21 +545,14 @@ function buildOurFlowPayload(question, overrides = {}) {
 
 function logOurFlowPromptDiagnostics(payload, injectJourneyContext) {
 
-    const finalPromptPayload = {
-        ...payload,
-        landmarkImageData: payload.landmarkImageData
-            ? "[image data length " + payload.landmarkImageData.length + "]"
-            : ""
-    };
-
-    console.log("OURFLOW PROMPT TRACE", {
-        "Current activeJourney": activeJourney,
-        "Conversation history": payload.history,
-        "Injected notes": payload.notes,
-        "Injected destination": payload.destination,
-        "Injected parking": payload.parkingLocation,
-        "Injected start location": payload.startLocation,
-        "Journey context injected": injectJourneyContext,
-        "Final prompt payload": finalPromptPayload
+    console.log("OURFLOW PROMPT METADATA", {
+        journeyContextInjected: Boolean(injectJourneyContext),
+        historyCount: Array.isArray(payload.history)
+            ? payload.history.length
+            : 0,
+        notesCount: Array.isArray(payload.notes)
+            ? payload.notes.length
+            : 0,
+        imageIncluded: Boolean(payload.landmarkImageData)
     });
 }

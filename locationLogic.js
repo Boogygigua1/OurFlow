@@ -1,4 +1,36 @@
 
+var escapeOurFlowHtml =
+    typeof escapeOurFlowHtml === "function"
+        ? escapeOurFlowHtml
+        : function (value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        };
+
+var escapeOurFlowHtmlWithBreaks =
+    typeof escapeOurFlowHtmlWithBreaks === "function"
+        ? escapeOurFlowHtmlWithBreaks
+        : function (value) {
+            return escapeOurFlowHtml(value)
+                .replace(/\r?\n/g, "<br>");
+        };
+
+var getSafeOurFlowMapUrl =
+    typeof getSafeOurFlowMapUrl === "function"
+        ? getSafeOurFlowMapUrl
+        : function (value) {
+            const source = typeof value === "string" ? value.trim() : "";
+
+            // Accept only HTTPS Google Maps URLs, never executable schemes or lookalike hosts.
+            return /^https:\/\/(?:www\.google\.com\/maps(?:[/?#]|$)|maps\.google\.com(?:[/?#]|$)|maps\.app\.goo\.gl\/)[^\u0000-\u0020\u007f\\]*$/i.test(source)
+                ? source
+                : "";
+        };
+
 function analyzeUserQuestion(question) {
     const text = question.toLowerCase();
 
@@ -271,7 +303,7 @@ function saveLocationType(type) {
     <br><br>
 
     <strong>
-        ${activeJourney.destination}
+        ${escapeOurFlowHtmlWithBreaks(activeJourney.destination)}
     </strong>
 
     <br><br>
@@ -594,9 +626,11 @@ function showParkingSavedConfirmationCard(statusMessage = "") {
         ? `${escapeDestinationPlaceHtml(statusMessage)}<br><br>`
         : ""}
 
-    ${activeJourney?.parkingDescription ||
+    ${escapeOurFlowHtmlWithBreaks(
+        activeJourney?.parkingDescription ||
         activeJourney?.parkingLocation ||
-        "Your parking location has been recorded."}
+        "Your parking location has been recorded."
+    )}
 
     <br><br>
 
@@ -694,7 +728,7 @@ async function verifyParkingLocation() {
 <div class="card">
     <h2 class="card-title" data-card-heading tabindex="-1">Parking Address Optional</h2>
 
-    ${parkingLocation}
+    ${escapeOurFlowHtmlWithBreaks(parkingLocation)}
 
     <br><br>
 
@@ -763,7 +797,7 @@ if(address){
 <div class="card">
     <h2 class="card-title" data-card-heading tabindex="-1">🚗 Verifying Parking Location</h2>
 
-    ${parkingLocation}
+    ${escapeOurFlowHtmlWithBreaks(parkingLocation)}
 
     <br><br>
 
@@ -801,7 +835,7 @@ if(address){
 <div class="card">
     <h2 class="card-title" data-card-heading tabindex="-1">📍 Suggested Location</h2>
 
-${data.suggestion || "No suggestion found."}
+${escapeOurFlowHtmlWithBreaks(data.suggestion || "No suggestion found.")}
 
 <br><br>
 
@@ -917,7 +951,7 @@ function saveInformationSearchAsDestination() {
 <div class="card">
     <h2 class="card-title">📍 Destination Detail Saved</h2>
 
-    ${pendingDestinationSearch}
+    ${escapeOurFlowHtmlWithBreaks(pendingDestinationSearch)}
 
     <br><br>
 
@@ -1009,7 +1043,7 @@ async function verifySavedLocation() {
 
     <br><br>
 
-    <strong>${destination}</strong>
+    <strong>${escapeOurFlowHtmlWithBreaks(destination)}</strong>
 
     <br><br>
 
@@ -1103,11 +1137,11 @@ async function verifySavedLocation() {
         🔍 Search Google Places
     </button>
 
-    ${bestMatch.googleMapsUri
+    ${getSafeOurFlowMapUrl(bestMatch.googleMapsUri)
         ? `
     <br><br>
 
-    <button onclick="window.open(window.destinationPlaceCandidates[0].googleMapsUri, '_blank')">
+    <button onclick="openVerifiedDestinationMap()">
         🗺️ Open Map
     </button>
     `
@@ -1124,6 +1158,18 @@ async function verifySavedLocation() {
     if (typeof focusResultCardTarget === "function") {
         focusResultCardTarget("[data-card-heading]");
     }
+}
+
+function openVerifiedDestinationMap() {
+
+    const mapUrl = getSafeOurFlowMapUrl(
+        window.destinationPlaceCandidates?.[0]?.googleMapsUri
+    );
+
+    if (!mapUrl) return false;
+
+    window.open(mapUrl, "_blank", "noopener,noreferrer");
+    return true;
 }
 
 function escapeDestinationPlaceHtml(value) {
@@ -2568,7 +2614,7 @@ function saveVerifiedDestinationAddress(address) {
 <div class="card">
     <h2 class="card-title" data-card-heading tabindex="-1">📬 Destination Verified</h2>
 
-    ${address}
+    ${escapeOurFlowHtmlWithBreaks(address)}
 
     <br><br>
 

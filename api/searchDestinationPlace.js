@@ -1,3 +1,52 @@
+import {
+    applyRateLimit,
+    getSafeErrorCategory,
+    getLimitedString,
+    getUpstreamFailureStatus,
+    readJsonSafely,
+    rejectOversizedBody
+} from "./requestGuards.js";
+
+const SEARCH_DESTINATION_LIMITS = {
+    bodyBytes: 16 * 1024,
+    destinationChars: 500,
+    originalDestinationChars: 500,
+    maxBiasRadiusMeters: 50000
+};
+
+function getSafeLocationBias(locationBias) {
+
+    if (
+        !locationBias ||
+        typeof locationBias.latitude !== "number" ||
+        typeof locationBias.longitude !== "number"
+    ) {
+        return null;
+    }
+
+    if (
+        locationBias.latitude < -90 ||
+        locationBias.latitude > 90 ||
+        locationBias.longitude < -180 ||
+        locationBias.longitude > 180
+    ) {
+        return null;
+    }
+
+    return {
+        latitude: locationBias.latitude,
+        longitude: locationBias.longitude,
+        radius:
+            typeof locationBias.radius === "number" &&
+            locationBias.radius > 0
+                ? Math.min(
+                    locationBias.radius,
+                    SEARCH_DESTINATION_LIMITS.maxBiasRadiusMeters
+                )
+                : SEARCH_DESTINATION_LIMITS.maxBiasRadiusMeters
+    };
+}
+
 export default async function handler(req, res) {
 
     if (req.method !== "POST") {
@@ -6,11 +55,44 @@ export default async function handler(req, res) {
         });
     }
 
+    if (
+        applyRateLimit(req, res, {
+            name: "searchDestinationPlace",
+            windowMs: 60 * 1000,
+            maxRequests: 30
+        })
+    ) {
+        return;
+    }
+
+    if (rejectOversizedBody(req, res, SEARCH_DESTINATION_LIMITS.bodyBytes)) {
+        return;
+    }
+
     const {
-        destination,
-        originalDestination,
-        locationBias
+        destination: rawDestination,
+        originalDestination: rawOriginalDestination,
+        locationBias: rawLocationBias
     } = req.body || {};
+
+    const destination =
+        getLimitedString(rawDestination, SEARCH_DESTINATION_LIMITS.destinationChars);
+
+    const originalDestination =
+        getLimitedString(
+            rawOriginalDestination,
+            SEARCH_DESTINATION_LIMITS.originalDestinationChars
+        );
+
+    if (destination === null || originalDestination === null) {
+        return res.status(413).json({
+            error: "Request is too large.",
+            candidates: []
+        });
+    }
+
+    const locationBias =
+        getSafeLocationBias(rawLocationBias);
 
     if (!destination || !String(destination).trim()) {
         return res.status(400).json({
@@ -23,8 +105,12 @@ export default async function handler(req, res) {
         process.env.GOOGLE_MAPS_API_KEY;
 
     if (!apiKey) {
+        console.error("DESTINATION PLACE LOOKUP ERROR:", {
+            errorCategory: "missing_configuration"
+        });
+
         return res.status(500).json({
-            error: "Google Places API key is not configured",
+            error: "Location lookup is temporarily unavailable.",
             candidates: []
         });
     }
@@ -36,9 +122,7 @@ export default async function handler(req, res) {
         };
 
         if (
-            locationBias &&
-            typeof locationBias.latitude === "number" &&
-            typeof locationBias.longitude === "number"
+            locationBias
         ) {
             requestBody.locationBias = {
                 circle: {
@@ -47,9 +131,7 @@ export default async function handler(req, res) {
                         longitude: locationBias.longitude
                     },
                     radius:
-                        typeof locationBias.radius === "number"
-                            ? locationBias.radius
-                            : 50000
+                        locationBias.radius
                 }
             };
         }
@@ -69,19 +151,33 @@ export default async function handler(req, res) {
         );
 
         const data =
-            await response.json();
+            await readJsonSafely(response);
 
         if (!response.ok) {
-            return res.status(response.status).json({
-                error:
-                    data?.error?.message ||
-                    "Google Places lookup failed",
+            console.error("DESTINATION PLACE LOOKUP ERROR:", {
+                errorCategory: "upstream_http_error",
+                upstreamStatus: response.status
+            });
+
+            return res.status(getUpstreamFailureStatus(response.status)).json({
+                error: "Location lookup is temporarily unavailable.",
+                candidates: []
+            });
+        }
+
+        if (!data || !Array.isArray(data.places)) {
+            console.error("DESTINATION PLACE LOOKUP ERROR:", {
+                errorCategory: "upstream_invalid_response"
+            });
+
+            return res.status(502).json({
+                error: "Location lookup is temporarily unavailable.",
                 candidates: []
             });
         }
 
         const candidates =
-            (data.places || [])
+            data.places
                 .slice(0, 3)
                 .map(place => ({
                     destinationName:
@@ -108,10 +204,12 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
-        console.error(error);
+        console.error("DESTINATION PLACE LOOKUP ERROR:", {
+            errorCategory: getSafeErrorCategory(error)
+        });
 
-        return res.status(500).json({
-            error: "Google Places lookup failed",
+        return res.status(503).json({
+            error: "Location lookup is temporarily unavailable.",
             candidates: []
         });
     }

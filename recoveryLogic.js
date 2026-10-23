@@ -1,3 +1,23 @@
+var escapeOurFlowHtml =
+    typeof escapeOurFlowHtml === "function"
+        ? escapeOurFlowHtml
+        : function (value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        };
+
+var escapeOurFlowHtmlWithBreaks =
+    typeof escapeOurFlowHtmlWithBreaks === "function"
+        ? escapeOurFlowHtmlWithBreaks
+        : function (value) {
+            return escapeOurFlowHtml(value)
+                .replace(/\r?\n/g, "<br>");
+        };
+
 function isRecoveryIntent(question) {
 
     const text =
@@ -86,12 +106,12 @@ function showRecoveryChoices() {
     const placeButtons =
         places.map(place => `
 <div style="margin-bottom:16px;">
-    <h3 class="card-subtitle">${place.label}</h3>
+    <h3 class="card-subtitle">${escapeOurFlowHtml(place.label)}</h3>
 
-    ${place.title || "Unnamed place"}
+    ${escapeOurFlowHtmlWithBreaks(place.title || "Unnamed place")}
 
     ${place.address
-                ? `<br>${place.address}`
+                ? `<br>${escapeOurFlowHtmlWithBreaks(place.address)}`
                 : ""}
 
     ${place.verified
@@ -100,8 +120,8 @@ function showRecoveryChoices() {
 
     <br><br>
 
-    <button onclick="navigateToJourneyPlace('${place.id}')">
-        Open ${place.label} in Google Maps
+    <button onclick="navigateToJourneyPlace(${escapeOurFlowHtml(JSON.stringify(String(place.id || "")))})">
+        Open ${escapeOurFlowHtml(place.label)} in Google Maps
     </button>
 </div>
 `).join("");

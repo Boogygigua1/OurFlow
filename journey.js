@@ -2,6 +2,38 @@
 // COLLAPSIBLE SECTIONS
 // ========================================
 
+var escapeOurFlowHtml =
+    typeof escapeOurFlowHtml === "function"
+        ? escapeOurFlowHtml
+        : function (value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        };
+
+var escapeOurFlowHtmlWithBreaks =
+    typeof escapeOurFlowHtmlWithBreaks === "function"
+        ? escapeOurFlowHtmlWithBreaks
+        : function (value) {
+            return escapeOurFlowHtml(value)
+                .replace(/\r?\n/g, "<br>");
+        };
+
+var getSafeOurFlowImageSrc =
+    typeof getSafeOurFlowImageSrc === "function"
+        ? getSafeOurFlowImageSrc
+        : function (value) {
+            const source =
+                String(value || "").trim();
+
+            return /^data:image\/(?:png|jpe?g|gif|webp);base64,/i.test(source)
+                ? escapeOurFlowHtml(source)
+                : "";
+        };
+
 window.showJourneyInfo =
     window.showJourneyInfo ?? false;
 
@@ -118,12 +150,17 @@ function saveJourney() {
         JSON.stringify(savedJourneys)
     );
 
+    if (typeof trackOurFlow === "function") {
+        trackOurFlow("journey_saved");
+        trackOurFlow("journey_completed");
+    }
+
     result.innerHTML = `
 <div class="card">
     <h2 class="card-title" data-card-heading tabindex="-1">🧭 Journey Saved</h2>
 
     Destination:
-    ${journeyToSave.destination}
+    ${escapeOurFlowHtmlWithBreaks(journeyToSave.destination)}
 
     <br><br>
 
@@ -221,7 +258,7 @@ function showActiveJourneyRecoveryCard() {
     <br><br>
 
     Destination:
-    ${getJourneyRecoveryDestination()}
+    ${escapeOurFlowHtmlWithBreaks(getJourneyRecoveryDestination())}
 
     <br><br>
 
@@ -367,6 +404,10 @@ function saveAndKeepJourneyActive() {
         JSON.stringify(activeJourney)
     );
 
+    if (typeof trackOurFlow === "function") {
+        trackOurFlow("journey_saved");
+    }
+
     window.journeySaveInProgress = false;
     window.journeyEndActionInProgress = false;
 
@@ -409,6 +450,10 @@ function endJourneyWithoutSaving() {
     window.journeyEndActionInProgress = true;
 
     clearActiveJourneySession();
+
+    if (typeof trackOurFlow === "function") {
+        trackOurFlow("journey_completed");
+    }
 
     window.journeyEndActionInProgress = false;
 
@@ -478,7 +523,7 @@ function showJourneyUpgradeBox() {
     if (typeof showOurFlowStatusCard === "function") {
         showOurFlowStatusCard(
             "🧭 Journey Archive Full",
-            "Your free journey archive is full. Delete older journeys or expand your archive to save more.",
+            "Your OurFlow journey archive is full at 5 saved journeys. You can still create new journeys and explore OurFlow anytime. Remove an older journey to make room for a new memory.",
             {
                 role: "alert",
                 announce: false
@@ -495,7 +540,7 @@ function showJourneyUpgradeBox() {
 <div class="card" role="alert">
     <h2 class="card-title">🧭 Journey Archive Full</h2>
 
-    Your free journey archive is full. Delete older journeys or expand your archive to save more.
+    Your OurFlow journey archive is full at 5 saved journeys. You can still create new journeys and explore OurFlow anytime. Remove an older journey to make room for a new memory.
 </div>
 `;
         }
@@ -731,11 +776,17 @@ ${savedJourneys.length >= JOURNEY_LIMIT
                 journey
             );
 
+        const safeJourneyDisplayTitle =
+            escapeOurFlowHtml(journeyDisplayTitle);
+
         const journeyDisplayDate =
             getSavedJourneyDisplayDate(
                 journey,
                 index
             );
+
+        const safeJourneyDisplayDate =
+            escapeOurFlowHtml(journeyDisplayDate);
 
         const journeySearchTitle =
             getSavedJourneyDisplayTitle(
@@ -743,10 +794,20 @@ ${savedJourneys.length >= JOURNEY_LIMIT
                 index
             );
 
+        const safeJourneySearchTitle =
+            escapeOurFlowHtml(journeySearchTitle);
+
+        const journeyPreviewDestination =
+            journey.verifiedDestinationAddress ||
+            journey.destinationAddress ||
+            journey.destinationDetail ||
+            journey.destination ||
+            "Not recorded";
+
         html += `
 <details
     class="saved-journey-item"
-    data-journey="${journeySearchTitle}"
+    data-journey="${safeJourneySearchTitle}"
     data-journey-index="${index}"
     ontoggle="toggleJourney(${index}, this)"
 >
@@ -755,10 +816,10 @@ ${savedJourneys.length >= JOURNEY_LIMIT
     >
         <span class="saved-journey-summary-main">
             <span class="saved-journey-summary-title">
-                ${journeyDisplayTitle}
+                ${safeJourneyDisplayTitle}
             </span>
             <span class="saved-journey-summary-date">
-                ${journeyDisplayDate}
+                ${safeJourneyDisplayDate}
             </span>
             <span class="saved-journey-summary-hint saved-journey-hint-collapsed">
                 Tap to view complete journey
@@ -772,18 +833,14 @@ ${savedJourneys.length >= JOURNEY_LIMIT
 
     <div class="saved-journey-preview">
 Destination:
-${journey.verifiedDestinationAddress ||
-            journey.destinationAddress ||
-            journey.destinationDetail ||
-            journey.destination ||
-            "Not recorded"}
+${escapeOurFlowHtmlWithBreaks(journeyPreviewDestination)}
 
 ${journey.journeyPurpose
             ? `
     <br>
 
     Purpose:
-    ${journey.journeyPurpose}
+    ${escapeOurFlowHtmlWithBreaks(journey.journeyPurpose)}
 `
             : ""}
 
@@ -894,6 +951,10 @@ function toggleJourney(index, savedJourneyItem) {
 </div>
 `;
 
+    if (typeof trackOurFlow === "function") {
+        trackOurFlow("saved_journey_opened");
+    }
+
     if (!savedJourneyItem) {
         details.style.display = "block";
     }
@@ -910,12 +971,12 @@ function toggleJourney(index, savedJourneyItem) {
     <h2 class="card-title">🧭 Journey Summary</h2>
 
     Destination:
-    ${journey.destination}
+    ${escapeOurFlowHtmlWithBreaks(journey.destination)}
 
     <br>
 
     Duration:
-    ${journey.duration || 0} minute(s)
+    ${escapeOurFlowHtml(String(journey.duration || 0))} minute(s)
 
     <br>
 
@@ -956,32 +1017,32 @@ ${journey.photos?.length
             : ""}
 
 ${journey.parkingLocation
-            ? `<strong>🚗 Parking:</strong> ${journey.parkingLocation}<br>`
+            ? `<strong>🚗 Parking:</strong> ${escapeOurFlowHtmlWithBreaks(journey.parkingLocation)}<br>`
             : ""}
 
 ${journey.startLocation
-            ? `<strong>🧭 Start:</strong> ${journey.startLocation}<br>`
+            ? `<strong>🧭 Start:</strong> ${escapeOurFlowHtmlWithBreaks(journey.startLocation)}<br>`
             : ""}
 
 <h3 class="card-subtitle">📍 Destination</h3>
-${journey.destination}
+${escapeOurFlowHtmlWithBreaks(journey.destination)}
 
 <br><br>
 
 <hr>
         <h3 class="card-subtitle">Destination</h3>
-        ${journey.destination}
+        ${escapeOurFlowHtmlWithBreaks(journey.destination)}
 
         <br><br>
 
         <h3 class="card-subtitle">📍 Destination Details</h3>
-        ${journey.destinationDetail ||
-        "No destination details recorded"}
+        ${escapeOurFlowHtmlWithBreaks(journey.destinationDetail ||
+        "No destination details recorded")}
 
         <br><br>
 
         <h3 class="card-subtitle">📬 Verified Destination</h3>
-        ${journey.verifiedDestinationAddress || "Not verified"}
+        ${escapeOurFlowHtmlWithBreaks(journey.verifiedDestinationAddress || "Not verified")}
 
         <br><br>
 
@@ -992,34 +1053,34 @@ ${journey.destination}
 <br><br>
 
         <strong>Started:</strong>
-        ${journey.startTime}
+        ${escapeOurFlowHtmlWithBreaks(journey.startTime)}
 
         <br><br>
 
         <strong>Ended:</strong>
-        ${journey.endTime || "Not recorded"}
+        ${escapeOurFlowHtmlWithBreaks(journey.endTime || "Not recorded")}
 
         <br><br>
 
         <strong>Duration:</strong>
-        ${journey.duration || 0} minute(s)
+        ${escapeOurFlowHtml(String(journey.duration || 0))} minute(s)
 
         <br><br>
 
      <h3 class="card-subtitle">🧭 Starting Location</h3>
-${journey.startLocation || "Not recorded"}
+${escapeOurFlowHtmlWithBreaks(journey.startLocation || "Not recorded")}
 
 ${journey.startLocationAddress &&
             !journeyDisplayAlreadyIncludesAddress(
                 journey.startLocation,
                 journey.startLocationAddress
             )
-            ? `<br>${journey.startLocationAddress}`
+            ? `<br>${escapeOurFlowHtmlWithBreaks(journey.startLocationAddress)}`
             : ""}
     <br><br>
 
         <h3 class="card-subtitle">Parking</h3>
-        ${journey.parkingLocation || "Not recorded"}
+        ${escapeOurFlowHtmlWithBreaks(journey.parkingLocation || "Not recorded")}
 
 ${journey.parkingLocation
             ? `
@@ -1038,7 +1099,7 @@ ${journey.startLocation
 <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                 journey.startLocationAddress ||
                 journey.startLocation
-            )}', '_blank')">
+            ).replace(/'/g, "%27")}', '_blank')">
     🧭 Return To Start
 </button>
 `
@@ -1066,7 +1127,7 @@ No journey events recorded.
         journey.timeline.forEach(event => {
 
             html += `
-${event}
+${escapeOurFlowHtmlWithBreaks(event)}
 <br><br>
 `;
         });
@@ -1085,12 +1146,12 @@ ${event}
 
         <br>
 
-        ${photo.note || photo.title || photo.name || "Unnamed Photo"}
+        ${escapeOurFlowHtmlWithBreaks(photo.note || photo.title || photo.name || "Unnamed Photo")}
 
         <br><br>
 
         <img
-            src="${photo.thumbnail}"
+            src="${getSafeOurFlowImageSrc(photo.thumbnail)}"
             alt=""
             style="
                 max-width:200px;
@@ -1138,7 +1199,7 @@ function restoreJourney(index) {
 
     <br><br>
 
-    ${activeJourney.destination || "Untitled Journey"}
+    ${escapeOurFlowHtmlWithBreaks(activeJourney.destination || "Untitled Journey")}
 
     <br><br>
 
@@ -1210,8 +1271,9 @@ function buildJourneyRows(rows) {
     return visibleRows
         .map(row => `
 <div class="journey-info-row">
-    <span>${row.label}</span>
-    <strong>${row.value}</strong>
+    <span>${escapeOurFlowHtml(row.label)}</span>
+    <strong>${(Array.isArray(row.valueLines) ? row.valueLines : [row.value])
+        .map(escapeOurFlowHtmlWithBreaks).join("<br>")}</strong>
 </div>
 `)
         .join("");
@@ -1232,8 +1294,8 @@ function buildJourneyPanel(title, rows) {
     }
 
     return `
-<section class="journey-panel"${sectionKey ? ` data-journey-section="${sectionKey}"` : ""}>
-    <h3>${title}</h3>
+<section class="journey-panel"${sectionKey ? ` data-journey-section="${escapeOurFlowHtml(sectionKey)}"` : ""}>
+    <h3>${escapeOurFlowHtml(title)}</h3>
     ${html}
 </section>
 `;
@@ -1687,19 +1749,19 @@ function buildJourneySummary(journey) {
 <section class="journey-summary-grid" aria-label="Journey summary">
     <div>
         <span>Destination</span>
-        <strong>${getJourneyDestinationLabel(journey)}</strong>
+        <strong>${escapeOurFlowHtml(getJourneyDestinationLabel(journey))}</strong>
     </div>
     ${getJourneyPurpose(journey)
         ? `
     <div>
         <span>Purpose</span>
-        <strong>${getJourneyPurpose(journey)}</strong>
+        <strong>${escapeOurFlowHtml(getJourneyPurpose(journey))}</strong>
     </div>
 `
         : ""}
     <div>
         <span>Journey Started</span>
-        <strong>${journey?.startTime || "In progress"}</strong>
+        <strong>${escapeOurFlowHtml(journey?.startTime || "In progress")}</strong>
     </div>
     <div>
         <span>Parking Saved</span>
@@ -1789,8 +1851,7 @@ function buildJourneyLocationPanel(journey, includeActions = false) {
             getJourneyParkingAddressLine(journey),
             journey?.parkingVerified ? "✓ Verified Address" : ""
         ]
-            .filter(Boolean)
-            .join("<br>");
+            .filter(Boolean);
 
     const startValue =
         [
@@ -1798,8 +1859,7 @@ function buildJourneyLocationPanel(journey, includeActions = false) {
             getJourneyStartAddressLine(journey),
             journey?.startVerified ? "✓ Verified Address" : ""
         ]
-            .filter(Boolean)
-            .join("<br>");
+            .filter(Boolean);
 
     const panel =
         buildJourneyPanel(
@@ -1807,11 +1867,13 @@ function buildJourneyLocationPanel(journey, includeActions = false) {
             [
                 {
                     label: "Starting Location",
-                    value: startValue
+                    value: startDisplay || getJourneyStartAddressLine(journey),
+                    valueLines: startValue
                 },
                 {
                     label: "Parking Memory",
-                    value: parkingValue
+                    value: parkingDisplay || getJourneyParkingAddressLine(journey),
+                    valueLines: parkingValue
                 },
                 ...buildParkingDetailsRows(journey)
             ],
@@ -1848,7 +1910,7 @@ function buildJourneyListItems(items) {
         .map((item, index) => `
 <li>
     <span>${index + 1}.</span>
-    <span>${item}</span>
+    <span>${escapeOurFlowHtmlWithBreaks(item)}</span>
 </li>
 `)
         .join("");
@@ -1953,8 +2015,8 @@ function buildJourneyEventItems(events) {
 <li>
     <span>${index + 1}.</span>
     <span>
-        ${meta ? `<strong>${meta}</strong><br>` : ""}
-        ${parts.text}
+        ${meta ? `<strong>${escapeOurFlowHtml(meta)}</strong><br>` : ""}
+        ${escapeOurFlowHtmlWithBreaks(parts.text)}
     </span>
 </li>
 `;
@@ -2035,12 +2097,16 @@ function buildJourneyEventSection(events) {
 function buildJourneyPhotoItems(photos) {
 
     return photos
-        .map((photo, index) => `
+        .map((photo, index) => {
+            const thumbnailSrc =
+                getSafeOurFlowImageSrc(photo.thumbnail);
+
+            return `
 <li>
-    ${photo.thumbnail
+    ${thumbnailSrc
                 ? `
 <img
-    src="${photo.thumbnail}"
+    src="${thumbnailSrc}"
     alt=""
     class="journey-photo-thumb"
 >
@@ -2048,10 +2114,11 @@ function buildJourneyPhotoItems(photos) {
                 : ""}
     <span>
         ${index + 1}.
-        ${photo.note || photo.title || photo.name || "Unnamed Photo"}
+        ${escapeOurFlowHtmlWithBreaks(photo.note || photo.title || photo.name || "Unnamed Photo")}
     </span>
 </li>
-`)
+`;
+        })
         .join("");
 }
 
@@ -2070,9 +2137,9 @@ function buildJourneyMemorySection(title, items, options = {}) {
             : buildJourneyListItems(visibleItems);
 
     return `
-<details class="journey-compact-section"${options.sectionKey ? ` data-journey-section="${options.sectionKey}"` : ""}>
+<details class="journey-compact-section"${options.sectionKey ? ` data-journey-section="${escapeOurFlowHtml(options.sectionKey)}"` : ""}>
     <summary>
-        <span>${title}</span>
+        <span>${escapeOurFlowHtml(title)}</span>
         <span>${items.length}</span>
     </summary>
     <ol>
@@ -2240,7 +2307,7 @@ function showActiveJourneyBox(targetSectionKey = "") {
     <br><br>
 
     <strong>
-        ${activeJourney.destination || "Not set yet"}
+        ${escapeOurFlowHtmlWithBreaks(activeJourney.destination || "Not set yet")}
     </strong>
 
     <br><br>
@@ -2256,7 +2323,7 @@ function showActiveJourneyBox(targetSectionKey = "") {
 ${activeJourney?.verifiedDestinationAddress
             ? `
 <h3 class="card-subtitle">📬 Verified Destination</h3>
-${activeJourney.verifiedDestinationAddress}
+${escapeOurFlowHtmlWithBreaks(activeJourney.verifiedDestinationAddress)}
 `
             : `
 <h3 class="card-subtitle">⚠️ Destination Not Verified</h3>
@@ -2298,12 +2365,12 @@ showActiveJourneyBox();
 ${window.showJourneyInfo ? `
 
 <h3 class="card-subtitle">Destination</h3>
-${activeJourney.destinationName ||
+${escapeOurFlowHtmlWithBreaks(activeJourney.destinationName ||
             activeJourney.destination ||
-            "No destination saved yet."}
+            "No destination saved yet.")}
 
 ${activeJourney.verifiedDestinationAddress
-                ? `<br>✓ Verified map destination: ${activeJourney.verifiedDestinationAddress}`
+                ? `<br>✓ Verified map destination: ${escapeOurFlowHtmlWithBreaks(activeJourney.verifiedDestinationAddress)}`
                 : ""}
 
 ${activeJourney.destinationInternalLocation ||
@@ -2356,7 +2423,7 @@ ${[
                         ? "Notes: " +
                         activeJourney.destinationInsideNotes
                         : ""
-                ].filter(Boolean).join("<br>")}
+                ].filter(Boolean).map(escapeOurFlowHtmlWithBreaks).join("<br>")}
 `
                 : ""}
 
@@ -2376,32 +2443,32 @@ ${[
                         ? "Source: " +
                         activeJourney.destinationSourceUrl
                         : ""
-                ].filter(Boolean).join("<br>")}
+].filter(Boolean).map(escapeOurFlowHtmlWithBreaks).join("<br>")}
 `
                 : ""}
 
 <br><br>
 
     <h3 class="card-subtitle">Arrival Help</h3>
-${activeJourney.arrivalTips || "No arrival tips yet."}
+${escapeOurFlowHtmlWithBreaks(activeJourney.arrivalTips || "No arrival tips yet.")}
 
 <br><br>
 
 <h3 class="card-subtitle">📍 Destination Details</h3>
-${activeJourney.destinationDetail ||
-            "No destination details saved yet."}
+${escapeOurFlowHtmlWithBreaks(activeJourney.destinationDetail ||
+            "No destination details saved yet.")}
 <br><br>
 <h3 class="card-subtitle">🧭 Starting Location</h3>
 
-${activeJourney.startLocation ||
-            "No starting location saved yet."}
+${escapeOurFlowHtmlWithBreaks(activeJourney.startLocation ||
+            "No starting location saved yet.")}
 
 ${activeJourney.startLocationAddress &&
             !journeyDisplayAlreadyIncludesAddress(
                 activeJourney.startLocation,
                 activeJourney.startLocationAddress
             )
-                ? `<br>${activeJourney.startLocationAddress}`
+                ? `<br>${escapeOurFlowHtmlWithBreaks(activeJourney.startLocationAddress)}`
                 : ""}
 
 ${activeJourney.startVerified
@@ -2412,12 +2479,12 @@ ${activeJourney.startVerified
 
 <h3 class="card-subtitle">🚗 Parking Memory</h3>
 
-${activeJourney.parkingLocation ||
+${escapeOurFlowHtmlWithBreaks(activeJourney.parkingLocation ||
             activeJourney.parkingDescription ||
             activeJourney.verifiedParkingAddress ||
             activeJourney.parkingLocationAddress ||
             activeJourney.parkingAddress ||
-            "No parking location saved yet."}
+            "No parking location saved yet.")}
 
 ${activeJourney.parkingLocationAddress &&
             !journeyDisplayAlreadyIncludesAddress(
@@ -2427,7 +2494,7 @@ ${activeJourney.parkingLocationAddress &&
                 activeJourney.parkingAddress,
                 activeJourney.parkingLocationAddress
             )
-                ? `<br>${activeJourney.parkingLocationAddress}`
+                ? `<br>${escapeOurFlowHtmlWithBreaks(activeJourney.parkingLocationAddress)}`
                 : ""}
 
 ${activeJourney.parkingVerified
@@ -2464,7 +2531,7 @@ ${activeJourney.appointments?.length
                     .slice(-3)
                     .map(
                         (item, index) =>
-                            `${index + 1}. ${item}`
+                            `${index + 1}. ${escapeOurFlowHtmlWithBreaks(item)}`
                     )
                     .join("<br>")
                 : "No appointments saved yet."}
@@ -2477,7 +2544,7 @@ ${activeJourney.staffInstructions?.length
                     .slice(-3)
                     .map(
                         (item, index) =>
-                            `${index + 1}. ${item}`
+                            `${index + 1}. ${escapeOurFlowHtmlWithBreaks(item)}`
                     )
                     .join("<br>")
                 : "No instructions saved yet."}
@@ -2490,7 +2557,7 @@ ${activeJourney.notes?.length
                     .slice(-3)
                     .map(
                         (item, index) =>
-                            `${index + 1}. ${item}`
+                            `${index + 1}. ${escapeOurFlowHtmlWithBreaks(item)}`
                     )
                     .join("<br>")
                 : "No notes saved yet."}
@@ -2503,7 +2570,7 @@ ${activeJourney.medications?.length
                     .slice(-3)
                     .map(
                         (item, index) =>
-                            `${index + 1}. ${item}`
+                            `${index + 1}. ${escapeOurFlowHtmlWithBreaks(item)}`
                     )
                     .join("<br>")
                 : "No medications saved yet."}
@@ -2516,7 +2583,7 @@ ${activeJourney.questionsForDoctor?.length
                     .slice(-3)
                     .map(
                         (item, index) =>
-                            `${index + 1}. ${item}`
+                            `${index + 1}. ${escapeOurFlowHtmlWithBreaks(item)}`
                     )
                     .join("<br>")
                 : "No questions saved yet."}
@@ -2531,9 +2598,9 @@ ${activeJourney.photos?.length
                     .map(
                         (item, index) =>
                             `
-${item.thumbnail ? `
+${getSafeOurFlowImageSrc(item.thumbnail) ? `
 <img
-    src="${item.thumbnail}"
+    src="${getSafeOurFlowImageSrc(item.thumbnail)}"
     alt=""
     style="
         width:60px;
@@ -2546,10 +2613,10 @@ ${item.thumbnail ? `
 >
 ` : ""}
 
-${index + 1}. ${item.note ||
+${index + 1}. ${escapeOurFlowHtmlWithBreaks(item.note ||
                             item.title ||
                             item.name ||
-                            "Unnamed Photo"}
+                            "Unnamed Photo")}
 `
                     )
                     .join("<br>")
@@ -2565,7 +2632,7 @@ ${activeJourney.directories?.length
                 .slice(-3)
                 .map(
                     (item, index) =>
-                        `${index + 1}. ${item}`
+                        `${index + 1}. ${escapeOurFlowHtmlWithBreaks(item)}`
                 )
                 .join("<br>")
             : "No directory information saved yet."}
@@ -2680,13 +2747,13 @@ function showQuickSummaryPhotos() {
 
     <br>
 
-    ${photo.note || photo.title || photo.name || "Unnamed Photo"}
+    ${escapeOurFlowHtmlWithBreaks(photo.note || photo.title || photo.name || "Unnamed Photo")}
 
-    ${photo.thumbnail
+    ${getSafeOurFlowImageSrc(photo.thumbnail)
                         ? `
     <br><br>
     <img
-        src="${photo.thumbnail}"
+        src="${getSafeOurFlowImageSrc(photo.thumbnail)}"
         alt=""
         style="
             max-width:120px;
@@ -2733,10 +2800,10 @@ function showQuickJourneySummary() {
 
     <br><br>
 
-    <strong>&#128205; ${activeJourney.destination || "Destination"}</strong>
+    <strong>&#128205; ${escapeOurFlowHtmlWithBreaks(activeJourney.destination || "Destination")}</strong>
 
     ${destinationAddress
-                ? `<br>${destinationAddress}`
+                ? `<br>${escapeOurFlowHtmlWithBreaks(destinationAddress)}`
                 : ""}
 
     <br><br>
@@ -2855,7 +2922,7 @@ function showArrivalMode() {
 
     <br><br>
 
-    <strong>${activeJourney.destination || "your destination"}</strong>
+    <strong>${escapeOurFlowHtmlWithBreaks(activeJourney.destination || "your destination")}</strong>
 
     <br><br>
 

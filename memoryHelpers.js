@@ -1,8 +1,28 @@
+var escapeOurFlowHtml =
+    typeof escapeOurFlowHtml === "function"
+        ? escapeOurFlowHtml
+        : function (value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        };
+
+var escapeOurFlowHtmlWithBreaks =
+    typeof escapeOurFlowHtmlWithBreaks === "function"
+        ? escapeOurFlowHtmlWithBreaks
+        : function (value) {
+            return escapeOurFlowHtml(value)
+                .replace(/\r?\n/g, "<br>");
+        };
+
 function showCard(title, body) {
     document.getElementById("result").innerHTML = `
 <div class="card">
-    <h2 class="card-title">${title}</h2>
-    ${body}
+    <h2 class="card-title">${escapeOurFlowHtml(title)}</h2>
+    ${escapeOurFlowHtmlWithBreaks(body)}
 </div>
 `;
 }
@@ -40,7 +60,7 @@ function showJourneyList(
 
         result.innerHTML = `
 <div class="card">
-    <h2 class="card-title">${title}</h2>
+    <h2 class="card-title">${escapeOurFlowHtml(title)}</h2>
 
     No items saved for this journey yet.
 </div>
@@ -54,13 +74,13 @@ function showJourneyList(
     items.forEach((item, index) => {
 
         listHtml += `
-${index + 1}. ${item}<br><br>
+${index + 1}. ${escapeOurFlowHtmlWithBreaks(item)}<br><br>
 `;
     });
 
     result.innerHTML = `
 <div class="card">
-    <h2 class="card-title">${title}</h2>
+    <h2 class="card-title">${escapeOurFlowHtml(title)}</h2>
 
     ${listHtml}
 </div>
@@ -1275,7 +1295,7 @@ function showWeatherCard() {
     const message = hasDestination
         ? `
       🌤️ Check weather near your destination?<br><br>
-      <strong>${activeJourney.destination}</strong>
+      <strong>${escapeOurFlowHtmlWithBreaks(activeJourney.destination)}</strong>
     `
         : `
       🌤️ This looks like a live question.<br><br>

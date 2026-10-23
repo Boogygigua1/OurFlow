@@ -380,16 +380,22 @@ async function getArrivalHelp(destination) {
     const placeData =
         await placeResponse.json();
 
-    activeJourney.arrivalTips =
-        placeData.arrivalTip ||
-        "Map search ready. Open Google Maps and check Street View, reviews, parking, and entrance details before leaving.";
+    const hasArrivalTip =
+        placeResponse.ok !== false &&
+        typeof placeData?.arrivalTip === "string" &&
+        Boolean(placeData.arrivalTip.trim());
+
+    activeJourney.arrivalTips = hasArrivalTip
+        ? placeData.arrivalTip
+        : "Map search ready. Open Google Maps and check Street View, reviews, parking, and entrance details before leaving.";
 
     if (!activeJourney.timeline) {
         activeJourney.timeline = [];
     }
 
-    activeJourney.mapLink =
-        placeData.mapUrl;
+    activeJourney.mapLink = hasArrivalTip && placeData.mapUrl
+        ? placeData.mapUrl
+        : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(destination);
 
     showActiveJourneyBox();
 }

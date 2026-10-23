@@ -3,6 +3,38 @@
 // ASK OURFLOW ENTRY POINT
 // ========================================
 
+var escapeOurFlowHtml =
+    typeof escapeOurFlowHtml === "function"
+        ? escapeOurFlowHtml
+        : function (value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        };
+
+var escapeOurFlowHtmlWithBreaks =
+    typeof escapeOurFlowHtmlWithBreaks === "function"
+        ? escapeOurFlowHtmlWithBreaks
+        : function (value) {
+            return escapeOurFlowHtml(value)
+                .replace(/\r?\n/g, "<br>");
+        };
+
+var getSafeOurFlowMapUrl =
+    typeof getSafeOurFlowMapUrl === "function"
+        ? getSafeOurFlowMapUrl
+        : function (value) {
+            const source = typeof value === "string" ? value.trim() : "";
+
+            // Accept only HTTPS Google Maps URLs, never executable schemes or lookalike hosts.
+            return /^https:\/\/(?:www\.google\.com\/maps(?:[/?#]|$)|maps\.google\.com(?:[/?#]|$)|maps\.app\.goo\.gl\/)[^\u0000-\u0020\u007f\\]*$/i.test(source)
+                ? source
+                : "";
+        };
+
 const DEBUG_MODE = false;
 
 function showParkingRecall() {
@@ -53,10 +85,10 @@ function showParkingRecall() {
 
     <br><br>
 
-    ${savedParkingLocation}
+    ${escapeOurFlowHtmlWithBreaks(savedParkingLocation)}
 
     ${displayParkingAddress
-                ? `<br><br>${displayParkingAddress}`
+                ? `<br><br>${escapeOurFlowHtmlWithBreaks(displayParkingAddress)}`
                 : ""}
 
     ${activeJourney.parkingVerified
@@ -368,7 +400,7 @@ function showInsideDestinationRecall(question) {
     <h2 class="card-title">Inside Destination Details</h2>
 
     ${rows.map(row =>
-        `<strong>${row.label}:</strong> ${row.value}`
+        `<strong>${escapeOurFlowHtml(row.label)}:</strong> ${escapeOurFlowHtmlWithBreaks(row.value)}`
     ).join("<br>")}
 </div>
 `;
@@ -1216,7 +1248,7 @@ async function askOurFlow() {
 
 <h2 class="card-title">📷 Photo Memory</h2>
 
-${question}
+${escapeOurFlowHtmlWithBreaks(question)}
 
 <br><br>
 
@@ -1328,6 +1360,12 @@ How should I save this?
 
             endTime: ""
         };
+
+        markActiveJourneyContext("new");
+
+        if (typeof trackOurFlowJourneyStarted === "function") {
+            trackOurFlowJourneyStarted();
+        }
     }
 
     if (!question) {
@@ -1405,7 +1443,7 @@ How should I save this?
     <br><br>
 
     New destination detected:
-    ${journeyStartIntent.destination}
+    ${escapeOurFlowHtmlWithBreaks(journeyStartIntent.destination)}
 
     <br><br>
 
@@ -1511,6 +1549,10 @@ How should I save this?
                 };
 
                 markActiveJourneyContext("new");
+
+                if (typeof trackOurFlowJourneyStarted === "function") {
+                    trackOurFlowJourneyStarted();
+                }
             } else {
                 activeJourney.destination =
                     destination;
@@ -1704,7 +1746,7 @@ How should I save this?
     <br><br>
 
     Destination:
-    ${activeJourney.destination}
+    ${escapeOurFlowHtmlWithBreaks(activeJourney.destination)}
 
     <br><br>
 
@@ -1739,7 +1781,7 @@ How should I save this?
     <br><br>
 
     ⏱ Duration:
-    ${activeJourney.duration} minute(s)
+    ${escapeOurFlowHtml(String(activeJourney.duration ?? ""))} minute(s)
 
     <br><br>
 
@@ -1968,6 +2010,10 @@ Ready to save?
 
             markActiveJourneyContext("new");
 
+            if (typeof trackOurFlowJourneyStarted === "function") {
+                trackOurFlowJourneyStarted();
+            }
+
             const parkingEventText =
                 typeof getStartingLocationDescriptionForDisplay === "function"
                     ? getStartingLocationDescriptionForDisplay(question)
@@ -2188,6 +2234,10 @@ Ready to save?
 
             markActiveJourneyContext("new");
 
+            if (typeof trackOurFlowJourneyStarted === "function") {
+                trackOurFlowJourneyStarted();
+            }
+
             activeJourney.timeline.push(
                 "Journey Created"
             );
@@ -2272,7 +2322,7 @@ Ready to save?
 
     <br><br>
 
-    ${cleanDestination}
+    ${escapeOurFlowHtmlWithBreaks(cleanDestination)}
 
     <br><br>
 
@@ -2322,7 +2372,7 @@ Ready to save?
 
     <br><br>
 
-    ${question}
+    ${escapeOurFlowHtmlWithBreaks(question)}
 
     <br><br>
 
@@ -2345,7 +2395,7 @@ Ready to save?
 
     <br><br>
 
-    ${question}
+    ${escapeOurFlowHtmlWithBreaks(question)}
 
     <br><br>
 
@@ -2380,7 +2430,7 @@ Ready to save?
 
     <br><br>
 
-    ${question}
+    ${escapeOurFlowHtmlWithBreaks(question)}
 
     <br><br>
 
@@ -2416,7 +2466,7 @@ Ready to save?
 
     <br><br>
 
-    ${question}
+    ${escapeOurFlowHtmlWithBreaks(question)}
 
     <br><br>
 
@@ -2446,7 +2496,7 @@ Ready to save?
 
     <br><br>
 
-    ${question}
+    ${escapeOurFlowHtmlWithBreaks(question)}
 
     <br><br>
 
@@ -2477,7 +2527,7 @@ Ready to save?
 
     <br><br>
 
-    ${question}
+    ${escapeOurFlowHtmlWithBreaks(question)}
 
     <br><br>
 
@@ -2530,7 +2580,7 @@ Ready to save?
 
     <br><br>
 
-    ${question}
+    ${escapeOurFlowHtmlWithBreaks(question)}
 
     <br><br>
 
@@ -2576,7 +2626,7 @@ Ready to save?
 
     <br><br>
 
-    ${question}
+    ${escapeOurFlowHtmlWithBreaks(question)}
 
     <br><br>
 
@@ -2616,7 +2666,7 @@ Ready to save?
 
     <br><br>
 
-    ${note}
+    ${escapeOurFlowHtmlWithBreaks(note)}
 
     <br><br>
 
@@ -2676,7 +2726,7 @@ Ready to save?
 
     <br><br>
 
-    ${doctorQuestion}
+    ${escapeOurFlowHtmlWithBreaks(doctorQuestion)}
 
     <br><br>
 
@@ -2717,7 +2767,7 @@ Ready to save?
 
     <br><br>
 
-    ${medication}
+    ${escapeOurFlowHtmlWithBreaks(medication)}
 
     <br><br>
 
@@ -2759,7 +2809,7 @@ Ready to save?
 
     <br><br>
 
-    ${directory}
+    ${escapeOurFlowHtmlWithBreaks(directory)}
 
     <br><br>
 
@@ -2816,7 +2866,7 @@ Ready to save?
 
     <br><br>
 
-    ${appointment}
+    ${escapeOurFlowHtmlWithBreaks(appointment)}
 
     <br><br>
 
@@ -2867,7 +2917,7 @@ Ready to save?
 
     <br><br>
 
-    ${instruction}
+    ${escapeOurFlowHtmlWithBreaks(instruction)}
 
     <br><br>
 
@@ -2915,7 +2965,7 @@ Ready to save?
 
     <br><br>
 
-    ${cleanStartLocation}
+    ${escapeOurFlowHtmlWithBreaks(cleanStartLocation)}
 
     <br><br>
 
@@ -3257,7 +3307,7 @@ Ready to save?
 
     <br><br>
 
-    ${activeJourney.startLocation}
+    ${escapeOurFlowHtmlWithBreaks(activeJourney.startLocation)}
 
     <br><br>
 
@@ -3330,7 +3380,7 @@ Can I help you get back there?
 
     <br><br>
 
-    ${question}
+    ${escapeOurFlowHtmlWithBreaks(question)}
 
     <br><br>
 
@@ -3353,7 +3403,7 @@ Can I help you get back there?
 
     <br><br>
 
-    ${question}
+    ${escapeOurFlowHtmlWithBreaks(question)}
 
     <br><br>
 
@@ -3519,7 +3569,7 @@ Can I help you get back there?
     <br><br>
     I saved this as your journey destination:
     <br><br>
-    ${activeJourney.destination}
+    ${escapeOurFlowHtmlWithBreaks(activeJourney.destination)}
     <br><br>
     I can use this for the rest of your journey.
 </div>
@@ -3745,7 +3795,7 @@ Can I help you get back there?
 
     <br><br>
 
-   ${question}
+   ${escapeOurFlowHtmlWithBreaks(question)}
 
 <br><br>
 
@@ -3753,7 +3803,7 @@ Can I help you get back there?
 
 <br>
 
-${searchData.searchDomain || "No domain found"}
+${escapeOurFlowHtmlWithBreaks(searchData.searchDomain || "No domain found")}
 
 <br><br>
 
@@ -3761,9 +3811,9 @@ ${searchData.searchDomain || "No domain found"}
 href="https://www.google.com/search?q=${encodeURIComponent(
                     `site:${searchData.searchDomain} ${question}`
                 )}"
-target="_blank">
+target="_blank" rel="noopener noreferrer">
 
-    🔍 Search ${activeJourney?.destination || "Site"}
+    🔍 Search ${escapeOurFlowHtml(activeJourney?.destination || "Site")}
 
 </a>
 
@@ -3827,7 +3877,7 @@ Chico, CA
 
     <br><br>
 
-    ${savedDestinationAddress}
+    ${escapeOurFlowHtmlWithBreaks(savedDestinationAddress)}
 
     <br><br>
 
@@ -3845,7 +3895,7 @@ Chico, CA
 
     <br><br>
 
-    ${cleanedSearch}
+    ${escapeOurFlowHtmlWithBreaks(cleanedSearch)}
 
     <br><br>
 
@@ -3859,7 +3909,7 @@ Chico, CA
 
     <br><br>
 
-    <a href="${placeData.mapUrl}" target="_blank">
+    <a href="${escapeOurFlowHtml(getSafeOurFlowMapUrl(placeData.mapUrl) || "https://www.google.com/maps/")}" target="_blank" rel="noopener noreferrer">
         Open Map Search
     </a>
 
@@ -3910,7 +3960,7 @@ if (address) {
     <br><br>
     Open this map search:
     <br><br>
-    <a href="${placeData.mapUrl}" target="_blank">
+    <a href="${escapeOurFlowHtml(getSafeOurFlowMapUrl(placeData.mapUrl) || "https://www.google.com/maps/")}" target="_blank" rel="noopener noreferrer">
         Search Google Maps
     </a>
     <br><br>
@@ -3943,7 +3993,7 @@ if (address) {
 
     <br><br>
 
-    ${activeJourney.destinationAddress}
+    ${escapeOurFlowHtmlWithBreaks(activeJourney.destinationAddress)}
 
     <br><br>
 
@@ -4021,6 +4071,10 @@ if (address) {
         });
 
         const data = await response.json();
+
+        if (response.ok === false || typeof data?.answer !== "string" || !data.answer.trim()) {
+            throw new Error("AI assistance is temporarily unavailable.");
+        }
         // ========================================
         // ANSWER HISTORY STORAGE
         // ========================================
@@ -4036,7 +4090,7 @@ if (address) {
         result.innerHTML = `
 <div class="card">
     <h2 class="card-title">🧭 OurFlow</h2>
-    ${data.answer}
+    ${escapeOurFlowHtmlWithBreaks(data.answer)}
 
     ${getRouteDebugHtml(routeDebug)}
 </div>
@@ -4046,12 +4100,16 @@ if (address) {
         // ========================================
     } catch (error) {
 
-        console.error(error);
+        console.error("OURFLOW CLIENT REQUEST ERROR:", {
+            errorCategory: error instanceof TypeError ? "network_error" : "request_error"
+        });
 
         result.innerHTML = `
 <div class="card">
     <h2 class="card-title">🧭 OurFlow</h2>
-    Error contacting OurFlow.
+    ${error?.code === "OURFLOW_REQUEST_TOO_LARGE"
+        ? "This photo and its context are too large to send. Choose a smaller photo or shorten the request."
+        : "Error contacting OurFlow."}
 </div>
 `;
     }

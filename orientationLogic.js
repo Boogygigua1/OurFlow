@@ -8,6 +8,20 @@ function escapeOrientationHtml(value) {
         .replace(/'/g, "&#39;");
 }
 
+var getSafeOurFlowImageSrc =
+    typeof getSafeOurFlowImageSrc === "function"
+        ? getSafeOurFlowImageSrc
+        : function (value) {
+            const source =
+                String(value || "").trim();
+
+            if (/^data:image\/(?:png|jpe?g|webp);base64,/i.test(source)) {
+                return escapeOrientationHtml(source);
+            }
+
+            return "";
+        };
+
 function getOrientationDestination(journey) {
 
     return {
@@ -99,15 +113,18 @@ function renderOrientationPhotos(photos) {
                 photo.name ||
                 `Photo ${index + 1}`;
 
+            const thumbnailSrc =
+                getSafeOurFlowImageSrc(photo.thumbnail);
+
             return `
 <li>
     <span class="orientation-photo-title">${escapeOrientationHtml(title)}</span>
 
-    ${photo.thumbnail
+    ${thumbnailSrc
                     ? `
     <br><br>
     <img
-        src="${escapeOrientationHtml(photo.thumbnail)}"
+        src="${thumbnailSrc}"
         alt=""
         style="
             max-width:120px;
@@ -131,7 +148,7 @@ function renderOrientationSection(title, content) {
 
     return `
 <br>
-<h3 class="card-subtitle">${title}</h3>
+<h3 class="card-subtitle">${escapeOrientationHtml(title)}</h3>
 
 <br><br>
 

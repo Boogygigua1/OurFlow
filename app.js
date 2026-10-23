@@ -102,6 +102,76 @@ function clearNewList() {
 ` + document.getElementById("result").innerHTML;
 }
 
+function clearAllOurFlowDeviceData() {
+
+    const shouldClear =
+        confirm(
+            "This will permanently remove the journeys, notes, locations, photos, and other OurFlow information stored on this device. This cannot be undone."
+        );
+
+    if (!shouldClear) {
+        return;
+    }
+
+    const ownedStorageKeys = [
+        "activeJourney",
+        "savedJourneys",
+        "journeyLimit",
+        "profile",
+        "ourflowProfile",
+        "profileMemory",
+        "ourflowProfileMemory",
+        "userProfile"
+    ];
+
+    ownedStorageKeys.forEach(key => {
+        localStorage.removeItem(key);
+    });
+
+    activeJourney = null;
+    savedJourneys = [];
+    JOURNEY_LIMIT = 5;
+
+    if (typeof resetJourneySessionContext === "function") {
+        resetJourneySessionContext();
+    }
+
+    const imagePreview =
+        document.getElementById("imagePreview");
+
+    if (imagePreview) {
+        imagePreview.replaceChildren();
+    }
+
+    const activeJourneyBox =
+        document.getElementById("activeJourneyBox");
+
+    if (activeJourneyBox) {
+        activeJourneyBox.replaceChildren();
+    }
+
+    const result =
+        document.getElementById("result");
+
+    if (result) {
+        result.innerHTML = `
+<div class="card">
+    <h2 class="card-title" data-card-heading tabindex="-1">OurFlow data cleared</h2>
+
+    Journeys, notes, locations, photos, and other OurFlow information stored on this device have been removed.
+</div>
+`;
+    }
+
+    if (typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("OurFlow data cleared from this device.");
+    }
+
+    if (typeof focusResultCardTarget === "function") {
+        focusResultCardTarget("[data-card-heading]");
+    }
+}
+
 let supportFinalSubmitInProgress = false;
 
 function getSupportReviewFields(form) {
@@ -331,11 +401,36 @@ function sendReviewedSupportMessage() {
     form.requestSubmit();
 }
 
-function trackOurFlow(eventName, details = {}) {
+function trackOurFlow(eventName) {
     if (window.va) {
         window.va("event", {
-            name: eventName,
-            data: details
+            name: eventName
         });
     }
+}
+
+function trackOurFlowJourneyStarted() {
+
+    if (!activeJourney) {
+        return;
+    }
+
+    const contextId =
+        activeJourney.contextSessionId ||
+        currentJourneyContextId;
+
+    if (!contextId) {
+        return;
+    }
+
+    window.ourFlowTrackedJourneyStartIds =
+        window.ourFlowTrackedJourneyStartIds || {};
+
+    if (window.ourFlowTrackedJourneyStartIds[contextId]) {
+        return;
+    }
+
+    window.ourFlowTrackedJourneyStartIds[contextId] = true;
+
+    trackOurFlow("journey_started");
 }
