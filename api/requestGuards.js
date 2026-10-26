@@ -1,3 +1,5 @@
+const MAX_RATE_LIMIT_BUCKETS = 1000;
+
 const rateLimitBuckets =
     globalThis.__ourFlowRateLimitBuckets ||
     new Map();
@@ -22,11 +24,17 @@ function getClientIp(req) {
 
 function pruneExpiredBuckets(now) {
 
+    let nextResetAt = Infinity;
+
     for (const [key, bucket] of rateLimitBuckets.entries()) {
         if (bucket.resetAt <= now) {
             rateLimitBuckets.delete(key);
+        } else {
+            nextResetAt = Math.min(nextResetAt, bucket.resetAt);
         }
     }
+
+    return nextResetAt;
 }
 
 export function applyRateLimit(req, res, options = {}) {
@@ -40,13 +48,18 @@ export function applyRateLimit(req, res, options = {}) {
     const now =
         Date.now();
 
-    pruneExpiredBuckets(now);
+    const nextResetAt = pruneExpiredBuckets(now);
 
     const key =
         name + ":" + getClientIp(req);
 
     const existing =
         rateLimitBuckets.get(key);
+
+    // Keep active counters intact; reject new identities rather than evicting them.
+    if (!existing && rateLimitBuckets.size >= MAX_RATE_LIMIT_BUCKETS) {
+        return rejectRateLimitedRequest(res, nextResetAt, now);
+    }
 
     const bucket =
         existing && existing.resetAt > now
@@ -63,8 +76,13 @@ export function applyRateLimit(req, res, options = {}) {
         return false;
     }
 
+    return rejectRateLimitedRequest(res, bucket.resetAt, now);
+}
+
+function rejectRateLimitedRequest(res, resetAt, now) {
+
     const retryAfterSeconds =
-        Math.max(1, Math.ceil((bucket.resetAt - now) / 1000));
+        Math.max(1, Math.ceil((resetAt - now) / 1000));
 
     res.setHeader("Retry-After", String(retryAfterSeconds));
     res.status(429).json({
