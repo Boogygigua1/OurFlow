@@ -778,8 +778,8 @@ function createContext(options = {}) {
     );
     assert.strictEqual(
         activeVerifiedContext.activeJourney.verifiedDestinationAddress,
-        "123 Verified St",
-        "Continue Current Journey should not overwrite verified destination fields."
+        "",
+        "A different destination must not retain the previous verified address."
     );
 
     const verifyContext =

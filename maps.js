@@ -356,6 +356,10 @@ async function getArrivalHelp(destination) {
         return;
     }
 
+    const journeyAtRequest = activeJourney;
+    const destinationAtRequest = activeJourney.destination;
+    const revisionAtRequest = window.ourFlowDestinationGuidanceRevision || 0;
+
     activeJourney.arrivalTips =
         "Searching for arrival tips...";
 
@@ -380,6 +384,11 @@ async function getArrivalHelp(destination) {
     const placeData =
         await placeResponse.json();
 
+    if (activeJourney !== journeyAtRequest || activeJourney?.destination !== destinationAtRequest ||
+        (window.ourFlowDestinationGuidanceRevision || 0) !== revisionAtRequest) {
+        return;
+    }
+
     const hasArrivalTip =
         placeResponse.ok !== false &&
         typeof placeData?.arrivalTip === "string" &&
@@ -388,6 +397,7 @@ async function getArrivalHelp(destination) {
     activeJourney.arrivalTips = hasArrivalTip
         ? placeData.arrivalTip
         : "Map search ready. Open Google Maps and check Street View, reviews, parking, and entrance details before leaving.";
+    activeJourney.arrivalGuidanceDestination = String(destinationAtRequest || "").trim();
 
     if (!activeJourney.timeline) {
         activeJourney.timeline = [];

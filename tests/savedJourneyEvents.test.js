@@ -305,4 +305,11 @@ assert.strictEqual(
     "Delete Journey should still remove the selected saved journey."
 );
 
+while (context.savedJourneys.length < context.JOURNEY_LIMIT) {
+    context.savedJourneys.push({ destination: "Sample journey", timeline: [], notes: [], photos: [] });
+}
+context.showSavedJourneys();
+assert(resultHtml.includes("Remove an older journey to make room for a new memory."));
+assert(!resultHtml.includes("Expand Archive"));
+
 console.log("Saved Journey events expansion passed");

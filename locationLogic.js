@@ -520,6 +520,8 @@ if (activeJourney) {
         JSON.stringify(activeJourney)
     );
 
+    if (typeof refreshParkingSavedSummary === "function") refreshParkingSavedSummary();
+
 }
 
     pendingParkingLocation = "";
@@ -998,6 +1000,8 @@ async function verifySavedLocation() {
         }
         return;
     }
+    const journeyAtRequest = activeJourney;
+    const destinationAtRequest = activeJourney?.destination;
     // const useSuggested = confirm(
     //     "Would you like OurFlow to search for this location?\n\n" +
     //     destination +
@@ -1070,6 +1074,10 @@ async function verifySavedLocation() {
     );
 
     const data = await response.json();
+
+    if (activeJourney !== journeyAtRequest || activeJourney?.destination !== destinationAtRequest) {
+        return;
+    }
 
     const rankedCandidates =
         rankDestinationPlaceCandidates(
@@ -2174,6 +2182,13 @@ function saveVerifiedDestinationPlace(place) {
 
     const destinationAddress =
         place.destinationAddress || "";
+
+    if (activeJourney?.destinationPlaceId && place.destinationPlaceId &&
+        activeJourney.destinationPlaceId !== place.destinationPlaceId &&
+        typeof clearPreviousDestinationData === "function") {
+        clearPreviousDestinationData(destinationName || destinationAddress, true);
+        activeJourney.originalDestinationRequest = destinationName || destinationAddress;
+    }
 
     activeJourney.destinationName =
         destinationName;
