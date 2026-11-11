@@ -992,6 +992,7 @@ function savePhotoAsLocationLegacy(type) {
 
     if (type === "destination") {
 
+        if (typeof prepareDestinationChange === "function") prepareDestinationChange(location);
         activeJourney.destination =
             location;
 
@@ -1399,6 +1400,7 @@ function savePhotoAsLocation(type) {
     }
 
     if (type === "destination") {
+        if (typeof prepareDestinationChange === "function") prepareDestinationChange(location);
         activeJourney.destination =
             location;
 

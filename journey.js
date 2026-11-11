@@ -740,14 +740,7 @@ ${savedJourneys.length >= JOURNEY_LIMIT
 
     <br><br>
 
-    Delete older journeys
-    or expand your archive.
-
-    <br><br>
-
-<button onclick="showJourneyUpgradeBox()">
-    ⭐ Expand Archive
-</button>
+    Remove an older journey to make room for a new memory.
 
 </div>
 `
@@ -894,8 +887,15 @@ function toggleJourney(index, savedJourneyItem) {
     const details =
         document.getElementById(`journey-${index}`);
 
-    const journey =
-        savedJourneys[index];
+    const savedJourney = savedJourneys[index];
+    const journey = savedJourney ? prepareJourneyGuidanceForDisplay({
+        ...savedJourney,
+        unverifiedArrivalGuidanceFields: savedJourney.unverifiedArrivalGuidanceFields &&
+            typeof savedJourney.unverifiedArrivalGuidanceFields === "object"
+            ? { ...savedJourney.unverifiedArrivalGuidanceFields } : savedJourney.unverifiedArrivalGuidanceFields
+    }) : null;
+
+    if (!journey) return;
 
     if (
         savedJourneyItem &&
@@ -947,7 +947,7 @@ function toggleJourney(index, savedJourneyItem) {
 
     ${buildJourneyMemorySections(journey)}
 
-    ${buildJourneyEventSection(journey.timeline)}
+    ${buildJourneyEventSection(journey.timeline, journey.destinationGuidanceDisplayBoundary)}
 </div>
 `;
 
@@ -1172,6 +1172,128 @@ ${escapeOurFlowHtmlWithBreaks(event)}
 
 }
 
+function classifyRestoredArrivalGuidance(journey) {
+    const guidance = typeof journey?.arrivalTips === "string" ? journey.arrivalTips : "";
+    const lines = guidance.split(/\n+/).map(line => line.trim()).filter(Boolean);
+    const events = Array.isArray(journey?.timeline) ? journey.timeline : [];
+    const normalize = value => String(value || "").trim().toLowerCase().replace(/\s+/g, " ").replace(/[.!?]+$/, "");
+    const destinationTypes = new Set([
+        "destination set", "destination updated", "destination saved from photo",
+        "destination saved from location", "journey started from location", "journey started",
+        "arrival guidance confirmed for"
+    ]);
+    let lastDestinationIndex = -1;
+    let lastDestination = "";
+    events.forEach((event, index) => {
+        const parts = getJourneyEventParts(event);
+        if (destinationTypes.has(normalize(parts.type)) && parts.text && normalize(parts.text) !== "auto-created") {
+            lastDestinationIndex = index;
+            lastDestination = normalize(parts.text);
+        }
+    });
+
+    const destinationMatches = lastDestinationIndex >= 0 &&
+        lastDestination === normalize(journey?.destination);
+    const provenanceMatches = Boolean(normalize(journey?.destination)) &&
+        normalize(journey?.arrivalGuidanceDestination) === normalize(journey?.destination);
+    const supported = new Set();
+    if (destinationMatches) {
+        events.slice(lastDestinationIndex + 1).forEach(event => {
+            const parts = getJourneyEventParts(event);
+            if (normalize(parts.type) === "destination guidance saved") supported.add(normalize(parts.text));
+        });
+    }
+
+    const current = [];
+    const unverified = [];
+    for (const line of lines) {
+        (provenanceMatches || (destinationMatches && supported.has(normalize(line))) ? current : unverified).push(line);
+    }
+    return { current, unverified, boundary: lastDestinationIndex >= 0 ? lastDestinationIndex + 1 : events.length };
+}
+
+function quarantineRestoredGuidanceFields(journey, currentLines, unverifiedLines) {
+    if (typeof extractNavigationClueDetails !== "function" || !unverifiedLines.length) return;
+    const fields = ["destinationEntrance", "destinationFloor", "destinationRoomSuite"];
+    const normalize = value => String(value || "").trim().toLowerCase().replace(/\s+/g, " ").replace(/[.!?]+$/, "");
+    const uncertain = unverifiedLines.map(extractNavigationClueDetails);
+    const current = currentLines.map(extractNavigationClueDetails);
+    const retained = journey.unverifiedArrivalGuidanceFields && typeof journey.unverifiedArrivalGuidanceFields === "object"
+        && !Array.isArray(journey.unverifiedArrivalGuidanceFields) ? journey.unverifiedArrivalGuidanceFields : {};
+    for (const field of fields) {
+        const value = normalize(journey[field]);
+        if (value && uncertain.some(item => normalize(item[field]) === value) &&
+            !current.some(item => normalize(item[field]) === value)) {
+            retained[field] = journey[field];
+            delete journey[field];
+        }
+    }
+    if (retained.destinationRoomSuite && typeof journey.destinationInternalLocation === "string") {
+        const parts = journey.destinationInternalLocation.split(/\s*•\s*/);
+        if (parts.some(part => normalize(part) === normalize(retained.destinationRoomSuite))) {
+            retained.destinationInternalLocation = journey.destinationInternalLocation;
+            journey.destinationInternalLocation = parts.filter(part => normalize(part) !== normalize(retained.destinationRoomSuite)).join(" • ");
+        }
+    }
+    if (Object.keys(retained).length) journey.unverifiedArrivalGuidanceFields = retained;
+}
+
+function confirmRestoredArrivalGuidance() {
+    if (!activeJourney || !activeJourney.unverifiedArrivalGuidance) return;
+    const destination = String(activeJourney.destination || "").trim();
+    if (!destination || /^(untitled journey|photo memory)$/i.test(destination)) {
+        if (typeof announceOurFlowStatus === "function") announceOurFlowStatus("Set a destination before confirming guidance.");
+        return;
+    }
+    const lines = String(activeJourney.unverifiedArrivalGuidance).split(/\n+/).map(line => line.trim()).filter(Boolean);
+    const current = String(activeJourney.arrivalTips || "").split(/\n+/).map(line => line.trim()).filter(Boolean);
+    activeJourney.timeline = Array.isArray(activeJourney.timeline) ? activeJourney.timeline : [];
+    activeJourney.timeline.push("Arrival Guidance Confirmed For: " + destination);
+    for (const line of lines) {
+        if (!current.includes(line)) current.push(line);
+        activeJourney.timeline.push("Destination Guidance Saved: " + line);
+    }
+    activeJourney.arrivalTips = current.join("\n");
+    activeJourney.arrivalGuidanceDestination = destination;
+    activeJourney.unverifiedArrivalGuidance = "";
+    const fields = activeJourney.unverifiedArrivalGuidanceFields;
+    if (fields && typeof fields === "object" && !Array.isArray(fields)) {
+        const conflicts = {};
+        for (const field of ["destinationEntrance", "destinationFloor", "destinationRoomSuite", "destinationInternalLocation"]) {
+            if (!fields[field]) continue;
+            if (!activeJourney[field]) activeJourney[field] = fields[field];
+            else if (activeJourney[field] !== fields[field]) conflicts[field] = fields[field];
+        }
+        if (Object.keys(conflicts).length) {
+            if (!Array.isArray(activeJourney.previousDestinationDetails)) {
+                activeJourney.previousDestinationDetails = activeJourney.previousDestinationDetails == null
+                    ? [] : [activeJourney.previousDestinationDetails];
+            }
+            activeJourney.previousDestinationDetails.push({ destination: "Unverified historical guidance", details: conflicts });
+        }
+        delete activeJourney.unverifiedArrivalGuidanceFields;
+    }
+    localStorage.setItem("activeJourney", JSON.stringify(activeJourney));
+    showActiveJourneyBox();
+    document.getElementById("questionInput")?.focus?.();
+    if (typeof announceOurFlowStatus === "function") announceOurFlowStatus("Arrival guidance confirmed for this destination.");
+}
+
+function prepareJourneyGuidanceForDisplay(journey) {
+    if (!journey?.arrivalTips && !journey?.unverifiedArrivalGuidance) return journey;
+    const restoredGuidance = classifyRestoredArrivalGuidance(journey);
+    journey.arrivalTips = restoredGuidance.current.join("\n");
+    const previousUnverified = typeof journey.unverifiedArrivalGuidance === "string"
+        ? journey.unverifiedArrivalGuidance.split(/\n+/).map(line => line.trim()).filter(Boolean) : [];
+    journey.unverifiedArrivalGuidance = Array.from(new Set([...previousUnverified, ...restoredGuidance.unverified])).join("\n");
+    quarantineRestoredGuidanceFields(journey, restoredGuidance.current,
+        journey.unverifiedArrivalGuidance.split(/\n+/).filter(Boolean));
+    const existingBoundary = Number.isSafeInteger(journey.destinationGuidanceDisplayBoundary)
+        ? journey.destinationGuidanceDisplayBoundary : 0;
+    journey.destinationGuidanceDisplayBoundary = Math.max(existingBoundary, restoredGuidance.boundary);
+    return journey;
+}
+
 function restoreJourney(index) {
 
     const journey =
@@ -1183,6 +1305,8 @@ function restoreJourney(index) {
 
     activeJourney =
         JSON.parse(JSON.stringify(journey));
+
+    prepareJourneyGuidanceForDisplay(activeJourney);
 
     markActiveJourneyContext("new");
 
@@ -1206,6 +1330,9 @@ function restoreJourney(index) {
     This saved journey is active again.
 </div>
 `;
+    if (activeJourney.unverifiedArrivalGuidance && typeof announceOurFlowStatus === "function") {
+        announceOurFlowStatus("Journey restored. Some arrival guidance needs review.");
+    }
 }
 
 function normalizeJourneyDisplayValue(value) {
@@ -1765,7 +1892,7 @@ function buildJourneySummary(journey) {
     </div>
     <div>
         <span>Parking Saved</span>
-        <strong>${getJourneyParkingDisplay(journey) ? "Yes" : "No"}</strong>
+        <strong data-parking-saved-status>${getJourneyParkingDisplay(journey) ? "Yes" : "No"}</strong>
     </div>
     <div>
         <span>Verified Destination</span>
@@ -1773,6 +1900,11 @@ function buildJourneySummary(journey) {
     </div>
 </section>
 `;
+}
+
+function refreshParkingSavedSummary() {
+    const status = document.querySelector?.("#activeJourneyBox [data-parking-saved-status]");
+    if (status) status.textContent = getJourneyParkingDisplay(activeJourney) ? "Yes" : "No";
 }
 
 function buildActiveJourneyActions(journey) {
@@ -1831,7 +1963,16 @@ function buildJourneyDestinationPanels(journey) {
                 }
             ],
             "arrivalGuidance"
-        )
+        ),
+        journey?.unverifiedArrivalGuidance
+            ? `
+<details class="journey-compact-section unverified-guidance">
+    <summary>Review unverified arrival guidance</summary>
+    <p>This guidance may be from an earlier destination. It is not used for navigation or AI unless you confirm it.</p>
+    <p>${escapeOurFlowHtmlWithBreaks(journey.unverifiedArrivalGuidance)}</p>
+    ${journey === activeJourney ? '<button type="button" onclick="confirmRestoredArrivalGuidance()">Use for current destination</button>' : ""}
+</details>`
+            : ""
     ]
         .filter(Boolean)
         .join("");
@@ -2068,14 +2209,21 @@ function getVisibleJourneyEvents(events) {
     });
 }
 
-function buildJourneyEventSection(events) {
+function buildJourneyEventSection(events, destinationGuidanceDisplayBoundary = 0) {
 
     if (!events || !events.length) {
         return "";
     }
 
-    const visibleEvents =
-        getVisibleJourneyEvents(events);
+    const boundary = Number.isSafeInteger(destinationGuidanceDisplayBoundary) && destinationGuidanceDisplayBoundary >= 0
+        ? destinationGuidanceDisplayBoundary : 0;
+    const visibleEvents = getVisibleJourneyEvents(events.map((event, index) => {
+        const parts = getJourneyEventParts(event);
+        if (index < boundary && ["destination guidance saved", "arrival guidance"].includes(normalizeJourneyEventDisplayText(parts.type))) {
+            return { timestamp: parts.timestamp, type: "Previous Destination Guidance", text: "Details from an earlier destination are hidden." };
+        }
+        return event;
+    }));
 
     if (!visibleEvents.length) {
         return "";
@@ -2196,7 +2344,8 @@ function getDisplayDirectories(journey) {
             const normalizedItem =
                 normalizeJourneyDisplayValue(item);
 
-            return !structuredValues.includes(normalizedItem);
+            return !structuredValues.includes(normalizedItem) &&
+                !(typeof isUnverifiedGuidanceValue === "function" && isUnverifiedGuidanceValue(item, journey));
         });
 }
 
@@ -2205,7 +2354,8 @@ function buildJourneyMemorySections(journey) {
     return [
         buildJourneyMemorySection(
             "Notes",
-            journey?.notes,
+            Array.isArray(journey?.notes) && typeof isUnverifiedGuidanceValue === "function"
+                ? journey.notes.filter(item => !isUnverifiedGuidanceValue(item, journey)) : journey?.notes,
             { sectionKey: "notes" }
         ),
         buildJourneyMemorySection(

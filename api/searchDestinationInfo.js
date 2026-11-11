@@ -8,7 +8,8 @@ export default async function handler(req, res) {
 
     const {
         destination,
-        question
+        question,
+        searchTerm
     } = req.body;
 
     const destinationDomains = {
@@ -20,18 +21,15 @@ export default async function handler(req, res) {
 
     let searchDomain = "";
 
-    const destinationLower =
-        (destination || "").toLowerCase();
-
-    for (const key in destinationDomains) {
-
-        if (destinationLower.includes(key)) {
-
-            searchDomain =
-                destinationDomains[key];
-
-            break;
+    for (const value of [searchTerm, destination]) {
+        const text = typeof value === "string" ? value.toLowerCase() : "";
+        for (const key in destinationDomains) {
+            if (text.includes(key)) {
+                searchDomain = destinationDomains[key];
+                break;
+            }
         }
+        if (searchDomain) break;
     }
 
     return res.status(200).json({

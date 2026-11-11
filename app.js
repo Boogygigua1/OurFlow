@@ -434,3 +434,12 @@ function trackOurFlowJourneyStarted() {
 
     trackOurFlow("journey_started");
 }
+
+if (typeof activeJourney !== "undefined" && activeJourney && typeof prepareJourneyGuidanceForDisplay === "function") {
+    prepareJourneyGuidanceForDisplay(activeJourney);
+    try {
+        localStorage.setItem("activeJourney", JSON.stringify(activeJourney));
+    } catch (_) {
+        // Keep the in-memory journey protected if device storage is unavailable.
+    }
+}

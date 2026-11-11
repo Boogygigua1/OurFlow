@@ -350,6 +350,8 @@ function focusResultCardTarget(selector) {
 
 function resetJourneySessionContext() {
 
+    if (typeof clearPendingDestinationSearch === "function") clearPendingDestinationSearch();
+
     // A late FileReader/thumbnail callback must not restore a cleared journey's photo.
     if (typeof resetCurrentPhotoSelection === "function") resetCurrentPhotoSelection();
 
@@ -499,6 +501,50 @@ function shouldInjectActiveJourneyContext(question) {
 
 const OURFLOW_MAX_AI_REQUEST_BYTES = 4000000;
 
+function isUnverifiedGuidanceValue(value, journey) {
+    if (typeof value !== "string" || !journey) return false;
+    const normalize = text => text.toLowerCase().replace(/[.!?,;:]+/g, " ").replace(/\s+/g, " ").trim();
+    const text = normalize(value);
+    const matches = clue => {
+        const line = normalize(clue);
+        if (!line) return false;
+        if (text.includes(line)) return true;
+        if (typeof extractNavigationClueDetails !== "function") return false;
+        return Object.values(extractNavigationClueDetails(clue)).some(part => {
+            const normalizedPart = typeof part === "string" ? normalize(part) : "";
+            return normalizedPart && text.includes(normalizedPart);
+        });
+    };
+    const unverified = typeof journey.unverifiedArrivalGuidance === "string"
+        ? journey.unverifiedArrivalGuidance.split(/\n+/).filter(Boolean) : [];
+    if (unverified.some(matches)) return true;
+
+    const boundary = Number.isSafeInteger(journey.destinationGuidanceDisplayBoundary)
+        ? Math.max(0, journey.destinationGuidanceDisplayBoundary) : 0;
+    const current = typeof journey.arrivalTips === "string" ? journey.arrivalTips.split(/\n+/).map(normalize) : [];
+    const historical = Array.isArray(journey.previousDestinationDetails) ? journey.previousDestinationDetails : [];
+    if (historical.some(entry => {
+        const guidance = entry?.details?.unverifiedArrivalGuidance;
+        return typeof guidance === "string" && guidance.split(/\n+/)
+            .some(line => line && !current.includes(normalize(line)) && matches(line));
+    })) return true;
+    return (Array.isArray(journey.timeline) ? journey.timeline.slice(0, boundary) : []).some(event => {
+        let type = "";
+        let clue = "";
+        if (typeof event === "string") {
+            const match = event.match(/^([^:]{2,40}):\s*(.+)$/);
+            if (match) { type = match[1]; clue = match[2]; }
+        } else if (event && typeof event === "object") {
+            type = event.type || event.category || event.label || "";
+            clue = event.text || event.message || event.value || event.description || "";
+        }
+        const normalizedType = typeof type === "string" ? normalize(type) : "";
+        const normalizedClue = typeof clue === "string" ? normalize(clue) : "";
+        return ["destination guidance saved", "arrival guidance"].includes(normalizedType) &&
+            normalizedClue && !current.includes(normalizedClue) && matches(clue);
+    });
+}
+
 function assertOurFlowRequestSize(payload) {
     const bodyBytes = new TextEncoder().encode(JSON.stringify(payload)).byteLength;
     if (bodyBytes > OURFLOW_MAX_AI_REQUEST_BYTES) {
@@ -526,7 +572,7 @@ function buildOurFlowPayload(question, overrides = {}) {
             ? getScopedConversationHistory().filter(value => typeof value === "string")
             : [],
         notes: Array.isArray(journey?.notes)
-            ? journey.notes.slice(-5).filter(value => typeof value === "string")
+            ? journey.notes.slice(-5).filter(value => typeof value === "string" && !isUnverifiedGuidanceValue(value, journey))
             : [],
         destination: text(journey?.destination),
         destinationAddress: text(journey?.destinationAddress),

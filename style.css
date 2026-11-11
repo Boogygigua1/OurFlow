@@ -37,6 +37,27 @@ textarea {
     min-height: 44px;
 }
 
+#questionInput {
+    display: block;
+    width: 100%;
+    max-width: 640px;
+    min-height: 3.75rem;
+    margin: 10px auto 0;
+    padding: 0.9rem 1rem;
+    border: 2px solid #475569;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #111827;
+    font-size: 1.125rem;
+    line-height: 1.4;
+}
+
+label[for="questionInput"],
+#questionInputError {
+    width: 100%;
+    max-width: 640px;
+}
+
 ::placeholder {
     color: #4b5563;
     opacity: 1;
@@ -77,6 +98,10 @@ button,
     vertical-align: top;
     appearance: none;
     -webkit-appearance: none;
+}
+
+#installOurFlowButton[hidden] {
+    display: none;
 }
 
 button:focus-visible,
@@ -304,6 +329,11 @@ button:disabled,
 .journey-compact-section {
     margin: 10px 0;
     overflow: hidden;
+}
+
+.unverified-guidance p {
+    margin: 12px;
+    overflow-wrap: anywhere;
 }
 
 .journey-compact-section summary {

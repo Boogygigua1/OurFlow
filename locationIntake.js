@@ -655,6 +655,8 @@ function saveLocationIntakeAsDestination() {
 
     ensureLocationIntakeJourney(candidate.locationText);
 
+    if (typeof prepareDestinationChange === "function") prepareDestinationChange(candidate.locationText);
+
     activeJourney.destination =
         candidate.locationText;
 

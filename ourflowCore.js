@@ -37,6 +37,106 @@ var getSafeOurFlowMapUrl =
 
 const DEBUG_MODE = false;
 
+let pendingSearchRequest = null;
+
+function clearPendingDestinationSearch() {
+    if (pendingSearchRequest) {
+        pendingSearchRequest.journey = null;
+    }
+    pendingSearchRequest = null;
+}
+
+function retryDestinationSearch() {
+    if (!pendingSearchRequest) return;
+    const input = document.getElementById("questionInput");
+    input.value = pendingSearchRequest.question;
+    input.focus();
+    return askOurFlow();
+}
+
+function clearDestinationGuidanceIfChanged(destination, force = false) {
+    if (!activeJourney || !String(destination || "").trim() || (!force && isCurrentJourneyDestination(activeJourney, destination))) return;
+    activeJourney.arrivalTips = "";
+    activeJourney.arrivalGuidanceDestination = "";
+    activeJourney.destinationGuidanceDisplayBoundary = Array.isArray(activeJourney.timeline) ? activeJourney.timeline.length : 0;
+    conversationHistory = [];
+    window.ourFlowDestinationGuidanceRevision = (window.ourFlowDestinationGuidanceRevision || 0) + 1;
+}
+
+function clearPreviousDestinationData(destination, force = false) {
+    clearDestinationGuidanceIfChanged(destination, force);
+    const previousDestination = String(activeJourney.destination || "").trim();
+    const detailFields = [
+        "destinationBuilding", "destinationDepartmentOffice", "destinationRoomSuite",
+        "destinationInternalLocation", "destinationEntrance", "destinationFloor",
+        "destinationContactPerson", "destinationPhone", "destinationEmail",
+        "destinationCampusZip", "destinationSourceUrl", "destinationDirectoryNote",
+        "destinationInsideNotes", "unverifiedArrivalGuidance", "unverifiedArrivalGuidanceFields"
+    ];
+    const previousDetails = {};
+    for (const field of detailFields) {
+        if (activeJourney[field]) previousDetails[field] = activeJourney[field];
+    }
+    if (Object.keys(previousDetails).length) {
+        if (!Array.isArray(activeJourney.previousDestinationDetails)) {
+            activeJourney.previousDestinationDetails = activeJourney.previousDestinationDetails == null
+                ? [] : [activeJourney.previousDestinationDetails];
+        }
+        activeJourney.previousDestinationDetails.push({ destination: previousDestination, details: previousDetails });
+        for (const field of detailFields) delete activeJourney[field];
+    }
+    activeJourney.destinationName = "";
+    activeJourney.destinationAddress = "";
+    activeJourney.verifiedDestinationAddress = "";
+    activeJourney.destinationPlaceId = "";
+    activeJourney.destinationGps = null;
+    activeJourney.destinationGoogleMapsUri = "";
+    activeJourney.mapLink = "";
+    activeJourney.destinationVerificationSource = "";
+    activeJourney.destinationVerifiedAt = "";
+    window.destinationPlaceCandidates = [];
+    window.destinationVerificationSearchQuery = "";
+}
+
+function prepareDestinationChange(destination) {
+    if (activeJourney && String(destination || "").trim() && !isCurrentJourneyDestination(activeJourney, destination)) {
+        clearPreviousDestinationData(destination);
+    }
+}
+
+function useSearchAsDestination() {
+    if (!activeJourney || !pendingSearchRequest?.query || pendingSearchRequest.journey !== activeJourney) return;
+    const destination = pendingSearchRequest.query;
+    if (isCurrentJourneyDestination(activeJourney, destination)) {
+        document.getElementById("result").innerHTML = "";
+        document.getElementById("questionInput").focus();
+        return;
+    }
+    clearPreviousDestinationData(destination);
+    activeJourney.destination = destination;
+    activeJourney.destinationDetail = destination;
+    activeJourney.originalDestinationRequest = destination;
+    activeJourney.timeline = activeJourney.timeline || [];
+    activeJourney.timeline.push("Destination Updated: " + destination);
+    localStorage.setItem("activeJourney", JSON.stringify(activeJourney));
+    showActiveJourneyBox();
+    document.getElementById("result").innerHTML = "";
+    if (typeof announceOurFlowStatus === "function") announceOurFlowStatus("Destination updated.");
+    document.getElementById("questionInput").focus();
+}
+
+function showDestinationSearchMessage(message, query, canRetry) {
+    const mapUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(query);
+    document.getElementById("result").innerHTML = `
+<div class="card">
+    <h2 class="card-title">Search</h2>
+    <p>${escapeOurFlowHtml(message)}</p>
+    ${canRetry ? '<button onclick="retryDestinationSearch()">Retry Search</button>' : ""}
+    <a href="${escapeOurFlowHtml(mapUrl)}" target="_blank" rel="noopener noreferrer">Search on Google Maps</a>
+</div>`;
+    if (typeof announceOurFlowStatus === "function") announceOurFlowStatus(message);
+}
+
 function showParkingRecall() {
 
     const result =
@@ -138,6 +238,10 @@ function continueCurrentJourneyWithDetectedDestination() {
         return;
     }
 
+    if (!isCurrentJourneyDestination(activeJourney, destination)) {
+        clearPreviousDestinationData(destination);
+    }
+
     activeJourney.destination =
         destination;
 
@@ -145,7 +249,6 @@ function continueCurrentJourneyWithDetectedDestination() {
         destination;
 
     activeJourney.originalDestinationRequest =
-        activeJourney.originalDestinationRequest ||
         destination;
 
     if (pendingDestination.purpose) {
@@ -204,6 +307,14 @@ function hasMeaningfulActiveJourneyDestination(journey) {
         journey.verifiedDestinationAddress ||
         journey.destinationPlaceId
     );
+}
+
+function isCurrentJourneyDestination(journey, destination) {
+    const normalize = value => String(value || "")
+        .trim().toLowerCase().replace(/[’‘]/g, "'")
+        .replace(/\s+/g, " ").replace(/[.!?]+$/, "");
+    const current = normalize(journey?.destination || journey?.destinationName);
+    return Boolean(current && current === normalize(destination));
 }
 
 function showParkingMemoryReview(parkingText) {
@@ -282,7 +393,7 @@ function getInsideDestinationDetailRows() {
             value: activeJourney.destinationInsideNotes ||
                 activeJourney.destinationDirectoryNote
         }
-    ].filter(row => row.value);
+    ].filter(row => row.value && !(typeof isUnverifiedGuidanceValue === "function" && isUnverifiedGuidanceValue(row.value, activeJourney)));
 }
 
 function getInsideDestinationRecallRows(question) {
@@ -510,6 +621,7 @@ function saveNavigationClueToDestinationGuidance(clue) {
             ),
             clue
         );
+    activeJourney.arrivalGuidanceDestination = String(activeJourney.destination || "").trim();
 
     if (details.destinationEntrance) {
         activeJourney.destinationEntrance =
@@ -1011,7 +1123,7 @@ function detectJourneyStartIntent(question) {
             name: "leaving-for",
             pattern: new RegExp(
                 "^" + personPrefix +
-                "leaving\\s+for\\s+(?<destination>.+)$",
+                "leaving\\s+(?:for|to)\\s+(?<destination>.+)$",
                 "i"
             )
         },
@@ -1425,6 +1537,15 @@ How should I save this?
                 journeyStartIntent &&
                 hasMeaningfulActiveJourneyDestination(activeJourney)
             ) {
+                if (isCurrentJourneyDestination(activeJourney, journeyStartIntent.destination)) {
+                    window.pendingActiveJourneyDestination = null;
+                    result.innerHTML = `
+<div class="card">
+    <h2 class="card-title">🧭 Current Destination</h2>
+    This destination is already part of your active journey.
+</div>`;
+                    return;
+                }
                 window.pendingActiveJourneyDestination = {
                     destination:
                         journeyStartIntent.destination,
@@ -1448,7 +1569,7 @@ How should I save this?
     <br><br>
 
     <button onclick="continueCurrentJourneyWithDetectedDestination()">
-        Continue Current Journey
+        Continue With New Destination
     </button>
 
     <br><br>
@@ -1554,6 +1675,7 @@ How should I save this?
                     trackOurFlowJourneyStarted();
                 }
             } else {
+                prepareDestinationChange(destination);
                 activeJourney.destination =
                     destination;
 
@@ -2083,16 +2205,19 @@ Ready to save?
                 question.match(/hospital|hematology|enloe|emergency room|er/i);
 
             if (teaMatch) {
+                prepareDestinationChange("Tea Bar");
                 activeJourney.destination = "Tea Bar";
                 activeJourney.destinationAddress = "Tea Bar";
             }
 
             if (chicoMatch) {
+                prepareDestinationChange("Chico State");
                 activeJourney.destination = "Chico State";
                 activeJourney.destinationAddress = "Chico State";
             }
 
             if (anthroMatch) {
+                prepareDestinationChange("Anthropology Lab");
                 activeJourney.destination =
                     "Anthropology Lab";
 
@@ -2101,11 +2226,16 @@ Ready to save?
             }
 
             if (hospitalMatch) {
+                prepareDestinationChange("Hospital Visit");
                 activeJourney.destination =
                     "Hospital Visit";
 
                 activeJourney.destinationAddress =
                     "Hospital Visit";
+            }
+
+            if (teaMatch || chicoMatch || anthroMatch || hospitalMatch) {
+                localStorage.setItem("activeJourney", JSON.stringify(activeJourney));
             }
 
         }
@@ -3557,11 +3687,14 @@ Can I help you get back there?
 
             )
         ) {
+            prepareDestinationChange(question);
             activeJourney.destination = question;
 
             activeJourney.answers.push(
                 "Destination updated."
             );
+
+            localStorage.setItem("activeJourney", JSON.stringify(activeJourney));
 
             result.innerHTML = `
 <div class="card">
@@ -3674,43 +3807,8 @@ Can I help you get back there?
                         )
                         .trim();
 
-            if (
-                activeJourney &&
-                cleanedSearch
-            ) {
-                const normalizedCleanedSearch =
-                    cleanedSearch.toLowerCase();
-
-                const existingDestination =
-                    (activeJourney.destination || "")
-                        .toLowerCase();
-
-                const existingDestinationDetail =
-                    (activeJourney.destinationDetail || "")
-                        .toLowerCase();
-
-                if (
-                    normalizedCleanedSearch !== existingDestination &&
-                    normalizedCleanedSearch !== existingDestinationDetail
-                ) {
-                    activeJourney.destinationAddress =
-                        "";
-
-                    activeJourney.verifiedDestinationAddress =
-                        "";
-                }
-
-                activeJourney.destination =
-                    cleanedSearch;
-
-                activeJourney.destinationDetail =
-                    cleanedSearch;
-
-                localStorage.setItem(
-                    "activeJourney",
-                    JSON.stringify(activeJourney)
-                );
-            }
+            const searchRequest = { question, query: cleanedSearch, journey: activeJourney };
+            pendingSearchRequest = searchRequest;
 
             // ========================================
             // INFORMATION SEARCH DETECTION
@@ -3736,23 +3834,47 @@ Can I help you get back there?
                 navigationSearch.includes("financial aid") ||
                 navigationSearch.includes("admissions");
 
-            const placeResponse = await fetch("/api/searchPlace", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    query: cleanedSearch
-                })
-            });
+            let placeResponse;
+            try {
+                placeResponse = await fetch("/api/searchPlace", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        query: cleanedSearch
+                    })
+                });
+                if (pendingSearchRequest !== searchRequest) return;
+                if (!placeResponse.ok) throw new Error("Search unavailable");
+            } catch (_) {
+                if (pendingSearchRequest !== searchRequest) return;
+                showDestinationSearchMessage("Search is temporarily unavailable. Please try again.", cleanedSearch, true);
+                return;
+            }
 
-            const placeData = await placeResponse.json();
+            let placeData;
+            try {
+                placeData = await placeResponse.json();
+                if (pendingSearchRequest !== searchRequest) return;
+            } catch (_) {
+                if (pendingSearchRequest !== searchRequest) return;
+                showDestinationSearchMessage("Search is temporarily unavailable. Please try again.", cleanedSearch, true);
+                return;
+            }
+
+            if (!placeData || typeof placeData.arrivalTip !== "string" || !placeData.arrivalTip.trim()) {
+                showDestinationSearchMessage("No matches found.", cleanedSearch, false);
+                return;
+            }
 
 
             if (isInformationSearch) {
 
-                const searchResponse =
-                    await fetch(
+                let searchResponse;
+                let searchData;
+                try {
+                    searchResponse = await fetch(
                         "/api/searchDestinationInfo",
                         {
                             method: "POST",
@@ -3762,13 +3884,25 @@ Can I help you get back there?
                             body: JSON.stringify({
                                 destination:
                                     activeJourney?.destination || "",
+                                searchTerm: cleanedSearch,
                                 question
                             })
                         }
                     );
 
-                const searchData =
-                    await searchResponse.json();
+                    if (pendingSearchRequest !== searchRequest) return;
+                    if (!searchResponse.ok) throw new Error("Search unavailable");
+                    searchData = await searchResponse.json();
+                    if (pendingSearchRequest !== searchRequest) return;
+                } catch (_) {
+                    if (pendingSearchRequest !== searchRequest) return;
+                    showDestinationSearchMessage("Search is temporarily unavailable. Please try again.", cleanedSearch, true);
+                    return;
+                }
+                if (!searchData?.searchDomain) {
+                    showDestinationSearchMessage("No information source is configured for this search.", cleanedSearch, false);
+                    return;
+                }
                 // CLEANUP:
                 // Duplicate search cleanup logic.
                 // Similar to cleanedSearch above.
@@ -3788,6 +3922,8 @@ Can I help you get back there?
                 result.innerHTML = `
 <div class="card">
     <h2 class="card-title">🔍 Information Search</h2>
+
+    ${activeJourney ? '<button onclick="useSearchAsDestination()">Use as Destination</button>' : ""}
 
     <br><br>
 
@@ -3813,13 +3949,13 @@ href="https://www.google.com/search?q=${encodeURIComponent(
                 )}"
 target="_blank" rel="noopener noreferrer">
 
-    🔍 Search ${escapeOurFlowHtml(activeJourney?.destination || "Site")}
+    🔍 Search ${escapeOurFlowHtml(cleanedSearch || "Site")}
 
 </a>
 
 <br><br>
 
-<button onclick="
+${activeJourney && cleanedSearch.toLowerCase() === String(activeJourney.destination || "").toLowerCase() ? `<button onclick="
 const address = prompt(
 'Paste the verified address you found:'
 );
@@ -3829,7 +3965,7 @@ if (address) {
 }
 ">
     📍 Save Verified Address
-</button>
+</button>` : ""}
 
 <br><br>
 
@@ -3845,6 +3981,8 @@ Butte Hall
 Chico, CA
 </div>
 `;
+
+                if (typeof announceOurFlowStatus === "function") announceOurFlowStatus("Search results ready.");
 
                 return;
             }
@@ -3866,10 +4004,11 @@ Chico, CA
                     activeJourney.verifiedDestinationAddress ||
                     activeJourney.destinationAddress;
 
-                if (savedDestinationAddress) {
+                if (activeJourney.verifiedDestinationAddress &&
+                    cleanedSearch.toLowerCase() === String(activeJourney.destination || "").toLowerCase()) {
                     result.innerHTML = `
 <div class="card">
-    <h2 class="card-title">Navigation Available</h2>
+    <h2 class="card-title">Verified Map Search</h2>
 
     <br><br>
 
@@ -3886,54 +4025,16 @@ Chico, CA
     </button>
 </div>
 `;
+                    if (typeof announceOurFlowStatus === "function") announceOurFlowStatus("Verified destination available.");
                     return;
                 }
-
-                result.innerHTML = `
-<div class="card">
-    <h2 class="card-title">📍 Destination Saved</h2>
-
-    <br><br>
-
-    ${escapeOurFlowHtmlWithBreaks(cleanedSearch)}
-
-    <br><br>
-
-    <h3 class="card-subtitle">Address not verified yet</h3>
-
-    <br><br>
-
-    <button onclick="verifySavedLocation()">
-        📍 Verify Address
-    </button>
-
-    <br><br>
-
-    <a href="${escapeOurFlowHtml(getSafeOurFlowMapUrl(placeData.mapUrl) || "https://www.google.com/maps/")}" target="_blank" rel="noopener noreferrer">
-        Open Map Search
-    </a>
-
-    <br><br>
-
-    <button onclick="
-const address = prompt(
-'Paste the verified address:'
-);
-
-if (address) {
-    saveVerifiedDestinationAddress(address);
-}
-">
-        ✏ Enter Address Manually
-    </button>
-</div>
-`;
-                return;
             }
 
             result.innerHTML = `
 <div class="card">
-    <h2 class="card-title">🧭 Verified Map Search</h2>
+    <h2 class="card-title">🧭 Search on Google Maps</h2>
+
+    ${activeJourney && !questionInfo.mentionsParking ? '<button onclick="useSearchAsDestination()">Use as Destination</button>' : ""}
 
     ${pendingParkingLocation
                     ? `
@@ -3960,13 +4061,14 @@ if (address) {
     <br><br>
     Open this map search:
     <br><br>
-    <a href="${escapeOurFlowHtml(getSafeOurFlowMapUrl(placeData.mapUrl) || "https://www.google.com/maps/")}" target="_blank" rel="noopener noreferrer">
-        Search Google Maps
+    <a href="${escapeOurFlowHtml("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(cleanedSearch))}" target="_blank" rel="noopener noreferrer">
+        Search on Google Maps
     </a>
     <br><br>
     After you open it, come back and tell me what you see.
 </div>
 `;
+            if (typeof announceOurFlowStatus === "function") announceOurFlowStatus("Map search ready.");
             return;
         }
         // ========================================
